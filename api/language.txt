@@ -1,0 +1,22 @@
+
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['MobileEndIconType'] 	= 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	= 'MobileEndIconField';
+$MAP['ShowType_名称'] 	= 'ShowType_名称';
