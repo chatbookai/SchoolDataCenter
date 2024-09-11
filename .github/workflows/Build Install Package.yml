@@ -1,0 +1,45 @@
+name: Build and Package with Inno Setup
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+    
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./htdocs
+
+    - name: Make html files
+      run: npm run build
+      working-directory: ./htdocs
+
+    - name: Install Inno Setup
+      run: |
+        choco install innosetup -y
+        echo "C:\Program Files (x86)\Inno Setup 6" >> $GITHUB_PATH
+
+    - name: Compile Inno Setup Script
+      run: |
+        ISCC.exe "${env:GITHUB_WORKSPACE}\innosetup\install.iss"
+        
+    - name: Upload compiled EXE file
+      uses: actions/upload-artifact@v4
+      with:
+        name: MyXinLiJianKang-installer
+        path: "D:/a/SchoolDataCenter/SchoolDataCenter/MyXinLiJianKang-0.1.exe"
