@@ -131,8 +131,8 @@ const ShortcutsDropdown = (props: Props) => {
             spacing={0}
             sx={{
               '& .MuiGrid-root': {
-                borderBottom: theme => `1px solid ${theme.palette.divider}`,
-                '&:nth-of-type(odd)': { borderRight: theme => `1px solid ${theme.palette.divider}` }
+                borderBottom: (theme: any) => `1px solid ${theme.palette.divider}`,
+                '&:nth-of-type(odd)': { borderRight: (theme: any) => `1px solid ${theme.palette.divider}` }
               }
             }}
           >

@@ -54,7 +54,7 @@ export type CustomCheckboxIconsProps = {
   handleChange: (value: string) => void
 }
 
-// ** Types of Custom Checkboxes with Images
+// ** Types of Custom Checkboxes with images
 export type CustomCheckboxImgData = {
   alt?: string
   value: string

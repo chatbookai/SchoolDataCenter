@@ -3,7 +3,6 @@ import React, { useState, useEffect, Fragment, Ref, useRef } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import Checkbox from '@mui/material/Checkbox'
 import Mousetrap from 'mousetrap'
 
 // ** Icon Imports
@@ -154,7 +153,8 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                     <FormControl fullWidth size="small">
                       <InputLabel id={Filter.name}>{Filter.text}</InputLabel>
                       <Select
-                        multiple
+                      
+                        //multiple
                         fullWidth
                         value={filterSelectValue[Filter_index] || [Filter.selected]}
                         id={Filter.text}
@@ -173,13 +173,17 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                       >
                         {filterSelectValue[Filter_index]!=undefined && Filter && Filter.list.map((item: any, item_index: number) => {
                           return (
-                            <MenuItem value={item.value} key={item.name + "_" + item_index}><Checkbox size="small" style={{padding:'0px 5px 0px 0px'}} checked={ (filterSelectValue[Filter_index] && filterSelectValue[Filter_index].includes(item.value) ) } />{item.name}({item.num})</MenuItem>
+                            <MenuItem value={item.value} key={item.name + "_" + item_index}>{item.name}({item.num})</MenuItem>
                           )
+
+                          //<Checkbox size="small" style={{padding:'0px 5px 0px 0px'}} checked={ (filterSelectValue[Filter_index] && filterSelectValue[Filter_index].includes(item.value) ) } />
                         })}
                         {filterSelectValue[Filter_index]==undefined && Filter && Filter.list.map((item: any, item_index: number) => {
                           return (
-                            <MenuItem value={item.value} key={item.name + "_" + item_index}><Checkbox size="small" style={{padding:'0px 5px 0px 0px'}} checked={Filter.selected == item.value} />{item.name}({item.num})</MenuItem>
+                            <MenuItem value={item.value} key={item.name + "_" + item_index}>{item.name}({item.num})</MenuItem>
                           )
+
+                          //<Checkbox size="small" style={{padding:'0px 5px 0px 0px'}} checked={Filter.selected == item.value} />
                         })}
                       </Select>
                     </FormControl>

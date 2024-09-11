@@ -142,7 +142,7 @@ const DialogReferEarn = () => {
             </Grid>
           </Grid>
         </DialogContent>
-        <Divider sx={{ my: theme => `${theme.spacing(4)} !important` }} />
+        <Divider sx={{ my: (theme: any) => `${theme.spacing(4)} !important` }} />
         <DialogContent sx={{ px: { xs: 8, sm: 15 }, pb: { xs: 8, sm: 12.5 }, position: 'relative' }}>
           <Box sx={{ mb: 8 }}>
             <Typography variant='h6' sx={{ mb: 4 }}>

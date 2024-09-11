@@ -30,10 +30,10 @@ const CustomRadioIcons = (props: CustomRadioIconsProps) => {
             position: 'relative',
             alignItems: 'center',
             flexDirection: 'column',
-            border: theme => `1px solid ${theme.palette.divider}`,
+            border: (theme: any) => `1px solid ${theme.palette.divider}`,
             ...(selected === value
               ? { borderColor: `${color}.main` }
-              : { '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` } })
+              : { '&:hover': { borderColor: (theme: any) => `rgba(${theme.palette.customColors.main}, 0.25)` } })
           }}
         >
           {icon ? <Icon icon={icon} {...iconProps} /> : null}

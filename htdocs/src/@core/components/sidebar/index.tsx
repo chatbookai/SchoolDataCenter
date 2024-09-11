@@ -51,7 +51,7 @@ const Sidebar = (props: BoxProps & SidebarType) => {
           open={show}
           transitionDuration={250}
           onClick={handleBackdropClick}
-          sx={{ position: 'absolute', zIndex: theme => theme.zIndex.drawer - 1 }}
+          sx={{ position: 'absolute', zIndex: (theme: any) => theme.zIndex.drawer - 1 }}
         />
       )}
     </Fragment>

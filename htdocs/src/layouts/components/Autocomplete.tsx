@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useCallback, useRef, useState, ChangeEvent } from 'react'
+import { useEffect, useCallback, useRef, useState, ChangeEvent, SyntheticEvent } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -344,8 +344,8 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                 options={options}
                 id='appBar-search'
                 isOptionEqualToValue={() => true}
-                onInputChange={(event, value: string) => setSearchValue(value)}
-                onChange={(event, obj) => handleOptionClick(obj as AppBarSearchType)}
+                onInputChange={(event: any, value: string) => setSearchValue(value)}
+                onChange={(event: SyntheticEvent<Element, Event>, value: unknown) => handleOptionClick(value as AppBarSearchType)}
                 noOptionsText={<NoResult value={searchValue} setOpenDialog={setOpenDialog} />}
                 getOptionLabel={(option: AppBarSearchType | unknown) => (option as AppBarSearchType).title}
                 groupBy={(option: AppBarSearchType | unknown) =>
@@ -405,7 +405,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                     />
                   )
                 }}
-                renderOption={(props, option: AppBarSearchType | unknown) => {
+                renderOption={(props: any, option: AppBarSearchType | unknown) => {
                   return searchValue.length ? (
                     <ListItem
                       {...props}

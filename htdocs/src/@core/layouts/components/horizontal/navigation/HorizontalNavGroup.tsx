@@ -197,7 +197,7 @@ const HorizontalNavGroup = (props: Props) => {
                       borderRadius: 3.5,
                       '&.Mui-selected': {
                         boxShadow: 3,
-                        backgroundImage: theme =>
+                        backgroundImage: (theme: any) =>
                           `linear-gradient(98deg, ${theme.palette.customColors.primaryGradient}, ${theme.palette.primary.main} 94%)`,
                         '& .MuiTypography-root, & .MuiListItemIcon-root, & svg': {
                           color: 'common.white'

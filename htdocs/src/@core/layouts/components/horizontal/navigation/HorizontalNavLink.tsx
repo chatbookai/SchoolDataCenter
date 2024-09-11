@@ -91,7 +91,7 @@ const HorizontalNavLink = (props: Props) => {
           className={clsx({ active: isNavLinkActive() })}
           target={item.openInNewTab ? '_blank' : undefined}
           href={item.path === undefined ? '/' : `${item.path}`}
-          onClick={e => {
+          onClick={(e: any) => {
             if (item.path === undefined) {
               e.preventDefault()
               e.stopPropagation()
@@ -105,7 +105,7 @@ const HorizontalNavLink = (props: Props) => {
                   borderRadius: 3.5,
                   '&.active, &.active:hover': {
                     boxShadow: 3,
-                    backgroundImage: theme =>
+                    backgroundImage: (theme: any) =>
                       `linear-gradient(98deg, ${theme.palette.customColors.primaryGradient}, ${theme.palette.primary.main} 94%)`,
                     '& .MuiTypography-root, & .MuiListItemIcon-root': {
                       color: 'common.white'

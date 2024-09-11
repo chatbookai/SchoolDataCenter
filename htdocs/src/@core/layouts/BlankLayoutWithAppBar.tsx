@@ -42,7 +42,7 @@ const BlankLayoutWithAppBar = (props: BlankLayoutWithAppBarProps) => {
         sx={{
           overflowX: 'hidden',
           position: 'relative',
-          minHeight: theme => `calc(100vh - ${theme.spacing((theme.mixins.toolbar.minHeight as number) / 4)})`
+          minHeight: (theme: any) => `calc(100vh - ${theme.spacing((theme.mixins.toolbar.minHeight as number) / 4)})`
         }}
       >
         {children}

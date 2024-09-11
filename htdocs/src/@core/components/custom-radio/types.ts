@@ -54,7 +54,7 @@ export type CustomRadioIconsProps = {
   handleChange: (prop: string | ChangeEvent<HTMLInputElement>) => void
 }
 
-// ** Types of Custom Radios with Images
+// ** Types of Custom Radios with images
 export type CustomRadioImgData = {
   alt?: string
   value: string

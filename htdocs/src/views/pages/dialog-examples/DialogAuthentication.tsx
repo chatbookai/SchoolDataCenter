@@ -108,7 +108,7 @@ const DialogAuthentication = () => {
                   borderRadius: 1,
                   cursor: 'pointer',
                   ...(authType === 'app' ? { ...bgColors.primaryLight } : { backgroundColor: 'action.hover' }),
-                  border: theme =>
+                  border: (theme: any) =>
                     `1px solid ${authType === 'app' ? theme.palette.primary.main : theme.palette.divider}`
                 }}
               >
@@ -137,7 +137,7 @@ const DialogAuthentication = () => {
                   borderRadius: 1,
                   cursor: 'pointer',
                   ...(authType === 'sms' ? { ...bgColors.primaryLight } : { backgroundColor: 'action.hover' }),
-                  border: theme =>
+                  border: (theme: any) =>
                     `1px solid ${authType === 'sms' ? theme.palette.primary.main : theme.palette.divider}`
                 }}
               >

@@ -9,6 +9,7 @@ import axios from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
+import { DecryptDataAES256GCM } from 'src/configs/functions'
 
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
@@ -21,7 +22,8 @@ const defaultProvider: AuthValuesType = {
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
+  refresh: () => Promise.resolve()
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -50,13 +52,35 @@ const AuthProvider = ({ children }: Props) => {
             }
           })
           .then(async response => {
+            let dataJson: any = null
+            const data = response.data
+            if(data && data.isEncrypted == "1" && data.data)  {
+                const i = data.data.slice(0, 32);
+                const t = data.data.slice(-32);
+                const e = data.data.slice(32, -32);
+                const k = authConfig.k;
+                const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+                try{
+                    dataJson = JSON.parse(DecryptDataAES256GCMData)
+                }
+                catch(Error: any) {
+                    console.log("DecryptDataAES256GCMData view_default Error", Error)
+        
+                    dataJson = data
+                }
+            }
+            else {
+
+                dataJson = data
+            }
             setLoading(false)
-            setUser({ ...response.data.userData })
+            setUser({ ...dataJson.userData })
           })
           .catch(() => {
             localStorage.removeItem('userData')
             localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
+            localStorage.removeItem(authConfig.storageTokenKeyName)
+            localStorage.removeItem('GO_SYSTEM')
             setUser(null)
             setLoading(false)
             if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
@@ -77,23 +101,47 @@ const AuthProvider = ({ children }: Props) => {
       .post(authConfig.loginEndpoint, params)
       .then(async response => {
 
+        let dataJson: any = null
+        const data = response.data
+        if(data && data.isEncrypted == "1" && data.data)  {
+            const i = data.data.slice(0, 32);
+            const t = data.data.slice(-32);
+            const e = data.data.slice(32, -32);
+            const k = authConfig.k;
+            const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+            try{
+                dataJson = JSON.parse(DecryptDataAES256GCMData)
+            }
+            catch(Error: any) {
+                console.log("DecryptDataAES256GCMData view_default Error", Error)
+    
+                dataJson = data
+            }
+        }
+        else {
+
+            dataJson = data
+        }
+        
         //console.log("authConfig.storageTokenKeyName",authConfig.storageTokenKeyName)
-        //console.log("response.data.accessToken",response.data.accessToken)
-        //console.log("response.data.userData",response.data.userData)
-        //console.log("JSON.stringify(response.data.userData)",JSON.stringify(response.data.userData))
-        if(response.data.userData!=undefined && response.data.accessToken!=undefined)  {
-          params.rememberMe
-            ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+        //console.log("dataJson.accessToken",dataJson.accessToken)
+        //console.log("dataJson.userData",dataJson.userData)
+        //console.log("JSON.stringify(dataJson.userData)",JSON.stringify(dataJson.userData))
+        if(dataJson.userData!=undefined && dataJson.accessToken!=undefined)  {
+          true
+            ? window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
             : null
           const returnUrl = router.query.returnUrl
-          setUser({ ...response.data.userData })
-          params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+          setUser({ ...dataJson.userData })
+          true ? window.localStorage.setItem('userData', JSON.stringify(dataJson.userData)) : null
+          true ? window.localStorage.setItem('GO_SYSTEM', JSON.stringify(dataJson.GO_SYSTEM)) : null
           const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
           router.replace(redirectURL as string)
         }
         else {
           setUser(null)
           window.localStorage.removeItem('userData')
+          window.localStorage.removeItem('GO_SYSTEM')
           window.localStorage.removeItem(authConfig.storageTokenKeyName)
           if (errorCallback) errorCallback({})
         }
@@ -103,9 +151,50 @@ const AuthProvider = ({ children }: Props) => {
       })
   }
 
+  const handleRefreshToken = () => {
+    const token = window.localStorage.getItem(authConfig.storageTokenKeyName)
+    if(window && token)  {
+      axios
+        .post(authConfig.refreshEndpoint, {}, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
+        .then(async (response: any) => {
+
+          let dataJson: any = null
+          const data = response.data
+          if(data && data.isEncrypted == "1" && data.data)  {
+              const i = data.data.slice(0, 32);
+              const t = data.data.slice(-32);
+              const e = data.data.slice(32, -32);
+              const k = authConfig.k;
+              const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+              try{
+                  dataJson = JSON.parse(DecryptDataAES256GCMData)
+              }
+              catch(Error: any) {
+                  console.log("DecryptDataAES256GCMData view_default Error", Error)
+      
+                  dataJson = data
+              }
+          }
+          else {
+
+              dataJson = data
+          }
+          
+          if(dataJson.status == 'ok' && dataJson.accessToken) {
+            window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
+
+            setUser({ ...dataJson.userData })
+          }
+          else {
+          }
+        })
+    }
+  }
+
   const handleLogout = () => {
     setUser(null)
     window.localStorage.removeItem('userData')
+    window.localStorage.removeItem('GO_SYSTEM')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
     router.push('/login')
   }
@@ -130,7 +219,8 @@ const AuthProvider = ({ children }: Props) => {
     setLoading,
     login: handleLogin,
     logout: handleLogout,
-    register: handleRegister
+    register: handleRegister,
+    refresh: handleRefreshToken
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

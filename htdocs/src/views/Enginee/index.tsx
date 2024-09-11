@@ -19,6 +19,11 @@ import ListItem from '@mui/material/ListItem'
 import CircularProgress from '@mui/material/CircularProgress'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
+import Table from '@mui/material/Table'
+import TableRow from '@mui/material/TableRow'
+import TableHead from '@mui/material/TableHead'
+import TableCell, { TableCellBaseProps } from '@mui/material/TableCell'
+
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -26,6 +31,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContentText from '@mui/material/DialogContentText'
 
 import CardContent from '@mui/material/CardContent'
+import Pagination from '@mui/material/Pagination'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -52,12 +58,21 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 
 // ** Myself file
-import IndexTableHeader from 'src/pages/Enginee/IndexTableHeader'
+import IndexTableHeader from 'src/views/Enginee/IndexTableHeader'
 import AddOrEditTable from './AddOrEditTable'
 import ViewTable from './ViewTable'
 import ImagesPreview from './ImagesPreview'
 import IndexBottomFlowNode from './IndexBottomFlowNode'
 import { RootState, AppDispatch } from 'src/store/index'
+import { DecryptDataAES256GCM } from 'src/configs/functions'
+
+const MUITableCell = styled(TableCell)<TableCellBaseProps>(({ theme }) => ({
+  borderBottom: 0,
+  paddingLeft: '5 !important',
+  paddingRight: '5 !important',
+  paddingTop: `${theme.spacing(1)} !important`,
+  paddingBottom: `${theme.spacing(1)} !important`
+}))
 
 export type InvoiceLayoutProps = {
   backEndApi: string
@@ -107,6 +122,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   const [imagesType, setImagesType] = useState<string[]>([])
   const [CSRF_TOKEN, setCSRF_TOKEN] = useState<string>('')
   const [CSRF_TOKEN_MAP, setCSRF_TOKEN_MAP] = useState<any>({})
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const [filterMultiColumns, setFilterMultiColumns] = useState<GridFilterModel>()
   const [searchFieldName, setSearchFieldName] = useState<string>('')
@@ -128,7 +144,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   const [mobileEditPageIdEnable, setMobileEditPageIdEnable] = useState<boolean>(false)
 
   const paginationModelDefaultValue = { page: 0, pageSize: 15 }
-  const [paginationModel, setPaginationModel] = useState(paginationModelDefaultValue)  
+  const [paginationModel, setPaginationModel] = useState(paginationModelDefaultValue)
   const isMobileData = isMobile()
   const windowWidthData = windowWidth()
 
@@ -154,7 +170,6 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     //setFilter(filterNew)
     console.log("paginationModel", paginationModel)
   }
-
 
   //console.log("process.env.NEXT_PUBLIC_JWT_REFRESH_TOKEN_SECRET", process.env.NEXT_PUBLIC_JWT_REFRESH_TOKEN_SECRET)
 
@@ -197,34 +212,59 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
           Authorization: storedToken
         },
         params: newAllFilters
+      }).then(res => {
+        const data = res.data
+        if(data && data.isEncrypted == "1" && data.data)  {
+          const i = data.data.slice(0, 32);
+          const t = data.data.slice(-32);
+          const e = data.data.slice(32, -32);
+          const k = authConfig.k;
+          const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+          try{
+            const ResJson = JSON.parse(DecryptDataAES256GCMData)
+            console.log("DecryptDataAES256GCMData ResJson", ResJson)
+  
+            return ResJson
+          }
+          catch(Error: any) {
+            console.log("DecryptDataAES256GCMData Error", Error)
+  
+            return []
+          }
+        }
+        else {
+
+          return data
+        }
       })
-      if(response.data && response.data.init_action.action.indexOf("view_default") != -1) {
-        setAddEditActionName(response.data.init_action.action)
-        setAddEditActionId(response.data.init_action.id)
+
+      if(response && response.init_action.action.indexOf("view_default") != -1) {
+        setAddEditActionName(response.init_action.action)
+        setAddEditActionId(response.init_action.id)
         setViewActionOpen(!viewActionOpen)
         setEditViewCounter(0)
         setAddEditViewShowInWindow(true)
       }
-      else if(response.data && response.data.init_action.action.indexOf("edit_default") != -1) {
-        setAddEditActionName(response.data.init_action.action)
-        setAddEditActionId(response.data.init_action.id)
+      else if(response && response.init_action.action.indexOf("edit_default") != -1) {
+        setAddEditActionName(response.init_action.action)
+        setAddEditActionId(response.init_action.id)
         setAddEditActionOpen(!addEditActionOpen)
         setAddEditViewShowInWindow(true)
       }
-      else if(response.data && response.data.init_action.action.indexOf("add_default") != -1) {
-        setAddEditActionName(response.data.init_action.action)
-        setAddEditActionId(response.data.init_action.id)
+      else if(response && response.init_action.action.indexOf("add_default") != -1) {
+        setAddEditActionName(response.init_action.action)
+        setAddEditActionId(response.init_action.id)
         setAddEditActionOpen(!addEditActionOpen)
         setAddEditViewShowInWindow(true)
       }
   
-      if(response.data && response.data.init_default && response.data.init_default.MobileEndData && response.data.init_default.MobileEndData.length > 0) {
+      if(response && response.init_default && response.init_default.MobileEndData && response.init_default.MobileEndData.length > 0) {
 
-        const MobileEndDataNew = response.data.init_default.MobileEndData.map((Item: any)=>{
+        const MobileEndDataNew = response.init_default.MobileEndData.map((Item: any)=>{
 
           return {
             ...Item,
-            CSRF_TOKEN: response.data.init_default.CSRF_TOKEN
+            CSRF_TOKEN: response.init_default.CSRF_TOKEN
           }
         })
 
@@ -242,18 +282,18 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
         setCSRF_TOKEN_MAP((prevData: any) => {
           const Id2CSRF_TOKEN: any = {}
-          response.data.init_default.data.map((Item: any) => {
-            Id2CSRF_TOKEN[Item.id] = response.data.init_default.CSRF_TOKEN
+          response.init_default.data.map((Item: any) => {
+            Id2CSRF_TOKEN[Item.id] = response.init_default.CSRF_TOKEN
           })
 
           return {...prevData, ...Id2CSRF_TOKEN}
         });
 
         //MobileEnd Forbidden Edit Row List 
-        setForbiddenEditRow((prevData: any) => [...prevData, ...response.data.init_default.ForbiddenEditRow]);
-        setForbiddenDeleteRow((prevData: any) => [...prevData, ...response.data.init_default.ForbiddenDeleteRow]);
+        setForbiddenEditRow((prevData: any) => [...prevData, ...response.init_default.ForbiddenEditRow]);
+        setForbiddenDeleteRow((prevData: any) => [...prevData, ...response.init_default.ForbiddenDeleteRow]);
       }
-      if(response.data && response.data.init_default && response.data.init_default.data.length == 0) {
+      if(response && response.init_default && response.init_default.data.length == 0) {
         setIsLoadingTip(true);
         setIsLoadingTipDisabled(true);
         if(allRows && allRows.length == 0) {
@@ -264,15 +304,15 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         }
       }
 
-      //setIsLoadingTipText(response.data.export_default.ExportLoading)
+      //setIsLoadingTipText(response.export_default.ExportLoading)
       
-      //setFilter(response.data.init_default.filter)
+      //setFilter(response.init_default.filter)
       setIsLoading(false);
       setIsLoadingTip(false);
-      setPageSize(response.data.init_default.pageNumber)
-      setPageCount(response.data.init_default.pageCount)
+      setPageSize(response.init_default.pageNumber)
+      setPageCount(response.init_default.pageCount)
       
-      return response.data
+      return response
     }
     else {
       
@@ -314,40 +354,51 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     setMobileEditPageIdEnable(false);
   }, [dispatch, searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, pageCount, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId])
 
+  const [isGetNextPageData, setIsGetNextPageData] = useState<boolean>(false)
+
   useEffect(() => {
-    window.addEventListener('resize', () => {
-      setInnerHeight(window.innerHeight)
-    })
+    const handleResize = () => {
+        setInnerHeight(window.innerHeight);
+    };
 
-    if(isMobileData == true)   {
-      const handleScroll = () => {
-        const scrollY = window.scrollY;
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.body.scrollHeight;
-        if (scrollY + windowHeight >= documentHeight && isLoadingTipDisabled == false) {
-          setPaginationModel((paginationModel) => {
-            if(paginationModel.page >= pageCount) {
-              const newPage = paginationModel.page + 1;
-              setPage(newPage);
-              setIsLoadingTip(true);
-              setIsLoadingTipText("正在加载中");
+    window.addEventListener('resize', handleResize);
 
-              return { ...paginationModel, page: newPage };
+    if (isMobileData === true) {
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.body.scrollHeight;
+            
+            if (scrollY + windowHeight >= documentHeight && isLoadingTipDisabled === false && paginationModel.page < (pageCount-1)) {
+                setPaginationModel((paginationModel) => {
+                    if (paginationModel.page < pageCount) {
+                        const newPage = paginationModel.page + 1;
+                        setPage(newPage);
+                        setIsLoadingTip(true);
+                        setIsLoadingTipText("正在加载中");
+                        setIsGetNextPageData(true)
+
+                        return { ...paginationModel, page: newPage };
+                    } else {
+                        return paginationModel;
+                    }
+                });
             }
-            else {
-              return paginationModel;
-            }
-          });
-        }
-      };
-      window.addEventListener('scroll', handleScroll);
+        };
 
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('scroll', handleScroll);
+        };
+    } else {
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }
+  }, [isMobileData, isLoadingTipDisabled, pageCount]);
 
-  }, [])
   
   const [innerHeight, setInnerHeight] = useState<number | string>(window.innerHeight)
   console.log("innerHeight",innerHeight)
@@ -429,9 +480,13 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         ws['!rows'] = [];
         const BodyData = jsonData['data'];
         ws && ws['!rows'] && BodyData.map(() => {
-          ws['!rows']?.push({ hpx: 20 });
+          if (ws['!rows']) {
+            ws['!rows'].push({ hpx: 20 });
+          }
         });
-        ws['!rows']?.push({ hpx: 20 });
+        if (ws['!rows']) {
+          ws['!rows'].push({ hpx: 20 });
+        }
         const header = Object.keys(jsonData['data'][0]);
         XLSX.utils.sheet_add_aoa(ws, [header], { origin: 'A1' });
         const wb = XLSX.utils.book_new();
@@ -444,9 +499,13 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         ws['!rows'] = [];
         const BodyData = jsonData['data'];
         ws && ws['!rows'] && BodyData.map(() => {
-          ws['!rows']?.push({ hpx: 20 });
+          if (ws['!rows']) {
+            ws['!rows'].push({ hpx: 20 });
+          }
         });
-        ws['!rows']?.push({ hpx: 20 });
+        if (ws['!rows']) {
+          ws['!rows'].push({ hpx: 20 });
+        }
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
         XLSX.writeFile(wb, store.export_default.titletext+'.xlsx');
@@ -826,10 +885,10 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
         return (
           <Fragment>
-          {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any)=>{
+          {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
             
             return (
-              <ListItem key={FileUrl['name']} style={{padding: "3px"}}>
+              <ListItem key={TempIndex} style={{padding: "3px"}}>
               <div className='file-details' style={{display: "flex"}}>
                 <div style={{padding: "3px 3px 0 0"}}>
                   {FileUrl.type.startsWith('image') ? 
@@ -874,10 +933,10 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
         return (
           <Fragment>
-          {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any)=>{
+          {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
             
             return (
-              <ListItem key={FileUrl['name']} style={{padding: "3px"}}>
+              <ListItem key={TempIndex} style={{padding: "3px"}}>
               <div className='file-details' style={{display: "flex"}}>
                 <div style={{padding: "0"}}>
                   <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
@@ -1105,6 +1164,21 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
               }
               </Fragment>              
             }
+            {store.init_default.MobileSummary && store.init_default.MobileSummary.length > 0 && (
+              <Table sx={{mb: 3}}>
+                <TableHead>
+                    {store.init_default.MobileSummary.map((Item: any, Index: number) => {
+                      
+                      return (
+                        <TableRow key={Index}>
+                          <MUITableCell ><Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>{Item.name}</Typography></MUITableCell>
+                          <MUITableCell ><Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>{Item.value}</Typography></MUITableCell>
+                        </TableRow>
+                      )
+                    })}
+                </TableHead>
+              </Table>              
+            )}
             {store && store.init_default && store.init_default.rowdelete && store.init_default.rowdelete.map((Item: any, index: number) => {
               
               return (
@@ -1137,6 +1211,10 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
             <Grid container spacing={2}>
               {store && store.init_default && store.init_default.MobileEndShowType && store.init_default.MobileEndShowType == "ListTemplate1" && allRows && allRows.map((item: any, index: number) => {
                 
+                const colorLeftValue = (item['MobileEndSecondLineLeftColor'] !== null && item['MobileEndSecondLineLeftColor'] !== undefined) ? item['MobileEndSecondLineLeftColor'] : 'secondary';
+
+                const colorRightValue = (item['MobileEndSecondLineRightColor'] !== null && item['MobileEndSecondLineRightColor'] !== undefined) ? item['MobileEndSecondLineRightColor'] : 'secondary';
+
                 return (
                   <Grid item xs={12} sx={{ py: 0 }} key={index}>
                     <Card>
@@ -1153,14 +1231,15 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap',
-                                maxWidth: windowWidthData*0.65
+                                width: windowWidthData*0.60,
+                                maxWidth: windowWidthData*0.60
                               }}
                               >
                                 {item['MobileEndFirstLine']}
                               </Typography>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
                                 <Typography variant='body2' sx={{ 
-                                  color: `${item['MobileEndSecondLineLeftColor'] ?? 'secondary'}.dark`, 
+                                  color: `${colorLeftValue}.dark`, 
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
@@ -1168,7 +1247,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                                   {item['MobileEndSecondLineLeft']}
                                 </Typography>
                                 <Typography variant='body2' sx={{ 
-                                  color: `${item['MobileEndSecondLineRightColor'] ?? 'secondary'}.dark`, 
+                                  color: `${colorRightValue}.dark`,
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
@@ -1179,23 +1258,32 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                               </Box>
                             </Box>
                           </Box>
-                          {(!forbiddenEditRow.includes(item.Id)) && item.EditUrl ?                          
-                          <IconButton size='small' onClick={() => 
-                          {
-                            setMobileEditPageId(item.PageId)
-                            togglePageActionDrawer('edit_default', item.Id, CSRF_TOKEN_MAP[item['Id']])
-                          }
-                          }>
-                            <Icon icon={item.EditIcon} fontSize={20} />
-                          </IconButton>
-                          :
-                          null
-                          }
-                          {(!forbiddenDeleteRow.includes(item.Id)) ?                          
-                          null
-                          :
-                          null
-                          }
+                          <Box sx={{ display: 'flex', alignItems: 'center'}}>
+                            {(!forbiddenEditRow.includes(item.Id)) && item.EditUrl ?                          
+                            <IconButton size='small' onClick={() => 
+                            {
+                              setMobileEditPageId(item.PageId)
+                              togglePageActionDrawer('edit_default', item.Id, CSRF_TOKEN_MAP[item['Id']])
+                            }
+                            }>
+                              <Icon icon={item.EditIcon} fontSize={20} />
+                            </IconButton>
+                            :
+                            null
+                            }
+                            {(!forbiddenDeleteRow.includes(item.Id)) ?                          
+                            <IconButton size='small' onClick={() => 
+                            {
+                              //setMobileEditPageId(item.PageId)
+                              togglePageActionDrawer('delete_array', item.Id, CSRF_TOKEN_MAP[item['Id']])
+                            }
+                            }>
+                              <Icon icon='mdi:delete-outline' fontSize={20} />
+                            </IconButton>
+                            :
+                            null
+                            }
+                          </Box>
                         </Box>
                       </Grid>
                     </Grid>
@@ -1215,14 +1303,28 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                             FieldCountArray.map((FieldCount: number, FieldCountIndex: number)=>{
                               const FieldName = `MobileEndField${FieldCount}Name`
                               const FieldValue = `MobileEndField${FieldCount}Value`
+                              const FieldColspan = `MobileEndField${FieldCount}Colspan`
                               
                               return (
                                     <Fragment key={FieldCountIndex}>
-                                      {
-                                      item[FieldName] ? 
+                                      {item[FieldColspan] == '1' && (
+                                      <Fragment>
+                                        <Grid item xs={12}>
+                                          <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center' }}>
+                                          {item[FieldName]}:
+                                          </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                          <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'left' }}>
+                                            {item[FieldValue]}
+                                          </Typography>
+                                        </Grid>
+                                      </Fragment>
+                                      )}
+                                      {item[FieldColspan] == '2' && (
                                       <Fragment>
                                         <Grid item xs={4}>
-                                          <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
+                                          <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center' }}>
                                           {item[FieldName]}:
                                           </Typography>
                                         </Grid>
@@ -1232,13 +1334,34 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                                           </Typography>
                                         </Grid>
                                       </Fragment>
-                                      :
-                                      null
-                                      }                          
+                                      )}
                                     </Fragment>
                               )
                             }) 
                           }
+                          {item['MobileEndFieldGlobalButtonText'] && item['MobileEndFieldGlobalButtonAction'] && storedToken && (
+                            <Fragment>
+                              <Grid item xs={12} container justifyContent="center" alignItems="center">
+                                <Button sx={{ mb: 2 }} disabled={item['MobileEndFieldGlobalButtonDisabled'] == "Disabled" ? true : false || isButtonDisabled} variant='outlined' size='small' onClick={() => {
+                                    setIsButtonDisabled(true)
+                                    axios.post(authConfig.backEndApiHost + backEndApi + item['MobileEndFieldGlobalButtonAction'], {Id: item['MobileEndFieldId']}, { headers: { Authorization: storedToken, 'Content-Type': 'application/json'} })
+                                    .then(async (res: any) => {
+                                      if(res.data.status == "OK")   {
+                                        toast.success(res.data.msg)
+                                        setForceUpdate(Math.random())
+                                        setIsButtonDisabled(false)
+                                      }
+                                      if(res.data.status == "ERROR")   {
+                                        toast.error(res.data.msg)
+                                        setForceUpdate(Math.random())
+                                        setIsButtonDisabled(false)
+                                      }
+                                      console.log("responseresponse", res)
+                                    })
+                                 }}>{item['MobileEndFieldGlobalButtonText']}</Button>
+                              </Grid>
+                            </Fragment>
+                          )}
                         </Grid>
 
                       </CardContent>      
@@ -1246,6 +1369,26 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                   </Grid>
                 )
               })}
+              {isGetNextPageData == false && pageCount > 1 && (
+                <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
+                  <Pagination count={pageCount} variant='outlined' color='primary' page={(paginationModel.page+1)} onChange={
+                    (event: React.ChangeEvent<unknown>, page: number) => {
+                      setPaginationModel((paginationModel) => {
+                        if (page-1 <= pageCount) {
+                            setPage(page-1);
+                            setIsLoadingTip(true);
+                            setIsLoadingTipText("正在加载中");
+    
+                            return { ...paginationModel, page: page-1 };
+                        } else {
+
+                            return paginationModel;
+                        }
+                      });
+                    }
+                  } siblingCount={1} boundaryCount={1} />
+                </Grid>
+              )}
               {isLoadingTip && isLoadingTipDisabled == false ?
                 <Grid item xs={12} sm={12} container justifyContent="space-around">
                     <Box sx={{ mt: 2, mb: 2, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>

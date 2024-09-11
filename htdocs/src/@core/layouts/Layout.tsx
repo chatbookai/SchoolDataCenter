@@ -6,7 +6,6 @@ import { LayoutProps } from 'src/@core/layouts/types'
 
 // ** Layout Components
 import VerticalLayout from './VerticalLayout'
-import HorizontalLayout from './HorizontalLayout'
 
 const Layout = (props: LayoutProps) => {
   // ** Props
@@ -34,10 +33,6 @@ const Layout = (props: LayoutProps) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hidden])
-
-  if (settings.layout === 'horizontal') {
-    return <HorizontalLayout {...props}>{children}</HorizontalLayout>
-  }
 
   return <VerticalLayout {...props}>{children}</VerticalLayout>
 }

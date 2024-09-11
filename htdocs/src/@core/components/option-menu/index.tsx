@@ -95,7 +95,7 @@ const OptionsMenu = (props: OptionsMenuType) => {
                 key={index}
                 {...option.menuItemProps}
                 {...(option.href && { sx: { p: 0 } })}
-                onClick={e => {
+                onClick={(e: any) => {
                   handleClose()
                   option.menuItemProps && option.menuItemProps.onClick ? option.menuItemProps.onClick(e) : null
                 }}

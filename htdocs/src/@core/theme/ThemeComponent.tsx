@@ -44,11 +44,18 @@ const ThemeComponent = (props: Props) => {
   let theme = createTheme(coreThemeConfig)
 
   // ** Deep Merge Component overrides of core and user
-  const mergeComponentOverrides = (theme: Theme, settings: Settings) =>
-    deepmerge({ ...overrides(theme, settings) }, UserThemeOptions()?.components)
+  const mergeComponentOverrides = (theme: Theme, settings: Settings) => {
+    const userThemeOptions = UserThemeOptions();
+
+    return deepmerge({ ...overrides(theme, settings) }, userThemeOptions ? userThemeOptions.components : {});
+  }
 
   // ** Deep Merge Typography of core and user
-  const mergeTypography = (theme: Theme) => deepmerge(typography(theme), UserThemeOptions()?.typography)
+  const mergeTypography = (theme: Theme) => {
+    const userThemeOptions = UserThemeOptions();
+    
+    return deepmerge(typography(theme), userThemeOptions ? userThemeOptions.typography : {});
+  }
 
   // ** Continue theme creation and pass merged component overrides to CreateTheme function
   theme = createTheme(theme, {

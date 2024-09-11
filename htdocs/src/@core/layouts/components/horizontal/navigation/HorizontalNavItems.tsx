@@ -16,7 +16,7 @@ const resolveComponent = (item: NavGroup | NavLink) => {
 }
 
 const HorizontalNavItems = (props: Props) => {
-  const RenderMenuItems = props.horizontalNavItems?.map((item: NavGroup | NavLink, index: number) => {
+  const RenderMenuItems = props.horizontalNavItems && props.horizontalNavItems.map((item: NavGroup | NavLink, index: number) => {
     const TagName: any = resolveComponent(item)
 
     return <TagName {...props} key={index} item={item} />

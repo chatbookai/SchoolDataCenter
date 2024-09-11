@@ -32,8 +32,8 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
     <Card
       sx={{
         backgroundColor: 'transparent !important',
-        boxShadow: theme => `${theme.shadows[0]} !important`,
-        border: theme => `1px solid ${theme.palette.divider}`
+        boxShadow: (theme: any) => `${theme.shadows[0]} !important`,
+        border: (theme: any) => `1px solid ${theme.palette.divider}`
       }}
     >
       <CardContent>

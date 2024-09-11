@@ -93,8 +93,8 @@ const VerticalLayout = (props: LayoutProps) => {
           {/* AppBar Component */}
           <AppBar
             toggleNavVisibility={toggleNavVisibility}
-            appBarContent={verticalLayoutProps.appBar?.content}
-            appBarProps={verticalLayoutProps.appBar?.componentProps}
+            appBarContent={verticalLayoutProps.appBar && verticalLayoutProps.appBar.content}
+            appBarProps={verticalLayoutProps.appBar && verticalLayoutProps.appBar.componentProps}
             {...props}
           />
 
@@ -117,7 +117,7 @@ const VerticalLayout = (props: LayoutProps) => {
           </ContentWrapper>
 
           {/* Footer Component */}
-          <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
+          <Footer footerStyles={footerProps && footerProps.sx} footerContent={footerProps && footerProps.content} {...props} />
         </MainContentWrapper>
       </VerticalLayoutWrapper>
 

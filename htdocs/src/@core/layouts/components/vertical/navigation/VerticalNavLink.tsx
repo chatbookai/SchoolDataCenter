@@ -130,7 +130,7 @@ const VerticalNavLink = ({
           className={isNavLinkActive() ? 'active' : ''}
           href={item.path === undefined ? '/' : `${item.path}`}
           {...(item.openInNewTab ? { target: '_blank' } : null)}
-          onClick={e => {
+          onClick={(e: any) => {
             if (item.path === undefined) {
               e.preventDefault()
               e.stopPropagation()

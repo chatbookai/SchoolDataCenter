@@ -121,7 +121,7 @@ const Drawer = (props: Props) => {
           borderRight: navigationBorderWidth === 0 ? 0 : `${navigationBorderWidth}px solid ${theme.palette.divider}`,
           ...userNavMenuPaperStyle
         },
-        ...navMenuProps?.PaperProps
+        ...(navMenuProps && navMenuProps.PaperProps)
       }}
       sx={{
         width: navCollapsed ? collapsedNavWidth : navWidth,

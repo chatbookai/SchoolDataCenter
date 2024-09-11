@@ -168,7 +168,7 @@ const NotificationDropdown = (props: Props) => {
           variant='dot'
           invisible={!notifications.length}
           sx={{
-            '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}` }
+            '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: (theme: any) => `0 0 0 2px ${theme.palette.background.paper}` }
           }}
         >
           <Icon icon='mdi:bell-outline' />
@@ -222,7 +222,7 @@ const NotificationDropdown = (props: Props) => {
             cursor: 'default',
             userSelect: 'auto',
             backgroundColor: 'transparent !important',
-            borderTop: theme => `1px solid ${theme.palette.divider}`
+            borderTop: (theme: any) => `1px solid ${theme.palette.divider}`
           }}
         >
           <Button fullWidth variant='contained' onClick={handleDropdownClose}>

@@ -23,7 +23,7 @@ const styleCache = () =>
     stylisPlugins: [stylisRTLPlugin]
   })
 
-const Direction = (props: DirectionProps) => {
+const DirectionModel = (props: DirectionProps) => {
   const { children, direction } = props
 
   useEffect(() => {
@@ -37,4 +37,4 @@ const Direction = (props: DirectionProps) => {
   return <>{children}</>
 }
 
-export default Direction
+export default DirectionModel

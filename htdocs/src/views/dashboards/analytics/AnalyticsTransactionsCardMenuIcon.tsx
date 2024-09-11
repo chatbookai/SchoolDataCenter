@@ -18,14 +18,6 @@ import { ThemeColor } from 'src/@core/layouts/types'
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
-import Link from "@mui/material/Link"
-import { styled } from '@mui/material/styles'
-
-const CustomLink = styled(Link)({
-    textDecoration: "none",
-    color: "inherit",
-})
-
 interface DataType2 {
   url: string
   title: string
@@ -68,19 +60,16 @@ const AnalyticsTransactionsCardMenuIcon = (props: DataType) => {
           {
             data.data.map((item: DataType2, index: number) => (
               <Grid item xs={12} sm={2} key={index}>
-                <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <CustomLink href={item.url}>
-                    <CustomAvatar
-                        variant='rounded'
-                        color={item.color}
-                        sx={{ mr: 3, boxShadow: 3, width: 44, height: 44, '& svg': { fontSize: '1.75rem' } }}
-                    >
-                    <Icon icon={item.icon} />
-                    </CustomAvatar>
-                  </CustomLink>
-                  
+                <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 3 }} onClick={() => router.push(item.url)}>
+                  <CustomAvatar
+                      variant='rounded'
+                      color={item.color}
+                      sx={{ mr: 3, boxShadow: 3, width: 44, height: 44, '& svg': { fontSize: '1.75rem' } }}
+                  >
+                  <Icon icon={item.icon} />
+                  </CustomAvatar>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <CustomLink href={item.url}><Typography>{item.title}</Typography></CustomLink>
+                    <Typography>{item.title}</Typography>
                   </Box>
                 </Box>
               </Grid>

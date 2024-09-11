@@ -4,14 +4,14 @@ import Box, { BoxProps } from '@mui/material/Box'
 
 const DropzoneWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   '&.dropzone, & .dropzone': {
-    minHeight: 50,
+    minHeight: 30,
     display: 'flex',
     flexWrap: 'wrap',
     cursor: 'pointer',
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing(4),
+    padding: '0.35rem',
     borderRadius: theme.shape.borderRadius,
     border: `2px dashed ${theme.palette.mode === 'light' ? 'rgba(93, 89, 98, 0.22)' : 'rgba(247, 244, 254, 0.14)'}`,
     [theme.breakpoints.down('xs')]: {
@@ -22,12 +22,12 @@ const DropzoneWrapper = styled(Box)<BoxProps>(({ theme }) => ({
     },
     '& + .MuiList-root': {
       padding: 0,
-      marginTop: theme.spacing(6.25),
+      marginTop: theme.spacing(2),
       '& .MuiListItem-root': {
         display: 'flex',
         justifyContent: 'space-between',
         borderRadius: theme.shape.borderRadius,
-        padding: theme.spacing(2.5, 2.4, 2.5, 6),
+        padding: theme.spacing(1),
         border: `1px solid ${theme.palette.mode === 'light' ? 'rgba(93, 89, 98, 0.14)' : 'rgba(247, 244, 254, 0.14)'}`,
         '& .file-details': {
           display: 'flex',
@@ -35,7 +35,7 @@ const DropzoneWrapper = styled(Box)<BoxProps>(({ theme }) => ({
         },
         '& .file-preview': {
           display: 'flex',
-          marginRight: theme.spacing(3.75),
+          marginRight: theme.spacing(0),
           '& svg': {
             fontSize: '2rem'
           }
@@ -51,15 +51,15 @@ const DropzoneWrapper = styled(Box)<BoxProps>(({ theme }) => ({
           fontWeight: 600
         },
         '& + .MuiListItem-root': {
-          marginTop: theme.spacing(3.5)
+          marginTop: theme.spacing(2)
         }
       },
       '& + .buttons': {
         display: 'flex',
         justifyContent: 'flex-end',
-        marginTop: theme.spacing(6.25),
+        marginTop: theme.spacing(2),
         '& > :first-of-type': {
-          marginRight: theme.spacing(3.5)
+          marginRight: theme.spacing(2)
         }
       }
     },

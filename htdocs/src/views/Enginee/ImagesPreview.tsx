@@ -10,9 +10,9 @@ import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
 
 //PDF
-import { pdfjs, Document, Page } from 'react-pdf';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
+//import { pdfjs, Document, Page } from 'react-pdf';
+//import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+//import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 //EXCEL
 import {OutTable, ExcelRenderer} from 'react-excel-renderer';
@@ -33,7 +33,7 @@ const FileViewer: React.ComponentType<FileViewerProps> = dynamic(
 
 
 // Set up pdf.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+//pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -132,10 +132,10 @@ const ImagesPreview = (props: ImagesPreviewType) => {
     toggleImagesPreviewDrawer()
   }
 
-  const [numPages, setNumPages] = useState<number>(0)    
-  function onDocumentLoadSuccess({ numPages }: { numPages: number; } ) {
-      setNumPages(numPages);
-  }
+  //const [numPages, setNumPages] = useState<number>(0)    
+  //function onDocumentLoadSuccess({ numPages }: { numPages: number; } ) {
+  //    setNumPages(numPages);
+  //}
 
   // ** States
   const [loaded, setLoaded] = useState<boolean>(false)
@@ -185,13 +185,6 @@ const ImagesPreview = (props: ImagesPreviewType) => {
                       
                       return (
                           <Fragment key={UrlIndex}>
-                              <Document file={Url} onLoadSuccess={onDocumentLoadSuccess} >
-                                  {Array.from(new Array(numPages), (element, index) => {
-                                      console.log("onDocumentLoadSuccess: ", element)
-                                      
-                                      return (<Page key={`page_${index + 1}`} pageNumber={index + 1} width={820}/>)
-                                  })}
-                              </Document>
                           </Fragment>
                       );
                     case 'Word':
@@ -221,14 +214,14 @@ const ImagesPreview = (props: ImagesPreviewType) => {
                       className={clsx('arrow arrow-left', {
                           'arrow-disabled': currentSlide === 0
                       })}
-                      onClick={(e: any) => e.stopPropagation() || instanceRef.current?.prev()}
+                      onClick={(e: any) => { e.stopPropagation(); instanceRef.current && instanceRef.current.prev(); }}
                       />
                       <Icon
                       icon='mdi:chevron-right'
                       className={clsx('arrow arrow-right', {
                           'arrow-disabled': currentSlide === instanceRef.current.track.details.slides.length - 1
                       })}
-                      onClick={(e: any) => e.stopPropagation() || instanceRef.current?.next()}
+                      onClick={(e: any) => { e.stopPropagation(); instanceRef.current && instanceRef.current.next(); }}
                       />
                   </Fragment>
                 )}
@@ -246,8 +239,11 @@ const ImagesPreview = (props: ImagesPreviewType) => {
                           active: currentSlide === idx
                           })}
                           onClick={() => {
-                          instanceRef.current?.moveToIdx(idx)
+                            if (instanceRef.current) {
+                              instanceRef.current.moveToIdx(idx);
+                            }
                           }}
+                          
                       ></Badge>
                     )
                 })}

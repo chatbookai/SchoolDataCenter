@@ -89,7 +89,7 @@ const DialogAddAddress = () => {
                   borderRadius: 1,
                   cursor: 'pointer',
                   ...(addressType === 'home' ? { ...bgColors.primaryLight } : { backgroundColor: 'action.hover' }),
-                  border: theme =>
+                  border: (theme: any) =>
                     `1px solid ${addressType === 'home' ? theme.palette.primary.main : theme.palette.divider}`
                 }}
               >
@@ -113,7 +113,7 @@ const DialogAddAddress = () => {
                   borderRadius: 1,
                   cursor: 'pointer',
                   ...(addressType === 'office' ? { ...bgColors.primaryLight } : { backgroundColor: 'action.hover' }),
-                  border: theme =>
+                  border: (theme: any) =>
                     `1px solid ${addressType === 'office' ? theme.palette.primary.main : theme.palette.divider}`
                 }}
               >

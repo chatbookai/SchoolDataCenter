@@ -105,8 +105,8 @@ const Customizer = () => {
           className='customizer-header'
           sx={{
             position: 'relative',
-            p: theme => theme.spacing(3.5, 5),
-            borderBottom: theme => `1px solid ${theme.palette.divider}`
+            p: (theme: any) => theme.spacing(3.5, 5),
+            borderBottom: (theme: any) => `1px solid ${theme.palette.divider}`
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600, textTransform: 'uppercase' }}>

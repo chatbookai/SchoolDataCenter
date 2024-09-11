@@ -4,24 +4,60 @@ import { useEffect, useState } from 'react'
 // ** Axios Import
 import axios from 'axios'
 
+
 // ** Config
 import authConfig from 'src/configs/auth'
+import { useRouter } from 'next/router'
 
 // ** Type Import
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
+import { DecryptDataAES256GCM } from 'src/configs/functions'
 
 const ServerSideNavItems = () => {
   // ** State
   const [menuItems, setMenuItems] = useState<VerticalNavItemsType>([])
-  const backEndApi = "auth/menus.php"
+  const backEndApi = authConfig.indexMenuspath
+  const router = useRouter()
 
   useEffect(() => {
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-    axios.get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken } }).then(response => {
-      //axios.get('http://react.admin.test/auth/menus.php').then(response => {
-      //axios.get('/api/vertical-nav/data').then(response => {
-      const menuArray = response.data
-      setMenuItems(menuArray)
+    axios.get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken } }).then(res => {
+
+      
+      let dataJson: any = null
+      const data = res.data
+      if(data && data.isEncrypted == "1" && data.data)  {
+          const i = data.data.slice(0, 32);
+          const t = data.data.slice(-32);
+          const e = data.data.slice(32, -32);
+          const k = authConfig.k;
+          const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+          try{
+              dataJson = JSON.parse(DecryptDataAES256GCMData)
+          }
+          catch(Error: any) {
+              console.log("DecryptDataAES256GCMData view_default Error", Error)
+  
+              dataJson = data
+          }
+      }
+      else {
+
+          dataJson = data
+      }
+      
+      const menuArray = dataJson
+      if (menuArray && menuArray.status && menuArray.status == "ERROR" && router.pathname != '/login') {
+        localStorage.removeItem('userData')
+        localStorage.removeItem('refreshToken')
+        localStorage.removeItem(authConfig.storageTokenKeyName)
+        localStorage.removeItem('GO_SYSTEM')
+        console.log("menuArray ERROR", menuArray, router)
+        router.push('/login')
+      }
+      if(menuArray) {
+        setMenuItems(menuArray)
+      }
     })
   }, [])
 

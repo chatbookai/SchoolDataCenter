@@ -21,7 +21,7 @@ const themeOptions = (settings: Settings): ThemeOptions => {
   // ** Create New object before removing user component overrides and typography objects from userThemeOptions
   const userThemeConfig: any = Object.assign({}, UserThemeOptions())
 
-  const userFontFamily = userThemeConfig.typography?.fontFamily
+  const userFontFamily = userThemeConfig.typography ? userThemeConfig.typography.fontFamily : undefined;
 
   // ** Remove component overrides and typography objects from userThemeOptions
   delete userThemeConfig.components

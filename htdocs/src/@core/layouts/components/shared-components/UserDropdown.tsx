@@ -52,10 +52,28 @@ const UserDropdown = (props: Props) => {
   const router = useRouter()
   const auth = useAuth()
   const logout = auth.logout
+  const refresh = auth.refresh
   const user:any = auth.user
 
   // ** Vars
   const { direction } = settings
+
+  useEffect(() => {
+    const refreshUserToken = async () => {
+      try {
+        if (user) {
+          refresh(user)
+        }
+      } 
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+    const intervalId = setInterval(refreshUserToken, 30000);
+
+    return () => clearInterval(intervalId);
+  }, []); 
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -123,35 +141,79 @@ const UserDropdown = (props: Props) => {
           src={authConfig.backEndApiHost + user.avatar}
         />
       </Badge>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => handleDropdownClose()}
-        sx={{ '& .MuiMenu-paper': { width: 230, mt: 4 } }}
-        anchorOrigin={{ vertical: 'bottom', horizontal: direction === 'ltr' ? 'right' : 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
-      >
-        <Box sx={{ pt: 2, pb: 3, px: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Badge
-              overlap='circular'
-              badgeContent={<BadgeContentSpan />}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-            >
-              <Avatar alt={user.USER_NAME} src={authConfig.backEndApiHost + user.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
-            </Badge>
-            <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>{user.USER_NAME}</Typography>
-              <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-              {user.role}
-              </Typography>
+      {authConfig.themeName=="厦门技师"?
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => handleDropdownClose()}
+          sx={{ '& .MuiMenu-paper': { width: 230, mt: 4 } }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: direction === 'ltr' ? 'right' : 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
+        >
+          <Box sx={{ pt: 2, pb: 3, px: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Badge
+                overlap='circular'
+                badgeContent={<BadgeContentSpan />}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+              >
+                <Avatar alt={user.USER_NAME} src={authConfig.backEndApiHost + user.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
+              </Badge>
+              <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography sx={{ fontWeight: 600 }}>{user.USER_NAME}</Typography>
+                <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+                {user.role}
+                </Typography>
+              </Box>
             </Box>
           </Box>
-        </Box>
-        <Divider sx={{ mt: '0 !important' }} />
+
+          <Divider sx={{ mt: '0 !important' }} />
+          
+          <MenuItem
+            onClick={handleLogout}
+            sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
+          >
+            <Icon icon='mdi:logout-variant' />
+            退出
+          </MenuItem>
+
+        </Menu>
+        :
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => handleDropdownClose()}
+          sx={{ '& .MuiMenu-paper': { width: 230, mt: 4 } }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: direction === 'ltr' ? 'right' : 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
+        >
+          <Box sx={{ pt: 2, pb: 3, px: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Badge
+                overlap='circular'
+                badgeContent={<BadgeContentSpan />}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+              >
+                <Avatar alt={user.USER_NAME} src={authConfig.backEndApiHost + user.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
+              </Badge>
+              <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography sx={{ fontWeight: 600 }}>{user.USER_NAME}</Typography>
+                <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+                {user.role}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          <Divider sx={{ mt: '0 !important' }} />
+          
           <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/user/password')}>
             <Box sx={styles}>
               <Icon icon='mdi:security' />
@@ -172,16 +234,20 @@ const UserDropdown = (props: Props) => {
               登录日志
             </Box>
           </MenuItem>
+          
+          <Divider />
 
-        <Divider />
-        <MenuItem
-          onClick={handleLogout}
-          sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
-        >
-          <Icon icon='mdi:logout-variant' />
-          退出
-        </MenuItem>
-      </Menu>
+          <MenuItem
+            onClick={handleLogout}
+            sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
+          >
+            <Icon icon='mdi:logout-variant' />
+            退出
+          </MenuItem>
+          
+        </Menu>
+      }
+      
     </Fragment>
   )
 }
