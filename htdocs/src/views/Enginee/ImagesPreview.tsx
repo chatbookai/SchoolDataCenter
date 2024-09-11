@@ -17,21 +17,6 @@ import Fade, { FadeProps } from '@mui/material/Fade'
 //EXCEL
 import {OutTable, ExcelRenderer} from 'react-excel-renderer';
 
-import dynamic from 'next/dynamic';
-
-type FileViewerProps = {
-  fileType: string
-  filePath: string
-  className: string
-};
-
-const FileViewer: React.ComponentType<FileViewerProps> = dynamic(
-  () => import('react-file-viewer') as Promise<React.ComponentType<FileViewerProps>>,
-  { ssr: false }
-);
-
-
-
 // Set up pdf.js worker
 //pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -191,7 +176,6 @@ const ImagesPreview = (props: ImagesPreviewType) => {
 
                       return (
                         <div style={{ width: '100%', color:'black'}} key={UrlIndex}>
-                          <FileViewer fileType={'docx'} filePath={Url} className={styles.ExcelTable2007}/>
                         </div>
                       )
                     case 'Excel':
