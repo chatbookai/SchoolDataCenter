@@ -133,11 +133,11 @@
 	} else {
 		$installsys = fopen($installsysroot, 'w');
 		if ( $usbstick == "1" ) {
-		$wamppinfo = "DIR = $nonpartition\r\nxampp = $xamppversion\r\nserver = 0\r\nperl = 0\r\npython = 0\r\nutils = 0\r\njava = 0\r\nother = 0\r\nusbstick = $usbstick";
+			$wamppinfo = "DIR = $nonpartition\r\nxampp = $xamppversion\r\nserver = 0\r\nperl = 0\r\npython = 0\r\nutils = 0\r\njava = 0\r\nother = 0\r\nusbstick = $usbstick";
 		} else {
-    $wamppinfo = "DIR = $partwampp\r\nxampp = $xamppversion\r\nserver = 0\r\nperl = 0\r\npython = 0\r\nutils = 0\r\njava = 0\r\nother = 0\r\nusbstick = $usbstick";
-    }
-    fputs($installsys, $wamppinfo);
+			$wamppinfo = "DIR = $partwampp\r\nxampp = $xamppversion\r\nserver = 0\r\nperl = 0\r\npython = 0\r\nutils = 0\r\njava = 0\r\nother = 0\r\nusbstick = $usbstick";
+		}
+    	fputs($installsys, $wamppinfo);
 		fclose($installsys);
 		$xamppinstaller = "newinstall";
 	}
@@ -147,7 +147,7 @@
 	$hdl = opendir($path);
 	while ($res = readdir($hdl)) { //Searching all xampp sys files
 		$array[] = $res;
-	 }
+	}
 	closedir($hdl);
 	$werte = count($array);
 	for ($q = 2; $q < $werte; $q++) {
@@ -233,8 +233,8 @@
 					}
 				}
 			}
-	fclose($datei);
-//// Vogelgesang 28.12.2005 => Old Section for addon functality end here
+		fclose($datei);
+		//// Vogelgesang 28.12.2005 => Old Section for addon functality end here
 
 
 					if (($updatemake == "makenew") || ($updatemake=="doppelt")) {
