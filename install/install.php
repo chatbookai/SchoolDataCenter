@@ -106,12 +106,12 @@
 		while (!feof($datei)) {
 			$zeile = fgets($datei, 255);
 			if ( $zeile == "usbstick = 1" ) {
-        echo "  USB stick installation found! Using relative paths by default ($nonpartition).";
-          $dirpartwampp=$nonpartition;
-          $usbstick="1";
-          $partwampp=$nonpartition;
-        //exit;
-      }
+				echo "  USB stick installation found! Using relative paths by default ($nonpartition).";
+				$dirpartwampp=$nonpartition;
+				$usbstick="1";
+				$partwampp=$nonpartition;
+				//exit;
+			}
 			$sysroot[] = $zeile;
 			$i += 1;
 		}
