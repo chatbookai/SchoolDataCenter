@@ -42,4 +42,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MyXinLiJianKang-installer
-        path: "D:/a/SchoolDataCenter/SchoolDataCenter/MyXinLiJianKang-0.1.exe"
+        path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolDataCenter-0.1.exe"
