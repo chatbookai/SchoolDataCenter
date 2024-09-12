@@ -41,5 +41,5 @@ jobs:
     - name: Upload compiled EXE file
       uses: actions/upload-artifact@v4
       with:
-        name: MyXinLiJianKang-installer
+        name: MySchoolDataCenter-installer
         path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolDataCenter-0.1.exe"
