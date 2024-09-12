@@ -32,12 +32,6 @@ else if(hostname == 'localhost')   {
   indexMenuspath = "auth/menus.php"
 }
 
-APP_URL = "https://h5.xmjsxy.com/api/"
-themeNameTemp = "厦门技师"
-indexDashboardPath = "/dashboards/xmjs_wygl"
-indexMenuspath = "auth/menus_xmjs.php"
-
-
 export default {
   meEndpoint: APP_URL+'jwt.php?action=refresh',
   loginEndpoint: APP_URL+'jwt.php?action=login',
