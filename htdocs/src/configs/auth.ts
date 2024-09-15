@@ -7,26 +7,8 @@ let themeNameTemp = "单点科技"
 let indexDashboardPath = "/dashboards/analytics"
 let indexMenuspath = "auth/menus.php"
 
-if(hostname == 'h5.xmjsxy.com')   {
-  APP_URL = "https://h5.xmjsxy.com/api/"
-  themeNameTemp = "厦门技师"
-  indexDashboardPath = "/dashboards/xmjs_wygl"
-  indexMenuspath = "auth/menus_xmjs.php"
-}
-else if(hostname == 'gdgx.dandian.net')   {
-  APP_URL = "https://gdgx.dandian.net/api/"
-  themeNameTemp = "广东高新"
-  indexDashboardPath = "/dashboards/analytics"
-  indexMenuspath = "auth/menus.php"
-}
-else if(hostname == 'dc.gdgxjx.cn')   {
-  APP_URL = "http://dc.gdgxjx.cn:9999/api/"
-  themeNameTemp = "广东高新"
-  indexDashboardPath = "/dashboards/analytics"
-  indexMenuspath = "auth/menus.php"
-}
-else if(hostname == 'localhost')   {
-  APP_URL = "http://localhost/api/"
+if(hostname == 'localhost')   {
+  APP_URL = "http://localhost:8080/api/"
   themeNameTemp = "单点科技"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"

@@ -18,8 +18,3 @@
 系部: xibu / 密码: Abcd1234!
 班主任: banzhuren / 密码: Abcd1234!
 学生: 20230101 / 密码: Abcd1234!
-  
-
-================================================================
-
-当前运行环境从xampp-windows-x64-8.2.4-0-VS16-installer.exe(https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/)修改而来.

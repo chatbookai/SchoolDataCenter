@@ -67,8 +67,9 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:8080"
 
 [Run]
-Filename: "{app}\InitialSetup.bat"; Description: "{cm:LaunchProgram,InitialSetup}"; Flags: waituntilterminated postinstall skipifsilent
-Filename: "{app}\xampp-control.exe"; Description: "{cm:LaunchProgram,xampp-control}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: nowait postinstall skipifsilent checkedonce; Check: "1"
+Filename: "{app}\InitialSetup.bat"; Description: "{cm:LaunchProgram,InitialSetup}"; Flags: waituntilterminated postinstall skipifsilent checkedonce; Check: "1"
+Filename: "{app}\xampp-control.exe"; Description: "{cm:LaunchProgram,xampp-control}"; Flags: nowait postinstall skipifsilent checkedonce; Check: "1"
 
 [Code]
 procedure InitializeWizard();

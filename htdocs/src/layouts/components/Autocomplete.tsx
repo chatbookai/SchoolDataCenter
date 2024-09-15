@@ -24,7 +24,6 @@ import MuiAutocomplete, { AutocompleteRenderInputParams } from '@mui/material/Au
 import axios from 'axios'
 
 // ** Types Imports
-import { AppBarSearchType } from 'src/@fake-db/types'
 import { Settings } from 'src/@core/context/settingsContext'
 
 // ** Icon Imports
@@ -35,6 +34,14 @@ import themeConfig from 'src/configs/themeConfig'
 
 // ** Config
 import authConfig from 'src/configs/auth'
+
+type AppBarSearchType = {
+  id: number
+  url: string
+  icon: string
+  title: string
+  category: string
+}
 
 interface Props {
   hidden: boolean
