@@ -28,6 +28,7 @@
     "@popperjs/core": "2.11.6",
     "@reduxjs/toolkit": "1.8.6",
     "@types/xlsx": "^0.0.36",
+    "@fullcalendar/common": "5.11.3",
     "apexcharts-clevision": "3.28.5",
     "axios": "^1.7.7",
     "bs58": "^6.0.0",
