@@ -13,7 +13,6 @@
 4 APACHE和MYSQL正常启动以后,请在浏览器打开 http://localhost:80 就可以看到系统的界面了.
 
 5 测试账户
-浏览器里面打开: http://localhost:8080
 管理员: admin / 密码: Abcd1234!
 系部: xibu / 密码: Abcd1234!
 班主任: banzhuren / 密码: Abcd1234!
