@@ -14,6 +14,7 @@ apache/logs/error.log
 apache/logs/access.log
 apache/logs/error.log
 apache/logs/httpd.pid
+apache/logs/ssl_request.log
 
 xampp-control.log
 
