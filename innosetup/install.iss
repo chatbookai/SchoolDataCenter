@@ -64,10 +64,10 @@ Source: "{#MyAppSourceDir}\readme.txt"; DestDir: "{app}"; Flags: ignoreversion r
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:8080"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:80"
 
 [Run]
-Filename: "{app}\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: shellexec nowait postinstall skipifsilent
 Filename: "{app}\InitialSetup.bat"; Description: "{cm:LaunchProgram,InitialSetup}"; Flags: waituntilterminated postinstall skipifsilent
 Filename: "{app}\xampp-control.exe"; Description: "{cm:LaunchProgram,xampp-control}"; Flags: nowait postinstall skipifsilent
 

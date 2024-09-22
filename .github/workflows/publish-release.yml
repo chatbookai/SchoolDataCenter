@@ -1,0 +1,75 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build
+      run: |
+        echo "Building your project..."
+        echo "Hello, World!" > output.txt
+
+    - name: Get current time and format release name
+      id: set_release_name
+      run: |
+        FULL_RELEASE_NAME="单点高校心理健康管理系统 V0.2 - $(date +"%Y-%m-%d %H:%M:%S")"
+        echo "FULL_RELEASE_NAME=$FULL_RELEASE_NAME" >> $GITHUB_ENV  # 将最终的release name设置为环境变量
+
+    - name: Create or Update Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: V0.2
+        release_name: ${{ env.FULL_RELEASE_NAME }}
+        draft: true
+        prerelease: false
+        body: |
+          ## 单点高校心理健康管理系统简介
+
+          单点高校心理健康管理系统是为高校职校提供的一款涵盖心理测评，心理报告，心理AI咨询等领域的高校学生心理健康解决方案，基于GPL和商业许可双重授权发布。
+
+          * 技术架构: 前端采用React，NextJS，MUI; 后端采用PHP，MYSQL。
+          * 权限认证: 使用Jwt，支持AES-256-CBC和SM4-CBC(国密)等多种加密和认证方式，支持多终端认证系统。
+          * 基础框架：内置单点低代码开发平台，拥有超过15年以上行业管理软件开发经验。
+          * 主要功能: 心理测评，心理报告，心理AI咨询。
+          * 业务特点：支持老师和学生用户登录；内置学生，班主任，专业，系部等特殊角色，用于适用不同的应用场景。
+          * 数据加密: 采用AES-256-GCM加密技术对API返回的接口数据进行加密，在前端接收到密文以后再进行解密和显示，可以极大的提高系统的安全性。
+
+          ## 安装步骤:
+          1.  双击 MyXinLiJianKang.XXX.exe, 程序安装过程中你可以指定安装路径,但要求是英文路径,不能使用中文路径.
+          2.  程序安装完成以后,弹出一个命令对话框,此部分主要会把相关的路径替换为您解压的位置,执行完成以后,直接按任意键结束.
+          3.  系统会打开xampp-control.exe, 然后手工启动Apache和Mysql,如果有提示端口冲突,可以更换为其它的端口.
+          4.  APACHE和MYSQL正常启动以后,请在浏览器打开 http://localhost:8080 就可以看到系统的界面了.
+          5.  测试账户
+              管理员: admin / 密码: Abcd1234!
+              系部: xibu / 密码: Abcd1234!
+              班主任: banzhuren / 密码: Abcd1234!
+              学生: 20230101 / 密码: Abcd1234!    
+
+    - name: Set upload URL
+      run: |
+        echo "Upload URL is: ${{ steps.create_release.outputs.upload_url }}"
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: output.txt
+        asset_name: output.txt
+        asset_content_type: text/plain

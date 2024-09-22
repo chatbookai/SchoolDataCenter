@@ -8,7 +8,7 @@ let indexDashboardPath = "/dashboards/analytics"
 let indexMenuspath = "auth/menus.php"
 
 if(hostname == 'localhost')   {
-  APP_URL = "http://localhost:8080/api/"
+  APP_URL = "http://localhost:80/api/"
   themeNameTemp = "单点科技"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"
