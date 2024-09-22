@@ -10,7 +10,7 @@
 
 3 系统会打开xampp-control.exe, 然后手工启动Apache和Mysql,如果有提示端口冲突,可以更换为其它的端口.
 
-4 APACHE和MYSQL正常启动以后,请在浏览器打开 http://localhost:8080 就可以看到系统的界面了.
+4 APACHE和MYSQL正常启动以后,请在浏览器打开 http://localhost:80 就可以看到系统的界面了.
 
 5 测试账户
 浏览器里面打开: http://localhost:8080
