@@ -16,6 +16,8 @@ apache/logs/error.log
 apache/logs/httpd.pid
 apache/logs/ssl_request.log
 
+php/php_error.log
+
 xampp-control.log
 
 # git rm --cached mysql/data/ib_logfile0
