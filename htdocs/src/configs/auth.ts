@@ -7,7 +7,7 @@ let themeNameTemp = "单点职校数据中心"
 let indexDashboardPath = "/dashboards/analytics"
 let indexMenuspath = "auth/menus.php"
 
-if(hostname == 'localhost')   {
+if(hostname == 'localhost' || hostname == '127.0.0.1')   {
   APP_URL = "http://localhost:80/api/"
   themeNameTemp = "单点职校数据中心"
   indexDashboardPath = "/dashboards/analytics"

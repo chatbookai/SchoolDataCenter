@@ -12,8 +12,7 @@ $DB_DATABASE    = 'myedu';
 global $allowedOrigins;
 $allowedOrigins = [];
 $allowedOrigins[] = 'http://localhost:3000';
-$allowedOrigins[] = 'http://data.dandian.net:8026';
-$allowedOrigins[] = 'http://react.admin.chives';
+$allowedOrigins[] = 'http://127.0.0.1:3000';
 
 // Setting Default Language for user
 global $GLOBAL_LANGUAGE;

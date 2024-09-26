@@ -1,7 +1,7 @@
 import bs58 from 'bs58'
 
 // ** React Imports
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, Fragment } from 'react'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -21,6 +21,7 @@ import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormCo
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import Link from 'next/link'
 
 // ** Third Party Imports
 import * as yup from 'yup'
@@ -44,6 +45,12 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+
+const LinkStyled = styled(Link)(({ theme }) => ({
+  fontSize: '0.875rem',
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -92,23 +99,24 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 
 const schema = yup.object().shape({
   username: yup.string().min(3).required().label('用户名'),
-  password: yup.string().min(6).required().label('密码')
+  password: yup.string().min(6).required().label('密码'),
+  termsofUse: yup.boolean().required('请同意使用协议').test('is-true', '请同意使用协议', value => value === true)
 })
 
 const defaultValues = {
   password: '',
-  username: ''
+  username: '',
+  termsofUse: false
 }
 
 interface FormData {
   username: string
   password: string
+  termsofUse: boolean
 }
 
 const LoginPage = () => {
-  const [rememberMe, setRememberMe] = useState<boolean>(true)
   const [showPassword, setShowPassword] = useState<boolean>(false)
-
 
   // ** Hooks
   const auth = useAuth()
@@ -140,21 +148,6 @@ const LoginPage = () => {
       return encoded;
     }
 
-    /*
-    function base58Decode(encoded: string) {
-      var decodedBytes = bs58.decode(encoded);
-      let uint8array = new Uint8Array(decodedBytes);
-      let decoder = new TextDecoder('utf-8');
-      let string = decoder.decode(uint8array);
-
-      return string;
-    }
-    var data2 = 'Hello, World!';
-    var encoded = base58Encode(data2);
-    console.log('Encoded:', encoded);
-    var decoded = base58Decode(encoded);
-    console.log('Decoded:', decoded);
-    */
     auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}, () => {
       setError('username', {
         type: 'manual',
@@ -164,6 +157,8 @@ const LoginPage = () => {
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
+
+  console.log("errors", errors)
 
   return (
     <Box className='content-right'>
@@ -274,7 +269,6 @@ const LoginPage = () => {
             </Box>
             <Box sx={{ mb: 6 }}>
               <TypographyStyled variant='h5'>欢迎来到 {themeConfig.templateName}! 👋🏻</TypographyStyled>
-              <Typography variant='body2'>数字化校园</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth sx={{ mb: 4 }}>
@@ -333,13 +327,27 @@ const LoginPage = () => {
                   </FormHelperText>
                 )}
               </FormControl>
-              <Box
-                sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
-              >
-                <FormControlLabel
-                  label='记住状态'
-                  control={<Checkbox checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />}
-                />
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }} >
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <Controller
+                    name='termsofUse'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <FormControlLabel
+                        control={<Checkbox checked={value} onChange={onChange} />}
+                        label={
+                          <Fragment>
+                            <span>我同意 </span>
+                            <LinkStyled href='/TermsofUse' target="_blank" sx={{mx: 1}}>使用协议</LinkStyled>
+                            <LinkStyled href='/PrivacyPolicy' target="_blank" sx={{mx: 1}}>隐私政策</LinkStyled>
+                          </Fragment>
+                        }
+                      />
+                    )}
+                  />
+                  {errors.termsofUse && <FormHelperText sx={{ color: 'error.main' }}>{errors.termsofUse.message}</FormHelperText>}
+                </FormControl>
               </Box>
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
                 登录
