@@ -25,7 +25,7 @@ if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
     $promptText = "
         请为“".$subject."”生成一个详细的PPT大纲，涵盖内容请根据topic提供的信息生成一份与时俱进的完美的ppt大纲。
 
-        大纲应包含主要1个大的章节，每个章节下面要求有3-8个子章节，每个子章节进一步细分为3-6个小节。小节的数量应根据主题的复杂性灵活调整，最多不超过6个。
+        大纲应包含主要3个大的章节，每个章节下面要求有3-8个子章节，每个子章节进一步细分为3-4个小节。小节的数量应根据主题的复杂性灵活调整，最多不超过6个。
 
         如果“".$subject."”里面有要求子章节和小点的数量，请根据要求生成对应的子章节数量和小点数量。
 
@@ -35,12 +35,12 @@ if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
         示例：
 
         1.1 标题名称
-        - 1.1.1 简短描述要点1的内容。
-        - 1.1.2.简短描述要点2的内容。
-        - 1.1.3.简短描述要点3的内容。
-        - 1.1.4.简短描述要点4的内容。
-        - 1.1.5.简短描述要点5的内容。
-        - 1.1.6.简短描述要点6的内容。
+        1.1.1 简短描述要点1的内容。
+        1.1.2 简短描述要点2的内容。
+        1.1.3 简短描述要点3的内容。
+        1.1.4 简短描述要点4的内容。
+        1.1.5 简短描述要点5的内容。
+        1.1.6 简短描述要点6的内容。
 
         只需要精确到1.1.1就可以,不需要扩充到1.1.1.1这样的四级结构.
 
@@ -73,26 +73,26 @@ if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
     $CURLOPT_POSTFIELDS = json_encode($CURLOPT_POSTFIELDS, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
     curl_setopt_array($curl, array(
-    CURLOPT_URL => $API_URL . '/chat/completions',
-    CURLOPT_RETURNTRANSFER => false,
-    CURLOPT_WRITEFUNCTION => function($curl, $data) {
-        echo $data; 
-        ob_flush();
-        flush();
-        return strlen($data);
-    },
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'POST',
-    CURLOPT_POSTFIELDS => $CURLOPT_POSTFIELDS,
-    CURLOPT_HTTPHEADER => array(
-        'Content-Type: application/json',
-        'Accept: application/json',
-        'Authorization: Bearer ' . $API_KEY
-    ),
+        CURLOPT_URL => $API_URL . '/chat/completions',
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_WRITEFUNCTION => function($curl, $data) {
+            echo $data; 
+            ob_flush();
+            flush();
+            return strlen($data);
+        },
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $CURLOPT_POSTFIELDS,
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Authorization: Bearer ' . $API_KEY
+        ),
     ));
 
     curl_exec($curl);
