@@ -3,13 +3,13 @@ import os from 'os'
 const hostname = os.hostname()
 
 let APP_URL = '/api/'
-let themeNameTemp = "单点科技"
+let themeNameTemp = "单点职校数据中心"
 let indexDashboardPath = "/dashboards/analytics"
 let indexMenuspath = "auth/menus.php"
 
 if(hostname == 'localhost')   {
   APP_URL = "http://localhost:80/api/"
-  themeNameTemp = "单点科技"
+  themeNameTemp = "单点职校数据中心"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"
 }
