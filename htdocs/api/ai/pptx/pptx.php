@@ -7,13 +7,9 @@ require_once("../../vendor/autoload.php");
 
 
 // with your own install
-require_once 'src/PhpPresentation/Autoloader.php';
 \PhpOffice\PhpPresentation\Autoloader::register();
-require_once 'src/Common/Autoloader.php';
 \PhpOffice\Common\Autoloader::register();
 
-// with Composer
-require_once 'vendor/autoload.php';
 
 use PhpOffice\PhpPresentation\PhpPresentation;
 use PhpOffice\PhpPresentation\IOFactory;
@@ -29,7 +25,7 @@ $currentSlide = $objPHPPowerPoint->getActiveSlide();
 $shape = $currentSlide->createDrawingShape();
 $shape->setName('PHPPresentation logo')
       ->setDescription('PHPPresentation logo')
-      ->setPath('./resources/phppowerpoint_logo.gif')
+      ->setPath('./images/logo.jpg')
       ->setHeight(36)
       ->setOffsetX(10)
       ->setOffsetY(10);
@@ -50,8 +46,8 @@ $textRun->getFont()->setBold(true)
                    ->setColor( new Color( 'FFE06B20' ) );
 
 $oWriterPPTX = IOFactory::createWriter($objPHPPowerPoint, 'PowerPoint2007');
-$oWriterPPTX->save(__DIR__ . "/sample.pptx");
+$oWriterPPTX->save(__DIR__ . "/output/sample.pptx");
 $oWriterODP = IOFactory::createWriter($objPHPPowerPoint, 'ODPresentation');
-$oWriterODP->save(__DIR__ . "/sample.odp");
+$oWriterODP->save(__DIR__ . "/output/sample.odp");
 
 ?>
