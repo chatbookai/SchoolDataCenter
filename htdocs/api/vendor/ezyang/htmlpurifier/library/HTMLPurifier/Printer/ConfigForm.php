@@ -33,6 +33,11 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
     protected $compress = false;
 
     /**
+     * @var HTMLPurifier_Config
+     */
+    protected $genConfig;
+
+    /**
      * @param string $name Form element name for directives to be stuffed into
      * @param string $doc_url String documentation URL, will have fragment tagged on
      * @param bool $compress Integer max length before compressing a directive name, set to false to turn off
@@ -71,7 +76,7 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
      */
     public static function getCSS()
     {
-        return file_get_contents(HTMLPURIFIER_PREFIX . '/HTMLPurifier/Printer/ConfigFormCss.css');
+        return file_get_contents(HTMLPURIFIER_PREFIX . '/HTMLPurifier/Printer/ConfigForm.css');
     }
 
     /**
@@ -79,7 +84,7 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
      */
     public static function getJavaScript()
     {
-        return file_get_contents(HTMLPURIFIER_PREFIX . '/HTMLPurifier/Printer/ConfigFormJs.js');
+        return file_get_contents(HTMLPURIFIER_PREFIX . '/HTMLPurifier/Printer/ConfigForm.js');
     }
 
     /**

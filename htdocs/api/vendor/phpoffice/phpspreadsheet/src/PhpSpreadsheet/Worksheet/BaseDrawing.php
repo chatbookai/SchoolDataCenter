@@ -220,7 +220,7 @@ class BaseDrawing implements IComparable
     {
         if ($this->worksheet === null) {
             // Add drawing to \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet
-            if ($worksheet !== null) {
+            if ($worksheet !== null && !($this instanceof Drawing && $this->getPath() === '')) {
                 $this->worksheet = $worksheet;
                 $this->worksheet->getCell($this->coordinates);
                 $this->worksheet->getDrawingCollection()->append($this);
@@ -232,7 +232,7 @@ class BaseDrawing implements IComparable
 
                 while ($iterator->valid()) {
                     if ($iterator->current()->getHashCode() === $this->getHashCode()) {
-                        $this->worksheet->getDrawingCollection()->offsetUnset($iterator->key());
+                        $this->worksheet->getDrawingCollection()->offsetUnset(/** @scrutinizer ignore-type */ $iterator->key());
                         $this->worksheet = null;
 
                         break;
@@ -486,7 +486,7 @@ class BaseDrawing implements IComparable
         if ($this->imageWidth === 0 && $this->imageHeight === 0 && $this->type === IMAGETYPE_UNKNOWN) {
             $imageData = getimagesize($path);
 
-            if (is_array($imageData)) {
+            if (!empty($imageData)) {
                 $this->imageWidth = $imageData[0];
                 $this->imageHeight = $imageData[1];
                 $this->type = $imageData[2];

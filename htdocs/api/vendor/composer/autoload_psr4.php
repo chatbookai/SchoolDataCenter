@@ -7,14 +7,17 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'ZipStream\\' => array($vendorDir . '/maennchen/zipstream-php/src'),
-    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'StellaMaris\\Clock\\' => array($vendorDir . '/stella-maris/clock/src'),
     'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
-    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src', $vendorDir . '/psr/http-factory/src'),
+    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src'),
     'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
+    'Psr\\Clock\\' => array($vendorDir . '/psr/clock/src'),
     'PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
-    'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
+    'PhpOffice\\PhpPresentation\\' => array($vendorDir . '/phpoffice/phppresentation/src/PhpPresentation'),
+    'PhpOffice\\Common\\' => array($vendorDir . '/phpoffice/common/src/Common'),
     'Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
     'Lcobucci\\JWT\\' => array($vendorDir . '/lcobucci/jwt/src'),
+    'Lcobucci\\Clock\\' => array($vendorDir . '/lcobucci/clock/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Complex\\' => array($vendorDir . '/markbaker/complex/classes/src'),
 );

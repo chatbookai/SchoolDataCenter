@@ -7,7 +7,6 @@ namespace Composer\Autoload;
 class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
 {
     public static $files = array (
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
     );
 
@@ -18,23 +17,26 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         ),
         'S' => 
         array (
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'StellaMaris\\Clock\\' => 18,
         ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
+            'Psr\\Clock\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
+            'PhpOffice\\PhpPresentation\\' => 26,
+            'PhpOffice\\Common\\' => 17,
         ),
         'M' => 
         array (
-            'MyCLabs\\Enum\\' => 13,
             'Matrix\\' => 7,
         ),
         'L' => 
         array (
             'Lcobucci\\JWT\\' => 13,
+            'Lcobucci\\Clock\\' => 15,
         ),
         'F' => 
         array (
@@ -51,9 +53,9 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'StellaMaris\\Clock\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+            0 => __DIR__ . '/..' . '/stella-maris/clock/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -61,20 +63,28 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
+        'Psr\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/clock/src',
+        ),
         'PhpOffice\\PhpSpreadsheet\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
-        'MyCLabs\\Enum\\' => 
+        'PhpOffice\\PhpPresentation\\' => 
         array (
-            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+            0 => __DIR__ . '/..' . '/phpoffice/phppresentation/src/PhpPresentation',
+        ),
+        'PhpOffice\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
         ),
         'Matrix\\' => 
         array (
@@ -83,6 +93,10 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         'Lcobucci\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
+        ),
+        'Lcobucci\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lcobucci/clock/src',
         ),
         'Firebase\\JWT\\' => 
         array (
@@ -106,7 +120,7 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Stringable' => __DIR__ . '/..' . '/myclabs/php-enum/stubs/Stringable.php',
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
