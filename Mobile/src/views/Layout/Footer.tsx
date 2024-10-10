@@ -60,11 +60,11 @@ const Footer = (props: any) => {
           }}
           sx={{width: '100%'}}
         >
-          <BottomNavigationAction label={t("首页")} disabled={disabledFooter} icon={<Icon icon='material-symbols:account-balance-wallet-outline' />} />
-          <BottomNavigationAction label={t("课表")} disabled={disabledFooter} icon={<Icon icon='material-symbols:swap-horiz-rounded' />} />
+          <BottomNavigationAction label={t("首页")} disabled={disabledFooter} icon={<Icon icon='material-symbols:home-work-outline' />} />
+          <BottomNavigationAction label={t("课表")} disabled={disabledFooter} icon={<Icon icon='uil:schedule' />} />
           <BottomNavigationAction label={t("应用")} disabled={disabledFooter} icon={<Icon icon='icon-park-outline:all-application' />} />
-          <BottomNavigationAction label={t("消息")} disabled={disabledFooter} icon={<Icon icon='mdi:email-outline' />} />
-          <BottomNavigationAction label={t("联系人")} disabled={disabledFooter} icon={<Icon icon='material-symbols:settings-outline' />} />
+          <BottomNavigationAction label={t("消息")} disabled={disabledFooter} icon={<Icon icon='mdi:message-processing-outline' />} />
+          <BottomNavigationAction label={t("我的")} disabled={disabledFooter} icon={<Icon icon='mdi:account-box-outline' />} />
         </BottomNavigation>
       </Box>
   )
