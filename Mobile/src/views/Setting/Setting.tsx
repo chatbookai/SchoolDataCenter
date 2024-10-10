@@ -18,8 +18,8 @@ import { useSettings } from '../../@core/hooks/useSettings'
 
 import { styled } from '@mui/material/styles'
 import Header from '../Layout/Header'
-import TermsofUse from './TermsofUse'
-import PrivacyPolicy from './PrivacyPolicy'
+import TermsofUse from '../Setting/TermsofUse'
+import PrivacyPolicy from '../Setting/PrivacyPolicy'
 import Link from 'next/link'
 
 const ContentWrapper = styled('main')(({ theme }) => ({
@@ -119,47 +119,11 @@ const Setting = ({  }: any) => {
     setRightButtonIcon('')
   }
 
-  const handleClickLanguageButton = () => {
-    setCounter(counter + 1)
-    setPageModel('Language')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Language')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
   const handleClickThemeButton = () => {
     setCounter(counter + 1)
     setPageModel('Theme')
     setLeftIcon('mdi:arrow-left-thin')
     setTitle('Theme')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
-  const handleClickCurrencyButton = () => {
-    setCounter(counter + 1)
-    setPageModel('Currency')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Currency')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
-  const handleClickNetworkButton = () => {
-    setCounter(counter + 1)
-    setPageModel('Network')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Network')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
-  const handleClickCreateTokenButton = () => {
-    setCounter(counter + 1)
-    setPageModel('CreateToken')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Create Token')
     setRightButtonText('')
     setRightButtonIcon('')
   }
@@ -187,15 +151,6 @@ const Setting = ({  }: any) => {
     setTitle('Privacy Policy')
     setRightButtonText('')
     setRightButtonIcon('')
-  }
-
-  const handleClickCheckPinCodeButton = () => {
-    setPageModel('CheckPinCode')
-    setTitle('Check Pin Code')
-    setLeftIcon('')
-    setRightButtonText('')
-    setRightButtonIcon('')
-    setLeftIcon('')
   }
 
 

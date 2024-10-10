@@ -6,11 +6,9 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 const TermsofUse = () => {
   return (
     <div style={{margin: '20px'}}>
-      <div className="d-export-content">
-        <h1 id="Chatbook-open-platform-terms-of-service">
-          <span>{authConfig.AppName} 使用条款</span>
-        </h1>
-        <p><span>亲爱的用户，欢迎使用 {authConfig.AppName}！</span></p>
+      <div className="d-export-content" style={{ marginTop: '60px', marginBottom: '70px', fontSize: '0.9rem' }}>
+
+        <p><span>亲爱的用户，欢迎使用 <strong>{authConfig.AppName}</strong>！</span></p>
         
         <p>
           <span>

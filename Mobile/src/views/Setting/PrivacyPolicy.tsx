@@ -6,8 +6,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 const PrivacyPolicy = () => {
   return (
     <div style={{margin: '20px'}}>
-      <div className="d-export-content">
-        <h2 id="introduction"><span>介绍</span></h2>
+      <div className="d-export-content" style={{ marginTop: '60px', marginBottom: '70px', fontSize: '0.9rem' }}>
         <p>
           <span>我们，</span><strong>{authConfig.AppName}</strong><span>（“</span><strong>{authConfig.AppName}</strong><span>”、“</span><strong>我们</strong><span>”或“</span><strong>我们</strong><span>”）</span>
           <span>尊重您的隐私，并强烈致力于保护我们从您或关于您获得的任何信息。本隐私政策（“隐私政策”）适用于{authConfig.AppName}网站、软件及相关服务（“服务”）中处理的个人信息的隐私政策。如果您对我们使用您的个人信息有任何疑问，请联系我们。</span>
