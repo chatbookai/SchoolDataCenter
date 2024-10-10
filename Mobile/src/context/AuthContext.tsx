@@ -96,9 +96,11 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
+  const handleLogin = (params: any, errorCallback?: ErrCallbackType) => {
+    console.log("params", params)
+    const { Data, handleGoIndex, handleGoLogin } = params
     axios
-      .post(authConfig.loginEndpoint, params)
+      .post(authConfig.loginEndpoint, { Data })
       .then(async response => {
 
         let dataJson: any = null
@@ -131,12 +133,14 @@ const AuthProvider = ({ children }: Props) => {
           true
             ? window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
             : null
-          const returnUrl = router.query.returnUrl
           setUser({ ...dataJson.userData })
           true ? window.localStorage.setItem('userData', JSON.stringify(dataJson.userData)) : null
           true ? window.localStorage.setItem('GO_SYSTEM', JSON.stringify(dataJson.GO_SYSTEM)) : null
-          const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-          router.replace(redirectURL as string)
+          handleGoIndex()
+          
+          //const returnUrl = router.query.returnUrl
+          //const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+          //router.replace(redirectURL as string)
         }
         else {
           setUser(null)
@@ -196,7 +200,6 @@ const AuthProvider = ({ children }: Props) => {
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem('GO_SYSTEM')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    router.push('/login')
   }
 
   const handleRegister = (params: RegisterParams, errorCallback?: ErrCallbackType) => {

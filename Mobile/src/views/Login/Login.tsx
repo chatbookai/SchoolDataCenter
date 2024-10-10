@@ -86,7 +86,7 @@ interface FormData {
   termsofUse: boolean
 }
 
-const LoginPage = () => {
+const Login = ({ setCurrentTab }: any) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const auth = useAuth()
@@ -114,7 +114,7 @@ const LoginPage = () => {
       return encoded;
     }
 
-    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}, () => {
+    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true }))), handleGoIndex, handleGoLogin}, () => {
       setError('username', {
         type: 'manual',
         message: '用户名或密码错误'
@@ -147,7 +147,11 @@ const LoginPage = () => {
     setRightButtonIcon('')
   }
 
-  const handleGoHome = () => {
+  const handleGoIndex = () => {
+    setCurrentTab('Index')
+  }
+
+  const handleGoLogin = () => {
     setPageModel('Login')
     setLeftIcon('')
     setTitle('Setting')
@@ -160,7 +164,7 @@ const LoginPage = () => {
     switch(pageModel) {
       case 'PrivacyPolicy':
       case 'TermsOfUse':
-        handleGoHome()
+        handleGoLogin()
         break
     }
   }
@@ -325,8 +329,8 @@ const LoginPage = () => {
   )
 }
 
-LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+Login.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-LoginPage.guestGuard = true
+Login.guestGuard = true
 
-export default LoginPage
+export default Login
