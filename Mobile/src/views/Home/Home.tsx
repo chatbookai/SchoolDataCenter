@@ -13,7 +13,7 @@ const HomeModel = () => {
   return (
     <Fragment>
       {currentTab == "Setting" && (<Setting encryptWalletDataKey={encryptWalletDataKey} setEncryptWalletDataKey={setEncryptWalletDataKey} />)}
-      <Footer Hidden={false} setCurrentTab={setCurrentTab} currentTab={currentTab} disabledFooter={disabledFooter}/>
+      <Footer Hidden={false} setCurrentTab={setCurrentTab} currentTab={currentTab} disabledFooter={disabledFooter} setDisabledFooter={setDisabledFooter} />
     </Fragment>
   )
 }

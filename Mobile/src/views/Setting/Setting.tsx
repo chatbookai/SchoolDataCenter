@@ -1,25 +1,18 @@
 // ** React Imports
 import { useState, useEffect, Fragment } from 'react'
 
-import { Clipboard } from '@capacitor/clipboard';
-
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import CustomAvatar from '../../@core/components/mui/avatar'
 import IconButton from '@mui/material/IconButton'
-import TextField from '@mui/material/TextField'
-import { getInitials } from '../../@core/utils/get-initials'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 
 // ** MUI Imports
-import Button from '@mui/material/Button'
 import Icon from '../../@core/components/icon'
-import toast from 'react-hot-toast'
 import authConfig from '../../configs/auth'
 import { useSettings } from '../../@core/hooks/useSettings'
 
@@ -43,16 +36,14 @@ const ContentWrapper = styled('main')(({ theme }) => ({
   }
 }))
 
-const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
+const Setting = ({  }: any) => {
 
   // ** Hook
   const { t, i18n } = useTranslation()
   const { settings, saveSettings } = useSettings()
 
   const contentHeightFixed = {}
-
-  const [currentAddress, setCurrentAddress] = useState<string>("")
-  const [chooseWallet, setChooseWallet] = useState<any>(null)
+  const [counter, setCounter] = useState<number>(0)
 
   const [pageModel, setPageModel] = useState<string>('MainSetting')
   const [HeaderHidden, setHeaderHidden] = useState<boolean>(false)
@@ -61,25 +52,11 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
   const [RightButtonText, setRightButtonText] = useState<string>('')
   const [RightButtonIcon, setRightButtonIcon] = useState<string>('')
 
-  const [contactName, setContactName] = useState<string>('')
-  const [contactAddress, setContactAddress] = useState<string>('')
-  const [contactsAll, setContactsAll] = useState<any>({})
-  const [counter, setCounter] = useState<number>(0)
-  const [searchContactkeyWord, setSearchContactkeyWord] = useState<string>('')
-  const [languageValue, setLanguageValue] = useState<string>('Zh')
+  const [languageValue, setLanguageValue] = useState<string>('zh-CN')
   const [themeValue, setThemeValue] = useState<string>(settings.mode)
-  const [currencyValue, setCurrencyValue] = useState<string>('us')
-  const [networkValue, setNetworkValue] = useState<string>('mainnet')
 
-  const [tokenName, setTokenName] = useState<string>('TokenName')
-  const [tokenTicker, setTokenTicker] = useState<string>('AOTN')
-  const [tokenTotalBalance, setTokenTotalBalance] = useState<string>('1000000')
-  const [tokenLogo, setTokenLogo] = useState<string>('_A-OtzzfCZGUkVdf_Ajs6WLYIJySKI6SBmTzGKXsFG4')
-  const [tokenDenomination, setTokenDenomination] = useState<string>('3')
-  const [createTokenData, setCreateTokenData] = useState<any>(null)
-
-  const [uploadingButton, setUploadingButton] = useState<string>(`${t('Submit')}`)
-  const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
+  //const [uploadingButton, setUploadingButton] = useState<string>(`${t('Submit')}`)
+  //const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
   
   const LanguageArray = [
         {name:'English', value:'en'},
@@ -90,12 +67,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
   const themeArray = [
     {name:'Dark', value:'dark'},
     {name:'Light', value:'light'}
-  ]
-  const currencyArray = [
-    {name:'United Status', value:'us'}
-  ]
-  const networkArray = [
-    {name:'Main Network', value:'mainnet'}
   ]
 
   useEffect(() => {
@@ -125,22 +96,10 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
       case 'SecurityPrivacy':
         handleWalletGoHome()
         break
-      case 'NewContact':
-        handleClickContactsButton()
-        break
       case 'Language':
         handleClickGeneralButton()
         break
       case 'Theme':
-        handleClickGeneralButton()
-        break
-      case 'Currency':
-        handleClickGeneralButton()
-        break
-      case 'Network':
-        handleClickGeneralButton()
-        break
-      case 'CreateToken':
         handleClickGeneralButton()
         break
       case 'PrivacyPolicy':
@@ -164,18 +123,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
     setHeaderHidden(false)
     setRightButtonIcon('')
   }, []);
-  
-  const handleContactSave = () => {
-    if(contactAddress && contactAddress.length == 43) {
-        setChivesContacts(contactAddress, contactName, encryptWalletDataKey)
-        handleClickContactsButton()
-    }
-  }
-  
-  const handleContactDelete = (Address: string) => {
-    deleteChivesContacts(Address, encryptWalletDataKey)
-    handleClickContactsButton()
-  }
 
   const handleClickContactsButton = () => {
     setCounter(counter + 1)
@@ -184,9 +131,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
     setTitle(t('Contacts') as string)
     setRightButtonText(t('') as string)
     setRightButtonIcon('mdi:add')
-    setContactAddress('')
-    setContactName('')
-    setSearchContactkeyWord('')
   }
 
   const handleClickSecurityPrivacyButton = () => {
@@ -196,9 +140,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
     setTitle(t('Security & Privacy') as string)
     setRightButtonText(t('') as string)
     setRightButtonIcon('')
-    setContactAddress('')
-    setContactName('')
-    setSearchContactkeyWord('')
   }
 
   const handleClickGeneralButton = () => {
@@ -255,121 +196,19 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
     setRightButtonIcon('')
   }
 
-  const handleCreateTokenButton = async () => {
-    const validateInputs = () => {
-      if (tokenName == '') {
-        toast.error(t('Token name must input') as string, { duration: 1000, position: 'top-center' });
-
-        return false;
-      }
-      if (tokenTicker == '') {
-        toast.error(t('Token ticker must input') as string, { duration: 1000, position: 'top-center' });
-
-        return false;
-      }
-      if (tokenTotalBalance == '' || Number(tokenTotalBalance) <= 0) {
-        toast.error(t('Token total issue amount must input and more than zero') as string, { duration: 1000, position: 'top-center' });
-
-        return false;
-      }
-      if (tokenLogo.length != 43) {
-        toast.error(t('Token logo must a ar tx id that storage a image') as string, { duration: 1000, position: 'top-center' });
-
-        return false;
-      }
-      if (Number(tokenDenomination) <= 0 || Number(tokenDenomination) > 12) {
-        toast.error(t('Token denomination must be a integer between 1 and 12') as string, { duration: 1000, position: 'top-center' });
-
-        return false;
-      }
-
-      return true;
-    };
-  
-    if (!validateInputs()) {
-      
-      return;
-    }
-  
-    setIsDisabledButton(true);
-    setUploadingButton(t('Summitting...') as string);
-  
-    try {
-      let TokenProcessTxId: any = null;
-      do {
-        TokenProcessTxId = await AoCreateProcessAuto(chooseWallet.jwk);
-        console.log("TokenProcessTxId", TokenProcessTxId);
-      } while (TokenProcessTxId && TokenProcessTxId.length != 43);
-  
-      const tokenInfo = {
-        Name: tokenName,
-        Ticker: tokenTicker,
-        Balance: Number(tokenTotalBalance).toFixed(0),
-        Logo: tokenLogo,
-        Denomination: tokenDenomination
-      };
-  
-      const createToken = async () => {
-        let LoadBlueprintToken: any = await AoLoadBlueprintToken(chooseWallet.jwk, TokenProcessTxId, tokenInfo);
-        console.log("handleTokenCreate LoadBlueprintToken:", LoadBlueprintToken);
-        while (LoadBlueprintToken && LoadBlueprintToken.status == 'error') {
-          await sleep(6000);
-          LoadBlueprintToken = await AoLoadBlueprintToken(chooseWallet.jwk, TokenProcessTxId, tokenInfo);
-        }
-  
-        const AoDryRunBalance = await AoTokenBalanceDryRun(TokenProcessTxId, currentAddress);
-        if (AoDryRunBalance) {
-          setCounter(counter + 1);
-
-          return { Token: TokenProcessTxId, Balance: FormatBalance(AoDryRunBalance, Number(tokenDenomination)) };
-        }
-
-      };
-  
-      const result: any = await createToken();
-      const TokenGetMap: any = await AoTokenInfoDryRun(result.Token)
-      if(TokenGetMap) {
-        setCreateTokenData({TokenId: result.Token, TokenName: TokenGetMap.Name, TokenData: TokenGetMap})
-        handleSelectTokenAndSave({TokenId: result.Token}, TokenGetMap)
-      }
-      console.log("createTokenData", createTokenData);
-  
-      setUploadingButton(t('Submit') as string);
-      setIsDisabledButton(false);
-    } 
-    catch (error) {
-      console.error("handleTokenCreate Error:", error);
-      setUploadingButton(t('Submit') as string);
-      setIsDisabledButton(false);
-    }
-  };
-
-
   const handleClickNewContactButton = () => {
     setPageModel('NewContact')
     setLeftIcon('mdi:arrow-left-thin')
     setTitle(t('New Contact') as string)
     setRightButtonText(t('') as string)
     setRightButtonIcon('')
-    setContactAddress('')
-    setContactName('')
   }
 
-  const handleSelectContact = (Address: string, Name: string) => {
-    setContactAddress(Address)
-    setContactName(Name)
-    setPageModel('NewContact')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Edit Conact') as string)
-    setRightButtonText(t('') as string)
-    setRightButtonIcon('')
-  }
 
   const handleSelectLanguage = (Language: 'en' | 'zh-CN' | 'Ru' | 'Kr') => {
     setLanguageValue(Language)
     setTitle(Language)
     i18n.changeLanguage(Language)
-    setChivesLanguage(Language)
   }
 
   const handleSelectTheme = (Theme: string) => {
@@ -379,26 +218,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
 
     //@ts-ignore
     saveSettings({ ...settings, ['mode']: Theme })
-  }
-
-  const handleSelectCurrency = (Currency: string) => {
-    setCurrencyValue(Currency)
-    setTitle(Currency)
-  }
-
-  const handleSelectNetwork = (Network: string) => {
-    setNetworkValue(Network)
-    setTitle(Network)
-  }
-
-  const handleSelectTokenAndSave = async (Token: any, TokenData: any) => {
-    setIsDisabledButton(true)
-    const WantToSaveTokenProcessTxIdData = await MyProcessTxIdsAddToken(chooseWallet.jwk, authConfig.AoConnectMyProcessTxIds, Token.TokenId, '200', TokenData.Name, JSON.stringify(TokenData) )
-    setIsDisabledButton(false)
-    if(WantToSaveTokenProcessTxIdData?.msg?.Messages && WantToSaveTokenProcessTxIdData?.msg?.Messages[0]?.Data)  {
-      toast.success(t(WantToSaveTokenProcessTxIdData?.msg?.Messages[0]?.Data) as string, { duration: 2500, position: 'top-center' })
-      addMyAoToken(currentAddress, {TokenId: Token.TokenId, TokenSort: '200', TokenName: TokenData.Name, TokenData: TokenData}, encryptWalletDataKey)
-    }
   }
 
   const handleClickTermsOfUseButton = () => {
@@ -424,24 +243,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
     setRightButtonText('')
     setRightButtonIcon('')
     setLeftIcon('')
-  }
-
-  const handleClickSetPinCodeButton = () => {
-    setPageModel('SetPinCode')
-    setTitle(t('Set Pin Code') as string)
-    setLeftIcon('')
-    setRightButtonText('')
-    setRightButtonIcon('')
-    setLeftIcon('')
-  }
-
-  const setPinKeySuccess = (OldKay: string, NewKey: string) => {
-    resetPasswordForWallet(OldKay, NewKey)
-    resetChivesWalletNickNameEncryptedKey(OldKay, NewKey)
-    resetChivesWalletsEncryptedKey(OldKay, NewKey)
-    resetChivesContactsEncryptedKey(OldKay, NewKey)
-    toast.success(t('Change pin code success') as string, { duration: 2500, position: 'top-center' })
-    handleWalletGoHome()
   }
 
 
@@ -857,110 +658,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
               </Grid>
             )}
 
-            {pageModel == 'Contacts' && ( 
-              <Grid container spacing={2}>
-                <Grid item xs={12} sx={{height: 'calc(100%)'}}>
-                    <Grid container spacing={2}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        value={searchContactkeyWord}
-                        placeholder={t('Search Contact') as string}
-                        sx={{ '& .MuiInputBase-root': { borderRadius: 2 }, mb: 3 }}
-                        onChange={(e: any)=>{
-                            setSearchContactkeyWord(e.target.value)
-                            const searchChivesContactsData = searchChivesContacts(e.target.value, encryptWalletDataKey)
-                            setContactsAll(searchChivesContactsData)
-                            console.log("e.target.value", e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid container spacing={2}>
-                    {Object.keys(contactsAll).map((Address: any, index: number) => {
-
-                      return (
-                        <Grid item xs={12} sx={{ py: 1 }} key={index}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <CustomAvatar
-                                skin='light'
-                                color={'primary'}
-                                sx={{ mr: 3, width: 38, height: 38, fontSize: '1.5rem' }}
-                              >
-                                {getInitials(Address).toUpperCase()}
-                              </CustomAvatar>
-                              <Box sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleSelectContact(Address, contactsAll[Address])}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {contactsAll[Address]}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `primary.dark`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {Address}
-                                  </Typography>
-                                  
-                                </Box>
-                              </Box>
-                              <Box textAlign="right">
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleContactDelete(Address)}>
-                                    <Icon icon='mdi:delete-outline' />
-                                </IconButton>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                      )
-
-                    })}
-                    </Grid>
-
-                </Grid>
-              </Grid>
-            )}
-
-            {pageModel == 'NewContact' && ( 
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sx={{height: 'calc(100%)'}}>
-                        <Grid container spacing={2}>
-                            <TextField
-                                fullWidth
-                                size='small'
-                                value={contactName}
-                                onChange={(e) => setContactName(e.target.value)}
-                                placeholder={t('Contact Name') as string}
-                                sx={{ '& .MuiInputBase-root': { borderRadius: 2 } }}
-                            />
-                            <TextField
-                                fullWidth
-                                size='small'
-                                value={contactAddress}
-                                onChange={(e) => setContactAddress(e.target.value)}
-                                placeholder={t('Contact Address') as string}
-                                sx={{ mt: 3, '& .MuiInputBase-root': { borderRadius: 2 } }}
-                            />
-                            <Box sx={{width: '100%', mr: 3}}>
-                                <Button sx={{mt: 8, mx: 2}} disabled={contactName != '' && contactAddress && contactAddress.length == 43 ? false : true} fullWidth variant='contained' onClick={()=>handleContactSave()}>
-                                {t("Save")}
-                                </Button>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                        
-                </Grid>
-            )}
-
             {pageModel == 'SecurityPrivacy' && ( 
               <Grid container spacing={2}>
                 <Grid item xs={12} sx={{height: 'calc(100%)'}}>
@@ -1137,215 +834,6 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
                     </RadioGroup>
 
                 </Grid>
-            )}
-
-            {pageModel == 'Currency' && (
-                <Grid container spacing={2}>
-
-                    <RadioGroup row value={'value'}  sx={{width: '100%'}} onClick={(e: any)=>e.target.value && handleSelectCurrency(e.target.value)}>
-                        {currencyArray.map((Currency: any, index: number) => {
-
-                            return (
-                                <Grid item xs={12} sx={{ py: 1 }} key={index}>
-                                    <Card sx={{ml: 2}}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                            <Box sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', width: '100%', ml: 2 }} onClick={()=>handleSelectCurrency(Currency.value)} >
-                                                <Typography sx={{ color: 'text.primary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', }} >
-                                                    {Currency.name}
-                                                </Typography>
-                                            </Box>
-                                            <Box textAlign="right" sx={{m: 0, p: 0}}>
-                                                <FormControlLabel value={Currency.value} control={<Radio sx={{justifyContent: 'center', ml: 3, mr: 0}} checked={currencyValue == Currency.value}/>} label="" />
-                                            </Box>
-                                        </Box>
-                                    </Card>
-                                </Grid>
-                            )
-
-                        })}
-                    </RadioGroup>
-
-                </Grid>
-            )}
-
-            {pageModel == 'Network' && (
-                <Grid container spacing={2}>
-
-                    <RadioGroup row value={'value'}  sx={{width: '100%'}} onClick={(e: any)=>e.target.value && handleSelectNetwork(e.target.value)}>
-                        {networkArray.map((Network: any, index: number) => {
-
-                            return (
-                                <Grid item xs={12} sx={{ py: 1 }} key={index}>
-                                    <Card sx={{ml: 2}}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                            <Box sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', width: '100%', ml: 2 }} onClick={()=>handleSelectNetwork(Network.value)} >
-                                                <Typography sx={{ color: 'text.primary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', }} >
-                                                    {Network.name}
-                                                </Typography>
-                                            </Box>
-                                            <Box textAlign="right" sx={{m: 0, p: 0}}>
-                                                <FormControlLabel value={Network.value} control={<Radio sx={{justifyContent: 'center', ml: 3, mr: 0}} checked={networkValue == Network.value}/>} label="" />
-                                            </Box>
-                                        </Box>
-                                    </Card>
-                                </Grid>
-                            )
-
-                        })}
-                    </RadioGroup>
-
-                </Grid>
-            )}
-
-            {pageModel == 'CreateToken' && (
-                <Grid container spacing={2}>
-
-                      <TextField
-                        fullWidth
-                        size='small'
-                        value={tokenName}
-                        placeholder={t('Token Name, eg. AOTest') as string}
-                        sx={{ '& .MuiInputBase-root': { borderRadius: 5 }, mb: 3 }}
-                        onChange={(e: any)=>{
-                          setTokenName(e.target.value)
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        size='small'
-                        value={tokenTicker}
-                        placeholder={t('Token Ticker, eg. AOT') as string}
-                        sx={{ '& .MuiInputBase-root': { borderRadius: 5 }, mb: 3 }}
-                        onChange={(e: any)=>{
-                          setTokenTicker(e.target.value)
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        size='small'
-                        value={tokenTotalBalance}
-                        placeholder={t('Total Balance, eg. 10000') as string}
-                        sx={{ '& .MuiInputBase-root': { borderRadius: 5 }, mb: 3 }}
-                        onChange={(e: any)=>{
-                          setTokenTotalBalance(String(Number(e.target.value)))
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        size='small'
-                        value={tokenLogo}
-                        placeholder={t('Token Logo Hash, length 32 tx id on AR') as string}
-                        sx={{ '& .MuiInputBase-root': { borderRadius: 5 }, mb: 3 }}
-                        onChange={(e: any)=>{
-                          setTokenLogo(e.target.value)
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        size='small'
-                        value={tokenDenomination}
-                        placeholder={t('Token Denomination, eg. 12') as string}
-                        sx={{ '& .MuiInputBase-root': { borderRadius: 5 }, mb: 0 }}
-                        onChange={(e: any)=>{
-                          setTokenDenomination(e.target.value)
-                        }}
-                      />
-
-                      <Box sx={{width: '100%', mx: 2, display: 'flex', justifyContent: 'center'}}>
-                        <Button sx={{mt: 8}}  disabled={isDisabledButton} variant='contained' onClick={()=>handleCreateTokenButton()}>
-                          {uploadingButton}
-                        </Button>
-                      </Box>
-
-                      {createTokenData && createTokenData && (
-                        <>
-                        <Typography sx={{ 
-                                      color: 'text.primary',
-                                      overflow: 'hidden',
-                                      textOverflow: 'ellipsis',
-                                      whiteSpace: 'nowrap',
-                                      mt: 5
-                                    }}
-                                    onClick={async ()=>{
-                                      await Clipboard.write({
-                                        string: createTokenData.TokenId
-                                      });
-                                      toast.success(t('Copied success') as string, { duration: 1000, position: 'top-center' })
-                                    }}
-                        >
-                        TokenId: {createTokenData.TokenId}
-                        </Typography>
-                        <Typography sx={{ 
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          width: '100%'
-                        }}
-                        >
-                        Name: {createTokenData.TokenData.Name}
-                        </Typography>
-                        <Typography sx={{ 
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          width: '100%'
-                        }}
-                        >
-                        Ticker: {createTokenData.TokenData.Ticker}
-                        </Typography>
-                        <Typography sx={{ 
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          width: '100%'
-                        }}
-                        >
-                        TotalSupply: {createTokenData.TokenData.TotalSupply}
-                        </Typography>
-                        <Typography sx={{ 
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          width: '100%'
-                        }}
-                        >
-                        Version: {createTokenData.TokenData.Version}
-                        </Typography>
-                        <Typography sx={{ 
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          width: '100%'
-                        }}
-                        >
-                        Denomination: {createTokenData.TokenData.Denomination}
-                        </Typography>
-                        <Typography sx={{ 
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          width: '100%'
-                        }}
-                        >
-                        Release: {createTokenData.TokenData.Release}
-                        </Typography>
-                        </>
-                      )}
-
-                </Grid>
-            )}
-
-            {pageModel == 'SetPinCode' && ( 
-              <Grid container spacing={2}>
-                <Grid item xs={12} sx={{height: 'calc(100% - 104px)'}}>
-                </Grid>
-              </Grid>
             )}
 
             {pageModel == 'PrivacyPolicy' && ( 

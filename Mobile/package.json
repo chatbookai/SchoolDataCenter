@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build-chrome": "next build && node rename_next_folder.js",
     "export": "next export",
     "start": "next start",
     "lint": "next lint",

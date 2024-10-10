@@ -9,8 +9,8 @@ const PrivacyPolicy = () => {
       <div className="d-export-content">
         <h2 id="introduction"><span>介绍</span></h2>
         <p>
-          <span>我们，</span><strong>{authConfig.themeName}</strong><span>（“</span><strong>{authConfig.themeName}</strong><span>”、“</span><strong>我们</strong><span>”或“</span><strong>我们</strong><span>”）</span>
-          <span>尊重您的隐私，并强烈致力于保护我们从您或关于您获得的任何信息。本隐私政策（“隐私政策”）适用于{authConfig.themeName}网站、软件及相关服务（“服务”）中处理的个人信息的隐私政策。如果您对我们使用您的个人信息有任何疑问，请联系我们。</span>
+          <span>我们，</span><strong>{authConfig.AppName}</strong><span>（“</span><strong>{authConfig.AppName}</strong><span>”、“</span><strong>我们</strong><span>”或“</span><strong>我们</strong><span>”）</span>
+          <span>尊重您的隐私，并强烈致力于保护我们从您或关于您获得的任何信息。本隐私政策（“隐私政策”）适用于{authConfig.AppName}网站、软件及相关服务（“服务”）中处理的个人信息的隐私政策。如果您对我们使用您的个人信息有任何疑问，请联系我们。</span>
         </p>
         
         <h2 id="what-information-we-collect"><span>我们收集的信息</span></h2>
@@ -73,7 +73,7 @@ const PrivacyPolicy = () => {
         
 
         <h2 id="your-rights"><span>您的权利</span></h2>
-        <p><span>根据您所在地的法律，您可能对您的个人信息拥有某些权利，例如了解我们如何收集和使用您的个人信息的权利。您还可能有权访问、更改、反对、请求复制您的授权、向主管当局提出投诉、撤回您的同意或限制我们对您的个人信息的收集和使用，以及要求我们删除您的个人信息和其他人。在某些情况下，您还可以要求我们提供有关我们收集和使用您的个人信息的额外信息。请注意，行使某些权利可能会影响您使用{authConfig.themeName}服务部分或全部功能和功能的能力。</span></p>
+        <p><span>根据您所在地的法律，您可能对您的个人信息拥有某些权利，例如了解我们如何收集和使用您的个人信息的权利。您还可能有权访问、更改、反对、请求复制您的授权、向主管当局提出投诉、撤回您的同意或限制我们对您的个人信息的收集和使用，以及要求我们删除您的个人信息和其他人。在某些情况下，您还可以要求我们提供有关我们收集和使用您的个人信息的额外信息。请注意，行使某些权利可能会影响您使用{authConfig.AppName}服务部分或全部功能和功能的能力。</span></p>
         <p><span>如果您已注册账户，您还可以通过登录您的账户并使用可用的功能和功能来访问、查看和更新您提供给我们的某些个人信息。</span></p>
         <p><span>如果您希望行使任何权利，请使用本隐私政策中提供的联系信息与我们联系。我们将根据适用法律并经过适当验证后回复您的请求。</span></p>
         
