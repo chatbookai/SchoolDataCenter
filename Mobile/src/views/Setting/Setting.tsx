@@ -618,7 +618,7 @@ const Setting = ({ encryptWalletDataKey, setEncryptWalletDataKey }: any) => {
                                       whiteSpace: 'nowrap',
                                       flex: 1
                                     }}>
-                                      {t('Discord') as string}
+                                      {t('Github') as string}
                                     </Typography>
                                   </Link>
                                 </Box>

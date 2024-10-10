@@ -9,6 +9,7 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { useTranslation } from 'react-i18next'
 
+import authConfig from 'src/configs/auth'
 
 const Footer = (props: any) => {
   // ** Props
@@ -32,6 +33,7 @@ const Footer = (props: any) => {
           justifyContent: 'center',
           bottom: 0,
           position: 'fixed',
+          overflow: 'visible', 
         }}
       >
         <BottomNavigation
@@ -62,7 +64,25 @@ const Footer = (props: any) => {
         >
           <BottomNavigationAction label={t("首页")} disabled={disabledFooter} icon={<Icon icon='material-symbols:home-work-outline' />} />
           <BottomNavigationAction label={t("课表")} disabled={disabledFooter} icon={<Icon icon='uil:schedule' />} />
-          <BottomNavigationAction label={t("应用")} disabled={disabledFooter} icon={<Icon icon='icon-park-outline:all-application' />} />
+          <BottomNavigationAction
+            label={t("应用")}
+            disabled={disabledFooter}
+            icon={
+              <img
+                src={authConfig.AppLogo}
+                alt='应用'
+                style={{
+                  width: '3.5rem', // 控制图片的宽度
+                  height: '3.5rem', // 控制图片的高度
+                  objectFit: 'cover', // 确保图片按比例缩放并覆盖整个区域
+                }}
+              />
+            }
+            sx={{
+              position: 'relative', 
+              bottom: '1rem',
+            }}
+          />
           <BottomNavigationAction label={t("消息")} disabled={disabledFooter} icon={<Icon icon='mdi:message-processing-outline' />} />
           <BottomNavigationAction label={t("我的")} disabled={disabledFooter} icon={<Icon icon='mdi:account-box-outline' />} />
         </BottomNavigation>
