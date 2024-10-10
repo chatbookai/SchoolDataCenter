@@ -105,6 +105,8 @@ const LoginPage = () => {
   const onSubmit = (data: FormData) => {
     const { username, password } = data
 
+    console.log("data", base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true }))))
+
     function base58Encode(data: string) {
       const bytes = Buffer.from(data, 'utf8');
       const encoded = bs58.encode(bytes);
