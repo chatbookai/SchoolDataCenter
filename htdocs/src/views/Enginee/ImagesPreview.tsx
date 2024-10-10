@@ -46,9 +46,9 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        
+
         const blob = await response.blob();
-        
+
         const reader = new FileReader();
         reader.onload = () => {
           ExcelRenderer(blob, (err: any, resp: { cols: SetStateAction<never[]>; rows: SetStateAction<never[]> }) => {
@@ -58,27 +58,27 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
               console.log("resp.cols", resp.cols)
               const tempCols: SetStateAction<any[]> = []
               tempCols.push({name: '', key: 0})
-              
+
               // @ts-ignore
               resp && resp.cols && resp.cols.map((Item: {'name': string, 'key': number}, Index: number)=>{
                 if(Item.name) {
                   tempCols.push({name: Item.name, key: Index+1})
                 }
               })
-              
+
               // @ts-ignore
               setCols(tempCols);
-              
+
               // @ts-ignore
               setRows(resp.rows);
             }
           });
         };
-        
+
         reader.onerror = () => {
           throw new Error("Failed to read the blob data");
         };
-        
+
         reader.readAsBinaryString(blob);
       } catch (error) {
         console.error("Error fetching or parsing the Excel file:", error);
@@ -112,12 +112,12 @@ interface ImagesPreviewType {
 const ImagesPreview = (props: ImagesPreviewType) => {
   // ** Props
   const { open, imagesList, imagesType, toggleImagesPreviewDrawer } = props
-  
+
   const handleClose = () => {
     toggleImagesPreviewDrawer()
   }
 
-  //const [numPages, setNumPages] = useState<number>(0)    
+  //const [numPages, setNumPages] = useState<number>(0)
   //function onDocumentLoadSuccess({ numPages }: { numPages: number; } ) {
   //    setNumPages(numPages);
   //}
@@ -160,14 +160,14 @@ const ImagesPreview = (props: ImagesPreviewType) => {
                 {imagesList && imagesList.length>0 && imagesList.map((Url: string, UrlIndex: number)=>{
                   switch(imagesType[UrlIndex]) {
                     case 'image':
-                      
+
                     return (
                           <Box className='keen-slider__slide' key={UrlIndex}>
                               <img src={Url} style={{'width':'100%', 'borderRadius': '4px'}}/>
                           </Box>
                       )
                     case 'pdf':
-                      
+
                       return (
                           <Fragment key={UrlIndex}>
                           </Fragment>
@@ -179,16 +179,16 @@ const ImagesPreview = (props: ImagesPreviewType) => {
                         </div>
                       )
                     case 'Excel':
-                      
+
                       return <ExcelViewer fileUrl={Url} />
                     default:
-                      
+
                       return (
                           <Box className='keen-slider__slide' key={UrlIndex}>
                               <img src={Url} style={{'width':'100%', 'borderRadius': '4px'}}/>
                           </Box>
                       )
-                  }                    
+                  }
                 })}
                 </Box>
                 {imagesList && imagesList[0]=="image" && loaded && instanceRef.current && (
@@ -213,7 +213,7 @@ const ImagesPreview = (props: ImagesPreviewType) => {
             {imagesList && imagesList[0]=="image" && loaded && instanceRef.current && (
                 <Box className='swiper-dots'>
                 {[...Array(instanceRef.current.track.details.slides.length).keys()].map(idx => {
-                    
+
                     return (
                       <Badge
                           key={idx}
@@ -227,7 +227,7 @@ const ImagesPreview = (props: ImagesPreviewType) => {
                               instanceRef.current.moveToIdx(idx);
                             }
                           }}
-                          
+
                       ></Badge>
                     )
                 })}
@@ -236,7 +236,7 @@ const ImagesPreview = (props: ImagesPreviewType) => {
             </Fragment>
         </DialogContent>
       </Dialog >
-    
+
   )
 }
 

@@ -7,7 +7,6 @@ require_once('../../config.inc.php');
 require_once('../../adodb5/adodb.inc.php');
 require_once("../../vendor/autoload.php");
 
-
 $JsonContent      = file_get_contents("./json/0001.json");
 $Array            = json_decode($JsonContent, true);
 

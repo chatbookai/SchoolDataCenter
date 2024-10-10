@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Dandian DataCenter</string>
+    <string name="title_activity_main">Dandian DataCenter</string>
+    <string name="package_name">net.dandian.dc</string>
+    <string name="custom_url_scheme">net.dandian.dc</string>
+</resources>
