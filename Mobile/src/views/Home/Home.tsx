@@ -3,19 +3,20 @@ import { useState, Fragment } from 'react'
 
 import Footer from '../Layout/Footer'
 import Setting from '../Setting/Setting'
+import Login from '../Login/Login'
 
-const HomeModel = () => {
+const Home = () => {
 
-  const [currentTab, setCurrentTab] = useState<string>('Setting')
+  const [currentTab, setCurrentTab] = useState<string>('Login')
   const [disabledFooter, setDisabledFooter] = useState<boolean>(true)
-  const [encryptWalletDataKey, setEncryptWalletDataKey] = useState<string>('')
 
   return (
     <Fragment>
-      {currentTab == "Setting" && (<Setting encryptWalletDataKey={encryptWalletDataKey} setEncryptWalletDataKey={setEncryptWalletDataKey} />)}
+      {currentTab == "Login" && (<Login />)}
+      {currentTab == "Setting" && (<Setting />)}
       <Footer Hidden={false} setCurrentTab={setCurrentTab} currentTab={currentTab} disabledFooter={disabledFooter} setDisabledFooter={setDisabledFooter} />
     </Fragment>
   )
 }
 
-export default HomeModel
+export default Home
