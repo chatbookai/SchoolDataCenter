@@ -16,9 +16,6 @@ import Icon from '../../@core/components/icon'
 import authConfig from '../../configs/auth'
 import { useSettings } from '../../@core/hooks/useSettings'
 
-// ** Third Party Import
-import { useTranslation } from 'react-i18next'
-
 import { styled } from '@mui/material/styles'
 import Header from '../Layout/Header'
 import TermsofUse from './TermsofUse'
@@ -39,7 +36,6 @@ const ContentWrapper = styled('main')(({ theme }) => ({
 const Setting = ({  }: any) => {
 
   // ** Hook
-  const { t, i18n } = useTranslation()
   const { settings, saveSettings } = useSettings()
 
   const contentHeightFixed = {}
@@ -48,40 +44,23 @@ const Setting = ({  }: any) => {
   const [pageModel, setPageModel] = useState<string>('MainSetting')
   const [HeaderHidden, setHeaderHidden] = useState<boolean>(false)
   const [LeftIcon, setLeftIcon] = useState<string>('')
-  const [Title, setTitle] = useState<string>(t('Setting') as string)
+  const [Title, setTitle] = useState<string>('Setting')
   const [RightButtonText, setRightButtonText] = useState<string>('')
   const [RightButtonIcon, setRightButtonIcon] = useState<string>('')
 
-  const [languageValue, setLanguageValue] = useState<string>('zh-CN')
   const [themeValue, setThemeValue] = useState<string>(settings.mode)
 
-  //const [uploadingButton, setUploadingButton] = useState<string>(`${t('Submit')}`)
-  //const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  
-  const LanguageArray = [
-        {name:'English', value:'en'},
-        {name:'Chinese', value:'zh-CN'},
-        {name:'Korean', value:'Kr'},
-        {name:'Russia', value:'Ru'}
-  ]
   const themeArray = [
     {name:'Dark', value:'dark'},
     {name:'Light', value:'light'}
   ]
 
-  useEffect(() => {
-
-    i18n.changeLanguage('Zh')
-
-  }, []);
-
-
   const handleWalletGoHome = () => {
     setRefreshWalletData(refreshWalletData+1)
     setPageModel('MainSetting')
     setLeftIcon('')
-    setTitle(t('Setting') as string)
-    setRightButtonText(t('QR') as string)
+    setTitle('Setting')
+    setRightButtonText('QR')
     setRightButtonIcon('')
   }
   
@@ -91,7 +70,6 @@ const Setting = ({  }: any) => {
         handleWalletGoHome()
         break
       case 'General':
-      case 'Contacts':
       case 'Support':
       case 'SecurityPrivacy':
         handleWalletGoHome()
@@ -112,7 +90,6 @@ const Setting = ({  }: any) => {
   const RightButtonOnClick = () => {
     switch(pageModel) {
         case 'Contacts':
-            handleClickNewContactButton()
           break
       }
   }
@@ -124,21 +101,12 @@ const Setting = ({  }: any) => {
     setRightButtonIcon('')
   }, []);
 
-  const handleClickContactsButton = () => {
-    setCounter(counter + 1)
-    setPageModel('Contacts')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Contacts') as string)
-    setRightButtonText(t('') as string)
-    setRightButtonIcon('mdi:add')
-  }
-
   const handleClickSecurityPrivacyButton = () => {
     setCounter(counter + 1)
     setPageModel('SecurityPrivacy')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Security & Privacy') as string)
-    setRightButtonText(t('') as string)
+    setTitle('Security & Privacy')
+    setRightButtonText('')
     setRightButtonIcon('')
   }
 
@@ -146,8 +114,8 @@ const Setting = ({  }: any) => {
     setCounter(counter + 1)
     setPageModel('General')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('General Setting') as string)
-    setRightButtonText(t('') as string)
+    setTitle('General Setting')
+    setRightButtonText('')
     setRightButtonIcon('')
   }
 
@@ -155,8 +123,8 @@ const Setting = ({  }: any) => {
     setCounter(counter + 1)
     setPageModel('Language')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Language') as string)
-    setRightButtonText(t('') as string)
+    setTitle('Language')
+    setRightButtonText('')
     setRightButtonIcon('')
   }
 
@@ -164,8 +132,8 @@ const Setting = ({  }: any) => {
     setCounter(counter + 1)
     setPageModel('Theme')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Theme') as string)
-    setRightButtonText(t('') as string)
+    setTitle('Theme')
+    setRightButtonText('')
     setRightButtonIcon('')
   }
 
@@ -173,8 +141,8 @@ const Setting = ({  }: any) => {
     setCounter(counter + 1)
     setPageModel('Currency')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Currency') as string)
-    setRightButtonText(t('') as string)
+    setTitle('Currency')
+    setRightButtonText('')
     setRightButtonIcon('')
   }
 
@@ -182,8 +150,8 @@ const Setting = ({  }: any) => {
     setCounter(counter + 1)
     setPageModel('Network')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Network') as string)
-    setRightButtonText(t('') as string)
+    setTitle('Network')
+    setRightButtonText('')
     setRightButtonIcon('')
   }
 
@@ -191,24 +159,9 @@ const Setting = ({  }: any) => {
     setCounter(counter + 1)
     setPageModel('CreateToken')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Create Token') as string)
-    setRightButtonText(t('') as string)
+    setTitle('Create Token')
+    setRightButtonText('')
     setRightButtonIcon('')
-  }
-
-  const handleClickNewContactButton = () => {
-    setPageModel('NewContact')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('New Contact') as string)
-    setRightButtonText(t('') as string)
-    setRightButtonIcon('')
-  }
-
-
-  const handleSelectLanguage = (Language: 'en' | 'zh-CN' | 'Ru' | 'Kr') => {
-    setLanguageValue(Language)
-    setTitle(Language)
-    i18n.changeLanguage(Language)
   }
 
   const handleSelectTheme = (Theme: string) => {
@@ -223,7 +176,7 @@ const Setting = ({  }: any) => {
   const handleClickTermsOfUseButton = () => {
     setPageModel('TermsOfUse')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Terms of Use') as string)
+    setTitle('Terms of Use')
     setRightButtonText('')
     setRightButtonIcon('')
   }
@@ -231,14 +184,14 @@ const Setting = ({  }: any) => {
   const handleClickPrivacyPolicyButton = () => {
     setPageModel('PrivacyPolicy')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle(t('Privacy Policy') as string)
+    setTitle('Privacy Policy')
     setRightButtonText('')
     setRightButtonIcon('')
   }
 
   const handleClickCheckPinCodeButton = () => {
     setPageModel('CheckPinCode')
-    setTitle(t('Check Pin Code') as string)
+    setTitle('Check Pin Code')
     setLeftIcon('')
     setRightButtonText('')
     setRightButtonIcon('')
@@ -288,7 +241,7 @@ const Setting = ({  }: any) => {
                                       whiteSpace: 'nowrap',
                                     }}
                                     >
-                                    {t('General') as string}
+                                    {'General'}
                                     </Typography>
                                     <Box sx={{ display: 'flex'}}>
                                     <Typography variant='body2' sx={{ 
@@ -298,7 +251,7 @@ const Setting = ({  }: any) => {
                                         whiteSpace: 'nowrap',
                                         flex: 1
                                     }}>
-                                        {t('Edit language, currency and theme') as string}
+                                        {'Edit language, currency and theme'}
                                     </Typography>
                                     </Box>
                                 </Box>
@@ -307,43 +260,6 @@ const Setting = ({  }: any) => {
                                         <Icon icon='mdi:chevron-right' fontSize={30} />
                                     </IconButton>
                                 </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>handleClickContactsButton()}>
-                                <Icon icon='mdi:contact-mail-outline' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ cursor: 'pointer', ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickContactsButton()}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {t('Contacts') as string}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {t('Manage your contacts') as string}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box textAlign="right">
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickContactsButton()}>
-                                    <Icon icon='mdi:chevron-right' fontSize={30} />
-                                </IconButton>
-                              </Box>
                             </Box>
                           </Card>
                         </Grid>
@@ -362,7 +278,7 @@ const Setting = ({  }: any) => {
                                   whiteSpace: 'nowrap',
                                 }}
                                 >
-                                  {t('Security & Privacy') as string}
+                                  {'Security & Privacy'}
                                 </Typography>
                                 <Box sx={{ display: 'flex'}}>
                                   <Typography variant='body2' sx={{ 
@@ -372,7 +288,7 @@ const Setting = ({  }: any) => {
                                     whiteSpace: 'nowrap',
                                     flex: 1
                                   }}>
-                                    {t('Management applications, etc') as string}
+                                    {'Management applications, etc'}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -399,7 +315,7 @@ const Setting = ({  }: any) => {
                                   whiteSpace: 'nowrap',
                                 }}
                                 >
-                                  {t('Support') as string}
+                                  {'Support'}
                                 </Typography>
                                 <Box sx={{ display: 'flex'}}>
                                   <Typography variant='body2' sx={{ 
@@ -409,7 +325,7 @@ const Setting = ({  }: any) => {
                                     whiteSpace: 'nowrap',
                                     flex: 1
                                   }}>
-                                    {t('Contact our customer support') as string}
+                                    {'Contact our customer support'}
                                   </Typography>
                                   <Link href={authConfig.Github} target='_blank'>
                                     <Typography variant='body2' sx={{ 
@@ -419,7 +335,7 @@ const Setting = ({  }: any) => {
                                       whiteSpace: 'nowrap',
                                       flex: 1
                                     }}>
-                                      {t('Github') as string}
+                                      {'Github'}
                                     </Typography>
                                   </Link>
                                 </Box>
@@ -442,7 +358,7 @@ const Setting = ({  }: any) => {
                                   whiteSpace: 'nowrap',
                                 }}
                                 >
-                                  {t('Version') as string}
+                                  {'Version'}
                                 </Typography>
                                 <Box sx={{ display: 'flex'}}>
                                   <Typography variant='body2' sx={{ 
@@ -471,43 +387,6 @@ const Setting = ({  }: any) => {
                         <Grid item xs={12} sx={{ py: 1 }}>
                           <Card>
                             <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickLanguageButton()}>
-                                    <Icon icon='clarity:language-line' fontSize={38} />
-                                </IconButton>
-                                <Box sx={{ cursor: 'pointer', ml: 2, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickLanguageButton()}
-                                    >
-                                    <Typography sx={{ 
-                                    color: 'text.primary',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    }}
-                                    >
-                                    {t('Language') as string}
-                                    </Typography>
-                                    <Box sx={{ display: 'flex'}}>
-                                    <Typography variant='body2' sx={{ 
-                                        color: `secondary.primary`, 
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        flex: 1
-                                    }}>
-                                        {t('Language') as string}
-                                    </Typography>
-                                    </Box>
-                                </Box>
-                                <Box textAlign="right">
-                                    <IconButton sx={{ p: 0 }} onClick={()=>handleClickLanguageButton()}>
-                                        <Icon icon='mdi:chevron-right' fontSize={30} />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
                               <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>handleClickThemeButton()}>
                                 <Icon icon='line-md:light-dark' fontSize={34} />
                               </IconButton>
@@ -520,7 +399,7 @@ const Setting = ({  }: any) => {
                                   whiteSpace: 'nowrap',
                                 }}
                                 >
-                                  {t('Theme') as string}
+                                  {'Theme'}
                                 </Typography>
                                 <Box sx={{ display: 'flex'}}>
                                   <Typography variant='body2' sx={{ 
@@ -530,7 +409,7 @@ const Setting = ({  }: any) => {
                                     whiteSpace: 'nowrap',
                                     flex: 1
                                   }}>
-                                    {t('Theme') as string}
+                                    {'Theme'}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -538,117 +417,6 @@ const Setting = ({  }: any) => {
                                 <IconButton sx={{ p: 0 }} onClick={()=>handleClickThemeButton()}>
                                     <Icon icon='mdi:chevron-right' fontSize={30} />
                                 </IconButton>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>handleClickCurrencyButton()}>
-                                <Icon icon='mdi:dollar' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ cursor: 'pointer', ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickCurrencyButton()}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {t('Currency') as string}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {t('Currency') as string}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box textAlign="right">
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickCurrencyButton()}>
-                                    <Icon icon='mdi:chevron-right' fontSize={30} />
-                                </IconButton>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>handleClickNetworkButton()}>
-                                <Icon icon='tabler:world-dollar' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ cursor: 'pointer', ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickNetworkButton()}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {t('Network') as string}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {t('Network') as string}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box textAlign="right">
-                                  <IconButton sx={{ p: 0 }} onClick={()=>handleClickLanguageButton()}>
-                                      <Icon icon='mdi:chevron-right' fontSize={30} />
-                                  </IconButton>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>handleClickCreateTokenButton()}>
-                                <Icon icon='material-symbols:token-outline' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ cursor: 'pointer', ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickCreateTokenButton()}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {t('Create Token') as string}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {t('Create Token') as string}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box textAlign="right">
-                                  <IconButton sx={{ p: 0 }} onClick={()=>handleClickLanguageButton()}>
-                                      <Icon icon='mdi:chevron-right' fontSize={30} />
-                                  </IconButton>
                               </Box>
                             </Box>
                           </Card>
@@ -677,7 +445,7 @@ const Setting = ({  }: any) => {
                                     whiteSpace: 'nowrap',
                                     }}
                                     >
-                                    {t('Terms of Use') as string}
+                                    {'Terms of Use'}
                                     </Typography>
                                     <Box sx={{ display: 'flex'}}>
                                     <Typography variant='body2' sx={{ 
@@ -687,7 +455,7 @@ const Setting = ({  }: any) => {
                                         whiteSpace: 'nowrap',
                                         flex: 1
                                     }}>
-                                        {t('Terms of Use') as string}
+                                        {'Terms of Use'}
                                     </Typography>
                                     </Box>
                                 </Box>
@@ -714,7 +482,7 @@ const Setting = ({  }: any) => {
                                     whiteSpace: 'nowrap',
                                     }}
                                     >
-                                    {t('Privacy Policy') as string}
+                                    {'Privacy Policy'}
                                     </Typography>
                                     <Box sx={{ display: 'flex'}}>
                                     <Typography variant='body2' sx={{ 
@@ -724,7 +492,7 @@ const Setting = ({  }: any) => {
                                         whiteSpace: 'nowrap',
                                         flex: 1
                                     }}>
-                                        {t('Privacy Policy') as string}
+                                        {'Privacy Policy'}
                                     </Typography>
                                     </Box>
                                 </Box>
@@ -736,75 +504,9 @@ const Setting = ({  }: any) => {
                             </Box>
                           </Card>
                         </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickCheckPinCodeButton()}>
-                                    <Icon icon='dashicons:privacy' fontSize={38} />
-                                </IconButton>
-                                <Box sx={{ cursor: 'pointer', ml: 2, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickCheckPinCodeButton()}
-                                    >
-                                    <Typography sx={{ 
-                                    color: 'text.primary',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    }}
-                                    >
-                                    {t('Change Pin Code') as string}
-                                    </Typography>
-                                    <Box sx={{ display: 'flex'}}>
-                                    <Typography variant='body2' sx={{ 
-                                        color: `secondary.primary`, 
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        flex: 1
-                                    }}>
-                                        {t('Change Pin Code') as string}
-                                    </Typography>
-                                    </Box>
-                                </Box>
-                                <Box textAlign="right">
-                                    <IconButton sx={{ p: 0 }} onClick={()=>handleClickCheckPinCodeButton()}>
-                                        <Icon icon='mdi:chevron-right' fontSize={30} />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
                     </Grid>
                 </Grid>
               </Grid>
-            )}
-
-            {pageModel == 'Language' && (
-                <Grid container spacing={2}>
-
-                    <RadioGroup row value={'value'}  sx={{width: '100%'}} onClick={(e: any)=>e.target.value && handleSelectLanguage(e.target.value)}>
-                        {LanguageArray.map((Language: any, index: number) => {
-
-                            return (
-                                <Grid item xs={12} sx={{ py: 1 }} key={index}>
-                                    <Card sx={{ml: 2}}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                            <Box sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', width: '100%', ml: 2 }} onClick={()=>handleSelectLanguage(Language.value)}>
-                                                <Typography sx={{ color: 'text.primary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', }} >
-                                                    {Language.name}
-                                                </Typography>
-                                            </Box>
-                                            <Box textAlign="right" sx={{m: 0, p: 0}}>
-                                                <FormControlLabel value={Language.value} control={<Radio sx={{justifyContent: 'center', ml: 3, mr: 0}} checked={languageValue == Language.value}/>} label="" />
-                                            </Box>
-                                        </Box>
-                                    </Card>
-                                </Grid>
-                            )
-
-                        })}
-                    </RadioGroup>
-
-                </Grid>
             )}
 
             {pageModel == 'Theme' && (

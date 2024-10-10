@@ -7,14 +7,12 @@ import Icon from '../../@core/components/icon'
 
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import { useTranslation } from 'react-i18next'
 
 import authConfig from 'src/configs/auth'
 
 const Footer = (props: any) => {
   // ** Props
   const { footer, setCurrentTab, disabledFooter } = props
-  const { t } = useTranslation()
 
   const [value, setValue] = useState(0);
 
@@ -62,10 +60,10 @@ const Footer = (props: any) => {
           }}
           sx={{width: '100%'}}
         >
-          <BottomNavigationAction label={t("首页")} disabled={disabledFooter} icon={<Icon icon='material-symbols:home-work-outline' />} />
-          <BottomNavigationAction label={t("课表")} disabled={disabledFooter} icon={<Icon icon='uil:schedule' />} />
+          <BottomNavigationAction label={"首页"} disabled={disabledFooter} icon={<Icon icon='material-symbols:home-work-outline' />} />
+          <BottomNavigationAction label={"课表"} disabled={disabledFooter} icon={<Icon icon='uil:schedule' />} />
           <BottomNavigationAction
-            label={t("应用")}
+            label={"应用"}
             disabled={disabledFooter}
             icon={
               <img
@@ -83,8 +81,8 @@ const Footer = (props: any) => {
               bottom: '1rem',
             }}
           />
-          <BottomNavigationAction label={t("消息")} disabled={disabledFooter} icon={<Icon icon='mdi:message-processing-outline' />} />
-          <BottomNavigationAction label={t("我的")} disabled={disabledFooter} icon={<Icon icon='mdi:account-box-outline' />} />
+          <BottomNavigationAction label={"消息"} disabled={disabledFooter} icon={<Icon icon='mdi:message-processing-outline' />} />
+          <BottomNavigationAction label={"我的"} disabled={disabledFooter} icon={<Icon icon='mdi:account-box-outline' />} />
         </BottomNavigation>
       </Box>
   )

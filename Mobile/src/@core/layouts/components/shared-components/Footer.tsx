@@ -10,8 +10,6 @@ import Icon from '../../../../@core/components/icon'
 
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import { useTranslation } from 'react-i18next'
-
 
 interface Props {
   settings: LayoutProps['settings']
@@ -23,7 +21,6 @@ interface Props {
 const Footer = (props: Props) => {
   // ** Props
   const { settings } = props
-  const { t } = useTranslation()
 
   const [value, setValue] = useState(0);
 
@@ -56,11 +53,11 @@ const Footer = (props: Props) => {
           }}
           sx={{width: '100%'}}
         >
-          <BottomNavigationAction label={t("首页")} icon={<Icon icon='material-symbols:home-work-outline' />} />
-          <BottomNavigationAction label={t("课表")} icon={<Icon icon='uil:schedule' />} />
-          <BottomNavigationAction label={t("应用")} icon={<Icon icon='icon-park-outline:all-application' />} />
-          <BottomNavigationAction label={t("消息")} icon={<Icon icon='mdi:message-processing-outline' />} />
-          <BottomNavigationAction label={t("我的")} icon={<Icon icon='mdi:account-box-outline' />} />
+          <BottomNavigationAction label={"首页"} icon={<Icon icon='material-symbols:home-work-outline' />} />
+          <BottomNavigationAction label={"课表"} icon={<Icon icon='uil:schedule' />} />
+          <BottomNavigationAction label={"应用"} icon={<Icon icon='icon-park-outline:all-application' />} />
+          <BottomNavigationAction label={"消息"} icon={<Icon icon='mdi:message-processing-outline' />} />
+          <BottomNavigationAction label={"我的"} icon={<Icon icon='mdi:account-box-outline' />} />
         </BottomNavigation>
       </Box>
   )
