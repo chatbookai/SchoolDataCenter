@@ -4,6 +4,7 @@ import authConfig from 'src/configs/auth'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 const TermsofUse = () => {
+  
   return (
     <div style={{margin: '20px'}}>
       <div className="d-export-content" style={{ marginTop: '60px', marginBottom: '70px', fontSize: '0.9rem' }}>

@@ -151,13 +151,11 @@ const LoginPage = () => {
     setTitle('Setting')
     setRightButtonText('QR')
     setRightButtonIcon('')
+    setHeaderHidden(true)
   }
   
   const LeftIconOnClick = () => {
     switch(pageModel) {
-      case 'Login':
-        handleGoHome()
-        break
       case 'PrivacyPolicy':
       case 'TermsOfUse':
         handleGoHome()
