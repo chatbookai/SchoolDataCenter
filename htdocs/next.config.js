@@ -13,6 +13,8 @@ const withTM = require('next-transpile-modules')([
 ])
 
 module.exports = withTM({
+  output: 'export',
+  distDir: 'webroot',
   trailingSlash: true,
   reactStrictMode: false,
   experimental: {
