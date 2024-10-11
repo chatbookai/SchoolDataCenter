@@ -98,16 +98,16 @@ const ViewTableCore = (props: ViewTableType) => {
   const [approvalNodes, setApprovalNodes] = useState<{[key:string]:any}>({})
   const [print, setPrint] = useState<{[key:string]:any}>({})
   const [model, setModel] = useState<string>("")
-  
+
   useEffect(() => {
     Mousetrap.bind(['alt+c', 'command+c'], handleClose);
-    
+
     return () => {
       Mousetrap.unbind(['alt+c', 'command+c']);
     }
   });
 
-  //console.log("defaultValuesView--------------------------------", defaultValuesView)
+  console.log("newTableRowData--------------------------------", newTableRowData)
 
   const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
 
@@ -132,7 +132,7 @@ const ViewTableCore = (props: ViewTableType) => {
               }
               catch(Error: any) {
                   console.log("DecryptDataAES256GCMData view_default Error", Error)
-      
+
                   dataJson = data
               }
           }
@@ -161,7 +161,7 @@ const ViewTableCore = (props: ViewTableType) => {
         })
     }
   }, [id, editViewCounter, isMobileData])
-  
+
   //Need refresh data every time.
 
   const handleClose = () => {
@@ -189,14 +189,14 @@ const ViewTableCore = (props: ViewTableType) => {
                 <Table>
                   <TableBody>
                     {newTableRowData && newTableRowData.length>0 && newTableRowData.map((RowData: any, RowData_index: number) => {
-                      
+
                       const colSpan = RowData.length == 2 ? 1 : 3 ;
-                      
+
                       return (
                         <TableRow key={RowData_index}>
                           {RowData && RowData.map((CellData: any, FieldArray_index: number) => {
                             const FieldArray = CellData.FieldArray
-                            
+
                             //开始根据表单中每个字段的类型,进行不同的渲染,此部分比较复杂,注意代码改动.
                             if (FieldArray.type == "input"
                               || FieldArray.type == "email"
@@ -213,7 +213,7 @@ const ViewTableCore = (props: ViewTableType) => {
                               if (CellData.Value == "1971-01-01" || CellData.Value == "1971-01-01 00:00:00" || CellData.Value == "1971-01") {
                                 CellData.Value = "";
                               }
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
@@ -222,16 +222,16 @@ const ViewTableCore = (props: ViewTableType) => {
                               )
                             }//end if
                             else if (FieldArray.type == "password" || FieldArray.type == "EncryptField" || FieldArray.type == "comfirmpassword") {
-                              // Nothing to do   
+                              // Nothing to do
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
                                   <MUITableCell sx={{ width: '35%', whiteSpace: 'wrap', wordWrap: 'break-word' }}>******</MUITableCell>
                                 </Fragment>
-                              )            
+                              )
                             }
                             else if (FieldArray.type == "select" || FieldArray.type == "autocomplete" || FieldArray.type == "radiogroup") {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
@@ -240,7 +240,7 @@ const ViewTableCore = (props: ViewTableType) => {
                               )
                             }
                             else if (FieldArray.type == "autocompletemulti") {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
@@ -249,7 +249,7 @@ const ViewTableCore = (props: ViewTableType) => {
                               )
                             }
                             else if (FieldArray.type == "checkbox") {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
@@ -258,16 +258,18 @@ const ViewTableCore = (props: ViewTableType) => {
                               )
                             }
                             else if (FieldArray.type == "textarea") {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
+                                    <MUITableCell sx={{ width: '50%' }} colSpan={`${colSpan+1}`}>
+                                      {FieldArray.label}
+                                      {CellData.Value}
+                                    </MUITableCell>
                                 </Fragment>
                               )
                             }
                             else if (FieldArray.type == "avatar" && CellData.Value != undefined) {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
@@ -280,7 +282,7 @@ const ViewTableCore = (props: ViewTableType) => {
                               )
                             }
                             else if ((FieldArray.type == "images" || FieldArray.type == "images2") && CellData.Value != undefined) {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '50%' }} colSpan={colSpan+1}>
@@ -299,84 +301,85 @@ const ViewTableCore = (props: ViewTableType) => {
                                         </div>
                                       )
                                     })}
-                                    </div>                               
+                                    </div>
                                   </MUITableCell>
                                 </Fragment>
                               )
                             }
                             else if ((FieldArray.type == "files" || FieldArray.type == "files2") && CellData.Value != undefined) {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '50%' }} colSpan={colSpan+1}>
                                     {FieldArray.label}:
                                     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                     {CellData.Value && CellData.Value.length>0 && CellData.Value.map((FileUrl: any)=>{
-                                      
+
                                       return (
                                         <ListItem key={FileUrl['name']} style={{padding: "3px"}}>
                                         <div className='file-details' style={{display: "flex"}}>
                                           <div style={{padding: "3px 3px 0 0"}}>
-                                            {FileUrl.type.startsWith('image') ? 
+                                            {FileUrl.type.startsWith('image') ?
                                             <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
                                               <ImgStyled68 src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
                                             </Box>
-                                            : <Icon icon='mdi:file-document-outline' fontSize={28}/> 
+                                            : <Icon icon='mdi:file-document-outline' fontSize={28}/>
                                             }
                                           </div>
                                           <div>
-                                            {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ? 
+                                            {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ?
                                               <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
                                             :
                                               ''
-                                            }      
-                                            {FileUrl['type']=="file" ? 
+                                            }
+                                            {FileUrl['type']=="file" ?
                                               <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
                                             :
                                               ''
-                                            }              
-                                            {FileUrl['size']>0 ? 
+                                            }
+                                            {FileUrl['size']>0 ?
                                               <Typography className='file-size' variant='body2'>
                                                   {Math.round(FileUrl['size'] / 100) / 10 > 1000
                                                   ? `${(Math.round(FileUrl['size'] / 100) / 10000).toFixed(1)} mb`
                                                   : `${(Math.round(FileUrl['size'] / 100) / 10).toFixed(1)} kb`}
                                               </Typography>
                                               : ''
-                                            }                                  
+                                            }
                                           </div>
                                         </div>
                                         </ListItem>
                                         )
-                                    })}  
-                                    </div>                              
+                                    })}
+                                    </div>
                                   </MUITableCell>
                                 </Fragment>
                               )
                             }
                             else if (FieldArray.type == "editor") {
-                              
+
                               return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}><div dangerouslySetInnerHTML={{ __html: CellData.Value }} /></MUITableCell>
-                                </Fragment>
+                                  <Fragment key={FieldArray_index}>
+                                    <MUITableCell sx={{ width: '50%' }} colSpan={`${colSpan+1}`}>
+                                      {FieldArray.label}
+                                      <div dangerouslySetInnerHTML={{ __html: CellData.Value }} /></MUITableCell>
+                                  </Fragment>
                               )
-                            }    
+                            }
                             else if (FieldArray.type == "tablefiltercolor" ||
                                     FieldArray.type == "tablefilter" ||
                                     FieldArray.type == "radiogroup" ||
                                     FieldArray.type == "radiogroupcolor"
                                     ) {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
                                   <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
                                 </Fragment>
                               )
-                            }                      
+                            }
                             else {
-                              
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                   <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
@@ -386,7 +389,7 @@ const ViewTableCore = (props: ViewTableType) => {
                                 </Fragment>
                               )
                             }
-                            
+
                           })}
                         </TableRow>
                       )
@@ -403,7 +406,7 @@ const ViewTableCore = (props: ViewTableType) => {
                       <TableHead>
                         <TableRow key="ChildTableTableRow">
                           {approvalNodes.Fields && approvalNodes.Fields.map((Item: any, ItemIndex: number) => {
-                            
+
                             return <MUITableCell sx={{ width: '20%', whiteSpace: 'nowrap' }} key={ItemIndex}>{Item}</MUITableCell>
                           })}
                         </TableRow>
@@ -411,7 +414,7 @@ const ViewTableCore = (props: ViewTableType) => {
                       <TableBody>
                         {approvalNodes.Nodes && approvalNodes.Nodes.map((Node: string, NodeIndex: number) => {
                           const FieldTemp = `${Node}${approvalNodes.Fields[1]}`
-                          
+
                           return (
                             <Fragment key={NodeIndex}>
                               {FieldTemp in defaultValuesView ?
@@ -431,7 +434,7 @@ const ViewTableCore = (props: ViewTableType) => {
                   </Fragment>
                   : ''
                 }
-                
+
                 {childTable && childTable.allFields && childTable.data ?
                   <Fragment>
                   <Divider />
@@ -439,18 +442,18 @@ const ViewTableCore = (props: ViewTableType) => {
                       <TableHead>
                         <TableRow key="ChildTableTableRow">
                           {childTable.allFields && childTable.allFields.Default.map((Item: any, Index: number) => {
-                            
+
                             return <MUITableCell key={Index}>{Item.code? Item.code : Item.name}</MUITableCell>
                           })}
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {childTable.data && childTable.data.map((RowItem: any, RowIndex: number) => {
-                          
+
                           return (
                             <TableRow key={RowIndex}>
                               {childTable.allFields && childTable.allFields.Default.map((Item: any, Index: number) => {
-                                
+
                                 return <MUITableCell key={Index}>{Item.type=="autocomplete" ? RowItem[Item.code? Item.code : Item.name] : RowItem[Item.name]}</MUITableCell>
                               })}
                             </TableRow>
@@ -467,7 +470,7 @@ const ViewTableCore = (props: ViewTableType) => {
                       <Button onClick={()=>{window.print();}}  variant='contained' size="small">{print.text}</Button>
                   </Grid>
                   : ''
-                }    
+                }
 
               </Grid>
             </CardContent>
