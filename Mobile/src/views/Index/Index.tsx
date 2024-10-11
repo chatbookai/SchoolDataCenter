@@ -17,6 +17,8 @@ import Header from '../Layout/Header'
 import axios from 'axios'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
+import EngineeModelApp from "src/views/Enginee/index"
+
 
 const ContentWrapper = styled('main')(({ theme }) => ({
   flexGrow: 1,
@@ -39,9 +41,10 @@ const Index = ({  }: any) => {
   const [pageModel, setPageModel] = useState<string>('MainSetting')
   const [HeaderHidden, setHeaderHidden] = useState<boolean>(false)
   const [LeftIcon, setLeftIcon] = useState<string>('')
-  const [Title, setTitle] = useState<string>('Setting')
+  const [Title, setTitle] = useState<string>('应用')
   const [RightButtonText, setRightButtonText] = useState<string>('')
   const [RightButtonIcon, setRightButtonIcon] = useState<string>('')
+  const [appItemId, setAppItemId] = useState<string>('')
 
   useEffect(() => {
     handleGetMainMenus()
@@ -110,30 +113,16 @@ const Index = ({  }: any) => {
     setRefreshWalletData(refreshWalletData+1)
     setPageModel('MainSetting')
     setLeftIcon('')
-    setTitle('Setting')
-    setRightButtonText('QR')
+    setTitle('应用')
+    setRightButtonText('')
     setRightButtonIcon('')
   }
 
   const LeftIconOnClick = () => {
     switch(pageModel) {
       case 'MainSetting':
+      case 'EngineeModelApp':
         handleWalletGoHome()
-        break
-      case 'General':
-      case 'Support':
-      case 'SecurityPrivacy':
-        handleWalletGoHome()
-        break
-      case 'Language':
-        handleClickGeneralButton()
-        break
-      case 'Theme':
-        handleClickGeneralButton()
-        break
-      case 'PrivacyPolicy':
-      case 'TermsOfUse':
-        handleClickSecurityPrivacyButton()
         break
     }
   }
@@ -152,20 +141,12 @@ const Index = ({  }: any) => {
     setRightButtonIcon('')
   }, []);
 
-  const handleClickSecurityPrivacyButton = () => {
+  const handleGoAppItem = (item: any) => {
+    setAppItemId(item.path.replace('/apps/', ''))
     setCounter(counter + 1)
-    setPageModel('SecurityPrivacy')
+    setPageModel('EngineeModelApp')
     setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Security & Privacy')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
-  const handleClickGeneralButton = () => {
-    setCounter(counter + 1)
-    setPageModel('General')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('General Setting')
+    setTitle(item.title)
     setRightButtonText('')
     setRightButtonIcon('')
   }
@@ -206,7 +187,7 @@ const Index = ({  }: any) => {
                         {menuItem.children && menuItem.children.map((item: any, index: number) => (
                           <Grid item xs={3} key={index}>
                             <Box textAlign="center" sx={{my: 0}}>
-                              <img src={authConfig.AppLogo} alt={item.title} style={{ width: '45px', height: '45px' }} />
+                              <img src={authConfig.AppLogo} alt={item.title} style={{ width: '45px', height: '45px' }} onClick={()=>handleGoAppItem(item)}/>
                               <Typography variant="body2"
                                 sx={{
                                   my: 0,
@@ -214,6 +195,7 @@ const Index = ({  }: any) => {
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis'
                                 }}
+                                onClick={()=>handleGoAppItem(item)}
                               >{item.title}</Typography>
                             </Box>
                           </Grid>
@@ -224,6 +206,12 @@ const Index = ({  }: any) => {
 
                 })}
               </Container>
+            )}
+
+            {pageModel == 'EngineeModelApp' && appItemId && (
+              <>
+                <EngineeModelApp backEndApi={`apps/apps_${appItemId}.php`} externalId=''/>
+              </>
             )}
 
         </ContentWrapper>
