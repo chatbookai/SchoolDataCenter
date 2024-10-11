@@ -3,24 +3,20 @@ import { useState, useEffect, Fragment } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Container from '@mui/material/Container'
 
 // ** MUI Imports
-import Icon from '../../@core/components/icon'
+//import Icon from '../../@core/components/icon'
 import authConfig from '../../configs/auth'
-import { useSettings } from '../../@core/hooks/useSettings'
 
 import { styled } from '@mui/material/styles'
 import Header from '../Layout/Header'
-import TermsofUse from '../Setting/TermsofUse'
-import PrivacyPolicy from '../Setting/PrivacyPolicy'
-import Link from 'next/link'
+
+import axios from 'axios'
+import { DecryptDataAES256GCM } from 'src/configs/functions'
+
 
 const ContentWrapper = styled('main')(({ theme }) => ({
   flexGrow: 1,
@@ -34,9 +30,8 @@ const ContentWrapper = styled('main')(({ theme }) => ({
 }))
 
 const Index = ({  }: any) => {
-
   // ** Hook
-  const { settings, saveSettings } = useSettings()
+  const [menuArray, setMenuArray] = useState<any[]>([])
 
   const contentHeightFixed = {}
   const [counter, setCounter] = useState<number>(0)
@@ -48,12 +43,68 @@ const Index = ({  }: any) => {
   const [RightButtonText, setRightButtonText] = useState<string>('')
   const [RightButtonIcon, setRightButtonIcon] = useState<string>('')
 
-  const [themeValue, setThemeValue] = useState<string>(settings.mode)
+  useEffect(() => {
+    handleGetMainMenus()
+  }, []);
 
-  const themeArray = [
-    {name:'Dark', value:'dark'},
-    {name:'Light', value:'light'}
-  ]
+  const handleGetMainMenus = () => {
+    if(window)  {
+      const storageMainMenus = window.localStorage.getItem(authConfig.storageMainMenus)
+      if(storageMainMenus && storageMainMenus != undefined) {
+        try{
+          const storageMainMenusJson = JSON.parse(storageMainMenus)
+          setMenuArray(storageMainMenusJson)
+        }
+        catch(Error: any) {
+            console.log("handleGetMainMenus storageMainMenus Error", storageMainMenus)
+        }
+      }
+    }
+    const backEndApi = authConfig.indexMenuspath
+    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+    axios.get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken } }).then(res => {
+      let dataJson: any = null
+      const data = res.data
+      if(data && data.isEncrypted == "1" && data.data)  {
+          const i = data.data.slice(0, 32);
+          const t = data.data.slice(-32);
+          const e = data.data.slice(32, -32);
+          const k = authConfig.k;
+          const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+          try{
+              dataJson = JSON.parse(DecryptDataAES256GCMData)
+          }
+          catch(Error: any) {
+              console.log("handleGetMainMenus DecryptDataAES256GCMData view_default Error", Error)
+              dataJson = data
+          }
+      }
+      else {
+          dataJson = data
+      }
+      if(dataJson) {
+        setMenuArray(dataJson)
+      }
+      if(window && dataJson) {
+        window.localStorage.setItem(authConfig.storageMainMenus, JSON.stringify(dataJson))
+      }
+      console.log("handleGetMainMenus menuArray dataJson", dataJson)
+    })
+    .catch(error => {
+      if (error.response) {
+        console.error('handleGetMainMenus Error response:', error.response.data);
+        console.error('handleGetMainMenus Error status:', error.response.status);
+        console.error('handleGetMainMenus Error headers:', error.response.headers);
+      }
+      else if (error.request) {
+        console.error('handleGetMainMenus Error request:', error.request);
+      }
+      else {
+        console.error('handleGetMainMenus Error message:', error.message);
+      }
+      console.error('handleGetMainMenus Error config:', error.config);
+    });
+  }
 
   const handleWalletGoHome = () => {
     setRefreshWalletData(refreshWalletData+1)
@@ -63,7 +114,7 @@ const Index = ({  }: any) => {
     setRightButtonText('QR')
     setRightButtonIcon('')
   }
-  
+
   const LeftIconOnClick = () => {
     switch(pageModel) {
       case 'MainSetting':
@@ -86,14 +137,14 @@ const Index = ({  }: any) => {
         break
     }
   }
-  
+
   const RightButtonOnClick = () => {
     switch(pageModel) {
         case 'Contacts':
           break
       }
   }
-    
+
   const [refreshWalletData, setRefreshWalletData] = useState<number>(0)
 
   useEffect(() => {
@@ -119,41 +170,6 @@ const Index = ({  }: any) => {
     setRightButtonIcon('')
   }
 
-  const handleClickThemeButton = () => {
-    setCounter(counter + 1)
-    setPageModel('Theme')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Theme')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
-  const handleSelectTheme = (Theme: string) => {
-    console.log("Theme", Theme)
-    setThemeValue(Theme)
-    setTitle(Theme)
-
-    //@ts-ignore
-    saveSettings({ ...settings, ['mode']: Theme })
-  }
-
-  const handleClickTermsOfUseButton = () => {
-    setPageModel('TermsOfUse')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Terms of Use')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
-  const handleClickPrivacyPolicyButton = () => {
-    setPageModel('PrivacyPolicy')
-    setLeftIcon('mdi:arrow-left-thin')
-    setTitle('Privacy Policy')
-    setRightButtonText('')
-    setRightButtonIcon('')
-  }
-
-
   return (
     <Fragment>
       <Header Hidden={HeaderHidden} LeftIcon={LeftIcon} LeftIconOnClick={LeftIconOnClick} Title={Title} RightButtonText={RightButtonText} RightButtonOnClick={RightButtonOnClick} RightButtonIcon={RightButtonIcon}/>
@@ -176,337 +192,38 @@ const Index = ({  }: any) => {
                 })
             }}
             >
-            
-            {pageModel == 'MainSetting' && ( 
-              <Grid container spacing={2}>
-                <Grid item xs={12} sx={{height: 'calc(100%)'}}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickGeneralButton()}>
-                                    <Icon icon='oui:integration-general' fontSize={38} />
-                                </IconButton>
-                                <Box sx={{ cursor: 'pointer', ml: 2, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickGeneralButton()}
-                                    >
-                                    <Typography sx={{ 
-                                      color: 'text.primary',
-                                      overflow: 'hidden',
-                                      textOverflow: 'ellipsis',
-                                      whiteSpace: 'nowrap',
-                                    }}
-                                    >
-                                    {'General'}
-                                    </Typography>
-                                    <Box sx={{ display: 'flex'}}>
-                                    <Typography variant='body2' sx={{ 
-                                        color: `secondary.primary`, 
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        flex: 1
-                                    }}>
-                                        {'Edit language, currency and theme'}
-                                    </Typography>
-                                    </Box>
-                                </Box>
-                                <Box textAlign="right">
-                                    <IconButton sx={{ p: 0 }} onClick={()=>handleClickGeneralButton()}>
-                                        <Icon icon='mdi:chevron-right' fontSize={30} />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>handleClickSecurityPrivacyButton()}>
-                                <Icon icon='mdi:security-lock-outline' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ cursor: 'pointer', ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickSecurityPrivacyButton()}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
+
+            {pageModel == 'MainSetting' && (
+              <Container>
+                {menuArray && menuArray.length > 0 && menuArray.map((menuItem: any, menuIndex: number)=>{
+
+                  return (
+                    <Box my={2} key={menuIndex}>
+                        <Typography variant="h6" sx={{ py: 0.5, pl: 2, borderRadius: '5px', mb: 2, fontSize: '16px' }}>
+                          {menuItem.title}
+                        </Typography>
+                      <Grid container spacing={2}>
+                        {menuItem.children && menuItem.children.map((item: any, index: number) => (
+                          <Grid item xs={3} key={index}>
+                            <Box textAlign="center" sx={{my: 0}}>
+                              <img src={authConfig.AppLogo} alt={item.title} style={{ width: '45px', height: '45px' }} />
+                              <Typography variant="body2"
+                                sx={{
+                                  my: 0,
                                   whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {'Security & Privacy'}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {'Management applications, etc'}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box textAlign="right">
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickSecurityPrivacyButton()}>
-                                    <Icon icon='mdi:chevron-right' fontSize={30} />
-                                </IconButton>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>null}>
-                                <Icon icon='material-symbols:support-agent' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>null}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
                                   overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
+                                  textOverflow: 'ellipsis'
                                 }}
-                                >
-                                  {'Support'}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {'Contact our customer support'}
-                                  </Typography>
-                                  <Link href={authConfig.Github} target='_blank'>
-                                    <Typography variant='body2' sx={{ 
-                                      color: `secondary.primary`, 
-                                      overflow: 'hidden',
-                                      textOverflow: 'ellipsis',
-                                      whiteSpace: 'nowrap',
-                                      flex: 1
-                                    }}>
-                                      {'Github'}
-                                    </Typography>
-                                  </Link>
-                                </Box>
-                              </Box>
+                              >{item.title}</Typography>
                             </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>null}>
-                                <Icon icon='material-symbols:help-outline' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>null}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {'Version'}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {authConfig.AppVersion}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                    </Grid>
-                </Grid>
-              </Grid>
-            )}
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
+                  )
 
-            {pageModel == 'General' && ( 
-              <Grid container spacing={2}>
-                <Grid item xs={12} sx={{height: 'calc(100%)'}}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>handleClickThemeButton()}>
-                                <Icon icon='line-md:light-dark' fontSize={34} />
-                              </IconButton>
-                              <Box sx={{ cursor: 'pointer', ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickThemeButton()}
-                                >
-                                <Typography sx={{ 
-                                  color: 'text.primary',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                >
-                                  {'Theme'}
-                                </Typography>
-                                <Box sx={{ display: 'flex'}}>
-                                  <Typography variant='body2' sx={{ 
-                                    color: `secondary.primary`, 
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1
-                                  }}>
-                                    {'Theme'}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                              <Box textAlign="right">
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickThemeButton()}>
-                                    <Icon icon='mdi:chevron-right' fontSize={30} />
-                                </IconButton>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                    </Grid>
-                </Grid>
-              </Grid>
-            )}
-
-            {pageModel == 'SecurityPrivacy' && ( 
-              <Grid container spacing={2}>
-                <Grid item xs={12} sx={{height: 'calc(100%)'}}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickTermsOfUseButton()}>
-                                    <Icon icon='mdi:text-box-outline' fontSize={38} />
-                                </IconButton>
-                                <Box sx={{ cursor: 'pointer', ml: 2, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickTermsOfUseButton()}
-                                    >
-                                    <Typography sx={{ 
-                                    color: 'text.primary',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    }}
-                                    >
-                                    {'Terms of Use'}
-                                    </Typography>
-                                    <Box sx={{ display: 'flex'}}>
-                                    <Typography variant='body2' sx={{ 
-                                        color: `secondary.primary`, 
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        flex: 1
-                                    }}>
-                                        {'Terms of Use'}
-                                    </Typography>
-                                    </Box>
-                                </Box>
-                                <Box textAlign="right">
-                                    <IconButton sx={{ p: 0 }} onClick={()=>handleClickTermsOfUseButton()}>
-                                        <Icon icon='mdi:chevron-right' fontSize={30} />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ py: 1 }}>
-                          <Card>
-                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                <IconButton sx={{ p: 0 }} onClick={()=>handleClickPrivacyPolicyButton()}>
-                                    <Icon icon='iconoir:privacy-policy' fontSize={38} />
-                                </IconButton>
-                                <Box sx={{ cursor: 'pointer', ml: 2, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>handleClickPrivacyPolicyButton()}
-                                    >
-                                    <Typography sx={{ 
-                                    color: 'text.primary',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    }}
-                                    >
-                                    {'Privacy Policy'}
-                                    </Typography>
-                                    <Box sx={{ display: 'flex'}}>
-                                    <Typography variant='body2' sx={{ 
-                                        color: `secondary.primary`, 
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        flex: 1
-                                    }}>
-                                        {'Privacy Policy'}
-                                    </Typography>
-                                    </Box>
-                                </Box>
-                                <Box textAlign="right">
-                                    <IconButton sx={{ p: 0 }} onClick={()=>handleClickPrivacyPolicyButton()}>
-                                        <Icon icon='mdi:chevron-right' fontSize={30} />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                          </Card>
-                        </Grid>
-                    </Grid>
-                </Grid>
-              </Grid>
-            )}
-
-            {pageModel == 'Theme' && (
-                <Grid container spacing={2}>
-
-                    <RadioGroup row value={'value'}  sx={{width: '100%'}} onClick={(e: any)=>e.target.value && handleSelectTheme(e.target.value)}>
-                        {themeArray.map((Theme: any, index: number) => {
-
-                            return (
-                                <Grid item xs={12} sx={{ py: 1 }} key={index}>
-                                    <Card sx={{ml: 2}}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
-                                            <Box sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', width: '100%', ml: 2 }}  onClick={()=>handleSelectTheme(Theme.value)}>
-                                                <Typography sx={{ color: 'text.primary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', }} >
-                                                    {Theme.name}
-                                                </Typography>
-                                            </Box>
-                                            <Box textAlign="right" sx={{m: 0, p: 0}}>
-                                                <FormControlLabel value={Theme.value} control={<Radio sx={{justifyContent: 'center', ml: 3, mr: 0}} checked={themeValue == Theme.value}/>} label="" />
-                                            </Box>
-                                        </Box>
-                                    </Card>
-                                </Grid>
-                            )
-
-                        })}
-                    </RadioGroup>
-
-                </Grid>
-            )}
-
-            {pageModel == 'PrivacyPolicy' && ( 
-              <Grid container spacing={6}>
-                <Grid item xs={12}>
-                  <PrivacyPolicy />
-                </Grid>
-              </Grid>
-            )}
-
-            {pageModel == 'TermsOfUse' && ( 
-              <Grid container spacing={6}>
-                <Grid item xs={12}>
-                  <TermsofUse />
-                </Grid>
-              </Grid>
+                })}
+              </Container>
             )}
 
         </ContentWrapper>

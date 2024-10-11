@@ -28,6 +28,7 @@ const config = {
   refreshEndpoint: APP_URL+'jwt.php?action=refresh',
   registerEndpoint: APP_URL+'jwt/register',
   storageTokenKeyName: 'accessToken',
+  storageMainMenus: 'mainMenus',
   onTokenExpiration: 'refreshToken', // logout | refreshToken
   backEndApiHost: APP_URL,
   indexDashboardPath: indexDashboardPath,
