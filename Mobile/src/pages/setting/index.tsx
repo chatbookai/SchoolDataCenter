@@ -1,4 +1,4 @@
-import SettingModel from '../../views/Setting/Setting';
+import SettingModel from '../../views/Setting/MyProfile';
 
 const Setting = () => {
 

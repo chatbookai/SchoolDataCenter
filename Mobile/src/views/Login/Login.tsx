@@ -86,7 +86,7 @@ interface FormData {
   termsofUse: boolean
 }
 
-const Login = ({ setCurrentTab }: any) => {
+const Login = ({ setCurrentTab, setDisabledFooter }: any) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const auth = useAuth()
@@ -149,6 +149,7 @@ const Login = ({ setCurrentTab }: any) => {
 
   const handleGoIndex = () => {
     setCurrentTab('Index')
+    setDisabledFooter(false)
   }
 
   const handleGoLogin = () => {

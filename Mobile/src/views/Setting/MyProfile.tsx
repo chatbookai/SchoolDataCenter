@@ -18,8 +18,8 @@ import { useSettings } from '../../@core/hooks/useSettings'
 
 import { styled } from '@mui/material/styles'
 import Header from '../Layout/Header'
-import TermsofUse from '../Setting/TermsofUse'
-import PrivacyPolicy from '../Setting/PrivacyPolicy'
+import TermsofUse from './TermsofUse'
+import PrivacyPolicy from './PrivacyPolicy'
 import Link from 'next/link'
 
 const ContentWrapper = styled('main')(({ theme }) => ({
@@ -33,7 +33,7 @@ const ContentWrapper = styled('main')(({ theme }) => ({
   }
 }))
 
-const Setting = ({  }: any) => {
+const MyProfile = ({  }: any) => {
 
   // ** Hook
   const { settings, saveSettings } = useSettings()
@@ -41,10 +41,10 @@ const Setting = ({  }: any) => {
   const contentHeightFixed = {}
   const [counter, setCounter] = useState<number>(0)
 
-  const [pageModel, setPageModel] = useState<string>('MainSetting')
+  const [pageModel, setPageModel] = useState<string>('MyProfile')
   const [HeaderHidden, setHeaderHidden] = useState<boolean>(false)
   const [LeftIcon, setLeftIcon] = useState<string>('')
-  const [Title, setTitle] = useState<string>('Setting')
+  const [Title, setTitle] = useState<string>('我的资料')
   const [RightButtonText, setRightButtonText] = useState<string>('')
   const [RightButtonIcon, setRightButtonIcon] = useState<string>('')
 
@@ -57,16 +57,16 @@ const Setting = ({  }: any) => {
 
   const handleWalletGoHome = () => {
     setRefreshWalletData(refreshWalletData+1)
-    setPageModel('MainSetting')
+    setPageModel('MyProfile')
     setLeftIcon('')
-    setTitle('Setting')
+    setTitle('MyProfile')
     setRightButtonText('QR')
     setRightButtonIcon('')
   }
   
   const LeftIconOnClick = () => {
     switch(pageModel) {
-      case 'MainSetting':
+      case 'MyProfile':
         handleWalletGoHome()
         break
       case 'General':
@@ -177,7 +177,7 @@ const Setting = ({  }: any) => {
             }}
             >
             
-            {pageModel == 'MainSetting' && ( 
+            {pageModel == 'MyProfile' && ( 
               <Grid container spacing={2}>
                 <Grid item xs={12} sx={{height: 'calc(100%)'}}>
                     <Grid container spacing={2}>
@@ -314,6 +314,38 @@ const Setting = ({  }: any) => {
                                 }}
                                 >
                                   {'Version'}
+                                </Typography>
+                                <Box sx={{ display: 'flex'}}>
+                                  <Typography variant='body2' sx={{ 
+                                    color: `secondary.primary`, 
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    flex: 1
+                                  }}>
+                                    {authConfig.AppVersion}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
+                          </Card>
+                        </Grid>
+                        <Grid item xs={12} sx={{ py: 1 }}>
+                          <Card>
+                            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.7}}>
+                              <IconButton sx={{ p: 0, ml: 1 }} onClick={()=>null}>
+                                <Icon icon='material-symbols:help-outline' fontSize={34} />
+                              </IconButton>
+                              <Box sx={{ ml: 2.5, display: 'flex', flexDirection: 'column', width: '100%' }} onClick={()=>null}
+                                >
+                                <Typography sx={{ 
+                                  color: 'text.primary',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                }}
+                                >
+                                  {'退出'}
                                 </Typography>
                                 <Box sx={{ display: 'flex'}}>
                                   <Typography variant='body2' sx={{ 
@@ -515,4 +547,4 @@ const Setting = ({  }: any) => {
   )
 }
 
-export default Setting
+export default MyProfile

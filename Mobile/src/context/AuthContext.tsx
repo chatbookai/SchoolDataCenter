@@ -12,7 +12,7 @@ import authConfig from 'src/configs/auth'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { AuthValuesType, RegisterParams, ErrCallbackType, UserDataType } from './types'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {

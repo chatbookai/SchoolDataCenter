@@ -42,19 +42,19 @@ const Footer = (props: any) => {
             console.log("FooterContent event", newValue)
             switch(newValue) {
               case 0:
-                setCurrentTab('首页')
+                setCurrentTab('Index')
                 break;
               case 1:
-                setCurrentTab('课表')
+                setCurrentTab('Schedule')
                 break;
               case 2:
-                setCurrentTab('应用')
+                setCurrentTab('Application')
                 break;
               case 3:
-                setCurrentTab('消息')
+                setCurrentTab('Message')
                 break;
-              case 3:
-                setCurrentTab('联系人')
+              case 4:
+                setCurrentTab('MyProfile')
                 break;
             }
           }}
