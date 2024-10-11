@@ -21,7 +21,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContentText from '@mui/material/DialogContentText'
 
-import { GridRowId } from '@mui/x-data-grid-pro'
+import { GridRowId } from '@mui/x-data-grid'
 import toast from 'react-hot-toast'
 
 import {isMobile} from 'src/configs/functions'
@@ -54,24 +54,24 @@ interface TableHeaderProps {
 }
 
 const IndexTableHeader = (props: TableHeaderProps) => {
-  
+
   // ** Props
   const { filter, handleFilterChange, handleFilter, toggleAddTableDrawer, toggleImportTableDrawer, toggleExportTableDrawer, searchFieldText, searchFieldArray, selectedRows, multireview, multiReviewHandleFilter, button_search, button_add, button_import, button_export, isAddButton, isImportButton, isExportButton, CSRF_TOKEN, MobileEndShowSearch, MobileEndShowGroupFilter } = props
   console.log("IndexTableHeader props", props)
   const defaultValuesInitial = { "searchFieldName": searchFieldArray && searchFieldArray[0] && searchFieldArray[0].value ? searchFieldArray[0].value : undefined, "searchFieldValue": "", "multiReviewInputName": "" }
-  
+
   const defaultValues = JSON.parse(JSON.stringify(defaultValuesInitial))
   const [filterSelectValue, setFilterSelectValue] = useState<any[]>([])
 
   const isMobileData = isMobile()
 
   useEffect(() => {
-    
+
     //Mousetrap.bind(['alt+f', 'command+f'], handleSubmit(onSubmit));
     Mousetrap.bind(['alt+a', 'command+a'], toggleAddTableDrawer);
     Mousetrap.bind(['alt+i', 'command+i'], toggleImportTableDrawer);
     Mousetrap.bind(['alt+e', 'command+e'], toggleExportTableDrawer);
-    
+
     return () => {
       Mousetrap.unbind(['alt+f', 'command+f']);
       Mousetrap.unbind(['alt+a', 'command+a']);
@@ -86,7 +86,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
   //console.log("filter", filter)
   //console.log("filter*******************************", filter)
   //console.log("searchFieldArray*******************************", searchFieldArray)
-  
+
   const {
     setValue,
     control,
@@ -134,7 +134,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
   }
 
   const myRef:Ref<any> = useRef(null)
-  
+
   //setValue("searchFieldName", searchFieldArray[0].value)
   //console.log("searchFieldNamesearchFieldNamesearchFieldName", searchFieldArray[0].value)
 
@@ -145,15 +145,15 @@ const IndexTableHeader = (props: TableHeaderProps) => {
           <CardContent sx={{ pl: 3, pb: 1, pt: 1 }}>
             <Grid container spacing={6}>
               {filter.length > 0 && filter.map((Filter: any, Filter_index: number) => {
-                
+
                 //const [valueFunction, setStatusFunction] = FilterStateMap['Filter_'+Filter_index];
-                
+
                 return (
                   <Grid item sm={3} xs={6} key={"Filter_" + Filter_index}>
                     <FormControl fullWidth size="small">
                       <InputLabel id={Filter.name}>{Filter.text}</InputLabel>
                       <Select
-                      
+
                         //multiple
                         fullWidth
                         value={filterSelectValue[Filter_index] || [Filter.selected]}
@@ -197,7 +197,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                   <Button sx={{ ml: 0, mb: 0 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
                 </Tooltip>
               </Grid>
-              : 
+              :
               null}
             </Grid>
           </CardContent>
@@ -267,17 +267,17 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 : ''}
               {isAddButton || isImportButton || isExportButton ?
                 <Grid item sm={4} xs={6}>
-                  {isAddButton ? 
+                  {isAddButton ?
                   <Tooltip title="Alt+a">
                     <Button sx={{ ml: 3, mb: 2 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
                   </Tooltip>
                   : ''}
-                  {isMobileData == false && isImportButton ? 
+                  {isMobileData == false && isImportButton ?
                   <Tooltip title="Alt+i">
                     <Button sx={{ ml: 3, mb: 2 }} onClick={toggleImportTableDrawer} variant='contained'>{button_import}</Button>
                   </Tooltip>
                   : ''}
-                  {isMobileData == false && isExportButton ? 
+                  {isMobileData == false && isExportButton ?
                   <Tooltip title="Alt+e">
                     <Button sx={{ ml: 3, mb: 2 }} onClick={toggleExportTableDrawer} variant='contained'>{button_export}</Button>
                   </Tooltip>
@@ -293,7 +293,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
         <Box sx={{ pl: 5, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
           <Grid container spacing={2}>
             {multireview && multireview.multireview && multireview.multireview.map((Item: any, index: number) => {
-              
+
               return (
                 <Grid item key={"Grid_" + index}>
                   <Fragment>
@@ -312,10 +312,10 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                       </DialogContent>
                       <DialogActions className='dialog-actions-dense'>
                         <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
-                        {Item.memoname != "" ? 
-                          <Button onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button> 
-                          : 
-                          <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button> 
+                        {Item.memoname != "" ?
+                          <Button onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
+                          :
+                          <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
                         }
                       </DialogActions>
                     </Dialog>

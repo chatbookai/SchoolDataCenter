@@ -1,9 +1,6 @@
 // ** React Imports
 import { createContext, useEffect, useState, ReactNode } from 'react'
 
-// ** Next Import
-import { useRouter } from 'next/router'
-
 // ** Axios
 import axios from 'axios'
 
@@ -37,9 +34,6 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
 
-  // ** Hooks
-  const router = useRouter()
-
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
@@ -65,7 +59,7 @@ const AuthProvider = ({ children }: Props) => {
                 }
                 catch(Error: any) {
                     console.log("DecryptDataAES256GCMData view_default Error", Error)
-        
+
                     dataJson = data
                 }
             }
@@ -83,9 +77,6 @@ const AuthProvider = ({ children }: Props) => {
             localStorage.removeItem('GO_SYSTEM')
             setUser(null)
             setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
           })
       } else {
         setLoading(false)
@@ -97,8 +88,8 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: any, errorCallback?: ErrCallbackType) => {
-    console.log("params", params)
-    const { Data, handleGoIndex, handleGoLogin } = params
+
+    const { Data, handleGoIndex } = params
     axios
       .post(authConfig.loginEndpoint, { Data })
       .then(async response => {
@@ -116,7 +107,7 @@ const AuthProvider = ({ children }: Props) => {
             }
             catch(Error: any) {
                 console.log("DecryptDataAES256GCMData view_default Error", Error)
-    
+
                 dataJson = data
             }
         }
@@ -124,7 +115,7 @@ const AuthProvider = ({ children }: Props) => {
 
             dataJson = data
         }
-        
+
         //console.log("authConfig.storageTokenKeyName",authConfig.storageTokenKeyName)
         //console.log("dataJson.accessToken",dataJson.accessToken)
         //console.log("dataJson.userData",dataJson.userData)
@@ -137,7 +128,7 @@ const AuthProvider = ({ children }: Props) => {
           true ? window.localStorage.setItem('userData', JSON.stringify(dataJson.userData)) : null
           true ? window.localStorage.setItem('GO_SYSTEM', JSON.stringify(dataJson.GO_SYSTEM)) : null
           handleGoIndex()
-          
+
           //const returnUrl = router.query.returnUrl
           //const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
           //router.replace(redirectURL as string)
@@ -175,7 +166,7 @@ const AuthProvider = ({ children }: Props) => {
               }
               catch(Error: any) {
                   console.log("DecryptDataAES256GCMData view_default Error", Error)
-      
+
                   dataJson = data
               }
           }
@@ -183,7 +174,7 @@ const AuthProvider = ({ children }: Props) => {
 
               dataJson = data
           }
-          
+
           if(dataJson.status == 'ok' && dataJson.accessToken) {
             window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
 
