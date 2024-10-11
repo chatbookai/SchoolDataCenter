@@ -104,7 +104,7 @@ const ImgStyled = styled('img')(() => ({
 const UserList = ({ backEndApi, externalId }: AddTableType) => {
   // ** Props
   const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-  
+
   // ** State
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingTipDisabled, setIsLoadingTipDisabled] = useState(false);
@@ -133,8 +133,8 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
   const [forbiddenEditRow, setForbiddenEditRow] = useState<any[]>([])
   const [forbiddenDeleteRow, setForbiddenDeleteRow] = useState<any[]>([])
-  
-  
+
+
   const [allSubmitFields, setAllSubmitFields] = useState({ 'searchFieldName': '' });
 
   const [pageSize, setPageSize] = useState<number>(10)
@@ -156,7 +156,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   }
 
   const [allRows, setAllRows] = useState<any>([])
-  
+
   const handleFilterChange = (field: any, value: string) => {
     const newAllFilters = JSON.parse(JSON.stringify(allSubmitFields))
     newAllFilters[field] = value
@@ -164,8 +164,8 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     setAllRows([])
     setPage(0)
     console.log("newAllFilters", newAllFilters)
-    
-    //const filterNew = JSON.parse(JSON.stringify(store.filter))    
+
+    //const filterNew = JSON.parse(JSON.stringify(store.filter))
     //filterNew[field] = value
     //setFilter(filterNew)
     console.log("paginationModel", paginationModel)
@@ -187,7 +187,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
             result.push(obj2);
         }
     }
-    
+
     return result;
   }
 
@@ -223,12 +223,12 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
           try{
             const ResJson = JSON.parse(DecryptDataAES256GCMData)
             console.log("DecryptDataAES256GCMData ResJson", ResJson)
-  
+
             return ResJson
           }
           catch(Error: any) {
             console.log("DecryptDataAES256GCMData Error", Error)
-  
+
             return []
           }
         }
@@ -257,7 +257,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         setAddEditActionOpen(!addEditActionOpen)
         setAddEditViewShowInWindow(true)
       }
-  
+
       if(response && response.init_default && response.init_default.MobileEndData && response.init_default.MobileEndData.length > 0) {
 
         const MobileEndDataNew = response.init_default.MobileEndData.map((Item: any)=>{
@@ -275,7 +275,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         else {
           setAllRows((prevData: any) => {
             const allRowsNow = mergeArrays(prevData, MobileEndDataNew)
-  
+
             return allRowsNow;
           });
         }
@@ -289,7 +289,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
           return {...prevData, ...Id2CSRF_TOKEN}
         });
 
-        //MobileEnd Forbidden Edit Row List 
+        //MobileEnd Forbidden Edit Row List
         setForbiddenEditRow((prevData: any) => [...prevData, ...response.init_default.ForbiddenEditRow]);
         setForbiddenDeleteRow((prevData: any) => [...prevData, ...response.init_default.ForbiddenDeleteRow]);
       }
@@ -305,17 +305,17 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
       }
 
       //setIsLoadingTipText(response.export_default.ExportLoading)
-      
+
       //setFilter(response.init_default.filter)
       setIsLoading(false);
       setIsLoadingTip(false);
       setPageSize(response.init_default.pageNumber)
       setPageCount(response.init_default.pageCount)
-      
+
       return response
     }
     else {
-      
+
       return []
     }
   })
@@ -368,7 +368,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
             const scrollY = window.scrollY;
             const windowHeight = window.innerHeight;
             const documentHeight = document.body.scrollHeight;
-            
+
             if (scrollY + windowHeight >= documentHeight && isLoadingTipDisabled === false && paginationModel.page < (pageCount-1)) {
                 setPaginationModel((paginationModel) => {
                     if (paginationModel.page < pageCount) {
@@ -399,7 +399,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     }
   }, [isMobileData, isLoadingTipDisabled, pageCount]);
 
-  
+
   const [innerHeight, setInnerHeight] = useState<number | string>(window.innerHeight)
   console.log("innerHeight",innerHeight)
 
@@ -510,7 +510,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
         XLSX.writeFile(wb, store.export_default.titletext+'.xlsx');
       }
-      
+
       /*
       const downloadLink = document.createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
@@ -664,7 +664,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     textDecoration: "none",
     color: "inherit",
   });
-  
+
   // set table every row actions, [edit, delete, or others] href={`?action=${action.action}&id=${row.id}`}
   store.columns.map((column: any, column_index: number) => {
     if (column && column.type == "actions" && column.actions) {
@@ -675,7 +675,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
             switch (action.action) {
               case 'view_default':
                 if (!store.init_default.ForbiddenViewRow.includes(row.id)) {
-                  
+
                   return (
                     <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
                       <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
@@ -686,11 +686,11 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                 }
                 break;
               case 'edit_default':
-                if (!store.init_default.ForbiddenEditRow.includes(row.id) 
-                    && 
+                if (!store.init_default.ForbiddenEditRow.includes(row.id)
+                    &&
                     (!store.init_default.CSRF_DATA || (store.init_default.CSRF_DATA && store.init_default.CSRF_DATA.Actions_In_List_Row_Array && store.init_default.CSRF_DATA.Actions_In_List_Row_Array.includes('Edit')))
                     ) {
-                  
+
                   return (
                     <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
                       <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
@@ -702,7 +702,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                 break;
               case 'delete_array':
                 if (!store.init_default.ForbiddenDeleteRow.includes(row.id)) {
-                  
+
                   return (
                     <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
                       <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
@@ -714,7 +714,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                 break;
               default:
                   if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
-                    
+
                     return (
                       <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
                         <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
@@ -742,7 +742,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                 switch (action) {
                   case 'view_default':
                     if (!store.init_default.ForbiddenViewRow.includes(row.id)) {
-                      
+
                       return (
                         <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
                           <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -754,7 +754,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                     break;
                   case 'edit_default':
                     if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
-                      
+
                       return (
                           <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
                             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -766,7 +766,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                     break;
                   case 'delete_array':
                     if (!store.init_default.ForbiddenDeleteRow.includes(row.id)) {
-                      
+
                       return (
                         <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
                           <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -778,7 +778,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                     break;
                   default:
                       if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
-                        
+
                         return (
                           <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
                             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -809,7 +809,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         </StyledLink>
       )
       columns_for_datagrid[column_index] = columnRenderCell
-    }    
+    }
     else if (column && column.type == "ExternalUrl") {
       const columnRenderCell = { ...column }
       columnRenderCell['renderCell'] = ({ row }: any) => (
@@ -859,7 +859,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     else if (column && column.type == "approvalnode") {
       const columnRenderCell = { ...column }
       columnRenderCell['renderCell'] = ({ row }: any) => {
-        
+
         return (
           row[column.field] != "" && row[column.field.replace("审核状态", "审核时间")] != "" ?
             (
@@ -886,42 +886,42 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         return (
           <Fragment>
           {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
-            
+
             return (
               <ListItem key={TempIndex} style={{padding: "3px"}}>
               <div className='file-details' style={{display: "flex"}}>
                 <div style={{padding: "3px 3px 0 0"}}>
-                  {FileUrl.type.startsWith('image') ? 
+                  {FileUrl.type.startsWith('image') ?
                   <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
                     <ImgStyled src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
                   </Box>
-                  : <Icon icon='mdi:file-document-outline' fontSize={28}/> 
+                  : <Icon icon='mdi:file-document-outline' fontSize={28}/>
                   }
                 </div>
                 <div>
-                  {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ? 
+                  {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ?
                     <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
                   :
                     ''
-                  }      
-                  {FileUrl['type']=="file" ? 
+                  }
+                  {FileUrl['type']=="file" ?
                     <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
                   :
                     ''
-                  }              
-                  {FileUrl['size']>0 && !FileUrl.type.startsWith('image') ? 
+                  }
+                  {FileUrl['size']>0 && !FileUrl.type.startsWith('image') ?
                     <Typography className='file-size' variant='body2'>
                         {Math.round(FileUrl['size'] / 100) / 10 > 1000
                         ? `${(Math.round(FileUrl['size'] / 100) / 10000).toFixed(1)} mb`
                         : `${(Math.round(FileUrl['size'] / 100) / 10).toFixed(1)} kb`}
                     </Typography>
                     : ''
-                  }                                  
+                  }
                 </div>
               </div>
               </ListItem>
               )
-          })} 
+          })}
           </Fragment>
         )
       }
@@ -934,7 +934,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         return (
           <Fragment>
           {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
-            
+
             return (
               <ListItem key={TempIndex} style={{padding: "3px"}}>
               <div className='file-details' style={{display: "flex"}}>
@@ -946,7 +946,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
               </div>
               </ListItem>
               )
-          })} 
+          })}
           </Fragment>
         )
       }
@@ -955,7 +955,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     else if (column && (column.type == "radiogroupcolor")) {
       const columnRenderCell = { ...column }
       columnRenderCell['renderCell'] = ({ row }: any) => {
-        
+
         return (
           row[column.field] != undefined &&row[column.field] != "" ?
             (
@@ -976,7 +976,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     else if (column && (column.type == "tablefiltercolor") && column.color) {
       const columnRenderCell = { ...column }
       columnRenderCell['renderCell'] = ({ row }: any) => {
-        
+
         return (
           row[column.field] != undefined && row[column.field] != "" ?
             (
@@ -998,7 +998,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
       columns_for_datagrid[column_index] = columnRenderCell
     }
   })
-  
+
   //console.log("store.init_default.ApprovalNodeFields",store.init_default.ApprovalNodeFields)
   //console.log("addEditActionId-addEditActionId-addEditActionId",store, addEditActionName)
   const renderMobileEndAvatar = (item: any) => {
@@ -1019,7 +1019,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
   return (
     <Grid container spacing={6}>
-      {store && store.init_action.action == 'init_default' && isMobileData == false ? 
+      {store && store.init_action.action == 'init_default' && isMobileData == false ?
       <Grid item xs={12}>
         <Card>
           {store.init_default.returnButton && store.init_default.returnButton.status ?
@@ -1033,7 +1033,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
             <CardHeader title={store.init_default.searchtitle} sx={{ pb: 2, pt: 3 }}/>
           }
           {store && store.init_default && store.init_default.rowdelete && store.init_default.rowdelete.map((Item: any, index: number) => {
-            
+
             return (
               <Grid item key={"Grid_" + index}>
                 <Fragment>
@@ -1123,24 +1123,24 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                   toast.error("Network Error!");
                 });
             }}
-            
+
             //pinnedColumns={pinnedColumns}
             //onPinnedColumnsChange={handlePinnedColumnsChange}
             localeText={dataGridLanguageText['localeText']}
           />
           }
         </Card>
-        { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default.ApprovalNodeFields.DebugSql) ? 
+        { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default.ApprovalNodeFields.DebugSql) ?
           (
           <Grid item xs={12} sx={{mt: 2}}>
             <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default.ApprovalNodeFields.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} />
           </Grid>
           )
-          : '' 
+          : ''
         }
       </Grid>
       : '' }
-      {store && store.init_action.action == 'init_default' && isMobileData == true ? 
+      {store && store.init_action.action == 'init_default' && isMobileData == true ?
         <Grid item xs={12}>
           <Card sx={{ mb: 3}}>
             {store.init_default.returnButton && store.init_default.returnButton.status ?
@@ -1162,13 +1162,13 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                 :
                 <CardHeader title={store.init_default.searchtitle} sx={{ pb: 2, pt: 3 }}/>
               }
-              </Fragment>              
+              </Fragment>
             }
             {store.init_default.MobileSummary && store.init_default.MobileSummary.length > 0 && (
               <Table sx={{mb: 3}}>
                 <TableHead>
                     {store.init_default.MobileSummary.map((Item: any, Index: number) => {
-                      
+
                       return (
                         <TableRow key={Index}>
                           <MUITableCell ><Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>{Item.name}</Typography></MUITableCell>
@@ -1177,10 +1177,10 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                       )
                     })}
                 </TableHead>
-              </Table>              
+              </Table>
             )}
             {store && store.init_default && store.init_default.rowdelete && store.init_default.rowdelete.map((Item: any, index: number) => {
-              
+
               return (
                 <Grid item key={"Grid_" + index}>
                   <Fragment>
@@ -1207,10 +1207,10 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
             {store && store.init_default && store.init_default.searchFieldText && store.init_default.searchFieldArray && store.init_default.searchFieldArray.length>0 ? <IndexTableHeader filter={store.init_default.filter} handleFilterChange={handleFilterChange} value={searchFieldName} handleFilter={tableHeaderHandleFilter} toggleAddTableDrawer={toggleAddTableDrawer} toggleImportTableDrawer={toggleImportTableDrawer} toggleExportTableDrawer={toggleExportTableDrawer} searchFieldText={store.init_default.searchFieldText} searchFieldArray={store.init_default.searchFieldArray} selectedRows={selectedRows} multireview={store.init_default.multireview} multiReviewHandleFilter={multiReviewHandleFilter} button_search={store.init_default.button_search} button_add={store.init_default.button_add} button_import={store.init_default.button_import} button_export={store.init_default.button_export} isAddButton={store && store.add_default && store.add_default.allFields ? true : false} isImportButton={store && store.import_default && store.import_default.allFields ? true : false} isExportButton={store && store.export_default && store.export_default.allFields && store.export_default.exportUrl ? true : false} CSRF_TOKEN={CSRF_TOKEN} MobileEndShowSearch={store.init_default.MobileEndShowSearch} MobileEndShowGroupFilter={store.init_default.MobileEndShowGroupFilter} /> : ''}
           </Card>
-          <Fragment>              
+          <Fragment>
             <Grid container spacing={2}>
               {store && store.init_default && store.init_default.MobileEndShowType && store.init_default.MobileEndShowType == "ListTemplate1" && allRows && allRows.map((item: any, index: number) => {
-                
+
                 const colorLeftValue = (item['MobileEndSecondLineLeftColor'] !== null && item['MobileEndSecondLineLeftColor'] !== undefined) ? item['MobileEndSecondLineLeftColor'] : 'secondary';
 
                 const colorRightValue = (item['MobileEndSecondLineRightColor'] !== null && item['MobileEndSecondLineRightColor'] !== undefined) ? item['MobileEndSecondLineRightColor'] : 'secondary';
@@ -1226,7 +1226,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', maxWidth: 'calc(100% - 50px)' }}
                               onClick={() => togglePageActionDrawer('view_default', item['Id'], CSRF_TOKEN_MAP[item['Id']])}
                               >
-                              <Typography sx={{ 
+                              <Typography sx={{
                                 color: 'text.primary',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
@@ -1238,15 +1238,15 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                                 {item['MobileEndFirstLine']}
                               </Typography>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
-                                <Typography variant='body2' sx={{ 
-                                  color: `${colorLeftValue}.dark`, 
+                                <Typography variant='body2' sx={{
+                                  color: `${colorLeftValue}.dark`,
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
                                 }}>
                                   {item['MobileEndSecondLineLeft']}
                                 </Typography>
-                                <Typography variant='body2' sx={{ 
+                                <Typography variant='body2' sx={{
                                   color: `${colorRightValue}.dark`,
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
@@ -1259,8 +1259,8 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                             </Box>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                            {(!forbiddenEditRow.includes(item.Id)) && item.EditUrl ?                          
-                            <IconButton size='small' onClick={() => 
+                            {(!forbiddenEditRow.includes(item.Id)) && item.EditUrl ?
+                            <IconButton size='small' onClick={() =>
                             {
                               setMobileEditPageId(item.PageId)
                               togglePageActionDrawer('edit_default', item.Id, CSRF_TOKEN_MAP[item['Id']])
@@ -1271,8 +1271,8 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                             :
                             null
                             }
-                            {(!forbiddenDeleteRow.includes(item.Id)) ?                          
-                            <IconButton size='small' onClick={() => 
+                            {(!forbiddenDeleteRow.includes(item.Id)) ?
+                            <IconButton size='small' onClick={() =>
                             {
                               //setMobileEditPageId(item.PageId)
                               togglePageActionDrawer('delete_array', item.Id, CSRF_TOKEN_MAP[item['Id']])
@@ -1304,7 +1304,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                               const FieldName = `MobileEndField${FieldCount}Name`
                               const FieldValue = `MobileEndField${FieldCount}Value`
                               const FieldColspan = `MobileEndField${FieldCount}Colspan`
-                              
+
                               return (
                                     <Fragment key={FieldCountIndex}>
                                       {item[FieldColspan] == '1' && (
@@ -1337,7 +1337,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                                       )}
                                     </Fragment>
                               )
-                            }) 
+                            })
                           }
                           {item['MobileEndFieldGlobalButtonText'] && item['MobileEndFieldGlobalButtonAction'] && storedToken && (
                             <Fragment>
@@ -1364,7 +1364,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                           )}
                         </Grid>
 
-                      </CardContent>      
+                      </CardContent>
                     </Card>
                   </Grid>
                 )
@@ -1378,7 +1378,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                             setPage(page-1);
                             setIsLoadingTip(true);
                             setIsLoadingTipText("正在加载中");
-    
+
                             return { ...paginationModel, page: page-1 };
                         } else {
 
@@ -1398,7 +1398,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                 </Grid>
               :
               null
-              }              
+              }
               {isLoadingTipDisabled ?
                 <Grid item xs={12} sm={12} container justifyContent="space-around">
                     <Box sx={{ mt: 1, mb: 1, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -1410,16 +1410,16 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
               }
             </Grid>
           </Fragment>
-          { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default.ApprovalNodeFields.DebugSql) ? 
+          { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default.ApprovalNodeFields.DebugSql) ?
             (
             <Grid item xs={12} sx={{mt: 2}}>
               <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default.ApprovalNodeFields.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} />
             </Grid>
             )
-            : '' 
+            : ''
           }
       </Grid>
-      : '' } 
+      : '' }
       {store && store.import_default && store.import_default.defaultValues && addEditActionName.indexOf("import_default") != -1 ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.import_default} open={addEditActionOpen} toggleAddTableDrawer={toggleImportTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
       {store && store.add_default && store.add_default.defaultValues && addEditActionName.indexOf("add_default") != -1 ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.add_default} open={addEditActionOpen} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
       {store && store[addEditActionName] && store[addEditActionName]['defaultValues'] && addEditActionName.indexOf("edit_default") != -1 && addEditActionId!='' ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store[addEditActionName]} open={addEditActionOpen} toggleAddTableDrawer={toggleEditTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}

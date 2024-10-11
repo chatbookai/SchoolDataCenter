@@ -55,7 +55,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
 
   return (
     <Fragment>
-    {addEditViewShowInWindow ? 
+    {addEditViewShowInWindow ?
       <Grid sx={{ pb: 8, px: { xs: 15, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }} style={{ height: `${addEditStructInfo.dialogContentHeight}`, width: '100%'}}>
         <AddOrEditTableCore externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfoNew} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={IsGetStructureFromEditDefault} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/>
       </Grid>
@@ -72,7 +72,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
           <IconButton
             size='small'
             onClick={handleClose}
-            sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
+            sx={{ position: 'absolute', top: '1rem' }}
           >
             <Icon icon='mdi:close' />
           </IconButton>

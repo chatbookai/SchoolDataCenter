@@ -32,7 +32,6 @@ import FormGroup from '@mui/material/FormGroup'
 import Slider from '@mui/material/Slider'
 import Divider from '@mui/material/Divider';
 import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import CardContent, { CardContentProps } from '@mui/material/CardContent'
 import Tooltip from "@mui/material/Tooltip"
 import TableContainer from '@mui/material/TableContainer'
@@ -169,7 +168,7 @@ interface AddOrEditTableType {
 const AddOrEditTableCore = (props: AddOrEditTableType) => {
     // ** Props
     const { externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate } = props
-    
+
     const i18n: any = {language: 'zh'}
 
     const isMobileData = isMobile()
@@ -181,7 +180,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     })
 
     const router = useRouter();
-    
+
     // ** Hooks
     const addFilesOrDatesDefault:{[key:string]:any} = {}
     const [defaultValuesNew, setDefaultValuesNew] = useState(addFilesOrDatesDefault)
@@ -223,10 +222,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
     useEffect(() => {
         if (action.indexOf("edit_default") != -1 && editViewCounter > 0) {
-            
+
             //setIsLoading(true)
             const params = { action, id, editViewCounter, IsGetStructureFromEditDefault, externalId }
-            
+
             //for (const Item in AddtionalParams) {
             //    params[Item] = AddtionalParams[Item]
             //}
@@ -246,7 +245,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         }
                         catch(Error: any) {
                             console.log("DecryptDataAES256GCMData view_default Error", Error)
-                
+
                             dataJson = data
                         }
                     }
@@ -255,9 +254,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         dataJson = data
                     }
                     if (dataJson.status == "OK") {
-                        
+
                         const defaultValuesNewTemp:{[key:string]:any} = { ...dataJson.data }
-                        
+
                         //Show the field when the value is match the condition
                         //This field will control other fields show or not
                         if (dataJson.EnableFields) {
@@ -299,7 +298,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                             })
                                         })
                                         setSelectedCheckbox(TempSelectedCheckbox)
-                                        setSelectedMenuOneNameForSubmit(FieldArray.name)                                        
+                                        setSelectedMenuOneNameForSubmit(FieldArray.name)
                                     }
                                     if (FieldArray.type == "images") {
                                         setUploadImageFieldName(FieldArray.name)
@@ -337,13 +336,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                         defaultValuesNewTemp[FieldArray.所在市] = all3Value[1] || ''
                                         defaultValuesNewTemp[FieldArray.所在区县] = all3Value[2] || ''
                                     }
-                                    
-                                    //处理身份证件类型为非居民身份证时,需要自动修改身份证件号的类型为input                       
+
+                                    //处理身份证件类型为非居民身份证时,需要自动修改身份证件号的类型为input
                                     if(action!="edit_default_1" && action!="edit_default_2" && FieldArray.name.includes("身份证件类型") && dataJson.data[FieldArray.name]!="居民身份证") {
                                         allFieldsTemp[allFieldsModeItem.value][FieldArray_index+1]['type'] = "input"
                                         allFieldsTemp[allFieldsModeItem.value][FieldArray_index+1]['rules']['format'] = ""
                                     }
-                                    
+
                                 })
                             })
                             setAllFields(allFieldsTemp)
@@ -367,9 +366,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                             }
 
                         }
-                        
+
                         setDefaultValuesNew(defaultValuesNewTemp)
-                        
+
                         //end for condition
                     }
                     setIsLoading(false)
@@ -428,7 +427,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     //console.log("defaultValues",defaultValues)
     //console.log("defaultValuesNew",defaultValuesNew)
     //console.log("allFields",allFields)
-    
+
     const chinaIdCardCheck = (value:string|undefined) => {
         if(value==undefined)  {
 
@@ -436,7 +435,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         }
         const reg = /(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
         if (!reg.test(value)) {
-            
+
             return false;
         }
         const wi = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
@@ -448,10 +447,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         const y = sum % 11;
         const valCode = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"][y];
         if (valCode != value.charAt(17).toUpperCase()) {
-            
+
             return false;
         }
-        
+
         return true;
     }
 
@@ -465,7 +464,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     if(addEditStructInfo2 && addEditStructInfo2.model == "Loop") {
         FieldShowStatus = 1
     }
-    
+
     //Yup check
     const yupCheckMap:{[key:string]:any} = {}
     {
@@ -502,7 +501,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     }
                     else if ((FieldArray.type == "date" || FieldArray.type == "date1" || FieldArray.type == "date2" || FieldArray.type == "datetime" || FieldArray.type == "month" || FieldArray.type == "year" || FieldArray.type == "monthrange" || FieldArray.type == "yearrange" || FieldArray.type == "quarter") && FieldArray.rules && FieldArray.rules.required) {
                         let yupCheck = yup.string().trim().label(FieldArray.label)
-                        FieldArray.rules.required ? yupCheck = yupCheck.required() : '';                    
+                        FieldArray.rules.required ? yupCheck = yupCheck.required() : '';
                         yupCheckMap[FieldArray.name] = yupCheck
                     }
                     else if (FieldArray.type == "avatar" && FieldArray.rules && FieldArray.rules.required)  {
@@ -560,14 +559,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         if (!storedToken) {
             toggleAddTableDrawer()
             reset()
-            
+
             return
         }
-        
+
         console.log("data", data)
         console.log("loopModelDataStorage", loopModelDataStorage)
-        
-        //upload file 
+
+        //upload file
         const formData = new FormData();
 
         const dataMap = new Map(Object.entries({...data, ...loopModelDataStorage}));
@@ -683,7 +682,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     }
                     catch(Error: any) {
                         console.log("DecryptDataAES256GCMData view_default Error", Error)
-            
+
                         dataJson = data
                     }
                 }
@@ -694,7 +693,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 console.log('Success:', dataJson);
                 if (dataJson && dataJson.status == "OK") {
                     toast.success(dataJson.msg)
-                    
+
                     // clear avatar and files
                     setAvatorShowArea({})
                     setAllFiles({})
@@ -709,7 +708,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 }
                 else if (dataJson && dataJson.status == "ERROR") {
                     toast.error(dataJson.msg)
-                    
+
                     // clear avatar and files
                     setAvatorShowArea({})
                     setAllFiles({})
@@ -744,13 +743,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 toggleAddTableDrawer()
                 reset()
             });
-            
+
     }
 
-    useEffect(() => {        
+    useEffect(() => {
         Mousetrap.bind(['alt+s', 'command+s', 'command+enter'], () => {handleSubmit(onSubmit)();});
-        Mousetrap.bind(['alt+c', 'command+c'], handleClose);        
-        
+        Mousetrap.bind(['alt+c', 'command+c'], handleClose);
+
         return () => {
             Mousetrap.unbind(['alt+s', 'command+s', 'command+enter']);
             Mousetrap.unbind(['alt+c', 'command+c']);
@@ -761,7 +760,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         setAvatorShowArea({})
         setAllFiles({})
         setAllDates({})
-        
+
         //setDefaultValuesNew({})
         toggleAddTableDrawer()
         reset()
@@ -857,7 +856,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         showPassword: false,
         showPassword2: false
     })
-    
+
     // Handle Password
     const handleClickShowPassword = () => {
         setState({ ...state, showPassword: !state.showPassword })
@@ -865,7 +864,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
     }
-    
+
     // Handle Confirm Password
     const handleClickShowConfirmPassword = () => {
         setState({ ...state, showPassword2: !state.showPassword2 })
@@ -873,14 +872,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const handleMouseDownConfirmPassword = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
     }
-    
-    
+
+
     const RoleMenuElementPermission = (id: string, MenuOneName: string) => {
         const arr:{[key:string]:any[]} = selectedCheckbox
         if (selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].includes(id)) {
           arr[MenuOneName].splice(arr[MenuOneName].indexOf(id), 1)
           setSelectedCheckbox({...arr})
-        } 
+        }
         else {
             if(arr[MenuOneName]==undefined) {
                 arr[MenuOneName] = []
@@ -901,7 +900,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             const TempSelectedCheckbox:{[key:string]:any} = { ...selectedCheckbox }
             TempSelectedCheckbox[chooseMenuOneName] = []
             setSelectedCheckbox(TempSelectedCheckbox)
-        } 
+        }
         else {
             const SectionMenuArray = userRoleMenuDetail[chooseMenuOneName]
             Object.keys(SectionMenuArray).map((SectionMenuKey: any) => {
@@ -920,16 +919,16 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             } else {
                 isIndeterminateCheckboxTemp[selectedCheckboxKey] = false
             }
-        })        
+        })
         setIsIndeterminateCheckbox(isIndeterminateCheckboxTemp)
     }, [selectedCheckbox])
-      
+
     const formatDateItem = (value:number) => {
         let str = '' + value;
         while (str.length < 2) {
             str = '0' + str;
         }
-        
+
         return str;
     }
 
@@ -1032,7 +1031,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         }
         else if (file.type.startsWith('image')) {
             return <img width={width} height={height} alt={file.name} style={{padding: "1px"}} src={URL.createObjectURL(file as any)} />
-        } 
+        }
         else {
             return <Icon icon='mdi:file-document-outline' />
         }
@@ -1092,7 +1091,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 </Box>
                 : ''
             }
-            <Grid container spacing={6}>
+            <Fragment>
                 {isLoading ? (
                     <Grid item xs={12} sm={12} container justifyContent="space-around">
                         <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -1103,14 +1102,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 ) : (
                     <form onSubmit={handleSubmit(onSubmit)} style={{width: '100%'}}>
                         {allFieldsMode && allFieldsMode.map((allFieldsModeItem: any, allFieldsModeIndex: number) => {
-                            
+
                             return (
-                                <Card key={"AllFieldsMode_" + allFieldsModeIndex} sx={{ mb: 2}}>
-                                    {allFieldsModeItem.label && allFieldsMode.length > 1 ? <CardHeader title={allFieldsModeItem.label} /> : ''}
-                                    <CardContent>
-                                        <Grid container spacing={5}>
+                                        <Grid container spacing={5} key={allFieldsModeIndex}>
                                             {allFields && allFields[allFieldsModeItem.value] && allFields[allFieldsModeItem.value].map((FieldArray: any, FieldArray_index: number) => {
-                                                
+
                                                 //开始根据表单中每个字段的类型,进行不同的渲染,此部分比较复杂,注意代码改动.
                                                 //Start to render differently according to the type of each field in the form
                                                 //this part is more complicated, pay attention to the code changes.
@@ -1120,11 +1116,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                 if(addEditStructInfo2 && addEditStructInfo2.model && addEditStructInfo2.model == "Loop" && FieldArray_index == fieldIdValue) {
                                                     FieldShowStatusItem = 1
                                                 }
-                                                
+
                                                 if(FieldShowStatusItem == 1 || FieldShowStatus == 2)  {
 
                                                     const fieldError = errors[FieldArray.name];
-                                                    
+
                                                     if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "hidden") ) {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
@@ -1134,7 +1130,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if ((action.indexOf("add_default") != -1 || action.indexOf("edit_default") != -1) && defaultValuesNew[FieldArray.name] != undefined) {
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -1160,27 +1156,27 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                         defaultValuesNewTemp[FieldArray.name] = e.target.value
                                                                                     }
                                                                                     if(FieldArray.rules.format == 'chinaidcard' && chinaIdCardCheck(e.target.value))     {
-                                                                                        if( FieldArray.rules.出生日期 )   {        
+                                                                                        if( FieldArray.rules.出生日期 )   {
                                                                                             defaultValuesNewTemp[FieldArray.rules.出生日期] = defaultValuesNew[FieldArray.name].substr(6, 4)+"-"+defaultValuesNew[FieldArray.name].substr(10, 2)+"-"+defaultValuesNew[FieldArray.name].substr(12, 2)
                                                                                             const allDatesTemp:{[key:string]:any} = { ...allDates }
                                                                                             allDatesTemp[FieldArray.rules.出生日期] = defaultValuesNewTemp[FieldArray.rules.出生日期]
                                                                                             setAllDates(allDatesTemp)
                                                                                         }
-                                                                                        if( FieldArray.rules.出生年月 )   {                                                                                     
+                                                                                        if( FieldArray.rules.出生年月 )   {
                                                                                             defaultValuesNewTemp[FieldArray.rules.出生年月] = defaultValuesNew[FieldArray.name].substr(6, 4)+"-"+defaultValuesNew[FieldArray.name].substr(10, 2)
                                                                                             const allDatesTemp:{[key:string]:any} = { ...allDates }
                                                                                             allDatesTemp[FieldArray.rules.出生年月] = defaultValuesNewTemp[FieldArray.rules.出生年月]
                                                                                             setAllDates(allDatesTemp)
                                                                                         }
-                                                                                        if( FieldArray.rules.性别 )   {    
+                                                                                        if( FieldArray.rules.性别 )   {
                                                                                             if(parseInt(defaultValuesNew[FieldArray.name].substr(16,1))%2==1)  {
                                                                                                 defaultValuesNewTemp[FieldArray.rules.性别] = "男"
                                                                                             }
                                                                                             else {
                                                                                                 defaultValuesNewTemp[FieldArray.rules.性别] = "女"
-                                                                                            }                                                                                 
+                                                                                            }
                                                                                         }
-                                                                                        if( FieldArray.rules.年龄 )   {                                                
+                                                                                        if( FieldArray.rules.年龄 )   {
                                                                                             const currentDate = new Date();
                                                                                             const currentYear = currentDate.getFullYear();
                                                                                             console.log(currentYear, Number(defaultValuesNew[FieldArray.name].substr(6, 4)))
@@ -1278,7 +1274,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "buttonrouter") {
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -1290,7 +1286,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "buttonurl") {
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -1304,14 +1300,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "readonly") {
-                                                        
+
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
                                                         else if (action.indexOf("add_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -1335,7 +1331,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 error={Boolean(errors[FieldArray.name])}
                                                                             />
                                                                         )}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -1361,7 +1357,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "password"||FieldArray.type == "EncryptField") ) {
-                                                                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -1399,7 +1395,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 }
                                                                             />
                                                                         )}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -1425,9 +1421,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "comfirmpassword") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -1465,7 +1461,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 }
                                                                             />
                                                                         )}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -1491,16 +1487,16 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "select" || FieldArray.type == "tablefilter" || FieldArray.type == "tablefiltercolor")) {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         //console.log("errors select--------------------------------", errors)
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -1535,7 +1531,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 })}
                                                                             </Select>
                                                                         )}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -1559,23 +1555,23 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 </FormControl>
                                                             </Grid>
                                                         )
-                                                    }  
+                                                    }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "ProvinceAndCity")) {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (defaultValuesNew[FieldArray.行政区划] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.行政区划, defaultValuesNew[FieldArray.行政区划])
                                                             setValue(FieldArray.所在省, defaultValuesNew[FieldArray.所在省])
                                                             setValue(FieldArray.所在市, defaultValuesNew[FieldArray.所在市])
-                                                            setValue(FieldArray.所在区县, defaultValuesNew[FieldArray.所在区县])                                                        
+                                                            setValue(FieldArray.所在区县, defaultValuesNew[FieldArray.所在区县])
                                                         }
-                                                        
+
                                                         //console.log("errors select--------------------------------", errors)
-                                                        
+
                                                         return (
-                                                            <Fragment key={"AllFields_1_" + FieldArray_index}> 
+                                                            <Fragment key={"AllFields_1_" + FieldArray_index}>
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm}>
                                                                     <FormControl fullWidth sx={{ mb: 0 }}>
                                                                         <InputLabel
@@ -1646,7 +1642,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             )}
                                                                         />
                                                                     </FormControl>
-                                                                </Grid>                                                            
+                                                                </Grid>
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_3_" + FieldArray_index}>
                                                                     <FormControl fullWidth sx={{ mb: 0 }}>
                                                                         <InputLabel
@@ -1675,7 +1671,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             }
                                                                                         })}
                                                                                         setDefaultValuesNew(defaultValuesNewTemp)
-                                                                                        
+
                                                                                     }}
                                                                                     error={Boolean(errors[FieldArray.所在区县])}
                                                                                     labelId='validation-basic-select'
@@ -1688,7 +1684,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             )}
                                                                         />
                                                                     </FormControl>
-                                                                </Grid>                                                            
+                                                                </Grid>
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_4_" + FieldArray_index}>
                                                                     <FormControl fullWidth sx={{ mb: 0 }}>
                                                                         <Controller
@@ -1712,23 +1708,23 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                     </FormControl>
                                                                 </Grid>
                                                             </Fragment>
-                                                            
+
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "ProvinceAndCityOneLine")) {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
-                                                        if (defaultValuesNew[FieldArray.行政区划] != undefined) { 
+                                                        if (defaultValuesNew[FieldArray.行政区划] != undefined) {
                                                             setValue(FieldArray.行政区划, defaultValuesNew[FieldArray.行政区划])
                                                             setValue(FieldArray.所在省, defaultValuesNew[FieldArray.所在省])
                                                             setValue(FieldArray.所在市, defaultValuesNew[FieldArray.所在市])
-                                                            setValue(FieldArray.所在区县, defaultValuesNew[FieldArray.所在区县])                                                        
+                                                            setValue(FieldArray.所在区县, defaultValuesNew[FieldArray.所在区县])
                                                         }
-                                                        
+
                                                         //console.log("errors select--------------------------------", errors)
-                                                        
+
                                                         return (
-                                                            <Fragment key={"AllFields_1_" + FieldArray_index}> 
+                                                            <Fragment key={"AllFields_1_" + FieldArray_index}>
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm}>
                                                                     <FormControl fullWidth sx={{ mb: 0 }}>
                                                                         <InputLabel
@@ -1799,7 +1795,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             )}
                                                                         />
                                                                     </FormControl>
-                                                                </Grid>                                                            
+                                                                </Grid>
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_3_" + FieldArray_index}>
                                                                     <FormControl fullWidth sx={{ mb: 0 }}>
                                                                         <InputLabel
@@ -1827,7 +1823,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             }
                                                                                         })}
                                                                                         setDefaultValuesNew(defaultValuesNewTemp)
-                                                                                        
+
                                                                                     }}
                                                                                     error={Boolean(errors[FieldArray.所在区县])}
                                                                                     labelId='validation-basic-select'
@@ -1840,13 +1836,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             )}
                                                                         />
                                                                     </FormControl>
-                                                                </Grid> 
+                                                                </Grid>
                                                             </Fragment>
-                                                            
+
                                                         )
-                                                    } 
+                                                    }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "SelectBuilding")) {
-                                                        
+
                                                         console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (defaultValuesNew[FieldArray.GroupOneMenuName] != undefined) {
                                                             setValue(FieldArray.GroupOneMenuName, defaultValuesNew[FieldArray.GroupOneMenuName])
@@ -1876,11 +1872,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             setValue(FieldArray.GroupOneMenuName, FieldArray.GroupOneMenuValue)
                                                             setValue(FieldArray.GroupTwoMenuName, FieldArray.GroupTwoMenuValue)
                                                         }
-                                                        
+
                                                         //console.log("errors select--------------------------------", errors)
-                                                        
+
                                                         return (
-                                                            <Fragment key={"AllFields_1_" + FieldArray_index}> 
+                                                            <Fragment key={"AllFields_1_" + FieldArray_index}>
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm}>
                                                                     <FormControl fullWidth sx={{ mb: 0 }}>
                                                                         <Controller
@@ -1946,7 +1942,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                     </FormControl>
                                                                 </Grid>
                                                             </Fragment>
-                                                            
+
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "autocomplete") {
@@ -1971,12 +1967,12 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if(defaultValuesNew[FieldArray.code]==undefined)  {
                                                             setValue(FieldArray.code, "")
                                                         }
-                                                        else {                                                        
+                                                        else {
                                                             setValue(FieldArray.code, defaultValuesNew[FieldArray.code])
                                                         }
-                                                        
+
                                                         const options = FieldArray.options
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2003,7 +1999,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             defaultValuesNewTemp[FieldArray.code] = newValue.value
                                                                                         }
                                                                                         setDefaultValuesNew(defaultValuesNewTemp)
-                                                                                        
+
                                                                                         //This field will control other fields show or not
                                                                                         const fieldArrayShowTemp:{[key:string]:any} = {}
                                                                                         if (FieldArray.EnableFields && FieldArray.EnableFields != undefined && FieldArray.EnableFields[newValue.value] != undefined) {
@@ -2060,7 +2056,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 }}
                                                                             />
                                                                         )}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -2084,17 +2080,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 </FormControl>
                                                             </Grid>
                                                         )
-                                                    }    
+                                                    }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "autocompletemdi") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
                                                         setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2125,7 +2121,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 )}
                                                                             />
                                                                         )}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -2149,17 +2145,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 </FormControl>
                                                             </Grid>
                                                         )
-                                                    }      
+                                                    }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "autocompleteicons") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
                                                         setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2190,7 +2186,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 )}
                                                                             />
                                                                         )}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -2214,7 +2210,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 </FormControl>
                                                             </Grid>
                                                         )
-                                                    }   
+                                                    }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "autocompletemulti") {
                                                         const DefaultValueForAutoComplete:any[] = []
                                                         const DefaultValueForAutoCompleteMap:{[key:string]:any} = {}
@@ -2228,12 +2224,12 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                     DefaultValueForAutoComplete.push({ "value": ItemValue, "label": DefaultValueForAutoCompleteMap[ItemValue] })
                                                                 }
                                                             })
-                                                        }                                                    
+                                                        }
                                                         setValue(FieldArray.name, DefaultValueForAutoComplete)
                                                         if(FieldArray.code!=FieldArray.name)  {
                                                             setValue(FieldArray.code, defaultValuesNew[FieldArray.code])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2244,10 +2240,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                                                                             return (
                                                                                 <Fragment>
-                                                                                    { Array.isArray(value) ? 
+                                                                                    { Array.isArray(value) ?
                                                                                     <Autocomplete
                                                                                         multiple
-                                                                                        size={componentsize}                                                                            
+                                                                                        size={componentsize}
                                                                                         value={value}
                                                                                         id="tags-outlined"
                                                                                         options={FieldArray.options}
@@ -2263,22 +2259,22 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                 const autoCompleteMultiTemp:{[key:string]:any} = { ...autoCompleteMulti }
                                                                                                 autoCompleteMultiTemp[FieldArray.name] = newValueArray.join(',');
                                                                                                 setAutoCompleteMulti(autoCompleteMultiTemp)
-            
+
                                                                                                 const defaultValuesNewTemp:{[key:string]:any} = { ...defaultValuesNew }
                                                                                                 defaultValuesNewTemp[FieldArray.code] = newValueArray.join(',');
                                                                                                 setDefaultValuesNew(defaultValuesNewTemp)
-            
+
                                                                                             }
                                                                                             else {
                                                                                                 const autoCompleteMultiTemp:{[key:string]:any} = { ...autoCompleteMulti }
                                                                                                 autoCompleteMultiTemp[FieldArray.name] = "";
                                                                                                 setAutoCompleteMulti(autoCompleteMultiTemp)
-            
+
                                                                                                 const defaultValuesNewTemp:{[key:string]:any} = { ...defaultValuesNew }
                                                                                                 defaultValuesNewTemp[FieldArray.code] = "";
                                                                                                 setDefaultValuesNew(defaultValuesNewTemp)
                                                                                             }
-            
+
                                                                                         }}
                                                                                         renderInput={(params) => (
                                                                                             <TextField
@@ -2289,10 +2285,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                         )}
                                                                                     />
                                                                                     : '' }
-                                                                                </Fragment>    
+                                                                                </Fragment>
                                                                             )
                                                                         }}
-                                                                    />                                                                
+                                                                    />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                         <FormHelperText>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
@@ -2341,7 +2337,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if(defaultValuesNew[NewFieldCode]==undefined)  {
                                                             setValue(NewFieldCode, "")
                                                         }
-                                                        else {                                                        
+                                                        else {
                                                             setValue(NewFieldCode, defaultValuesNew[NewFieldCode])
                                                         }
 
@@ -2354,7 +2350,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         render={({ field: { value, onChange } }) => (
                                                                             <Fragment>
                                                                                 <TextField
-                                                                                    size={componentsize}  
+                                                                                    size={componentsize}
                                                                                     disabled={FieldArray.rules.disabled}
                                                                                     value={value}
                                                                                     label={FieldArray.label}
@@ -2435,14 +2431,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 </FormControl>
                                                             </Grid>
                                                         )
-                                                    }     
+                                                    }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "radiogroup" || FieldArray.type == "radiogroupcolor")) {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                         }
                                                         setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2466,7 +2462,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                         loopModelDataStorageTemp[FieldArray.name] = e.target.value
                                                                                         setLoopModelDataStorage(loopModelDataStorageTemp)
                                                                                         setFieldIdValue(fieldIdValue + 1)
-                                                                                        
+
                                                                                         //console.log("loopModelDataStorageTemp1", loopModelDataStorageTemp)
                                                                                     }
                                                                                 }}
@@ -2476,13 +2472,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                         loopModelDataStorageTemp[FieldArray.name] = e.target.innerText
                                                                                         setLoopModelDataStorage(loopModelDataStorageTemp)
                                                                                         setFieldIdValue(fieldIdValue + 1)
-                                                                                        
+
                                                                                         //console.log("loopModelDataStorageTemp2", loopModelDataStorageTemp)
                                                                                     }
                                                                                 }}
                                                                             >
                                                                                 {FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
-                                                                                    
+
                                                                                 return (
                                                                                         <FormControlLabel
                                                                                             value={ItemArray.value}
@@ -2517,14 +2513,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "checkbox") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if ((action.indexOf("edit_default") != -1 || action.indexOf("import_default") != -1) && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2533,13 +2529,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         name={FieldArray.name}
                                                                         control={control}
                                                                         render={({ field }) => (
-                                                                            <FormGroup 
+                                                                            <FormGroup
                                                                                 row={FieldArray.rules.row}
-                                                                                {...field} 
+                                                                                {...field}
                                                                                 aria-label={FieldArray.label}>
                                                                                 {FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
                                                                                     const TempValueArray = defaultValuesNew[FieldArray.name].split(",")
-                                                                                    
+
                                                                                     return (
                                                                                         <FormControlLabel
                                                                                             value={ItemArray.value}
@@ -2610,14 +2606,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "textarea") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2668,15 +2664,15 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "date" || FieldArray.type == "date1" || FieldArray.type == "date2") && FieldArray.dateFormat == "yyyy-MM-dd") {
-                                                        
+
                                                         // Add ' 00:00:00' to avoid the date minus one day in the DatePicker
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name] != "0000-00-00" && defaultValuesNew[FieldArray.name] != "1971-01-01" && defaultValuesNew[FieldArray.name].length == 10) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]***************************", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2685,7 +2681,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         control={control}
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper sx={{ zIndex: 'tooltip' }}>
-                                                                                <DatePicker 
+                                                                                <DatePicker
                                                                                     selected={defaultValuesNew[FieldArray.name]!=undefined && defaultValuesNew[FieldArray.name]!="" && defaultValuesNew[FieldArray.name] != "0000-00-00" && defaultValuesNew[FieldArray.name] != "1971-01-01" && defaultValuesNew[FieldArray.name].length == 10 ? (new Date(defaultValuesNew[FieldArray.name] + ' 00:00:00')) : (value ? new Date(value) : null)  }
                                                                                     id={FieldArray.name}
                                                                                     showYearDropdown
@@ -2742,15 +2738,15 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "date" || FieldArray.type == "date1" || FieldArray.type == "date2") && FieldArray.dateFormat == "yyyyMMdd") {
-                                                        
+
                                                         // Add ' 00:00:00' to avoid the date minus one day in the DatePicker
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name] != "00000000" && defaultValuesNew[FieldArray.name] != "19710101" && defaultValuesNew[FieldArray.name].length == 8) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]***************************", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2759,7 +2755,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         control={control}
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper sx={{ zIndex: 'tooltip' }}>
-                                                                                <DatePicker 
+                                                                                <DatePicker
                                                                                     selected={defaultValuesNew[FieldArray.name]!=undefined && defaultValuesNew[FieldArray.name]!="" && defaultValuesNew[FieldArray.name] != "00000000" && defaultValuesNew[FieldArray.name] != "19710101" && defaultValuesNew[FieldArray.name].length == 8 ? (new Date(Number(defaultValuesNew[FieldArray.name].substring(0,4)) + '-' + Number(defaultValuesNew[FieldArray.name].substring(4,6)) + '-' + Number(defaultValuesNew[FieldArray.name].substring(6,8)) + '-' + ' 00:00:00')) : (value ? new Date(value) : null)  }
                                                                                     id={FieldArray.name}
                                                                                     showYearDropdown
@@ -2816,16 +2812,16 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "year") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name] != "0000" && defaultValuesNew[FieldArray.name] != "1971" && defaultValuesNew[FieldArray.name].length == 4) {
-                                                            
+
                                                             //console.log("FieldArray***************************", FieldArray)
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         // Add ' 00:00:00' to avoid the date minus one day in the DatePicker
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2889,16 +2885,16 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "month" && FieldArray.dateFormat == "yyyy-MM") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name] != "0000-00" && defaultValuesNew[FieldArray.name] != "1971-01" && defaultValuesNew[FieldArray.name].length == 7) {
-                                                            
+
                                                             //console.log("FieldArray***************************", FieldArray)
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         // Add ' 00:00:00' to avoid the date minus one day in the DatePicker
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -2962,16 +2958,16 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "month" && FieldArray.dateFormat == "yyyyMM") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name] != "000000" && defaultValuesNew[FieldArray.name] != "197101" && defaultValuesNew[FieldArray.name].length == 6) {
-                                                            
+
                                                             //console.log("FieldArray***************************", FieldArray)
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         // Add ' 00:00:00' to avoid the date minus one day in the DatePicker
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3035,11 +3031,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "quarter") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         const quarterMap:{[key:string]:any} = {}
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name] != "0000-00" && defaultValuesNew[FieldArray.name] != "1971-01" && defaultValuesNew[FieldArray.name].length == 7) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]---------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                             if (defaultValuesNew[FieldArray.name] && defaultValuesNew[FieldArray.name] != "0000-00" && defaultValuesNew[FieldArray.name] != "1971-Q1" && defaultValuesNew[FieldArray.name].length == 7) {
@@ -3062,7 +3058,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         }
 
                                                         // Add ' 00:00:00' to avoid the date minus one day in the DatePicker
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3070,10 +3066,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         name={FieldArray.name}
                                                                         control={control}
                                                                         render={({ field: { value, onChange, onBlur } }) => {
-                                                                            
+
                                                                             //console.log("value---------------------------------", value)
                                                                             //console.log("quarterMap---------------------------------", quarterMap)
-                                                                            
+
                                                                             return (
                                                                                 <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: '290px' } }}>
                                                                                     <DatePicker
@@ -3131,18 +3127,18 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "datetime") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name] != "0000-00-00 00:00:00" && defaultValuesNew[FieldArray.name] != "1971-01-01 00:00:00" && defaultValuesNew[FieldArray.name].length == 19) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]***************************", new Date(defaultValuesNew[FieldArray.name]+' 00:00:00'))
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
-                                                            
+
                                                             //const allDatesTemp = { ...allDates }
                                                             //allDatesTemp[FieldArray.name] = defaultValuesNew[FieldArray.name]
                                                             //setAllDates(allDatesTemp)
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3211,17 +3207,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "time") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name].length == 8) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]***************************", new Date(defaultValuesNew[FieldArray.name]+' 00:00:00'))
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                             const allDatesTemp:{[key:string]:any} = { ...allDates }
                                                             allDatesTemp[FieldArray.name] = defaultValuesNew[FieldArray.name]
                                                             setAllDates(allDatesTemp)
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3282,7 +3278,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3305,17 +3301,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             <div className='file-details' style={{overflow: 'hidden'}}>
                                                                                                 <div className='file-preview'>{renderFilePreview(fileInfor, 38, 38)}</div>
                                                                                                 <div>
-                                                                                                {fileInfor['type']=="file" ? 
+                                                                                                {fileInfor['type']=="file" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']}>{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {fileInfor['type']=="image" ? 
+                                                                                                {fileInfor['type']=="image" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']} target="_blank">{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ? 
+                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ?
                                                                                                 <Typography className='file-name'>{fileInfor['name']}</Typography>
                                                                                                 :
                                                                                                 ''
@@ -3365,7 +3361,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3388,17 +3384,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             <div className='file-details' style={{overflow: 'hidden'}}>
                                                                                                 <div className='file-preview'>{renderFilePreview(fileInfor, 38, 38)}</div>
                                                                                                 <div>
-                                                                                                {fileInfor['type']=="file" ? 
+                                                                                                {fileInfor['type']=="file" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']}>{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {fileInfor['type']=="image" ? 
+                                                                                                {fileInfor['type']=="image" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']} target="_blank">{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ? 
+                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ?
                                                                                                 <Typography className='file-name'>{fileInfor['name']}</Typography>
                                                                                                 :
                                                                                                 ''
@@ -3449,7 +3445,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
                                                         console.log("uploadImages", uploadImages)
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3486,7 +3482,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             </Button>
                                                                             </ListItem>
                                                                             </List>
-                                                                            
+
                                                                             </Fragment>
                                                                         ) : null}
                                                                         </DropzoneWrapper>
@@ -3519,7 +3515,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
                                                         console.log("uploadImages2", uploadImages2)
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3556,7 +3552,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             </Button>
                                                                             </ListItem>
                                                                             </List>
-                                                                            
+
                                                                             </Fragment>
                                                                         ) : null}
                                                                         </DropzoneWrapper>
@@ -3588,7 +3584,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3619,8 +3615,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                         {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                             <FormHelperText>
-                                                                                <Tooltip    
-                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>} 
+                                                                                <Tooltip
+                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>}
                                                                                         PopperProps={{
                                                                                             modifiers: [
                                                                                             {
@@ -3658,7 +3654,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3681,22 +3677,22 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             <div className='file-details' style={{overflow: 'hidden'}}>
                                                                                                 <div className='file-preview'>{renderFilePreview(fileInfor, 38, 38)}</div>
                                                                                                 <div>
-                                                                                                {fileInfor['type']=="file" ? 
+                                                                                                {fileInfor['type']=="file" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']}>{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {fileInfor['type']=="image" ? 
+                                                                                                {fileInfor['type']=="image" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']} target="_blank">{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ? 
+                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ?
                                                                                                 <Typography className='file-name'>{fileInfor['name']}</Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {(fileInfor && fileInfor.size>0) ? 
+                                                                                                {(fileInfor && fileInfor.size>0) ?
                                                                                                 <Typography className='file-size' variant='body2'>
                                                                                                     {Math.round(fileInfor.size / 100) / 10 > 1000
                                                                                                     ? `${(Math.round(fileInfor.size / 100) / 10000).toFixed(1)} mb`
@@ -3705,7 +3701,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                
+
                                                                                                 </div>
                                                                                             </div>
                                                                                             <IconButton onClick={() => handleRemoveFile(fileInfor)}>
@@ -3751,7 +3747,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3774,22 +3770,22 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             <div className='file-details' style={{overflow: 'hidden'}}>
                                                                                                 <div className='file-preview'>{renderFilePreview(fileInfor, 38, 38)}</div>
                                                                                                 <div>
-                                                                                                {fileInfor['type']=="file" ? 
+                                                                                                {fileInfor['type']=="file" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']}>{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {fileInfor['type']=="image" ? 
+                                                                                                {fileInfor['type']=="image" ?
                                                                                                 <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']} target="_blank">{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ? 
+                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ?
                                                                                                 <Typography className='file-name'>{fileInfor['name']}</Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {(fileInfor && fileInfor.size>0) ? 
+                                                                                                {(fileInfor && fileInfor.size>0) ?
                                                                                                 <Typography className='file-size' variant='body2'>
                                                                                                     {Math.round(fileInfor.size / 100) / 10 > 1000
                                                                                                     ? `${(Math.round(fileInfor.size / 100) / 10000).toFixed(1)} mb`
@@ -3798,7 +3794,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                
+
                                                                                                 </div>
                                                                                             </div>
                                                                                             <IconButton onClick={() => handleRemoveFile2(fileInfor)}>
@@ -3844,7 +3840,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             //setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -3864,17 +3860,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             <div className='file-details' style={{ display: 'flex', overflow: 'hidden'}}>
                                                                                                 <div className='file-preview'>{renderFilePreview(fileInfor, 38, 38)}</div>
                                                                                                 <div>
-                                                                                                {fileInfor['type']=="file" ? 
+                                                                                                {fileInfor['type']=="file" ?
                                                                                                     <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']}>{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {fileInfor['type']=="image" ? 
+                                                                                                {fileInfor['type']=="image" ?
                                                                                                     <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']} target="_blank">{fileInfor['name']}</CustomLink></Typography>
                                                                                                 :
                                                                                                 ''
                                                                                                 }
-                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ? 
+                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ?
                                                                                                     <Typography className='file-name'>{fileInfor['name']}</Typography>
                                                                                                 :
                                                                                                 ''
@@ -3894,8 +3890,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                         {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                             <FormHelperText>
-                                                                                <Tooltip    
-                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>} 
+                                                                                <Tooltip
+                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>}
                                                                                         PopperProps={{
                                                                                             modifiers: [
                                                                                             {
@@ -3990,7 +3986,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -4025,14 +4021,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "slider") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -4086,17 +4082,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "Switch") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, (defaultValuesNew[FieldArray.name] == "1" || defaultValuesNew[FieldArray.name] == "Yes" || defaultValuesNew[FieldArray.name] == "是" || defaultValuesNew[FieldArray.name] == "true") ? "1" : "0")
                                                         }
                                                         if (defaultValuesNew[FieldArray.name] != undefined) {
                                                             setValue(FieldArray.name, (defaultValuesNew[FieldArray.name] == "1" || defaultValuesNew[FieldArray.name] == "on" || defaultValuesNew[FieldArray.name] == "Yes" || defaultValuesNew[FieldArray.name] == "是" || defaultValuesNew[FieldArray.name] == "true" || defaultValuesNew[FieldArray.name] == true) ? "1" : "0")
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -4145,7 +4141,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "editor") {
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 3 }}>
@@ -4176,14 +4172,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "UserRoleMenuDetail") {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
-                                                            
+
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <TableContainer>
@@ -4207,11 +4203,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 </TableHead>
                                                                 <TableBody>
                                                                 <TableRow key={"TableRow_" + FieldArray_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                                                                
+
                                                                 {Object.keys(FieldArray.MenuTwoArray).map((MenuOneName: string, MenuOneName_index: number) => {
                                                                     const MenuTwoArray = FieldArray.MenuTwoArray[MenuOneName]
-                                                                    
-                                                                    return (                                                                    
+
+                                                                    return (
                                                                         <TableCell
                                                                             key={MenuOneName_index}
                                                                             sx={{
@@ -4223,12 +4219,12 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         >
                                                                             <Table size='small'>
                                                                                 <TableHead>
-                                                                                    <TableRow key={"MenuOneName_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>                                                                                
+                                                                                    <TableRow key={"MenuOneName_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
                                                                                         <TableCell colSpan={3}>
-                                                                                            {MenuOneName} 
-                                                                                        </TableCell>   
+                                                                                            {MenuOneName}
+                                                                                        </TableCell>
                                                                                     </TableRow>
-                                                                                    <TableRow key={"TableCell_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>                                                                                
+                                                                                    <TableRow key={"TableCell_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
                                                                                     <TableCell colSpan={3}>
                                                                                         <FormControlLabel
                                                                                         label={FieldArray.SelectAll}
@@ -4236,25 +4232,25 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                         control={
                                                                                             <Checkbox
                                                                                             size='small'
-                                                                                            value={MenuOneName} 
+                                                                                            value={MenuOneName}
                                                                                             onChange={handleSelectAllCheckbox}
                                                                                             indeterminate={isIndeterminateCheckbox[MenuOneName]}
                                                                                             checked={selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].length === menuTwoCount[MenuOneName] }
                                                                                             />
                                                                                         }
                                                                                         />
-                                                                                    </TableCell>   
+                                                                                    </TableCell>
                                                                                     </TableRow>
                                                                                 </TableHead>
-                                                                                <TableBody>                                                                                
+                                                                                <TableBody>
                                                                                     {Object.keys(MenuTwoArray).map((MenuTwoName: string, MenuTwoName_index: number) => {
                                                                                         const MenuThreeArray = MenuTwoArray[MenuTwoName]
-                                                                                        
-                                                                                        return ( 
+
+                                                                                        return (
                                                                                             <Fragment key={MenuTwoName_index}>
                                                                                                 {MenuThreeArray.length==1 && MenuThreeArray.map((MenuThreeRecord: any, MenuThreeRecord_index: number) => {
                                                                                                     const checkboxid = MenuThreeRecord['id']
-                                                                                                    
+
                                                                                                     return (
                                                                                                     <TableRow key={`${MenuThreeRecord['id']}_${MenuThreeRecord_index}`} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
                                                                                                         <TableCell>
@@ -4293,11 +4289,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                 }
                                                                                                 {MenuThreeArray.length>1 && MenuThreeArray.map((MenuThreeRecord: any, MenuThreeRecord_index: number) => {
                                                                                                     const checkboxid = MenuThreeRecord['id']
-                                                                                                    
+
                                                                                                     return (
                                                                                                     <TableRow key={`${MenuThreeRecord['id']}_${MenuThreeRecord_index}`} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
                                                                                                         <TableCell>
-                                                                                                            <FormControlLabel 
+                                                                                                            <FormControlLabel
                                                                                                             style={{paddingLeft:"20px"}}
                                                                                                             label={MenuThreeRecord['MenuThreeName']}
                                                                                                             control={
@@ -4315,12 +4311,12 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                 })}
                                                                                             </Fragment>
                                                                                         )
-                                                                                    })}        
+                                                                                    })}
                                                                                 </TableBody>
                                                                             </Table>
                                                                         </TableCell>
                                                                     )
-                                                                        
+
                                                                     })}
                                                                     </TableRow>
                                                                 </TableBody>
@@ -4330,7 +4326,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if ((FieldArray.show) && FieldArray.type == "divider") {
-                                                        
+
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <Divider />
@@ -4338,19 +4334,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         )
                                                     }
                                                     else if (!FieldArray.show) {
-                                                        
+
                                                         //console.log("****************************** Hidden Not Show", FieldArray)
                                                     }
                                                     else {
-                                                        
+
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                     }
                                                 }
 
                                             })}
                                         </Grid>
-                                    </CardContent>
-                                </Card>
                             )
                         })}
 
@@ -4382,7 +4376,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             else if (defaultValuesNew[NewFieldName] == undefined) {
                                                                 setValue(NewFieldName, "")
                                                             }
-                                                            
+
                                                             return (
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index} sx={{ml:1, mr:1}} >
                                                                     <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1 }}>
@@ -4413,7 +4407,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                             defaultValuesNewTemp[NewFieldName] = e.target.value
                                                                                         }
                                                                                         setDefaultValuesNew(defaultValuesNewTemp)
-                                                                                        
+
                                                                                         //Formula Method
                                                                                         if(FieldArray.Formula && FieldArray.Formula.FormulaMethod && FieldArray.Formula.FormulaMethod!="" && FieldArray.Formula.FormulaMethod!="None" && FieldArray.Formula.FormulaMethodField && FieldArray.Formula.FormulaMethodField!="" && FieldArray.Formula.FormulaMethodTarget && FieldArray.Formula.FormulaMethodTarget!="") {
                                                                                             const NewFormulaMethodField = "ChildTable____" + i + "____" + FieldArray.Formula.FormulaMethodField
@@ -4476,8 +4470,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         />
                                                                         {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                             <FormHelperText>
-                                                                                <Tooltip    
-                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>} 
+                                                                                <Tooltip
+                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>}
                                                                                         PopperProps={{
                                                                                             modifiers: [
                                                                                               {
@@ -4521,7 +4515,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 setValue(NewFieldName, "")
                                                             }
                                                             console.log("defaultValuesNew[NewFieldName]", NewFieldName, defaultValuesNew[NewFieldName])
-                                                            
+
                                                             return (
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index} sx={{ml:1, mr:1}} >
                                                                     <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1 }}>
@@ -4554,8 +4548,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         />
                                                                         {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                             <FormHelperText>
-                                                                                <Tooltip    
-                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>} 
+                                                                                <Tooltip
+                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>}
                                                                                         PopperProps={{
                                                                                             modifiers: [
                                                                                               {
@@ -4611,12 +4605,12 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             if(defaultValuesNew[NewFieldCode]==undefined)  {
                                                                 setValue(NewFieldCode, "")
                                                             }
-                                                            else {                                                        
+                                                            else {
                                                                 setValue(NewFieldCode, defaultValuesNew[NewFieldCode])
                                                             }
-                                                            
+
                                                             const options = FieldArray.options
-                                                            
+
                                                             return (
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                     <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1 }}>
@@ -4644,7 +4638,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                 defaultValuesNewTemp[NewFieldCode] = newValue.value
                                                                                             }
                                                                                             setDefaultValuesNew(defaultValuesNewTemp)
-                                                                                            
+
                                                                                             //This field will control other fields show or not
                                                                                             const fieldArrayShowTemp:{[key:string]:any} = {}
                                                                                             if (FieldArray.EnableFields && FieldArray.EnableFields != undefined && FieldArray.EnableFields[newValue.value] != undefined) {
@@ -4673,8 +4667,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         />
                                                                         {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                             <FormHelperText>
-                                                                                <Tooltip    
-                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>} 
+                                                                                <Tooltip
+                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>}
                                                                                         PopperProps={{
                                                                                             modifiers: [
                                                                                               {
@@ -4730,7 +4724,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             if(defaultValuesNew[NewFieldCode]==undefined)  {
                                                                 setValue(NewFieldCode, "")
                                                             }
-                                                            else {                                                        
+                                                            else {
                                                                 setValue(NewFieldCode, defaultValuesNew[NewFieldCode])
                                                             }
 
@@ -4803,8 +4797,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         />
                                                                         {FieldArray.helptext && FieldArray.helptext.length>12 && (
                                                                             <FormHelperText>
-                                                                                <Tooltip    
-                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>} 
+                                                                                <Tooltip
+                                                                                        title={<Fragment>{FieldArray.helptext}</Fragment>}
                                                                                         PopperProps={{
                                                                                             modifiers: [
                                                                                               {
@@ -4854,7 +4848,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                         )
                                     }}
                                     </Repeater>
-                                    
+
                                     {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Add ?
                                     <Grid container sx={{ mt: 4 }}>
                                         <Grid item xs={12} sx={{ px: 0 }}>
@@ -4919,8 +4913,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         }
                     </form>
                 )}
-            </Grid>
-            
+            </Fragment>
+
         </Fragment>
     )
 }
