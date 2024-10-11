@@ -203,9 +203,8 @@ const IndexTableHeader = (props: TableHeaderProps) => {
           </CardContent>
           : ''
         }
-        {filter.length > 0 && ( (isMobileData==false) || (isMobileData==true && MobileEndShowGroupFilter=='Yes' && MobileEndShowSearch=='Yes')) ? <Divider /> : ''}
         {(!selectedRows || selectedRows.length == 0) && ( (isMobileData==false) || (isMobileData==true && MobileEndShowSearch=='Yes')) ?
-          <Box sx={{ pl: 5, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ pt: 2, pl: 3, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <Grid container spacing={2}>
               {searchFieldArray ?
                 <Grid item sm={3} xs={6}>
@@ -260,7 +259,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 <Grid item sm={2} xs={6}>
                   <FormControl fullWidth size="small" sx={{}}>
                     <Tooltip title="Alt+f">
-                      <Button sx={{ ml: 3, mb: 2 }} variant='contained' type='submit'>{button_search}</Button>
+                      <Button sx={{ ml: 0, mb: 0 }} variant='contained' type='submit'>{button_search}</Button>
                     </Tooltip>
                   </FormControl>
                 </Grid>
@@ -290,7 +289,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
         }
       </form>
       {selectedRows && selectedRows.length > 0 ?
-        <Box sx={{ pl: 5, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ pl: 3, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
           <Grid container spacing={2}>
             {multireview && multireview.multireview && multireview.multireview.map((Item: any, index: number) => {
 
