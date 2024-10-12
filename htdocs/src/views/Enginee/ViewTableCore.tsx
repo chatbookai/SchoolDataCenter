@@ -261,7 +261,7 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                    <MUITableCell sx={{ width: '50%' }} colSpan={`${colSpan+1}`}>
+                                    <MUITableCell sx={{ width: '50%' }} colSpan={Number(colSpan) + 1}>
                                       {FieldArray.label}
                                       {CellData.Value}
                                     </MUITableCell>
@@ -359,7 +359,7 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                   <Fragment key={FieldArray_index}>
-                                    <MUITableCell sx={{ width: '50%' }} colSpan={`${colSpan+1}`}>
+                                    <MUITableCell sx={{ width: '50%' }} colSpan={Number(colSpan) + 1}>
                                       {FieldArray.label}
                                       <div dangerouslySetInnerHTML={{ __html: CellData.Value }} /></MUITableCell>
                                   </Fragment>
