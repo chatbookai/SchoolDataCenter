@@ -43,7 +43,7 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-      if (storedToken && storedToken!=undefined) {
+      if (storedToken && storedToken!=undefined && storedToken != '') {
         setLoading(true)
         await axios
           .get(authConfig.meEndpoint, {
@@ -77,17 +77,24 @@ const AuthProvider = ({ children }: Props) => {
             setUser({ ...dataJson.userData })
           })
           .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem(authConfig.storageTokenKeyName)
-            localStorage.removeItem('GO_SYSTEM')
+            window.localStorage.removeItem('userData')
+            window.localStorage.removeItem('refreshToken')
+            window.localStorage.removeItem(authConfig.storageTokenKeyName)
+            window.localStorage.removeItem('GO_SYSTEM')
             setUser(null)
             setLoading(false)
             if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
               router.replace('/login')
             }
           })
-      } else {
+      }
+      else if (storedToken && storedToken!=undefined && storedToken == '') {
+          window.localStorage.removeItem('userData')
+          window.localStorage.removeItem('refreshToken')
+          window.localStorage.removeItem(authConfig.storageTokenKeyName)
+          window.localStorage.removeItem('GO_SYSTEM')
+      }
+      else {
         setLoading(false)
       }
     }
@@ -181,8 +188,6 @@ const AuthProvider = ({ children }: Props) => {
           }
 
           if(dataJson.status == 'ok' && dataJson.accessToken) {
-            window.localStorage.setItem(authConfig.storageTokenKeyName, '')
-
             setUser({ ...dataJson.userData })
           }
           else {

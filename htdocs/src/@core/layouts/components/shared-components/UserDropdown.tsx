@@ -123,6 +123,7 @@ const UserDropdown = (props: Props) => {
         window.localStorage.removeItem(authConfig.storageTokenKeyName)
         window.localStorage.removeItem('GO_SYSTEM')
         window.localStorage.removeItem('userData')
+        window.localStorage.removeItem('refreshToken')
       })
     }
   }, [isLogout])
