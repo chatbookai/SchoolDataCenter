@@ -65,7 +65,7 @@ const AuthProvider = ({ children }: Props) => {
                 }
                 catch(Error: any) {
                     console.log("DecryptDataAES256GCMData view_default Error", Error)
-        
+
                     dataJson = data
                 }
             }
@@ -114,7 +114,7 @@ const AuthProvider = ({ children }: Props) => {
             }
             catch(Error: any) {
                 console.log("DecryptDataAES256GCMData view_default Error", Error)
-    
+
                 dataJson = data
             }
         }
@@ -122,7 +122,7 @@ const AuthProvider = ({ children }: Props) => {
 
             dataJson = data
         }
-        
+
         //console.log("authConfig.storageTokenKeyName",authConfig.storageTokenKeyName)
         //console.log("dataJson.accessToken",dataJson.accessToken)
         //console.log("dataJson.userData",dataJson.userData)
@@ -171,7 +171,7 @@ const AuthProvider = ({ children }: Props) => {
               }
               catch(Error: any) {
                   console.log("DecryptDataAES256GCMData view_default Error", Error)
-      
+
                   dataJson = data
               }
           }
@@ -179,13 +179,17 @@ const AuthProvider = ({ children }: Props) => {
 
               dataJson = data
           }
-          
+
           if(dataJson.status == 'ok' && dataJson.accessToken) {
-            window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
+            window.localStorage.setItem(authConfig.storageTokenKeyName, '')
 
             setUser({ ...dataJson.userData })
           }
           else {
+            console.log("用户当前身份登录状态失效...");
+            window.localStorage.removeItem(authConfig.storageTokenKeyName)
+            window.localStorage.removeItem('GO_SYSTEM')
+            window.localStorage.removeItem('userData')
           }
         })
     }

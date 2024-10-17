@@ -64,16 +64,16 @@ const UserDropdown = (props: Props) => {
         if (user) {
           refresh(user)
         }
-      } 
+      }
       catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-    
+
     const intervalId = setInterval(refreshUserToken, 30000);
 
     return () => clearInterval(intervalId);
-  }, []); 
+  }, []);
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -85,7 +85,7 @@ const UserDropdown = (props: Props) => {
     }
     if(url=='/apps/201' && user.type=="Student")  {
       url = '/apps/202'
-    }    
+    }
     if (url) {
       router.push(url)
     }
@@ -113,12 +113,17 @@ const UserDropdown = (props: Props) => {
     handleDropdownClose()
   }
 
-  const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
   useEffect(() => {
     if(isLogout) {
+      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
       axios
       .get(authConfig.logoutEndpoint, { headers: { Authorization: storedToken} })
-      .then()
+      .then(async (response: any) => {
+        console.log("logoutEndpoint response", response)
+        window.localStorage.removeItem(authConfig.storageTokenKeyName)
+        window.localStorage.removeItem('GO_SYSTEM')
+        window.localStorage.removeItem('userData')
+      })
     }
   }, [isLogout])
 
@@ -172,7 +177,7 @@ const UserDropdown = (props: Props) => {
           </Box>
 
           <Divider sx={{ mt: '0 !important' }} />
-          
+
           <MenuItem
             onClick={handleLogout}
             sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
@@ -213,7 +218,7 @@ const UserDropdown = (props: Props) => {
           </Box>
 
           <Divider sx={{ mt: '0 !important' }} />
-          
+
           <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/user/password')}>
             <Box sx={styles}>
               <Icon icon='mdi:security' />
@@ -234,7 +239,7 @@ const UserDropdown = (props: Props) => {
               登录日志
             </Box>
           </MenuItem>
-          
+
           <Divider />
 
           <MenuItem
@@ -244,10 +249,10 @@ const UserDropdown = (props: Props) => {
             <Icon icon='mdi:logout-variant' />
             退出
           </MenuItem>
-          
+
         </Menu>
       }
-      
+
     </Fragment>
   )
 }
