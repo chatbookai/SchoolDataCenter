@@ -112,7 +112,7 @@ function AttachFieldValueToUrl($TableName,$Id,$FieldName,$Type,$FieldValue) {
             $DATA   = EncryptID(serialize($RS));
             $URL    = "data_image.php?DATA=".$DATA;
 
-            //Return Avatar 
+            //Return Avatar
             if($Type=="avatar")  {
                 return $URL;
             }
@@ -186,7 +186,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
     for($i=1; $i<=$MaxMsgSections; $i++)     {
         $Msg_Reminder_Rule_Field_Name1 = $SettingMap["Msg_Reminder_Rule_Field_Name_{$i}_1"];
         $Msg_Reminder_Rule_Field_Method1 = $SettingMap["Msg_Reminder_Rule_Field_Method_{$i}_1"];
-        $Msg_Reminder_Rule_Field_Value1 = $SettingMap["Msg_Reminder_Rule_Field_Value_{$i}_1"];        
+        $Msg_Reminder_Rule_Field_Value1 = $SettingMap["Msg_Reminder_Rule_Field_Value_{$i}_1"];
         $Msg_Reminder_Rule_Field_Name2 = $SettingMap["Msg_Reminder_Rule_Field_Name_{$i}_2"];
         $Msg_Reminder_Rule_Field_Method2 = $SettingMap["Msg_Reminder_Rule_Field_Method_{$i}_2"];
         $Msg_Reminder_Rule_Field_Value2 = $SettingMap["Msg_Reminder_Rule_Field_Value_{$i}_2"];
@@ -472,7 +472,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 }
                                 break;
                         }
-                    }                    
+                    }
                 }
             }
             //Reminder Other Student
@@ -513,7 +513,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                     }
                 }
             }
-            
+
         }
 
         //Begin to Reminder
@@ -545,7 +545,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                 }
             }
 
-            //Reminder Students            
+            //Reminder Students
             $Students = $Need_To_Reminder_Object['Student'];
             $Students = array_flip($Students);
             $Students = array_keys($Students);
@@ -569,7 +569,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
             }
         }
         //exit;
-        
+
     }
     return $InsertSQLALL;
 }
@@ -612,7 +612,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
         $CurrentFieldTypeArray = explode(':',$CurrentFieldType);
         //Filter Field Type
         $FieldTypeInFlow = $SettingMap['FieldType_'.$FieldName];
-        $FieldTypeInFlow_Map = [];        
+        $FieldTypeInFlow_Map = [];
         if($FilterFlowSetting==false)   {
             $FieldTypeInFlow = 'FieldTypeFollowByFormSetting';
         }
@@ -650,12 +650,12 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 else {
                     if($actionType=="LIST"||$actionType=="ADD"||$actionType=="EDIT") {
                         $FieldTypeInFlow_Map['add_default'] = "Disable";
-                        $FieldTypeInFlow_Map['edit_default'] = "Disable"; 
+                        $FieldTypeInFlow_Map['edit_default'] = "Disable";
                     }
                     else {
                         $FieldTypeInFlow_Map['add_default'] = "readonly";
-                        $FieldTypeInFlow_Map['edit_default'] = "readonly"; 
-                    }                   
+                        $FieldTypeInFlow_Map['edit_default'] = "readonly";
+                    }
                 }
                 break;
             case 'ListAddView_Use_Edit_Readonly':
@@ -673,12 +673,12 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 }
                 elseif(in_array($CurrentFieldTypeArray[0], ['tablefilter','tablefiltercolor','radiogroup','radiogroupcolor','autucomplete']))  {
                     $FieldTypeInFlow_Map['edit_default'] = "readonly".$CurrentFieldTypeArray[0];
-                    //$FieldTypeInFlow_Map['view_default'] = "input";  
+                    //$FieldTypeInFlow_Map['view_default'] = "input";
                     $CurrentFieldTypeArray[0] = "readonly".$CurrentFieldTypeArray[0];
                 }
                 else {
                     $FieldTypeInFlow_Map['edit_default'] = "readonly";
-                    $FieldTypeInFlow_Map['view_default'] = "input";                  
+                    $FieldTypeInFlow_Map['view_default'] = "input";
                 }
                 break;
             case 'ListView_Use_AddEdit_Readonly':
@@ -696,12 +696,12 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 }
                 elseif(in_array($CurrentFieldTypeArray[0], ['tablefilter','tablefiltercolor','radiogroup','radiogroupcolor','autucomplete']))  {
                     $FieldTypeInFlow_Map['add_default'] = "readonly".$CurrentFieldTypeArray[0];
-                    $FieldTypeInFlow_Map['edit_default'] = "readonly".$CurrentFieldTypeArray[0];  
+                    $FieldTypeInFlow_Map['edit_default'] = "readonly".$CurrentFieldTypeArray[0];
                     $CurrentFieldTypeArray[0] = "readonly".$CurrentFieldTypeArray[0];
                 }
                 else {
                     $FieldTypeInFlow_Map['add_default'] = "readonly";
-                    $FieldTypeInFlow_Map['edit_default'] = "readonly";                    
+                    $FieldTypeInFlow_Map['edit_default'] = "readonly";
                 }
                 break;
             case 'ListAddEdit_Use_View_NotUse':
@@ -760,10 +760,10 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 if($actionType=="ADD"||$actionType=="EDIT")  {
                     //print_R($Item);print "\n";
                     if($Setting['DateTimeFormat']!="") {
-                        $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = date($Setting['DateTimeFormat']);    
+                        $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = date($Setting['DateTimeFormat']);
                     }
                     else {
-                        $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = date("Y-m-d H:i:s");  
+                        $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = date("Y-m-d H:i:s");
                     }
                 }
                 break;
@@ -929,7 +929,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 $FieldType = $rs->GetArray();
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>$CurrentFieldTypeArray[0], 'options'=>$FieldType, 'label' => $ShowTextName, 'value' => $FieldType[2]['value'], 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth),'disabled' => false]];
                 break;
-                
+
             case 'autocompletemdi':
                 if($actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>$CurrentFieldTypeArray[0], 'label' => $ShowTextName, 'value' => $FieldDefault, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false,'min'=>$Min,'max'=>$Max]];
@@ -950,7 +950,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 $DefaultValue       = $CurrentFieldTypeArray[4];
                 $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                 $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);   
+                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                 $AddSqlTemp         = "";
                 switch($TableNameTemp) {
                     case 'data_banji':
@@ -1055,7 +1055,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                 $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
                 $OrderByDesc        = ForSqlInjection($CurrentFieldTypeArray[7]);
-                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);               
+                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                 if(sizeof($CurrentFieldTypeArray)==7)   {
                     if(in_array("SortNumber",$MetaColumnNamesTemp))  {
                         $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' order by SortNumber asc, `".$MetaColumnNamesTemp[$ValueField]."` asc";
@@ -1084,7 +1084,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                     if($DefaultValue=="") {
                         $DefaultValue = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
                     }
-                    $sql .= " limit 10";
+                    $sql .= " limit 100";
                 }
                 $rs = $db->CacheExecute(10, $sql) or print($sql);
                 $FieldType = $rs->GetArray();
@@ -1211,11 +1211,11 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                     if($Item['MenuThreeName']!="")   {
                         $MenuTwoArray1[$Item['MenuOneName']][$Item['MenuTwoName']][] = $Item;
                     }
-                    else { 
+                    else {
                         $MenuTwoArray1[$Item['MenuOneName']]['SystemMenuTwo_'.$Item['id']][] = $Item;
                     }
                     $MenuTwoCount[$Item['MenuOneName']] += 1;
-                }                
+                }
                 foreach($MenuOneRSA as $Item)  {
                     if(isset($MenuTwoArray1[$Item['MenuOneName']])) {
                         $MenuTwoArray2[$Item['MenuOneName']] = $MenuTwoArray1[$Item['MenuOneName']];
@@ -1409,7 +1409,7 @@ function option_multi_approval_exection($selectedRows, $multiReviewInputValue, $
     }
     if(in_array($Batch_Approval_Review_Field,$MetaColumnNames)&&$multiReviewInputValue!='')   {
         $updateSQL[] = " $Batch_Approval_Review_Field = '".$multiReviewInputValue."' ";
-    }    
+    }
     $Change_Field_When_Batch_Approval_1         = $SettingMap['Change_Field_When_Batch_Approval_1'];
     $Change_Into_Value_When_Batch_Approval_1    = $SettingMap['Change_Into_Value_When_Batch_Approval_1'];
     if(in_array($Change_Field_When_Batch_Approval_1,$MetaColumnNames))   {
@@ -1450,7 +1450,7 @@ function option_multi_approval_exection($selectedRows, $multiReviewInputValue, $
     if(in_array($Change_Field_When_Batch_Approval_8,$MetaColumnNames))   {
         $updateSQL[] = " $Change_Field_When_Batch_Approval_8 = '".$Change_Into_Value_When_Batch_Approval_8."' ";
     }
-    
+
     $sqlArray = [];
     if($selectedRows[0]!=""&&count($updateSQL)>0) {
         $RS             = [];
@@ -1463,7 +1463,7 @@ function option_multi_approval_exection($selectedRows, $multiReviewInputValue, $
             $sqlArray[] = $sql;
             if($Reminder)   $RS['Msg_Reminder'][$id] = Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id);
             if($UpdateOtherTableField) UpdateOtherTableFieldAfterFormSubmit($id);
-        }  
+        }
         //SystemLogRecord
         if(in_array($SettingMap['OperationLogGrade'],["EditAndDeleteOperation","AddEditAndDeleteOperation","AllOperation"]))  {
             SystemLogRecord("option_multi_approval", '', json_encode($sqlArray));
@@ -1485,7 +1485,7 @@ function option_multi_approval_exection($selectedRows, $multiReviewInputValue, $
         $RS['_GET']     = $_GET;
         $RS['_POST']    = $_POST;
         return json_encode($RS);
-    }  
+    }
 }
 
 function option_multi_refuse_exection($selectedRows, $multiReviewInputValue, $Reminder=1, $UpdateOtherTableField=1) {
@@ -1516,7 +1516,7 @@ function option_multi_refuse_exection($selectedRows, $multiReviewInputValue, $Re
     }
     if(in_array($Batch_Refuse_Review_Field,$MetaColumnNames)&&$multiReviewInputValue!='')   {
         $updateSQL[] = " $Batch_Refuse_Review_Field = '".$multiReviewInputValue."' ";
-    }    
+    }
     $Change_Field_When_Batch_Refuse_1         = $SettingMap['Change_Field_When_Batch_Refuse_1'];
     $Change_Into_Value_When_Batch_Refuse_1    = $SettingMap['Change_Into_Value_When_Batch_Refuse_1'];
     if(in_array($Change_Field_When_Batch_Refuse_1,$MetaColumnNames))   {
@@ -1547,7 +1547,7 @@ function option_multi_refuse_exection($selectedRows, $multiReviewInputValue, $Re
     if(in_array($Change_Field_When_Batch_Refuse_6,$MetaColumnNames))   {
         $updateSQL[] = " $Change_Field_When_Batch_Refuse_6 = '".$Change_Into_Value_When_Batch_Refuse_6."' ";
     }
-    
+
     $sqlArray = [];
     if($selectedRows[0]!=""&&count($updateSQL)>0) {
         $RS             = [];
@@ -1582,7 +1582,7 @@ function option_multi_refuse_exection($selectedRows, $multiReviewInputValue, $Re
         $RS['_GET']     = $_GET;
         $RS['_POST']    = $_POST;
         return json_encode($RS);
-    } 
+    }
 }
 
 function option_multi_cancel_exection($selectedRows, $multiReviewInputValue, $Reminder=1, $UpdateOtherTableField=1) {
@@ -1613,7 +1613,7 @@ function option_multi_cancel_exection($selectedRows, $multiReviewInputValue, $Re
     }
     if(in_array($Batch_Cancel_Review_Field,$MetaColumnNames)&&$multiReviewInputValue!='')   {
         $updateSQL[] = " $Batch_Cancel_Review_Field = '".$multiReviewInputValue."' ";
-    }    
+    }
     $Change_Field_When_Batch_Cancel_1         = $SettingMap['Change_Field_When_Batch_Cancel_1'];
     $Change_Into_Value_When_Batch_Cancel_1    = $SettingMap['Change_Into_Value_When_Batch_Cancel_1'];
     if(in_array($Change_Field_When_Batch_Cancel_1,$MetaColumnNames))   {
@@ -1654,7 +1654,7 @@ function option_multi_cancel_exection($selectedRows, $multiReviewInputValue, $Re
     if(in_array($Change_Field_When_Batch_Cancel_8,$MetaColumnNames))   {
         $updateSQL[] = " $Change_Field_When_Batch_Cancel_8 = '".$Change_Into_Value_When_Batch_Cancel_8."' ";
     }
-    
+
     $sqlArray = [];
     if($selectedRows[0]!=""&&count($updateSQL)>0) {
         $RS             = [];
@@ -1689,7 +1689,7 @@ function option_multi_cancel_exection($selectedRows, $multiReviewInputValue, $Re
         $RS['_GET']     = $_GET;
         $RS['_POST']    = $_POST;
         return json_encode($RS);
-    } 
+    }
 }
 
 function UpdateOtherTableFieldAfterFormSubmit($id)  {
@@ -1707,11 +1707,11 @@ function UpdateOtherTableFieldAfterFormSubmit($id)  {
     if($OperationAfterSubmit_Which_Field_Value!="" && $OperationAfterSubmit_Which_Field_Name!="" && $OperationAfterSubmit_Which_Field_Name!="None" && in_array($OperationAfterSubmit_Which_Field_Name, $MetaColumnNames))  {
         $CompareValueArray = returntablefield($TableName,"id",$id,"".$OperationAfterSubmit_Which_Field_Name.",".$OperationAfterSubmit_SameField_This_Table."");
         $OperationAfterSubmit_Which_Field_Value_Array = explode(',',$OperationAfterSubmit_Which_Field_Value);
-        if( $CompareValueArray[$OperationAfterSubmit_Which_Field_Name]!="" 
+        if( $CompareValueArray[$OperationAfterSubmit_Which_Field_Name]!=""
             && in_array($CompareValueArray[$OperationAfterSubmit_Which_Field_Name],$OperationAfterSubmit_Which_Field_Value_Array)
             && in_array($OperationAfterSubmit_Need_Update_Table_Name,$GLOBAL_MetaTables)
             )  {
-                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($OperationAfterSubmit_Need_Update_Table_Name); 
+                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($OperationAfterSubmit_Need_Update_Table_Name);
                 if($OperationAfterSubmit_SameField_Other_Table!="" && in_array($OperationAfterSubmit_SameField_Other_Table,$MetaColumnNamesTemp))    {
                     $sql    = "select * from $TableName where ".$MetaColumnNames[0]." = '$id'";
                     $rs     = $db->Execute($sql);

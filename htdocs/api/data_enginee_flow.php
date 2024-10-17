@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 $TIME_BEGIN = time();
 require_once('cors.php');
 require_once('include.inc.php');
@@ -31,8 +31,11 @@ $FaceTo  	= $FromInfo['FaceTo'];
 
 //Except CSRS
 global $ExceptCsrf;
-$ExceptCsrf[] = "/apps/apps_19.php";
-$ExceptCsrf[] = "/apps/apps_19.php";
+$ExceptCsrf[] = "/api/apps/apps_19.php";
+$ExceptCsrf[] = "/api/apps/apps_19.php";
+
+global $ExceptCheckDiffTime;
+$ExceptCheckDiffTime[] = "/api/apps/apps_9.php";
 
 if($FaceTo=="AuthUser")         {
     //Check User Login or Not
@@ -93,7 +96,7 @@ foreach($AllFieldsFromTable as $Item)  {
 }
 //print "TIME EXCEUTE 4:".(time()-$TIME_BEGIN)."<BR>\n";
 
-$MetaColumnNames    = GLOBAL_MetaColumnNames($TableName); 
+$MetaColumnNames    = GLOBAL_MetaColumnNames($TableName);
 $UniqueKey          = $MetaColumnNames[1];
 
 //Extra Role
@@ -202,11 +205,11 @@ if($_GET['action']=="option_multi_cancel")  {
 }
 
 if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List_Header_Array) && $TableName!="")  {
-    
+
     //Filter data when do add save operation
-    require_once('data_enginee_filter_post.php');    
+    require_once('data_enginee_filter_post.php');
     $MetaColumnNames    = GLOBAL_MetaColumnNames($TableName);
-    
+
     $filePath = $_FILES['Import_File']['tmp_name']['0'];
     if(!is_file($filePath))  {
         $RS             = [];
@@ -294,7 +297,7 @@ if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List
             if(function_exists($functionNameIndividual))  {
                 $Element = $functionNameIndividual($Element);
             }
-            
+
             $Import_Rule_Method = $_POST['Import_Rule_Method'];
             switch($Import_Rule_Method) {
                 case 'BothInsertAndUpdate':
@@ -341,7 +344,7 @@ if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List
 
 //编辑页面时的启用字段列表
 if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Header_Array) && $TableName!="")  {
-    
+
     //Filter data when do add save operation
     require_once('data_enginee_filter_post.php');
     $MetaColumns    = $db->MetaColumns($TableName);
@@ -351,7 +354,7 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
         $MetaColumnsInDb[$Item->name]       = $Item->type;
     }
     $MetaColumnNames    = GLOBAL_MetaColumnNames($TableName);
-    
+
     //functionNameIndividual
     $functionNameIndividual = "plugin_".$TableName."_".$Step."_add_default_data_before_submit";
     if(function_exists($functionNameIndividual))  {
@@ -361,15 +364,15 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
     $FieldsArray        = [];
     $IsExecutionSQL     = 0;
     foreach($AllFieldsFromTable as $Item)  {
-        if($_POST[$Item['FieldName']]!="") {            
+        if($_POST[$Item['FieldName']]!="") {
             $IsExecutionSQL = 1;
         }
-        if($_POST[$Item['FieldName']]=="undefined") {            
+        if($_POST[$Item['FieldName']]=="undefined") {
             $_POST[$Item['FieldName']] = "";
         }
         // Give a default value for date and number
         $FieldType = $MetaColumnsInDb[$Item['FieldName']];
-        if($_POST[$Item['FieldName']]=="") {    
+        if($_POST[$Item['FieldName']]=="") {
             switch($FieldType)  {
                 case 'int':
                     $_POST[$Item['FieldName']] = 0;
@@ -479,7 +482,7 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                     break;
             }
         }
-        $FieldsArray[$Item['FieldName']]        = addslashes($_POST[$Item['FieldName']]);        
+        $FieldsArray[$Item['FieldName']]        = addslashes($_POST[$Item['FieldName']]);
         //To check need encrypt field value
         $FieldName                      = $Item['FieldName'];
         $SettingTempMap                 = $AllFieldsMap[$FieldName]['Setting'];
@@ -575,11 +578,11 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
             $RS['msg'] = $SettingMap['Tip_When_Add_Success'];
             $RS['Msg_Reminder_Object_From_Add_Or_Edit_Result'] = $Msg_Reminder_Object_From_Add_Or_Edit_Result;
             if($SettingMap['Debug_Sql_Show_On_Api']=="Yes")  {
-                $RS['sql'] = $sql;  
+                $RS['sql'] = $sql;
                 global $GLOBAL_EXEC_KEY_SQL;
-                $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;              
+                $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
             }
-            
+
             //Relative Child Table Support
             $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
             $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
@@ -589,7 +592,7 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                 $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
                 $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
                 $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
-                $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName); 
+                $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
                 if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) &&strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false) {
                     //Get All Fields
                     $db->BeginTrans();
@@ -622,7 +625,7 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                                 default:
                                     $ChildElement[$ChildFieldName] = ForSqlInjection($_POST['ChildTable____'.$X.'____'.$ChildFieldName]);
                                     break;
-                            }                            
+                            }
                         }
                         $deleteChildTableItemArray = explode(',',$_POST['deleteChildTableItemArray']);
                         if(!in_array($X, $deleteChildTableItemArray)) {
@@ -638,7 +641,7 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                     $RS['MultiSql'] = $MultiSql;
                 }
             }
-            
+
             //functionNameIndividual
             $functionNameIndividual = "plugin_".$TableName."_".$Step."_add_default_data_after_submit";
             if(function_exists($functionNameIndividual))  {
@@ -647,11 +650,11 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
             //SystemLogRecord
             if(in_array($SettingMap['OperationLogGrade'],["AddEditAndDeleteOperation","AllOperation"]))  {
                 $sql    = "select * from $TableName where ".$MetaColumnNames[0]." = '$NewId'";
-                $Record = $db->Execute($sql); 
+                $Record = $db->Execute($sql);
                 SystemLogRecord("add_default_data", '', json_encode($Record->fields));
             }
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -692,11 +695,11 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
     else if($TableName=="data_student" && $SettingMap['Init_Action_Value']=="edit_default" && $SettingMap['Init_Action_FilterValue']=="学号") {
         $学号    = $GLOBAL_USER->学号;
         $id     = returntablefield($TableName,"学号",$学号,"id")["id"];
-    }   
+    }
     else if($SettingMap['Init_Action_Value']=="edit_default" && $SettingMap['Init_Action_FilterValue']!="") {
         $id     = intval($SettingMap['Init_Action_FilterValue']);
     }
-    else {        
+    else {
         $id     = intval(DecryptID($_GET['id']));
     }
     if($id==0)   {
@@ -749,7 +752,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
         }
         if($_POST[$FieldName]!="") {
             $IsExecutionSQL = 1;
-        }        
+        }
         if($_POST['ChildItemCounter']>0) {
             $IsExecutionSQLChildTable = 1;
         }
@@ -757,7 +760,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
     //Check Permission For This Record
     //LimitEditAndDelete
     $sql            = "select * from $TableName where ".$MetaColumnNames[0]." = '$id'";
-    $RecordOriginal = $db->Execute($sql); 
+    $RecordOriginal = $db->Execute($sql);
     if($SettingMap['LimitEditAndDelete_Edit_Field_One']!="" && $SettingMap['LimitEditAndDelete_Edit_Field_One']!="None" && in_array($SettingMap['LimitEditAndDelete_Edit_Field_One'], $MetaColumnNames)) {
         $LimitEditAndDelete_Edit_Value_One_Array = explode(',',$SettingMap['LimitEditAndDelete_Edit_Value_One']);
         if(in_array($RecordOriginal->fields[$SettingMap['LimitEditAndDelete_Edit_Field_One']],$LimitEditAndDelete_Edit_Value_One_Array)) {
@@ -865,12 +868,12 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             $RS['Msg_Reminder_Object_From_Add_Or_Edit_Result'] = $Msg_Reminder_Object_From_Add_Or_Edit_Result;
             if($SettingMap['Debug_Sql_Show_On_Api']=="Yes")  {
                 global $GLOBAL_EXEC_KEY_SQL;
-                $RS['sql'] = $sql;  
-                $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;              
+                $RS['sql'] = $sql;
+                $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
             }
-            $RS['sql'] = $sql;  
-            $RS['_POST'] = $_POST; 
-            $RS['_FILES'] = $_FILES;  
+            $RS['sql'] = $sql;
+            $RS['_POST'] = $_POST;
+            $RS['_FILES'] = $_FILES;
             //Batch_Approval
             $Batch_Approval_Status_Field    = $SettingMap['Batch_Approval_Status_Field'];
             $Batch_Approval_Status_Value    = $SettingMap['Batch_Approval_Status_Value'];
@@ -888,7 +891,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             $Batch_Refuse_Status_Value    = $SettingMap['Batch_Refuse_Status_Value'];
             if($Batch_Refuse_Status_Value!="" && $_POST[$Batch_Refuse_Status_Field]==$Batch_Refuse_Status_Value)  {
                 option_multi_refuse_exection($FieldsArray['id'], $multiReviewInputValue='', $Reminder=0, $UpdateOtherTableField=0);
-            }            
+            }
             //Relative Child Table Support
             $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
             $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
@@ -898,7 +901,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
                 $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
                 $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
                 $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
-                $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName); 
+                $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
                 if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) &&strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false) {
                     //Get All Fields
                     $readonlyIdArray            = explode(',',ForSqlInjection($_POST['readonlyIdArray']));
@@ -932,7 +935,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
                                 default:
                                     $ChildElement[$ChildFieldName] = ForSqlInjection($_POST['ChildTable____'.$X.'____'.$ChildFieldName]);
                                     break;
-                            }                            
+                            }
                         }
                         $deleteChildTableItemArray = explode(',',$_POST['deleteChildTableItemArray']);
                         if(!in_array($X, $deleteChildTableItemArray)) {
@@ -948,7 +951,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
                     $RS['MultiSql'] = $MultiSql;
                 }
             }
-            
+
             //functionNameIndividual
             $functionNameIndividual = "plugin_".$TableName."_".$Step."_edit_default_data_after_submit";
             if(function_exists($functionNameIndividual))  {
@@ -957,11 +960,11 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             //SystemLogRecord
             if(in_array($SettingMap['OperationLogGrade'],["EditAndDeleteOperation","AddEditAndDeleteOperation","AllOperation"]))  {
                 $sql            = "select * from $TableName where ".$MetaColumnNames[0]." = '$id'";
-                $Record         = $db->Execute($sql); 
+                $Record         = $db->Execute($sql);
                 SystemLogRecord("edit_default_data", json_encode($RecordOriginal->fields), json_encode($Record->fields));
             }
             print_R(EncryptApiData($RS));
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -1012,11 +1015,11 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     if($TableName=="data_user" && $SettingMap['Init_Action_Value']=="edit_default" && $SettingMap['Init_Action_FilterValue']=="email") {
         $EMAIL  = $GLOBAL_USER->email;
         $id     = returntablefield("data_user","EMAIL",$EMAIL,"id")["id"];
-    } 
+    }
     else if($TableName=="data_user" && $SettingMap['Init_Action_Value']=="edit_default" && $SettingMap['Init_Action_FilterValue']=="USER_ID") {
         $USER_ID  = $GLOBAL_USER->USER_ID;
         $id     = returntablefield($TableName,"USER_ID",$USER_ID,"id")["id"];
-    }   
+    }
     else if($TableName=="data_xiaoyou_member" && $SettingMap['Init_Action_Value']=="edit_default" && $SettingMap['Init_Action_FilterValue']=="USER_ID") {
         $USER_ID  = $GLOBAL_USER->USER_ID;
         $id     = returntablefield($TableName,"学生学号",$USER_ID,"id")["id"];
@@ -1024,13 +1027,13 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     else if($TableName=="data_student" && $SettingMap['Init_Action_Value']=="edit_default" && $SettingMap['Init_Action_FilterValue']=="学号") {
         $学号    = $GLOBAL_USER->学号;
         $id     = returntablefield($TableName,"学号",$学号,"id")["id"];
-    }   
+    }
     else if($SettingMap['Init_Action_Value']=="edit_default" && $SettingMap['Init_Action_FilterValue']!="") {
         $id     = intval($SettingMap['Init_Action_FilterValue']);
     }
     else {
         $id     = intval(DecryptID($_GET['id']));
-    }    
+    }
     if($id==0)   {
         $RS = [];
         $RS['status'] = "ERROR";
@@ -1279,7 +1282,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
         $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
         $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
-        $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName); 
+        $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
         if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) ) {
             //Get All Fields
             $sql        = "select * from $ChildTableName where $Relative_Child_Table_Parent_Field_Name = '".$data[$Relative_Child_Table_Parent_Field_Name]."';";
@@ -1333,7 +1336,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                         $DefaultValue       = $CurrentFieldTypeArray[4];
                         $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                         $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                        $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);            
+                        $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                         if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $RS['data'][$FieldName]!="") {
                             $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
                             $rs = $db->CacheExecute(10, $sql) or print($sql);
@@ -1343,7 +1346,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                             $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
                             $rs = $db->CacheExecute(10, $sql) or print($sql);
                             $RS['data'][$FieldName] = $rs->fields['label'];
-                        }    
+                        }
                         break;
                     case 'autocompletemulti':
                         //print_R($CurrentFieldTypeArray);
@@ -1353,7 +1356,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                         $DefaultValue       = $CurrentFieldTypeArray[4];
                         $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                         $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                        $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);           
+                        $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                         $MultiValueArray        = explode(',',$RS['data'][$FieldName]);
                         $MultiValueRS           = [];
                         foreach($MultiValueArray as $MultiValue) {
@@ -1382,11 +1385,11 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     }
 
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Array))  ) && $_GET['id']!="")  {
-    $id     = intval(DecryptID($_GET['id']));    
+    $id     = intval(DecryptID($_GET['id']));
     if($id==0)   {
         $RS = [];
         $RS['status'] = "ERROR";
@@ -1436,7 +1439,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
             case 'xlsx':
                 $data[$Item['FieldName']] = AttachFieldValueToUrl($TableName,$id,$Item['FieldName'],'xlsx',$data[$Item['FieldName']]);
                 break;
-        }        
+        }
         //Decrypt Field Value
         $FieldName                      = $Item['FieldName'];
         $SettingTempMap                 = $AllFieldsMap[$FieldName]['Setting'];
@@ -1485,7 +1488,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
                     $DefaultValue       = $CurrentFieldTypeArray[4];
                     $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                     $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                    $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);            
+                    $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                     if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $RS['data'][$FieldName]!="") {
                         $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
                         $rs = $db->CacheExecute(10, $sql) or print($sql);
@@ -1495,7 +1498,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
                         $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
                         $rs = $db->CacheExecute(10, $sql) or print($sql);
                         $RS['data'][$FieldName] = $rs->fields['label'];
-                    }    
+                    }
                     break;
                 case 'autocompletemulti':
                     //print_R($CurrentFieldTypeArray);
@@ -1505,7 +1508,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
                     $DefaultValue       = $CurrentFieldTypeArray[4];
                     $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                     $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                    $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);           
+                    $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                     $MultiValueArray        = explode(',',$RS['data'][$FieldName]);
                     $MultiValueRS           = [];
                     foreach($MultiValueArray as $MultiValue) {
@@ -1608,8 +1611,8 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
                 $RowData[1]                 = $RowData2;
                 $NewTableRowItem[]          = [$RowData2];
             }
-            
-        }        
+
+        }
         if(sizeof($RowData)>0) {
             $NewTableRowData[] = $RowData;
         }
@@ -1635,7 +1638,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
         $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
         $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
         $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
-        $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName); 
+        $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
         if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) ) {
             //Get All Fields
             $sql        = "select * from $ChildTableName where $Relative_Child_Table_Parent_Field_Name = '".$data[$Relative_Child_Table_Parent_Field_Name]."';";
@@ -1660,7 +1663,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
                 }
             }
             $RS['childtable']['allFields']  = $allFieldsView;
-            
+
         }
     }
 
@@ -1709,7 +1712,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
             if($RS['MobileEnd']['MobileEndActivityEnrollEndDate']<date("Y-m-d")) {
                 $RS['MobileEnd']['MobileEndActivityStatus'] = "结束";
             }
-            else {            
+            else {
                 $RS['MobileEnd']['MobileEndActivityStatus'] = "报名中";
             }
         }
@@ -1721,30 +1724,30 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
         }
 
         if($SettingMap['MobileEndIconType']=="ImageField") {
-            $data[$SettingMap['MobileEndNewsLeftImage']] = $data[$SettingMap['MobileEndIconField']];                    
+            $data[$SettingMap['MobileEndNewsLeftImage']] = $data[$SettingMap['MobileEndIconField']];
         }
         if($SettingMap['MobileEndIconType']=="UserAvator") {
-            
+
         }
         if($data[$SettingMap['MobileEndNewsLeftImage']]=="") {
             $data[$SettingMap['MobileEndNewsLeftImage']] = "/images/wechat/logo_icampus_left.png";
         }
         $RS['MobileEnd']['MobileEndNewsLeftImage']            = AttachFieldValueToUrl($TableName,$data['id'],$SettingMap['MobileEndNewsLeftImage'],'avatar',strval($data[$SettingMap['MobileEndNewsLeftImage']]));
 
-        //Extra Logic 
+        //Extra Logic
         if($SettingMap['MobileEndShowType']=="Activity") {
             $sql    = "select COUNT(*) AS NUM from data_xiaoyou_activity_record where 活动ID='".intval($data['id'])."' ";
             $rs     = $db->Execute($sql);
             $NUM    = intval($rs->fields['NUM']);
-            $RS['MobileEnd']['MobileEndActivityHaveEnrollNumber'] = $NUM; 
+            $RS['MobileEnd']['MobileEndActivityHaveEnrollNumber'] = $NUM;
             $sql    = "select COUNT(*) AS NUM from data_xiaoyou_activity_record where 活动ID='".intval($data['id'])."' and 用户ID='".$GLOBAL_USER->USER_ID."' ";
             $rs     = $db->Execute($sql);
             $NUM    = intval($rs->fields['NUM']);
-            $RS['MobileEnd']['MobileEndActivityMyEnrollStatus'] = $NUM; 
+            $RS['MobileEnd']['MobileEndActivityMyEnrollStatus'] = $NUM;
         }
         $RS['MobileEnd']['MobileEndNewsEnableEnroll']               = $SettingMap['MobileEndNewsEnableEnroll'];
         $RS['MobileEnd']['MobileEndActionType']                     = $TableName;
-        
+
         //Field Name
         $RS['MobileEnd']['MobileEndActivityFeeName']                = $SettingMap['MobileEndActivityFee'];
         $RS['MobileEnd']['MobileEndActivityContactName']            = $SettingMap['MobileEndActivityContact'];
@@ -1757,7 +1760,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
     }
 
     print_R(EncryptApiData($RS));
-    exit;  
+    exit;
 }
 
 if($_GET['action']=="updateone")  {
@@ -1773,7 +1776,7 @@ if($_GET['action']=="updateone")  {
         $functionNameIndividual = "plugin_".$TableName."_".$Step."_updateone";
         if(function_exists($functionNameIndividual))  {
             $functionNameIndividual($id);
-        }        
+        }
         //SystemLogRecord
         if(in_array($SettingMap['OperationLogGrade'],["EditAndDeleteOperation","AddEditAndDeleteOperation","AllOperation"]))  {
             SystemLogRecord("updateone", '', json_encode([$sql]));
@@ -1792,7 +1795,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -1801,7 +1804,7 @@ if($_GET['action']=="delete_array")  {
     $primary_key = $MetaColumnNames[0];
     foreach($selectedRows as $id) {
         $id     = intval(DecryptID($id));
-        if($id>0)  {            
+        if($id>0)  {
             //Check Permission For This Record
             //LimitEditAndDelete
             $sql            = "select * from $TableName where ".$MetaColumnNames[0]." = '$id'";
@@ -1848,10 +1851,10 @@ if($_GET['action']=="delete_array")  {
                 $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
                 $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
                 $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
-                $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName); 
+                $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
                 if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) &&strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false) {
                     //Get All Fields
-                    
+
                     $sql                    = "delete from $ChildTableName where $Relative_Child_Table_Parent_Field_Name = '".$RecordOriginal->fields[$Relative_Child_Table_Parent_Field_Name]."';";
                     $db->Execute($sql);
                     $MultiSql[]             = $sql;
@@ -1880,7 +1883,7 @@ if($_GET['action']=="Reset_Password_123654")  {
     $primary_key = $MetaColumnNames[0];
     foreach($selectedRows as $id) {
         $id     = intval(DecryptID($id));
-        if($id>0)  {            
+        if($id>0)  {
             if(1)  {
                 $sql    = "select * from $TableName where $primary_key = '$id'";
                 $rs     = $db->Execute($sql);
@@ -1916,7 +1919,7 @@ if($_GET['action']=="Reset_Password_ID_Last6")  {
     $primary_key = $MetaColumnNames[0];
     foreach($selectedRows as $id) {
         $id     = intval(DecryptID($id));
-        if($id>0)  {            
+        if($id>0)  {
             $sql    = "select * from $TableName where $primary_key = '$id'";
             $rs     = $db->Execute($sql);
             SystemLogRecord("Reset_Password_ID_Last6", '', json_encode($rs->fields));
@@ -2002,7 +2005,7 @@ $groupField = [];
 $FieldNameToType = [];
 $UpdateFields = [];
 foreach($AllFieldsFromTable as $Item)  {
-    $FieldName      = $Item['FieldName'];    
+    $FieldName      = $Item['FieldName'];
     $EnglishName    = $Item['EnglishName'];
     $ShowType       = $Item['ShowType'];
     $IsSearch       = $Item['IsSearch'];
@@ -2029,13 +2032,13 @@ foreach($AllFieldsFromTable as $Item)  {
             $ShowTextName    = $Item['EnglishName'];
             break;
     }
-    
+
     $editable = false;
     if($SettingMap['FieldEditable_'.$FieldName]=='true' || $SettingMap['FieldEditable_'.$FieldName]=='1')   {
         $editable = true;
         $UpdateFields[] = $FieldName;
     }
-    
+
     //Filter Field Type
     $FieldTypeInFlow = $SettingMap['FieldType_'.$FieldName];
     $FieldTypeInFlow_Map = [];
@@ -2064,21 +2067,21 @@ foreach($AllFieldsFromTable as $Item)  {
         case 'radiogroupcolor':
             $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
             break;
-        case 'avatar':            
+        case 'avatar':
             $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
             break;
-        case 'images':  
-        case 'images2':          
+        case 'images':
+        case 'images2':
             $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
             break;
         case 'files':
         case 'files2':
             $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
             break;
-        case 'file':            
+        case 'file':
             $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
             break;
-        case 'xlsx':            
+        case 'xlsx':
             $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
             break;
         case 'ExternalUrl':
@@ -2134,7 +2137,7 @@ foreach($groupField as $FieldName) {
     $rs_a   = $rs->GetArray();
     $ShowType   = $AllFieldsMap[$FieldName]['ShowType'];
     $FieldType  = $AllShowTypesArray[$ShowType]['LIST'];
-    $FieldTypeArray = explode(":",$FieldType);    
+    $FieldTypeArray = explode(":",$FieldType);
     switch($FieldTypeArray[0]) {
         case 'tablefilter':
         case 'tablefiltercolor':
@@ -2153,7 +2156,7 @@ foreach($groupField as $FieldName) {
                         $rs_a[$i]['name']   = __("NULL");
                         $rs_a[$i]['value']  = "NULL";
                     }
-                }     
+                }
             }
             break;
     }
@@ -2271,7 +2274,7 @@ $RS['init_default']['primarykey']   = $MetaColumnNames[0];
 
 //print "TIME EXCEUTE 10:".(time()-$TIME_BEGIN)."<BR>\n";
 
-if($_REQUEST['sortColumn']=="")   {    
+if($_REQUEST['sortColumn']=="")   {
     //order default
     $order_by_array = [];
     $Default_Order_Method_By_Field_One = $SettingMap['Default_Order_Method_By_Field_One'];
@@ -2344,7 +2347,7 @@ foreach ($rs_a as $Line) {
     $MobileEndItem['MobileEndSecondLineRight']              = strval($SettingMap['MobileEndSecondLineRight']);
     $MobileEndItem['MobileEndSecondLineRightColorField']    = strval($SettingMap['MobileEndSecondLineRightColorField']);
     $MobileEndItem['MobileEndSecondLineRightColorRule']     = strval($SettingMap['MobileEndSecondLineRightColorRule']);
-    //News Template 
+    //News Template
     $MobileEndItem['MobileEndNewsTitle']                = strval($Line[$SettingMap['MobileEndNewsTitle']]);
     $MobileEndItem['MobileEndNewsGroup']                = strval($Line[$SettingMap['MobileEndNewsGroup']]);
     $MobileEndItem['MobileEndNewsContent']              = strip_tags($Line[$SettingMap['MobileEndNewsContent']]);
@@ -2352,7 +2355,7 @@ foreach ($rs_a as $Line) {
     $MobileEndItem['MobileEndNewsLikeCounter']          = strval($Line[$SettingMap['MobileEndNewsLikeCounter']]);
     $MobileEndItem['MobileEndNewsFavoriteCounter']      = strval($Line[$SettingMap['MobileEndNewsFavoriteCounter']]);
     $MobileEndItem['MobileEndNewsReadUsers']            = strval($Line[$SettingMap['MobileEndNewsReadUsers']]);
-    
+
     $MobileEndItem['MobileEndSchoolmateCity']           = strval($Line[$SettingMap['MobileEndSchoolmateCity']]);
     $MobileEndItem['MobileEndSchoolmateCompany']        = strval($Line[$SettingMap['MobileEndSchoolmateCompany']]);
     $MobileEndItem['MobileEndSchoolmateIndustry']       = strval($Line[$SettingMap['MobileEndSchoolmateIndustry']]);
@@ -2388,7 +2391,7 @@ foreach ($rs_a as $Line) {
         if($MobileEndItem['MobileEndActivityEnrollEndDate']<date("Y-m-d")) {
             $MobileEndItem['MobileEndActivityStatus'] = "报名结束";
         }
-        else {            
+        else {
             $MobileEndItem['MobileEndActivityStatus'] = "报名中";
         }
     }
@@ -2400,11 +2403,11 @@ foreach ($rs_a as $Line) {
 
     if($SettingMap['MobileEndIconType']=="ImageField" && $Line[$SettingMap['MobileEndIconField']] != "") {
         $TempValue = AttachFieldValueToUrl($TableName,$OriginalID,$SettingMap['MobileEndIconField'],'images',$Line[$SettingMap['MobileEndIconField']]);
-        $Line[$SettingMap['MobileEndIconField']]    = $TempValue[0]['webkitRelativePath'];    
+        $Line[$SettingMap['MobileEndIconField']]    = $TempValue[0]['webkitRelativePath'];
     }
     else if($SettingMap['MobileEndIconType']=="UserAvator" && $Line[$SettingMap['MobileEndIconField']] != "") {
         //$TempValue = AttachFieldValueToUrl($TableName,$OriginalID,$SettingMap['MobileEndIconField'],'avatar',$Line[$SettingMap['MobileEndIconField']]);
-        //$Line[$SettingMap['MobileEndIconField']]    = $TempValue[0]['webkitRelativePath'];       
+        //$Line[$SettingMap['MobileEndIconField']]    = $TempValue[0]['webkitRelativePath'];
     }
     else if($Line[$SettingMap['MobileEndIconField']]=="") {
         $Line[$SettingMap['MobileEndIconField']]    = "/images/wechat/logo_icampus_left.png";
@@ -2438,7 +2441,7 @@ foreach ($rs_a as $Line) {
                 $DefaultValue       = $CurrentFieldTypeArray[4];
                 $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                 $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);               
+                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                 if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $Line[$FieldName]!="") {
                     $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($Line[$FieldName])."' ;";
                     $rs = $db->CacheExecute(10, $sql) or print($sql);
@@ -2455,7 +2458,7 @@ foreach ($rs_a as $Line) {
                     }
                     $FieldDataColorValue[$FieldName][$Line[$FieldName]] = "#";
                     //print "TIME EXCEUTE 13:".(time()-$TIME_BEGIN)." ".$Line[$FieldName]." $sql <BR>\n";
-                }    
+                }
                 break;
             case 'autocompletemulti':
                 $TableNameTemp      = $CurrentFieldTypeArray[1];
@@ -2464,7 +2467,7 @@ foreach ($rs_a as $Line) {
                 $DefaultValue       = $CurrentFieldTypeArray[4];
                 $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                 $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);           
+                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                 $MultiValueArray        = explode(',',$Line[$FieldName]);
                 $MultiValueRS           = [];
                 foreach($MultiValueArray as $MultiValue) {
@@ -2655,7 +2658,7 @@ foreach ($rs_a as $Line) {
     }
     if($ForbiddenDeleteRow[$Line['id']]=="" && in_array('Delete',$Actions_In_List_Row_Array)) {
         $MobileEndItem['DeleteUrl'] = "?action=delete_array&pageid=$page";
-    }    
+    }
     if($ForbiddenViewRow[$Line['id']]=="" && in_array('View',$Actions_In_List_Row_Array)) {
         $MobileEndItem['ViewUrl']   = "?action=view_default&pageid=$page&id=".$Line['id'];
     }
@@ -2846,7 +2849,7 @@ if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_
     $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
     $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
     $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
-    $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName); 
+    $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
     if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) ) {
         //Get All Fields
         $sql                        = "select * from form_formfield where FormId='$ChildFormId' and IsEnable='1' order by SortNumber asc, id asc";
@@ -2875,7 +2878,7 @@ if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_
         $RS['add_default']['childtable']['Add']                = strpos($ChildSettingMap['Actions_In_List_Header'],'Add')===false?false:true;
         $RS['add_default']['childtable']['Edit']               = strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false?false:true;
         $RS['add_default']['childtable']['Delete']             = strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')===false?false:true;
-        
+
         $allFieldsEdit   = getAllFields($ChildAllFieldsFromTable, $AllShowTypesArray, 'EDIT', true, $ChildSettingMap);
         foreach($allFieldsEdit as $ModeName=>$allFieldItem) {
             $allFieldItemIndex = 0;
@@ -2911,7 +2914,7 @@ $RS['init_default']['delete_dialog_button']     = $SettingMap['Tip_Button_When_D
 
 $RS['init_default']['rowHeight']        = $rowHeight;
 $RS['init_default']['dialogContentHeight']  = "90%";
-$RS['init_default']['dialogMaxWidth']   = $SettingMap['Init_Action_AddEditWidth']?$SettingMap['Init_Action_AddEditWidth']:'md';// xl lg md sm xs 
+$RS['init_default']['dialogMaxWidth']   = $SettingMap['Init_Action_AddEditWidth']?$SettingMap['Init_Action_AddEditWidth']:'md';// xl lg md sm xs
 $RS['init_default']['timeline']         = time();
 $RS['init_default']['pageNumber']       = $pageSize;
 $RS['init_default']['pageCount']        = ceil($RS['init_default']['total']/$pageSize);

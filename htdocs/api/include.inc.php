@@ -22,7 +22,7 @@ $db->Execute("SET NAMES 'utf8'");
 //$db->debug=true;
 
 function __($Value) {
-	global $MAP;	
+	global $MAP;
 	if($MAP[$Value]!="") {
 		$Value = $MAP[$Value];
 	}
@@ -70,15 +70,19 @@ function DecryptID($data) {
 }
 
 function EncryptApiData($JSON) {
+  global $EncryptApiEnable;
 	if($_SERVER['HTTP_HOST'] == "localhost" && $_SERVER['HTTP_HOST'] == "127.0.0.1")  {
 		return json_encode($JSON);
 	}
-	else {
+  else if($EncryptApiEnable) {
 		$cipher = "aes-256-gcm";
 		global $EncryptAESIV;
 		global $EncryptApiDataAESKey;
 		$ciphertext = openssl_encrypt(json_encode($JSON), $cipher, $EncryptApiDataAESKey, OPENSSL_RAW_DATA, $EncryptAESIV, $tag);
 		return json_encode(['data'=> bin2hex($EncryptAESIV).bin2hex($ciphertext).bin2hex($tag) , 'isEncrypted'=>'1']);
+  }
+	else {
+    return json_encode($JSON);
 	}
 }
 
@@ -146,7 +150,7 @@ function ForSqlInjection($str) 			{
 	$str  = str_replace("'","",$str);
 	$str  = str_replace('"',"",$str);
 	$str  = str_replace('--',"",$str);
-	
+
 	$str  = str_replace('create table ',"",$str);
 	$str  = str_replace('drop table ',"",$str);
 	$str  = str_replace('drop database ',"",$str);
@@ -206,7 +210,7 @@ function CheckAuthUserLoginStatus()  {
         $RS['errortext'] = "CheckAuthUserLoginStatus Failed";
         print_r(json_encode($RS));
         exit;
-    }  
+    }
 }
 
 function CheckAuthUserRoleHaveMenu($FlowId, $MenuPath='')  {
@@ -227,7 +231,7 @@ function CheckAuthUserRoleHaveMenu($FlowId, $MenuPath='')  {
 		}
 		$RoleArray 	= explode(',',$RoleArray);
 		$RoleArray 	= array_values($RoleArray);
-		
+
 		if($FlowId>0)    {
 			$MenuTwoId	= returntablefield("data_menutwo","FlowId",$FlowId,"id")['id'];
 			if($MenuTwoId>0 && in_array($MenuTwoId,$RoleArray))  {
@@ -256,7 +260,7 @@ function CheckAuthUserRoleHaveMenu($FlowId, $MenuPath='')  {
 
 function CheckCsrsToken() {
 	//此函数限制过于严格
-    $accessTokenArray   = explode('::::',$_SERVER['HTTP_AUTHORIZATION']);
+  $accessTokenArray   = explode('::::',$_SERVER['HTTP_AUTHORIZATION']);
 	$HTTP_CSRF_TOKEN    = $accessTokenArray[1];
 	$HTTP_CSRF_TOKEN_DATA = DecryptID($HTTP_CSRF_TOKEN);
 	$HTTP_CSRF_TOKEN_DATA = unserialize($HTTP_CSRF_TOKEN_DATA);
@@ -265,11 +269,12 @@ function CheckCsrsToken() {
 	if(in_array($_SERVER['PHP_SELF'],$ExceptCsrf)) {
 		return;
 	}
+  global $ExceptCheckDiffTime;
 	switch($_GET['action'])  {
 		case 'view_default':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
 			//After 4 hours will exprired
-			if($DiffTime>14400)  {
+			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
 				$RS = [];
 				$RS['status'] 	= "ERROR";
 				$RS['code'] 	= "TimeOut";
@@ -299,16 +304,21 @@ function CheckCsrsToken() {
 		case 'edit_default_data':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
 			//After 4 hours will exprired
-			if($DiffTime>14400)  {
+			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
 				$RS = [];
+				$RS['post'] 	  = $_POST;
 				$RS['status'] 	= "ERROR";
-				$RS['code'] 	= "TimeOut";
+				$RS['code'] 	  = "TimeOut";
 				$RS['DiffTime']	= $DiffTime;
-				$RS['msg'] 		= __("Timeout for operation");
+				$RS['msg'] 		  = __("Timeout for operation");
 				print json_encode($RS);
 				exit;
 			}
-			if(!is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('Edit',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])) {
+			if( (
+          !is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('Edit',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])
+          )
+          && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime)
+          ) {
 				$RS = [];
 				$RS['status'] = "ERROR";
 				$RS['msg'] = __("Edit not permisstion");
@@ -316,7 +326,11 @@ function CheckCsrsToken() {
 				exit;
 			}
 			$id = DecryptID($_GET['id']);
-			if($id>0 && (!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList']))) {
+			if(
+          $id>0
+          && (!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList']))
+          && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime)
+          ) {
 				$RS = [];
 				$RS['status'] 			= "ERROR";
 				$RS['msg'] 				= __("ID is invalid");
@@ -329,7 +343,7 @@ function CheckCsrsToken() {
 		case 'delete_array':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
 			//After 4 hours will exprired
-			if($DiffTime>14400)  {
+			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
 				$RS = [];
 				$RS['status'] 	= "ERROR";
 				$RS['code'] 	= "TimeOut";
@@ -361,7 +375,7 @@ function CheckCsrsToken() {
 		case 'updateone':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
 			//After 4 hours will exprired
-			if($DiffTime>14400)  {
+			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
 				$RS = [];
 				$RS['status'] 	= "ERROR";
 				$RS['code'] 	= "TimeOut";
@@ -388,7 +402,7 @@ function CheckCsrsToken() {
 		case 'option_multi_approval':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
 			//After 4 hours will exprired
-			if($DiffTime>14400)  {
+			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
 				$RS = [];
 				$RS['status'] 	= "ERROR";
 				$RS['code'] 	= "TimeOut";
@@ -419,7 +433,7 @@ function CheckCsrsToken() {
 		case 'option_multi_refuse':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
 			//After 4 hours will exprired
-			if($DiffTime>14400)  {
+			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
 				$RS = [];
 				$RS['status'] 	= "ERROR";
 				$RS['code'] 	= "TimeOut";
@@ -450,7 +464,7 @@ function CheckCsrsToken() {
 		case 'option_multi_cancel':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
 			//After 4 hours will exprired
-			if($DiffTime>14400)  {
+			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
 				$RS = [];
 				$RS['status'] 	= "ERROR";
 				$RS['code'] 	= "TimeOut";
