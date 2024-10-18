@@ -18,7 +18,7 @@ apache/logs/ssl_request.log
 
 php/php_error.log
 htdocs/api/ai/pptx/json
-htdocs/src/configs/auth.ts
+htdocs/src/configs/auth.backup.ts
 
 xampp-control.log
 
@@ -29,8 +29,5 @@ xampp-control.log
 # git rm -r --cached apache/logs
 # git rm -r --cached xampp-control.ini
 # git commit -m "Remove ignored files from index"
-
-
-
 
 xampp-control.ini
