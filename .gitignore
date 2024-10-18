@@ -18,6 +18,7 @@ apache/logs/ssl_request.log
 
 php/php_error.log
 htdocs/api/ai/pptx/json
+htdocs/src/configs/auth.ts
 
 xampp-control.log
 
