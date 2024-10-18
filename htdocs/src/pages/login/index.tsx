@@ -118,6 +118,8 @@ const LoginPage = () => {
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
+  console.log("authConfig", authConfig)
+
   // ** Vars
   const { skin } = settings
 

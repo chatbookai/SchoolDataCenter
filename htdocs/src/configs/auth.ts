@@ -14,14 +14,8 @@ if(hostname == 'localhost' || hostname == '127.0.0.1')   {
   themeNameTemp = "单点职校数据中心"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"
-}
-
-if(hostname == '110.90.174.66' || 1)   {
-  themeNameTemp = "福鼎职校"
-  indexDashboardPath = "/dashboards/analytics"
-  indexMenuspath = "auth/menus.php"
-  indexImageUrl = '/images/school/fdzz/index.jpg'
-  logoUrl = '/images/school/fdzz/logo.png'
+  indexImageUrl = '/images/pages/auth-v2-login-illustration-light.png'
+  logoUrl = '/images/pages/auth-v2-login-illustration-light.png'
 }
 
 export default {
