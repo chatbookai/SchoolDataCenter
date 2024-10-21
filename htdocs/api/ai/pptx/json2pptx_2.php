@@ -13,12 +13,11 @@ $Array            = json_decode($JsonContent, true);
 
 $所有页面 = (array)$Array['pages'];
 
-$首页JSON = $所有页面[0];
-//print_R($首页JSON);
+$目录JSON = $所有页面[1];
 
-渲染首页($首页JSON);
+渲染目录($目录JSON);
 
-function 渲染首页($首页JSON) {
+function 渲染目录($目录JSON) {
 	print '<?xml version="1.0" encoding="UTF-8"?>
 <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
 	<p:cSld>
@@ -46,7 +45,7 @@ function 渲染首页($首页JSON) {
 		
 		';
 		
-		$childrenList = $首页JSON['children'];
+		$childrenList = $目录JSON['children'];
 		foreach($childrenList as $childrenItem)  {
 			$Type 	= $childrenItem['type'];
 			$Point 	= $childrenItem['point'];
