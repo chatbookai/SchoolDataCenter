@@ -1,12 +1,7 @@
 name: Build and Package with Inno Setup
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:  # 手动触发事件
 
 permissions:
   contents: write
