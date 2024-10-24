@@ -20,7 +20,7 @@ if($FlowId!="")  {
 else {
 	$sql    = "select * from form_formflow where FormId='$FormId' and Step='$Step'";
 }
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $FromInfo   = $rs->fields;
 $FormId  	= $FromInfo['FormId'];
 $FlowId  	= $FromInfo['id'];
@@ -1339,12 +1339,12 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                         $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                         if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $RS['data'][$FieldName]!="") {
                             $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
-                            $rs = $db->CacheExecute(10, $sql) or print($sql);
+                            $rs = $db->Execute($sql) or print($sql);
                             $RS['data'][$FieldName] = $rs->fields['label'];
                         }
                         elseif($MetaColumnNamesTemp[$KeyField]!="" && $RS['data'][$FieldName]!="")    {
                             $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
-                            $rs = $db->CacheExecute(10, $sql) or print($sql);
+                            $rs = $db->Execute($sql) or print($sql);
                             $RS['data'][$FieldName] = $rs->fields['label'];
                         }
                         break;
@@ -1362,12 +1362,12 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                         foreach($MultiValueArray as $MultiValue) {
                             if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $MultiValue!="") {
                                 $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($MultiValue)."' ;";
-                                $rs = $db->CacheExecute(10, $sql) or print($sql);
+                                $rs = $db->Execute($sql) or print($sql);
                                 $MultiValueRS[] = $rs->fields['label'];
                             }
                             elseif($MetaColumnNamesTemp[$KeyField]!="" && $MultiValue!="")    {
                                 $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($MultiValue)."' ;";
-                                $rs = $db->CacheExecute(10, $sql) or print($sql);
+                                $rs = $db->Execute($sql) or print($sql);
                                 $MultiValueRS[] = $rs->fields['label'];
                             }
                         }
@@ -1491,12 +1491,12 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
                     $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                     if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $RS['data'][$FieldName]!="") {
                         $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
-                        $rs = $db->CacheExecute(10, $sql) or print($sql);
+                        $rs = $db->Execute($sql) or print($sql);
                         $RS['data'][$FieldName] = $rs->fields['label'];
                     }
                     elseif($MetaColumnNamesTemp[$KeyField]!="" && $RS['data'][$FieldName]!="")    {
                         $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($RS['data'][$FieldName])."' ;";
-                        $rs = $db->CacheExecute(10, $sql) or print($sql);
+                        $rs = $db->Execute($sql) or print($sql);
                         $RS['data'][$FieldName] = $rs->fields['label'];
                     }
                     break;
@@ -1514,12 +1514,12 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
                     foreach($MultiValueArray as $MultiValue) {
                         if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $MultiValue!="") {
                             $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($MultiValue)."' ;";
-                            $rs = $db->CacheExecute(10, $sql) or print($sql);
+                            $rs = $db->Execute($sql) or print($sql);
                             $MultiValueRS[] = $rs->fields['label'];
                         }
                         elseif($MetaColumnNamesTemp[$KeyField]!="" && $MultiValue!="")    {
                             $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($MultiValue)."' ;";
-                            $rs = $db->CacheExecute(10, $sql) or print($sql);
+                            $rs = $db->Execute($sql) or print($sql);
                             $MultiValueRS[] = $rs->fields['label'];
                         }
                     }
@@ -2133,7 +2133,7 @@ if(function_exists($functionNameIndividual))  {
 $RS['init_default']['filter'] = [];
 foreach($groupField as $FieldName) {
     $sql    = "select $FieldName as name, $FieldName as value, count(*) AS num from $TableName $AddSql group by $FieldName order by $FieldName desc";
-    $rs     = $db->CacheExecute(10, $sql) or print $sql;
+    $rs     = $db->Execute($sql) or print $sql;
     $rs_a   = $rs->GetArray();
     $ShowType   = $AllFieldsMap[$FieldName]['ShowType'];
     $FieldType  = $AllShowTypesArray[$ShowType]['LIST'];
@@ -2318,7 +2318,7 @@ $ForbiddenDeleteRowOriginal = [];
 //Get Total Records Number
 $sql    = "select count(*) AS NUM from $TableName " . $AddSql . "";
 $sqlList[] = $sql;
-$rs     = $db->CacheExecute(10, $sql);
+$rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 
 //Get All Data
@@ -2444,7 +2444,7 @@ foreach ($rs_a as $Line) {
                 $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                 if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $Line[$FieldName]!="") {
                     $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($Line[$FieldName])."' ;";
-                    $rs = $db->CacheExecute(10, $sql) or print($sql);
+                    $rs = $db->Execute($sql) or print($sql);
                     $Line[$FieldName] = $rs->fields['label'];
                     if($Line[$FieldName]=="") $Line[$FieldName] = $WhereValue;
                     $FieldDataColorValue[$FieldName][$Line[$FieldName]] = "#";
@@ -2452,7 +2452,7 @@ foreach ($rs_a as $Line) {
                 }
                 elseif($MetaColumnNamesTemp[$KeyField]!="" && $Line[$FieldName]!="")    {
                     $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($Line[$FieldName])."' ;";
-                    $rs = $db->CacheExecute(10, $sql) or print($sql);
+                    $rs = $db->Execute($sql) or print($sql);
                     if($rs->fields['label']!="")  {
                         $Line[$FieldName] = $rs->fields['label'];
                     }
@@ -2473,12 +2473,12 @@ foreach ($rs_a as $Line) {
                 foreach($MultiValueArray as $MultiValue) {
                     if($WhereField!="" && $WhereValue!="" && $MetaColumnNamesTemp[$KeyField]!="" && $MultiValue!="") {
                         $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($MultiValue)."' ;";
-                        $rs = $db->CacheExecute(10, $sql) or print($sql);
+                        $rs = $db->Execute($sql) or print($sql);
                         $MultiValueRS[] = $rs->fields['label'];
                     }
                     elseif($MetaColumnNamesTemp[$KeyField]!="" && $MultiValue!="")    {
                         $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($MultiValue)."' ;";
-                        $rs = $db->CacheExecute(10, $sql) or print($sql);
+                        $rs = $db->Execute($sql) or print($sql);
                         $MultiValueRS[] = $rs->fields['label'];
                     }
                 }

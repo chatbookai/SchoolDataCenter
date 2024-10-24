@@ -56,7 +56,6 @@ const IndexTableHeader = (props: TableHeaderProps) => {
 
   // ** Props
   const { filter, handleFilterChange, handleFilter, toggleAddTableDrawer, toggleImportTableDrawer, toggleExportTableDrawer, searchFieldText, searchFieldArray, selectedRows, multireview, multiReviewHandleFilter, button_search, button_add, button_import, button_export, isAddButton, isImportButton, isExportButton, CSRF_TOKEN, MobileEndShowSearch, MobileEndShowGroupFilter } = props
-  console.log("IndexTableHeader props", props)
   const defaultValuesInitial = { "searchFieldName": searchFieldArray && searchFieldArray[0] && searchFieldArray[0].value ? searchFieldArray[0].value : undefined, "searchFieldValue": "", "multiReviewInputName": "" }
 
   const defaultValues = JSON.parse(JSON.stringify(defaultValuesInitial))
@@ -134,8 +133,8 @@ const IndexTableHeader = (props: TableHeaderProps) => {
 
   const myRef:Ref<any> = useRef(null)
 
-  //setValue("searchFieldName", searchFieldArray[0].value)
-  //console.log("searchFieldNamesearchFieldNamesearchFieldName", searchFieldArray[0].value)
+  //列表页面,顶部下拉分组的默认值设定, 受控组件
+  setValue("searchFieldName", searchFieldArray[0].value)
 
   return (
     <>
