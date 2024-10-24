@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=utf-8");
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -7,11 +7,10 @@ require_once('../../config.inc.php');
 require_once('../../adodb5/adodb.inc.php');
 require_once("../../vendor/autoload.php");
 
-$PATH = "./json/0001/ppt/slides/slide2.xml";
-$xmlString 	= file_get_contents($PATH);
+$SLIDE_PATH = "./json/0001/ppt/slides/slide2.xml";
+$xmlString 	= file_get_contents($SLIDE_PATH);
 $xmlString 	= str_replace(':', '____', $xmlString);
 $xml 		= simplexml_load_string($xmlString);
-
 
 $JsonContent      	= file_get_contents("./json/0001.json");
 $Array            	= json_decode($JsonContent, true);
@@ -69,8 +68,8 @@ $PPTX元素_色块 = '<p:sp>
 					</p:nvSpPr>
 					<p:spPr>
 						<a:xfrm flipV="true">
-							<a:off x="1" y="-3"/>
-							<a:ext cx="2420470" cy="2880727"/>
+							<a:off x="会被替换掉的数值" y="会被替换掉的数值"/>
+							<a:ext cx="会被替换掉的数值" cy="会被替换掉的数值"/>
 						</a:xfrm>
 						<a:custGeom>
 							<a:avLst/>
@@ -138,13 +137,14 @@ $PPTX文本元素列表p____spTree = new SimpleXMLElement('
             </p____grpSpPr>
 		</p____spTree>
 ');
-//print_R($PPTX文本元素列表p____spTree);
+//print_R($childrenList);exit;
+
 // 遍历 childrenList 并处理每个元素
 foreach ($childrenList as $childrenItem) {
     $Type = $childrenItem['type'];
     $Point = $childrenItem['point'];
     $文本对像 = $childrenItem['children'][0]['children'][0];
-	
+	//print_R($childrenItem);
     if ($Type == "text" && $文本对像['text'] != "") {
         $PPTX元素_文本 = str_replace(':', '____', $PPTX元素_文本);
 		$PPTX文本元素 = simplexml_load_string($PPTX元素_文本);
@@ -158,8 +158,8 @@ foreach ($childrenList as $childrenItem) {
 		// 设置文本和样式属性
 		$PPTX文本元素->p____txBody->a____p->a____r->a____t = $文本对像['text'];
 		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['lang'] = $文本对像['extInfo']['property']['lang'];
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['b'] = $文本对像['extInfo']['property']['bold'];
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['i'] = $文本对像['extInfo']['property']['i'];
+		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['b'] = $文本对像['extInfo']['property']['bold'] == 1 ? "true" : "false";
+		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['i'] = $文本对像['extInfo']['property']['italic'] == 1 ? "true" : "false";
 		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['sz'] = ($文本对像['extInfo']['property']['fontSize'] * 100);
 		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr->a____latin['typeface'] = $文本对像['extInfo']['property']['fontFamily'];
 		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr->a____solidFill->a____srgbClr['val'] = $文本对像['extInfo']['property']['fontColor']['color']['scheme'];
@@ -168,13 +168,13 @@ foreach ($childrenList as $childrenItem) {
 		$domList = dom_import_simplexml($PPTX文本元素列表p____spTree)->ownerDocument;
 		$domElement = $domList->importNode(dom_import_simplexml($PPTX文本元素), true);
 		$domList->documentElement->appendChild($domElement);
-		break;
     }
 	
-	$geometry_name = $childrenItem['extInfo']['property']['geometry']['name'];
+	//绘制任意几何图形
+	$geometryInfo = $childrenItem['extInfo']['property']['geometry'];
+	$geometry_name = $geometryInfo['name'];
 	if ($Type == "text" && $geometry_name == "custom") {
-		print_R($childrenItem);
-		print_R($PPTX元素_色块);
+		//print_R($geometryInfo);
         $PPTX元素_色块 = str_replace(':', '____', $PPTX元素_色块);
 		$PPTX文本元素 = simplexml_load_string($PPTX元素_色块);
 
@@ -183,24 +183,49 @@ foreach ($childrenList as $childrenItem) {
 		$PPTX文本元素->p____spPr->a____xfrm->a____off['y'] = intval($Point[1] * 12700);
 		$PPTX文本元素->p____spPr->a____xfrm->a____ext['cx'] = intval($Point[2] * 12700);
 		$PPTX文本元素->p____spPr->a____xfrm->a____ext['cy'] = intval($Point[3] * 12700);
+		
+		
+		
+		//删除节点 a____path
+		$dom 	= dom_import_simplexml($PPTX文本元素)->ownerDocument;
+		$xpath 	= new DOMXPath($dom);
+		$nodes 	= $xpath->query('//p____spPr/a____custGeom/a____pathLst/a____path');
+		foreach ($nodes as $node) {
+			$node->parentNode->removeChild($node);  
+		}
+		//绘制任意几何图形
+		$createPathNodeResult = createPathNode($geometryInfo['data']['paths'][0]);
+		//添加节点 a____path
+		$pathLstNodes 	= $xpath->query('//p____spPr/a____custGeom/a____pathLst');
+		if ($pathLstNodes->length > 0) {
+			$pathLstNode = $pathLstNodes->item(0);  // 只取第一个匹配的节点
+			$pathLstNode->appendChild($dom->importNode(dom_import_simplexml(simplexml_load_string($createPathNodeResult)), true));
+		}
+		
+		//$PPTX文本元素->p____spPr->a____custGeom->a____pathLst->a____path->a____moveTo->a____pt['x'] = '';
+		//$PPTX文本元素->p____spPr->a____custGeom->a____pathLst->a____path->a____moveTo->a____pt['y'] = '';
+		
+		//print_R($geometryInfo['data']['paths']);exit;
 
 		// 设置文本和样式属性
-		$PPTX文本元素->p____txBody->a____p->a____r->a____t = $文本对像['text'];
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['lang'] = $文本对像['extInfo']['property']['lang'];
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['b'] = $文本对像['extInfo']['property']['bold'];
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['i'] = $文本对像['extInfo']['property']['i'];
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['sz'] = ($文本对像['extInfo']['property']['fontSize'] * 100);
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr->a____latin['typeface'] = $文本对像['extInfo']['property']['fontFamily'];
-		$PPTX文本元素->p____txBody->a____p->a____r->a____rPr->a____solidFill->a____srgbClr['val'] = $文本对像['extInfo']['property']['fontColor']['color']['scheme'];
-
+		//$PPTX文本元素->p____txBody->a____p->a____r->a____t = $文本对像['text'];
+		//$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['lang'] = $文本对像['extInfo']['property']['lang'];
+		//$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['b'] = $文本对像['extInfo']['property']['bold'];
+		//$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['i'] = $文本对像['extInfo']['property']['i'];
+		//$PPTX文本元素->p____txBody->a____p->a____r->a____rPr['sz'] = ($文本对像['extInfo']['property']['fontSize'] * 100);
+		//$PPTX文本元素->p____txBody->a____p->a____r->a____rPr->a____latin['typeface'] = $文本对像['extInfo']['property']['fontFamily'];
+		//$PPTX文本元素->p____txBody->a____p->a____r->a____rPr->a____solidFill->a____srgbClr['val'] = $文本对像['extInfo']['property']['fontColor']['color']['scheme'];
+		
+		//print_R($PPTX文本元素->asXML());
+		
 		// 将 $PPTX文本元素 合并到 $PPTX文本元素列表p____spTree
 		$domList = dom_import_simplexml($PPTX文本元素列表p____spTree)->ownerDocument;
 		$domElement = $domList->importNode(dom_import_simplexml($PPTX文本元素), true);
 		$domList->documentElement->appendChild($domElement);
-		break;
     }
 }
-//echo $PPTX文本元素列表p____spTree->asXML();exit;
+
+//echo $PPTX文本元素列表p____spTree->asXML();//exit;
 
 //加入节点 p____cSld
 $PPTX文本元素列表p____cSld = new SimpleXMLElement('
@@ -231,9 +256,52 @@ $domList->documentElement->appendChild($domElement);
 
 $最后输出PPTX_SLIDE = $PPTX文本元素列表p____sld->asXML();
 $最后输出PPTX_SLIDE = str_replace('____', ':', $最后输出PPTX_SLIDE);
+$最后输出PPTX_SLIDE = str_replace('<?xml version="1.0"?>', '<?xml version="1.0" encoding="UTF-8"?>', $最后输出PPTX_SLIDE);
+file_put_contents($SLIDE_PATH, $最后输出PPTX_SLIDE);
 print $最后输出PPTX_SLIDE;
 
 
+function createPathNode($pathInfo) {
+	
+    // 拆分字符串为指令和坐标
+    $commands = preg_split('/ (?=[MLZ])/', $pathInfo['path']);
+
+    // 创建XML根元素：<a:path>
+    $path = new SimpleXMLElement('<a____path />');
+    $path->addAttribute('w', $pathInfo['w']);
+    $path->addAttribute('h', $pathInfo['h']);
+    $path->addAttribute('stroke', $pathInfo['stroked'] == 1 ? "true" : "false");
+    $path->addAttribute('fill', strtolower($pathInfo['fill']));
+    $path->addAttribute('extrusionOk', $pathInfo['extrusionOk'] == 1 ? "true" : "false");
+
+    // 解析路径指令并生成相应的XML子元素
+    foreach ($commands as $command) {
+        $parts = explode(' ', $command);
+        $cmd = array_shift($parts); // 获取指令 (M, L, Z)
+        switch ($cmd) {
+            case 'M': // moveTo
+                $moveTo = $path->addChild('a____moveTo');
+                $pt = $moveTo->addChild('a____pt');
+                $pt->addAttribute('x', $parts[0]);
+                $pt->addAttribute('y', $parts[1]);
+                break;
+            case 'L': // lineTo
+                $lnTo = $path->addChild('a____lnTo');
+                $pt = $lnTo->addChild('a____pt');
+                $pt->addAttribute('x', $parts[0]);
+                $pt->addAttribute('y', $parts[1]);
+                break;
+            case 'Z': // close path
+                $path->addChild('a____close');
+                break;
+        }
+    }
+
+    // 格式化并返回XML字符串
+    $dom = dom_import_simplexml($path)->ownerDocument;
+    $dom->formatOutput = true;
+    return $dom->saveXML();
+}
 
 
 function createZip($source, $destination) {
