@@ -9,7 +9,7 @@ require_once("../../vendor/autoload.php");
 
 require_once('pptx.lib.inc.php');
 
-$SLIDEPAGE = 2;
+$SLIDEPAGE = 1;
 
 $SLIDE_PATH = "./json/0001/ppt/slides/slide".$SLIDEPAGE.".xml";
 $xmlString 	= file_get_contents($SLIDE_PATH);
@@ -47,11 +47,92 @@ $PPTX文本元素列表p____spTree = new SimpleXMLElement('
 $SharpCounter = 0;
 foreach ($childrenList as $childrenItem) {
     
-	$绘制单个元素RESULT = 绘制单个元素($childrenItem);
+	$Type 				= $childrenItem['type'];
+	$realType 			= $childrenItem['extInfo']['property']['realType'];
+	//print_R($realType);
+	if($realType == "Group") {
+		$anchor 			= $childrenItem['extInfo']['property']['anchor'];
+		$interiorAnchor 	= $childrenItem['extInfo']['property']['interiorAnchor'];
+		// 初始化 DOMDocument
+		$dom = new DOMDocument('1.0', 'UTF-8');
+		$dom->formatOutput = true;
 
+		// 创建 <p:grpSp> 节点
+		$grpSp = $dom->createElement('p:grpSp');
+
+		// 创建 <p:nvGrpSpPr> 节点
+		$nvGrpSpPr = $dom->createElement('p:nvGrpSpPr');
+
+		// 创建 <p:cNvPr> 节点，并设置属性
+		$cNvPr = $dom->createElement('p:cNvPr');
+		$cNvPr->setAttribute('name', 'Group 4');
+		$cNvPr->setAttribute('id', '4');
+
+		// 创建 <p:cNvGrpSpPr> 和 <p:nvPr> 节点
+		$cNvGrpSpPr = $dom->createElement('p:cNvGrpSpPr');
+		$nvPr = $dom->createElement('p:nvPr');
+
+		// 将 <p:cNvPr>, <p:cNvGrpSpPr>, <p:nvPr> 添加到 <p:nvGrpSpPr>
+		$nvGrpSpPr->appendChild($cNvPr);
+		$nvGrpSpPr->appendChild($cNvGrpSpPr);
+		$nvGrpSpPr->appendChild($nvPr);
+
+		// 创建 <p:grpSpPr> 节点
+		$grpSpPr = $dom->createElement('p:grpSpPr');
+
+		// 创建 <a:xfrm> 节点及其子节点
+		$xfrm = $dom->createElement('a:xfrm');
+
+		$off = $dom->createElement('a:off');
+		$off->setAttribute('x', intval($anchor[0] * 12700));
+		$off->setAttribute('y', intval($anchor[1] * 12700));
+
+		$ext = $dom->createElement('a:ext');
+		$ext->setAttribute('cx', intval($anchor[2] * 12700));
+		$ext->setAttribute('cy', intval($anchor[3] * 12700));
+
+		$chOff = $dom->createElement('a:chOff');
+		$chOff->setAttribute('x', intval($interiorAnchor[0] * 12700));
+		$chOff->setAttribute('y', intval($interiorAnchor[1] * 12700));
+
+		$chExt = $dom->createElement('a:chExt');
+		$chExt->setAttribute('cx', intval($interiorAnchor[2] * 12700));
+		$chExt->setAttribute('cy', intval($interiorAnchor[3] * 12700));
+
+		// 将子节点添加到 <a:xfrm>
+		$xfrm->appendChild($off);
+		$xfrm->appendChild($ext);
+		$xfrm->appendChild($chOff);
+		$xfrm->appendChild($chExt);
+
+		// 将 <a:xfrm> 添加到 <p:grpSpPr>
+		$grpSpPr->appendChild($xfrm);
+
+		// 将 <p:nvGrpSpPr> 和 <p:grpSpPr> 添加到 <p:grpSp>
+		$grpSp->appendChild($nvGrpSpPr);
+		$grpSp->appendChild($grpSpPr);
+
+		$childrenList = $childrenItem['children'];
+		foreach($childrenList as $children) {
+			//print_R($children);
+			$绘制元素RESULT 	= 绘制单个元素($children);
+			$importedNode = $dom->importNode($绘制元素RESULT->documentElement, true);
+			$grpSp->appendChild($importedNode);
+		}
+
+		// 将 <p:grpSp> 添加到 DOM 的根节点
+		$dom->appendChild($grpSp);
+
+		// 输出生成的 XML 结构
+		$绘制元素RESULT = $dom->saveXML();
+		print $绘制元素RESULT;
+	}
+	else {
+		$绘制元素RESULT 	= 绘制单个元素($childrenItem)->saveXML();
+	}
 	
 	$domList = dom_import_simplexml($PPTX文本元素列表p____spTree)->ownerDocument;
-	$domElement = $domList->importNode(dom_import_simplexml(simplexml_load_string($绘制单个元素RESULT)), true);
+	$domElement = $domList->importNode(dom_import_simplexml(simplexml_load_string($绘制元素RESULT)), true);
 	$domList->documentElement->appendChild($domElement);
 	
 	

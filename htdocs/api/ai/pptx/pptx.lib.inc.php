@@ -6,15 +6,18 @@ function 绘制单个元素($childrenItem)  {
 	$Type 			= $childrenItem['type'];
     $Point 			= $childrenItem['point'];
     $文本对像 		= $childrenItem['children'][0]['children'][0];
-	$geometryInfo 	= $childrenItem['extInfo']['property']['geometry'];
+    $文本属性 		= $childrenItem['children'][0]['extInfo'];
+	$anchor 		= $childrenItem['extInfo']['property']['anchor'];
+	$realType 		= $childrenItem['extInfo']['property']['realType'];
 	$realType 		= $childrenItem['extInfo']['property']['realType'];
 	$shapeType 		= $childrenItem['extInfo']['property']['shapeType'];
 	$fillStyle 		= $childrenItem['extInfo']['property']['fillStyle'];
 	$strokeStyle 	= $childrenItem['extInfo']['property']['strokeStyle'];
+	$geometry 		= $childrenItem['extInfo']['property']['geometry'];
 	$prstTxWarp 	= $childrenItem['extInfo']['property']['prstTxWarp'];
 	$flipVertical 	= $childrenItem['extInfo']['property']['flipVertical'];
 	//print_R($childrenItem);
-	
+
 	// 1. 创建 DOMDocument 对象
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true; // 格式化输出
@@ -33,7 +36,7 @@ function 绘制单个元素($childrenItem)  {
 	$nvSpPr->appendChild($cNvPr);
 
 	$cNvSpPr = $dom->createElement('p:cNvSpPr');
-	if($geometryInfo['name'] != "custom") {
+	if($realType == "TextBox") {
 		$cNvSpPr->setAttribute('txBox', 'true');
 	}
 	$nvSpPr->appendChild($cNvSpPr);
@@ -52,20 +55,18 @@ function 绘制单个元素($childrenItem)  {
 	$spPr->appendChild($xfrm);
 
 	$off = $dom->createElement('a:off');
-	$off->setAttribute('x', intval($Point[0] * 12700));
-	$off->setAttribute('y', intval($Point[1] * 12700));
+	$off->setAttribute('x', intval($anchor[0] * 12700));
+	$off->setAttribute('y', intval($anchor[1] * 12700));
 	$xfrm->appendChild($off);
 
 	$ext = $dom->createElement('a:ext');
-	$ext->setAttribute('cx', intval($Point[2] * 12700));
-	$ext->setAttribute('cy', intval($Point[3] * 12700));
+	$ext->setAttribute('cx', intval($anchor[2] * 12700));
+	$ext->setAttribute('cy', intval($anchor[3] * 12700));
 	$xfrm->appendChild($ext);
 	
 	if($childrenItem['extInfo']['property']['shapeType'] != "")  {
 		$prstGeom = $dom->createElement('a:prstGeom');
-		if($childrenItem['extInfo']['property']['shapeType'] == "rect")  {
-			$prstGeom->setAttribute('prst', 'rect');
-		}
+		$prstGeom->setAttribute('prst', $childrenItem['extInfo']['property']['shapeType']);
 		$spPr->appendChild($prstGeom);
 
 		$avLst = $dom->createElement('a:avLst');
@@ -77,7 +78,8 @@ function 绘制单个元素($childrenItem)  {
 	
 	
 	//绘制任意几何图形
-	if ($Type == "text" && $geometryInfo['name'] == "custom") {
+	if ($Type == "text" && $geometry['name'] == "custom" && 1) {
+		//print_R($childrenItem);
 		$a_custGeom = $dom->createElement('a:custGeom');
 		$spPr->appendChild($a_custGeom);
 
@@ -95,7 +97,7 @@ function 绘制单个元素($childrenItem)  {
 		$a_custGeom->appendChild($a_rect);
 
 		// 创建 <a:pathLst> 和 <a:path> 节点
-		$pathInfo = $geometryInfo['data']['paths'][0];
+		$pathInfo = $geometry['data']['paths'][0];
 		
 		$a_pathLst = $dom->createElement('a:pathLst');
 		$a_custGeom->appendChild($a_pathLst);
@@ -108,11 +110,14 @@ function 绘制单个元素($childrenItem)  {
 		$a_path->setAttribute('extrusionOk', $pathInfo['extrusionOk'] ? 'true' : 'false');
 		$a_pathLst->appendChild($a_path);
 		
-		$commands = preg_split('/ (?=[MLZ])/', $pathInfo['path']);
+		//print $pathInfo['path'];
+		$commands = preg_split('/ (?=[MLCZ])/', $pathInfo['path']);
+		//print_R($commands);exit;
 		// 遍历并生成路径指令
 		foreach ($commands as $command) {
 			$type = $command[0]; // 指令类型 (M, L, C, Z)
-			$points = explode(' ', trim(substr($command, 1))); // 提取点数据
+			$points = array_filter(explode(' ', trim(substr($command, 1)))); // 提取点数据
+
 			if ($type === 'M') {
 				// 创建 <a:moveTo> 节点
 				$moveTo = $dom->createElement('a:moveTo');
@@ -121,8 +126,8 @@ function 绘制单个元素($childrenItem)  {
 				$pt->setAttribute('y', $points[1]);
 				$moveTo->appendChild($pt);
 				$a_path->appendChild($moveTo);
-			} 
-			elseif ($type === 'L') {
+
+			} elseif ($type === 'L') {
 				// 创建 <a:lnTo> 节点
 				$lnTo = $dom->createElement('a:lnTo');
 				$pt = $dom->createElement('a:pt');
@@ -130,8 +135,8 @@ function 绘制单个元素($childrenItem)  {
 				$pt->setAttribute('y', $points[1]);
 				$lnTo->appendChild($pt);
 				$a_path->appendChild($lnTo);
-			} 
-			elseif ($type === 'C') {
+
+			} elseif ($type === 'C') {
 				// 创建 <a:cubicBezTo> 节点
 				$cubicBezTo = $dom->createElement('a:cubicBezTo');
 				for ($i = 0; $i < count($points); $i += 2) {
@@ -141,12 +146,13 @@ function 绘制单个元素($childrenItem)  {
 					$cubicBezTo->appendChild($pt);
 				}
 				$a_path->appendChild($cubicBezTo);
-			} 
-			elseif ($type === 'Z') {
+
+			} elseif ($type === 'Z') {
 				// 创建 <a:close> 节点
 				$a_path->appendChild($dom->createElement('a:close'));
 			}
 		}
+		//print $dom->asXML();exit;
 	}
 	
 	if ($fillStyle['type'] == 'color') {
@@ -155,18 +161,31 @@ function 绘制单个元素($childrenItem)  {
 		$spPr->appendChild($a_solidFill);
 
 		// 创建 <a:schemeClr> 节点并设置属性
-		$a_schemeClr = $dom->createElement('a:schemeClr');
-		$a_schemeClr->setAttribute('val', $fillStyle['color']['scheme']);
+		if($fillStyle['color']['scheme'] != "")  {
+			$a_schemeClr = $dom->createElement('a:schemeClr');
+			$a_schemeClr->setAttribute('val', $fillStyle['color']['scheme']);
+			$a_solidFill->appendChild($a_schemeClr);
+		}
+		
+		if($fillStyle['color']['color'] != '')  {
+			$srgbClr = $dom->createElement('a:srgbClr');
+			if($fillStyle['color']['color'] == '-1')  {
+				$srgbClr->setAttribute('val', 'FFFFFF');
+			}
+			else {
+				$srgbClr->setAttribute('val', 数字转颜色($fillStyle['color']['color']));
+			}
+			$a_solidFill->appendChild($srgbClr);
+		}
 
 		// 创建 <a:alpha> 节点并设置属性
-		if($fillStyle['color']['alpha'] != "")  {
+		if($fillStyle['color']['alpha'] != "" && $fillStyle['color']['scheme'] != "")  {
 			$a_alpha = $dom->createElement('a:alpha');
 			$a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
 			$a_schemeClr->appendChild($a_alpha);
 		}
 
 		// 将 <a:schemeClr> 添加到 <a:solidFill>
-		$a_solidFill->appendChild($a_schemeClr);
 	}
 	if ($fillStyle['type'] == 'noFill') {
 		// 创建 <a:solidFill> 节点
@@ -174,9 +193,13 @@ function 绘制单个元素($childrenItem)  {
 		$spPr->appendChild($a_noFill);
 	}
 	
+	//print_R($strokeStyle['paint']['color']['color']);
 	if($strokeStyle['lineCap'] != "")   {
 		// 创建 <a:ln> 节点并设置属性
 		$a_ln = $dom->createElement('a:ln');
+		if($strokeStyle['lineWidth'] != "")  {
+			$a_ln->setAttribute('w', intval($strokeStyle['lineWidth'] * 12700));
+		}
 		if($strokeStyle['lineCap'] == "ROUND")  {
 			$a_ln->setAttribute('cap', 'rnd'); // 设置 cap 属性为 "rnd"
 		}
@@ -185,10 +208,23 @@ function 绘制单个元素($childrenItem)  {
 		}
 		$spPr->appendChild($a_ln);
 		
+		if($strokeStyle['paint']['color']['color'] != '')  {
+			$solidFill = $dom->createElement('a:solidFill');
+			$a_ln->appendChild($solidFill);
+			$srgbClr = $dom->createElement('a:srgbClr');
+			if($strokeStyle['paint']['color']['color'] == '-1')  {
+				$srgbClr->setAttribute('val', 'FFFFFF');
+			}
+			else {
+				$srgbClr->setAttribute('val', 数字转颜色($strokeStyle['paint']['color']['color']));
+			}
+			$solidFill->appendChild($srgbClr);
+		}
+		
 		// 创建 <a:prstDash> 节点并设置属性
 		$a_prstDash = $dom->createElement('a:prstDash');
-		if($strokeStyle['lineDash'] == "SOLID")  {
-			$a_prstDash->setAttribute('val', 'solid'); // 设置 val 属性为 "solid"
+		if($strokeStyle['lineDash'] != "")  {
+			$a_prstDash->setAttribute('val', strtolower($strokeStyle['lineDash']));
 		}
 
 		// 将 <a:prstDash> 添加到 <a:ln>
@@ -201,11 +237,11 @@ function 绘制单个元素($childrenItem)  {
 
 	$bodyPr = $dom->createElement('a:bodyPr');
 	$bodyPr->setAttribute('rtlCol', 'false');
-	if($realType == "TextBox")  {
+	if($realType == "TextBox" || $realType == "Auto")  {
 		switch($childrenItem['extInfo']['property']['textAutofit']) {
 			case 'NORMAL':
-				$spAutoFit = $dom->createElement('a:spAutoFit');
-				$bodyPr->appendChild($spAutoFit);
+				$normAutofit = $dom->createElement('a:normAutofit');
+				$bodyPr->appendChild($normAutofit);
 				break;
 			case 'SHAPE':
 				$spAutoFit = $dom->createElement('a:spAutoFit');
@@ -274,9 +310,24 @@ function 绘制单个元素($childrenItem)  {
 		$txBody->appendChild($p);
 
 		$pPr = $dom->createElement('a:pPr');
-		$pPr->setAttribute('algn', 'l');
-		$pPr->setAttribute('marL', '0');
+		switch($文本属性['property']['textAlign']) {
+			case 'CENTER':
+				$pPr->setAttribute('algn', 'ctr');
+				break;
+		}
+		if($文本属性['property']['leftMargin'] != '') {
+			$pPr->setAttribute('marL', $文本属性['property']['leftMargin']);
+		}
 		$p->appendChild($pPr);
+		
+		
+		if($文本属性['property']['lineSpacing'] != '') {
+			$lnSpc = $dom->createElement('a:lnSpc');
+			$spcPct = $dom->createElement('a:spcPct');
+			$spcPct->setAttribute('val', intval($文本属性['property']['lineSpacing'] * 1000));
+			$lnSpc->appendChild($spcPct);
+			$pPr->appendChild($lnSpc);
+		}
 
 		$defRPr = $dom->createElement('a:defRPr');
 		$pPr->appendChild($defRPr);
@@ -297,10 +348,17 @@ function 绘制单个元素($childrenItem)  {
 
 		$solidFill = $dom->createElement('a:solidFill');
 		$rPr->appendChild($solidFill);
-
-		$srgbClr = $dom->createElement('a:srgbClr');
-		$srgbClr->setAttribute('val', 数字转颜色($文本对像['extInfo']['property']['fontColor']['color']['color']));
-		$solidFill->appendChild($srgbClr);
+		
+		if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" )  {
+			$srgbClr = $dom->createElement('a:srgbClr');
+			$srgbClr->setAttribute('val', 数字转颜色($文本对像['extInfo']['property']['fontColor']['color']['color']));
+			$solidFill->appendChild($srgbClr);
+		}
+		if($文本对像['extInfo']['property']['fontColor']['color']['scheme'] !="" )  {
+			$schemeClr = $dom->createElement('a:schemeClr');
+			$schemeClr->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['scheme']);
+			$solidFill->appendChild($schemeClr);
+		}
 
 		$latin = $dom->createElement('a:latin');
 		$latin->setAttribute('typeface', $文本对像['extInfo']['property']['fontFamily']);
@@ -319,7 +377,7 @@ function 绘制单个元素($childrenItem)  {
 		$p->appendChild($endParaRPr);
 	}
 	
-	return $dom->saveXML();	
+	return $dom;	
 }
 
 
