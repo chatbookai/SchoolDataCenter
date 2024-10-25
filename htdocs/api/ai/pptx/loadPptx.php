@@ -9,7 +9,7 @@ require_once("../../vendor/autoload.php");
 
 require_once('pptx.lib.inc.php');
 
-$SLIDEPAGE = 1;
+$SLIDEPAGE = 8;
 
 $SLIDE_PATH = "./json/0001/ppt/slides/slide".$SLIDEPAGE.".xml";
 $xmlString 	= file_get_contents($SLIDE_PATH);
@@ -65,8 +65,8 @@ foreach ($childrenList as $childrenItem) {
 
 		// 创建 <p:cNvPr> 节点，并设置属性
 		$cNvPr = $dom->createElement('p:cNvPr');
-		$cNvPr->setAttribute('name', 'Group 4');
-		$cNvPr->setAttribute('id', '4');
+		$cNvPr->setAttribute('name', 'Group '. $SharpCounter++);
+		$cNvPr->setAttribute('id', $SharpCounter++);
 
 		// 创建 <p:cNvGrpSpPr> 和 <p:nvPr> 节点
 		$cNvGrpSpPr = $dom->createElement('p:cNvGrpSpPr');
@@ -84,20 +84,20 @@ foreach ($childrenList as $childrenItem) {
 		$xfrm = $dom->createElement('a:xfrm');
 
 		$off = $dom->createElement('a:off');
-		$off->setAttribute('x', intval($anchor[0] * 12700));
-		$off->setAttribute('y', intval($anchor[1] * 12700));
+		$off->setAttribute('x', strval(intval($anchor[0] * 12700)));
+		$off->setAttribute('y', strval(intval($anchor[1] * 12700)));
 
 		$ext = $dom->createElement('a:ext');
-		$ext->setAttribute('cx', intval($anchor[2] * 12700));
-		$ext->setAttribute('cy', intval($anchor[3] * 12700));
+		$ext->setAttribute('cx', strval(intval($anchor[2] * 12700)));
+		$ext->setAttribute('cy', strval(intval($anchor[3] * 12700)));
 
 		$chOff = $dom->createElement('a:chOff');
-		$chOff->setAttribute('x', intval($interiorAnchor[0] * 12700));
-		$chOff->setAttribute('y', intval($interiorAnchor[1] * 12700));
+		$chOff->setAttribute('x', strval(intval($interiorAnchor[0] * 12700)));
+		$chOff->setAttribute('y', strval(intval($interiorAnchor[1] * 12700)));
 
 		$chExt = $dom->createElement('a:chExt');
-		$chExt->setAttribute('cx', intval($interiorAnchor[2] * 12700));
-		$chExt->setAttribute('cy', intval($interiorAnchor[3] * 12700));
+		$chExt->setAttribute('cx', strval(intval($interiorAnchor[2] * 12700)));
+		$chExt->setAttribute('cy', strval(intval($interiorAnchor[3] * 12700)));
 
 		// 将子节点添加到 <a:xfrm>
 		$xfrm->appendChild($off);
@@ -171,7 +171,7 @@ $最后输出PPTX_SLIDE = $PPTX文本元素列表p____sld->asXML();
 $最后输出PPTX_SLIDE = str_replace('____', ':', $最后输出PPTX_SLIDE);
 $最后输出PPTX_SLIDE = str_replace('<?xml version="1.0"?>', '<?xml version="1.0" encoding="UTF-8"?>', $最后输出PPTX_SLIDE);
 file_put_contents($SLIDE_PATH, $最后输出PPTX_SLIDE);
-print $最后输出PPTX_SLIDE;
+//print $最后输出PPTX_SLIDE;
 
 
 // 使用示例
