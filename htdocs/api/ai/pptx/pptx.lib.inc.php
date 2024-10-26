@@ -510,9 +510,24 @@ function 绘制单个元素($childrenItem)  {
 					break;
 			}
 			if($文本属性['property']['leftMargin'] != '') {
-				$pPr->setAttribute('marL', $文本属性['property']['leftMargin']);
+				$pPr->setAttribute('marL', intval($文本属性['property']['leftMargin'] * 12700));
+			}
+			if($文本属性['property']['indent'] != '') {
+				$pPr->setAttribute('indent', intval($文本属性['property']['indent'] * 12700));
 			}
 			$p->appendChild($pPr);
+			
+			if($文本属性['property']['bulletStyle']['bulletFont'] != '') {
+				$buFont = $dom->createElement('a:buFont');
+				$buFont->setAttribute('typeface', $文本属性['property']['bulletStyle']['bulletFont']);
+				$pPr->appendChild($buFont);
+			}
+			
+			if($文本属性['property']['bulletStyle']['bulletCharacter'] != '') {
+				$buChar = $dom->createElement('a:buChar');
+				$buChar->setAttribute('char', $文本属性['property']['bulletStyle']['bulletCharacter']);
+				$pPr->appendChild($buChar);
+			}
 			
 			if($文本属性['property']['lineSpacing'] != '') {
 				$lnSpc = $dom->createElement('a:lnSpc');
@@ -542,6 +557,59 @@ function 绘制单个元素($childrenItem)  {
 
 				$solidFill = $dom->createElement('a:solidFill');
 				$rPr->appendChild($solidFill);
+				
+				if($文本对像['extInfo']['property']['fontColor']['type'] == "gradient")  {
+					//print_R($文本对像['extInfo']['property']);exit;
+					// 创建根节点 <a:gradFill>
+					$gradFill = $dom->createElement('a:gradFill');
+
+					// 创建 <a:gsLst> 节点
+					$gsLst = $dom->createElement('a:gsLst');
+					$gradFill->appendChild($gsLst);
+
+					// 遍历 colors 数组，生成 <a:gs> 节点
+					foreach ($文本对像['extInfo']['property']['fontColor']['gradient']['colors'] as $index => $color) {
+						// 创建 <a:gs>，并设置 pos 属性
+						$gs = $dom->createElement('a:gs');
+						$pos = $文本对像['extInfo']['property']['fontColor']['gradient']['fractions'][$index] * 100000; // 转换为 0 ~ 100000 的范围
+						$gs->setAttribute('pos', (string)$pos);
+						$gsLst->appendChild($gs);
+
+						// 创建 <a:srgbClr>，并设置 val 属性
+						$srgbClr = $dom->createElement('a:srgbClr');
+						$srgbClr->setAttribute('val', 数字转颜色($color['color']));
+						$gs->appendChild($srgbClr);
+
+						// 如果有 alpha 属性，添加 <a:alpha> 节点
+						if (isset($color['alpha'])) {
+							$alpha = $dom->createElement('a:alpha');
+							$alpha->setAttribute('val', (string)$color['alpha']);
+							$srgbClr->appendChild($alpha);
+						}
+
+						// 如果有 lumMod 属性，添加 <a:lumMod> 节点
+						if (isset($color['lumMod'])) {
+							$lumMod = $dom->createElement('a:lumMod');
+							$lumMod->setAttribute('val', (string)$color['lumMod']);
+							$srgbClr->appendChild($lumMod);
+						}
+
+						// 如果有 lumOff 属性，添加 <a:lumOff> 节点
+						if (isset($color['lumOff'])) {
+							$lumOff = $dom->createElement('a:lumOff');
+							$lumOff->setAttribute('val', (string)$color['lumOff']);
+							$srgbClr->appendChild($lumOff);
+						}
+					}
+
+					// 创建 <a:lin> 节点，并设置 ang 属性
+					$lin = $dom->createElement('a:lin');
+					$angle = $文本对像['extInfo']['property']['fontColor']['gradient']['angle'] * 60000; // 将角度转换为 EMU 单位
+					$lin->setAttribute('ang', (string)$angle);
+					$gradFill->appendChild($lin);
+					
+					$rPr->appendChild($gradFill);
+				}
 				
 				if($文本对像['extInfo']['property']['fontColor']['color']['realColor'] !="" )  {
 					$srgbClr = $dom->createElement('a:srgbClr');
@@ -590,7 +658,7 @@ function 绘制单个元素($childrenItem)  {
 		
 	}
     
-	if(strval(intval($anchor[0] * 12700)) == '3727262')  {
+	if(strval(intval($anchor[0] * 12700)) == '1490272')  {
 		print_R($childrenItem);
 		print_R($dom->saveXML());
 	}
