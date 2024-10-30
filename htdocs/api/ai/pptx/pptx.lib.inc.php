@@ -1,7 +1,7 @@
 <?php
 
 function 绘制单个页面($PageData)  {
-	
+	global $SharpCounter;
 	$childrenList	= $PageData['children'];
 	
 	// 开始处理 Slide 页面
@@ -45,7 +45,7 @@ function 绘制单个页面($PageData)  {
 	// 创建 <p:nvGrpSpPr> 及其子元素
 	$nvGrpSpPr = $dom->createElement('p:nvGrpSpPr');
 	$cNvPr = $dom->createElement('p:cNvPr');
-	$cNvPr->setAttribute('id', '1');
+	$cNvPr->setAttribute('id', $SharpCounter++);
 	$cNvPr->setAttribute('name', '');
 
 	$cNvGrpSpPr = $dom->createElement('p:cNvGrpSpPr');
@@ -103,7 +103,7 @@ function 绘制单个页面($PageData)  {
 			$绘制元素RESULT 	= 绘制Group元素($childrenItem);
 		}
 		else {
-			$绘制元素RESULT 	= 绘制pSp元素($childrenItem);
+			$绘制元素RESULT 	= 绘制单个元素对像($childrenItem);
 		}
 		$importedNode = $dom->importNode($绘制元素RESULT, true); // 深度导入整个节点及其子节点
 		$spTree->appendChild($importedNode);
@@ -129,6 +129,7 @@ function 绘制单个页面($PageData)  {
 
 
 function 绘制Group元素($childrenItem)  {
+	global $SharpCounter;
 	$anchor 			= $childrenItem['extInfo']['property']['anchor'];
 	$interiorAnchor 	= $childrenItem['extInfo']['property']['interiorAnchor'];
 	// 初始化 DOMDocument
@@ -315,7 +316,7 @@ function 绘制Group元素($childrenItem)  {
 	$childrenList = $childrenItem['children'];
 	foreach($childrenList as $children) {
 		//print_R($children);
-		$绘制元素RESULT 	= 绘制pSp元素($children);
+		$绘制元素RESULT 	= 绘制单个元素对像($children);
 		$importedNode = $dom->importNode($绘制元素RESULT, true);
 		$grpSp->appendChild($importedNode);
 	}
@@ -336,7 +337,7 @@ function 绘制Group元素($childrenItem)  {
 }
 
 
-function 绘制pSp元素($childrenItem)  {
+function 绘制单个元素对像($childrenItem)  {
 	global $SharpCounter;
 	$Type 			= $childrenItem['type'];
     $Point 			= $childrenItem['point'];
@@ -351,6 +352,8 @@ function 绘制pSp元素($childrenItem)  {
 	$prstTxWarp 	= $childrenItem['extInfo']['property']['prstTxWarp'];
 	$flipVertical 	= $childrenItem['extInfo']['property']['flipVertical'];
 	$rotation 		= $childrenItem['extInfo']['property']['rotation'];
+	$fileName 		= $childrenItem['extInfo']['property']['fileName'];
+	$clipping 		= $childrenItem['extInfo']['property']['clipping'];
 	//print_R($childrenItem);
 
 	// 1. 创建 DOMDocument 对象
@@ -358,72 +361,153 @@ function 绘制pSp元素($childrenItem)  {
 	$dom->formatOutput = true; // 格式化输出
 
 	// 2. 创建根元素 <p:sp> 并附加到 DOM
-	$pSp = $dom->createElement('p:sp');
-	$dom->appendChild($pSp);
-
-	// 3. 添加 <p:nvSpPr> 子元素及其子元素
-	$nvSpPr = $dom->createElement('p:nvSpPr');
-	$pSp->appendChild($nvSpPr);
-
-	$cNvPr = $dom->createElement('p:cNvPr');
-	$cNvPr->setAttribute('name', $realType .' '. $SharpCounter++);
-	$cNvPr->setAttribute('id', $SharpCounter++);
-	$nvSpPr->appendChild($cNvPr);
-
-	$cNvSpPr = $dom->createElement('p:cNvSpPr');
-	$cNvSpPr->setAttribute('id', $SharpCounter++);
-	if($realType == "TextBox") {
-		$cNvSpPr->setAttribute('txBox', 'true');
+	switch($Type) {
+		case 'text':
+			$pSp = $dom->createElement('p:sp');
+			break;
+		case 'image':
+			$pSp = $dom->createElement('p:pic');
+			break;
+		case 'graphicFrame':
+			$pSp = $dom->createElement('p:graphicFrame');
+			break;
+		case 'table':
+			$pSp = $dom->createElement('p:tbl');
+			break;
+		case 'connectshape':
+			$pSp = $dom->createElement('p:cxnSp');
+			break;
+		case 'media':
+			$pSp = $dom->createElement('p:media');
+			break;
+		case 'group':
+			$pSp = $dom->createElement('p:group');
+			break;
+		case 'oleObj':
+			$pSp = $dom->createElement('p:oleObj');
+			break;
+		case 'ph':
+			$pSp = $dom->createElement('p:ph');
+			break;
+		default:
+			$pSp = $dom->createElement('p:sp');
+			break;
 	}
-	$nvSpPr->appendChild($cNvSpPr);
+	$dom->appendChild($pSp);
+	
+	if($Type == "text")  {
+		// 3. 添加 <p:nvSpPr> 子元素及其子元素
+		$nvSpPr = $dom->createElement('p:nvSpPr');
+		$pSp->appendChild($nvSpPr);
+		$cNvPr = $dom->createElement('p:cNvPr');
+		$cNvPr->setAttribute('name', $realType .' '. $SharpCounter++);
+		$cNvPr->setAttribute('id', $SharpCounter++);
+		$nvSpPr->appendChild($cNvPr);
+		$cNvSpPr = $dom->createElement('p:cNvSpPr');
+		$cNvSpPr->setAttribute('id', $SharpCounter++);
+		if($realType == "TextBox") {
+			$cNvSpPr->setAttribute('txBox', 'true');
+		}
+		$nvSpPr->appendChild($cNvSpPr);
+	}
+	if($Type == "image")  {
+		// 3. 添加 <p:nvPicPr> 子元素及其子元素
+		$nvSpPr = $dom->createElement('p:nvPicPr');
+		$pSp->appendChild($nvSpPr);
+		$cNvPr = $dom->createElement('p:cNvPr');
+		$cNvPr->setAttribute('name', $fileName);
+		$cNvPr->setAttribute('id', $SharpCounter++);
+		$nvSpPr->appendChild($cNvPr);
+		$cNvPicPr = $dom->createElement('p:cNvPicPr');
+		$cNvPicPr->setAttribute('id', $SharpCounter++);
+		
+		$picLocks = $dom->createElement('a:picLocks');
+		$picLocks->setAttribute('noChangeAspect', "true");
+		$cNvPicPr->appendChild($picLocks);
+		
+		$nvSpPr->appendChild($cNvPicPr);
+		
+		// 创建 <p:blipFill> 元素
+		$p_blipFill = $dom->createElement('p:blipFill');
+		// 创建 <a:blip> 元素，并添加 r:embed 属性
+		$a_blip = $dom->createElement('a:blip');
+		$a_blip->setAttribute('r:embed', 'rId2');
+		// 将 <a:blip> 添加到 <p:blipFill> 中
+		$p_blipFill->appendChild($a_blip);
+		
+		$a_srcRect = $dom->createElement('a:srcRect');
+		if(isset($clipping[0]) && $clipping[0]>0 ) $a_srcRect->setAttribute('t', $clipping[0]);
+		if(isset($clipping[1]) && $clipping[1]>0 ) $a_srcRect->setAttribute('r', $clipping[1]);
+		if(isset($clipping[2]) && $clipping[2]>0 ) $a_srcRect->setAttribute('b', $clipping[2]);
+		if(isset($clipping[3]) && $clipping[3]>0 ) $a_srcRect->setAttribute('l', $clipping[3]);
+		$p_blipFill->appendChild($a_srcRect);
+		
+		// 创建 <a:stretch> 元素
+		$a_stretch = $dom->createElement('a:stretch');
+		// 创建 <a:fillRect> 元素，并设置边距属性
+		$a_fillRect = $dom->createElement('a:fillRect');
+		$a_fillRect->setAttribute('t', '0');
+		$a_fillRect->setAttribute('l', '0');
+		$a_fillRect->setAttribute('b', '0');
+		$a_fillRect->setAttribute('r', '0');
+		// 将 <a:fillRect> 添加到 <a:stretch> 中
+		$a_stretch->appendChild($a_fillRect);
+		// 将 <a:stretch> 添加到 <p:blipFill> 中
+		$p_blipFill->appendChild($a_stretch);
+		
+		$pSp->appendChild($p_blipFill);
+	}
+	
 
 	$nvPr = $dom->createElement('p:nvPr');
 	switch($placeholder['type']) {
 		case 'TITLE':
 			$pPh = $dom->createElement('p:ph');
 			$pPh->setAttribute('type', strtolower($placeholder['type']));
-			$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
 		case 'BODY':
 			$pPh = $dom->createElement('p:ph');
-			$pPh->setAttribute('type', 'bd');
-			$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			$pPh->setAttribute('type', 'body');
+			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
 		case 'DATETIME':
 			$pPh = $dom->createElement('p:ph');
 			$pPh->setAttribute('type', 'dt');
 			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
-			$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
 		case 'FOOTER':
 			$pPh = $dom->createElement('p:ph');
 			$pPh->setAttribute('type', 'ftr');
 			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
-			$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
 		case 'SLIDE_NUMBER':
 			$pPh = $dom->createElement('p:ph');
 			$pPh->setAttribute('type', 'sldNum');
 			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
-			$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
 		case 'CENTERED_TITLE':
 			$pPh = $dom->createElement('p:ph');
 			$pPh->setAttribute('type', 'ctrTitle');
 			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
-			$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
 		case 'SUBTITLE':
 			$pPh = $dom->createElement('p:ph');
 			$pPh->setAttribute('type', 'subTitle');
 			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
-			$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
 	}
@@ -553,6 +637,10 @@ function 绘制pSp元素($childrenItem)  {
 			}
 		}
 		//print $dom->asXML();exit;
+	}
+	
+	if ($fillStyle['type'] == 'texture') {
+		// 未完成
 	}
 	
 	if ($fillStyle['type'] == 'color') {
@@ -787,282 +875,287 @@ function 绘制pSp元素($childrenItem)  {
 	}
 	
 	// 5. 添加 <p:txBody> 及其子元素
-	$txBody = $dom->createElement('p:txBody');
-	$pSp->appendChild($txBody);
+	if($realType != "Picture")  {
+		$txBody = $dom->createElement('p:txBody');
+		$pSp->appendChild($txBody);
 
-	$bodyPr = $dom->createElement('a:bodyPr');
-	$bodyPr->setAttribute('rtlCol', 'false');
-	if($realType == "TextBox" || $realType == "Auto" || $realType == "Freeform")  {
-		switch($childrenItem['extInfo']['property']['textAutofit']) {
-			case 'NORMAL':
-				$normAutofit = $dom->createElement('a:normAutofit');
-				$bodyPr->appendChild($normAutofit);
+		$bodyPr = $dom->createElement('a:bodyPr');
+		$bodyPr->setAttribute('rtlCol', 'false');
+		if($realType == "TextBox" || $realType == "Auto" || $realType == "Freeform")  {
+			switch($childrenItem['extInfo']['property']['textAutofit']) {
+				case 'NORMAL':
+					$normAutofit = $dom->createElement('a:normAutofit');
+					$bodyPr->appendChild($normAutofit);
+					break;
+				case 'SHAPE':
+					$spAutoFit = $dom->createElement('a:spAutoFit');
+					$bodyPr->appendChild($spAutoFit);
+					break;
+				case 'NONE':
+					$spAutoFit = $dom->createElement('a:noAutofit');
+					$bodyPr->appendChild($spAutoFit);
+					break;
+			}
+		}
+		switch($childrenItem['extInfo']['property']['textDirection']) {
+			case 'HORIZONTAL':
+				$bodyPr->setAttribute('vert', 'horz');
 				break;
-			case 'SHAPE':
-				$spAutoFit = $dom->createElement('a:spAutoFit');
-				$bodyPr->appendChild($spAutoFit);
-				break;
-			case 'NONE':
+			case 'VERTICAL':
+				$bodyPr->setAttribute('vert', 'vert');
 				break;
 		}
-	}
-	switch($childrenItem['extInfo']['property']['textDirection']) {
-		case 'HORIZONTAL':
-			$bodyPr->setAttribute('vert', 'horz');
-			break;
-		case 'VERTICAL':
-			$bodyPr->setAttribute('vert', 'vert');
-			break;
-	}
-	switch($childrenItem['extInfo']['property']['textVerticalAlignment']) {
-		case 'TOP':
-			$bodyPr->setAttribute('anchor', 't');
-			break;
-		case 'BOTTOM':
-			$bodyPr->setAttribute('anchor', 'b');
-			break;
-		case 'LEFT':
-			$bodyPr->setAttribute('anchor', 'l');
-			break;
-		case 'RIGHT':
-			$bodyPr->setAttribute('anchor', 'r');
-			break;
-		case 'CENTER':
-			$bodyPr->setAttribute('anchor', 'ctr');
-			break;
-		case 'MIDDLE':
-			$bodyPr->setAttribute('anchor', 'ctr');
-			break;
-	}
-	if($childrenItem['extInfo']['property']['textWordWrap'] == 1) {
-		$bodyPr->setAttribute('wrap', 'square');
-	}
-	elseif(isset($childrenItem['extInfo']['property']['textWordWrap'])) {
-		$bodyPr->setAttribute('wrap', 'none');
-	}
-	$bodyPr->setAttribute('tIns', '45720');
-	$bodyPr->setAttribute('lIns', '91440');
-	$bodyPr->setAttribute('bIns', '45720');
-	$bodyPr->setAttribute('rIns', '91440');
-	$txBody->appendChild($bodyPr);
-	
-	if($childrenItem['extInfo']['property']['prstTxWarp']['prst'] != "")  {
-		// 创建 <a:prstTxWarp> 节点并设置属性
-		$a_prstTxWarp = $dom->createElement('a:prstTxWarp');
-		$a_prstTxWarp->setAttribute('prst', $childrenItem['extInfo']['property']['prstTxWarp']['prst']);
-		$bodyPr->appendChild($a_prstTxWarp);
+		switch($childrenItem['extInfo']['property']['textVerticalAlignment']) {
+			case 'TOP':
+				$bodyPr->setAttribute('anchor', 't');
+				break;
+			case 'BOTTOM':
+				$bodyPr->setAttribute('anchor', 'b');
+				break;
+			case 'LEFT':
+				$bodyPr->setAttribute('anchor', 'l');
+				break;
+			case 'RIGHT':
+				$bodyPr->setAttribute('anchor', 'r');
+				break;
+			case 'CENTER':
+				$bodyPr->setAttribute('anchor', 'ctr');
+				break;
+			case 'MIDDLE':
+				$bodyPr->setAttribute('anchor', 'ctr');
+				break;
+		}
+		if($childrenItem['extInfo']['property']['textWordWrap'] == 1) {
+			$bodyPr->setAttribute('wrap', 'square');
+		}
+		elseif(isset($childrenItem['extInfo']['property']['textWordWrap'])) {
+			$bodyPr->setAttribute('wrap', 'none');
+		}
+		$bodyPr->setAttribute('tIns', '45720');
+		$bodyPr->setAttribute('lIns', '91440');
+		$bodyPr->setAttribute('bIns', '45720');
+		$bodyPr->setAttribute('rIns', '91440');
+		$txBody->appendChild($bodyPr);
 		
-		// 创建 <a:avLst> 节点
-		$a_avLst = $dom->createElement('a:avLst');
-
-		// 将 <a:avLst> 添加到 <a:prstTxWarp>
-		$a_prstTxWarp->appendChild($a_avLst);
-
-		// 创建 <a:noAutofit> 节点
-		$a_noAutofit = $dom->createElement('a:noAutofit');
-
-		// 将 <a:noAutofit> 添加到根节点（或适当的位置）
-		$bodyPr->appendChild($a_noAutofit);
-	}
-	
-	$lstStyle = $dom->createElement('a:lstStyle');
-	$txBody->appendChild($lstStyle);
-
-	// 6. 文本框, 创建段落 <a:p> 及其内容, <a:p>对像可能会有多个,所以需要循环过滤
-	$childrenList 	= $childrenItem['children'];
-	foreach($childrenList as $childrenListItem)  {
-		$文本属性 		= $childrenListItem['extInfo'];
-		if ($Type == "text" || $childrenListItem['extInfo']['type'] == "p") {
-			$p = $dom->createElement('a:p');
-			$txBody->appendChild($p);
-
-			$pPr = $dom->createElement('a:pPr');
-			$p->appendChild($pPr);
-			if(isset($文本属性['property']['indent'])) {
-				$pPr->setAttribute('indent', intval($文本属性['property']['indent'] * 12700));
-			}
-			if(isset($文本属性['property']['indentLevel'])) {
-				$pPr->setAttribute('lvl', intval($文本属性['property']['indentLevel']));
-			}
-			switch($文本属性['property']['textAlign']) {
-				case 'CENTER':
-					$pPr->setAttribute('algn', 'ctr');
-					break;
-				case 'LEFT':
-					$pPr->setAttribute('algn', 'l');
-					break;
-				case 'RIGHT':
-					$pPr->setAttribute('algn', 'r');
-					break;
-				case 'TOP':
-					$pPr->setAttribute('algn', 't');
-					break;
-				case 'BOTTOM':
-					$pPr->setAttribute('algn', 'b');
-					break;
-			}
-			if(isset($文本属性['property']['leftMargin'])) {
-				$pPr->setAttribute('marL', intval($文本属性['property']['leftMargin'] * 12700));
-			}
-			if(isset($文本属性['property']['bulletStyle']['bulletFont'])) {
-				$buFont = $dom->createElement('a:buFont');
-				$buFont->setAttribute('typeface', $文本属性['property']['bulletStyle']['bulletFont']);
-				$pPr->appendChild($buFont);
-			}
+		if($childrenItem['extInfo']['property']['prstTxWarp']['prst'] != "")  {
+			// 创建 <a:prstTxWarp> 节点并设置属性
+			$a_prstTxWarp = $dom->createElement('a:prstTxWarp');
+			$a_prstTxWarp->setAttribute('prst', $childrenItem['extInfo']['property']['prstTxWarp']['prst']);
+			$bodyPr->appendChild($a_prstTxWarp);
 			
-			if(isset($文本属性['property']['bulletStyle']['bulletCharacter'])) {
-				$buChar = $dom->createElement('a:buChar');
-				$buChar->setAttribute('char', $文本属性['property']['bulletStyle']['bulletCharacter']);
-				$pPr->appendChild($buChar);
-			}
-			
-			if(isset($文本属性['property']['lineSpacing'])) {
-				$lnSpc = $dom->createElement('a:lnSpc');
-				$spcPct = $dom->createElement('a:spcPct');
-				$spcPct->setAttribute('val', strval(intval($文本属性['property']['lineSpacing'] * 1000)));
-				$lnSpc->appendChild($spcPct);
-				$pPr->appendChild($lnSpc);
-			}
-			
-			if(isset($文本属性['property']['spaceBefore'])) {
-				$spcBef = $dom->createElement('a:spcBef');
-				$spcPts = $dom->createElement('a:spcPts');
-				$spcPts->setAttribute('val', strval(abs(intval($文本属性['property']['spaceBefore'] * 100))));
-				$spcBef->appendChild($spcPts);
-				$pPr->appendChild($spcBef);
-			}
-			
-			$defRPr = $dom->createElement('a:defRPr');
-			$pPr->appendChild($defRPr);
-			
-			
-			$文本对像List		= (array)$childrenListItem['children'];
-			foreach($文本对像List as $文本对像)   {
-				if(isset($文本对像['text']))  {
-					if($文本对像['extInfo']['property']['slideNum'] == 1) {
-						$r = $dom->createElement('a:fld');
-						$r->setAttribute('type', 'slidenum');
-						$r->setAttribute('id', 'NotSetting');
-					}
-					else {
-						$r = $dom->createElement('a:r');
-					}
-					$p->appendChild($r);
+			// 创建 <a:avLst> 节点
+			$a_avLst = $dom->createElement('a:avLst');
 
-					// 设置文本和样式属性		
-					$rPr = $dom->createElement('a:rPr');
-					$rPr->setAttribute('lang', $文本对像['extInfo']['property']['lang']);
-					$rPr->setAttribute('b', $文本对像['extInfo']['property']['bold'] == 1 ? "true" : "false");
-					$rPr->setAttribute('i', $文本对像['extInfo']['property']['italic'] == 1 ? "true" : "false");
-					$rPr->setAttribute('sz', ($文本对像['extInfo']['property']['fontSize'] * 100));
-					$rPr->setAttribute('baseline', $文本对像['extInfo']['property']['baseline']);
-					$rPr->setAttribute('u', 'none');
-					$rPr->setAttribute('altLang', 'en-US');
-					$r->appendChild($rPr);
+			// 将 <a:avLst> 添加到 <a:prstTxWarp>
+			$a_prstTxWarp->appendChild($a_avLst);
 
-					$solidFill = $dom->createElement('a:solidFill');
-					$rPr->appendChild($solidFill);
-					
-					if($文本对像['extInfo']['property']['fontColor']['type'] == "gradient")  {
-						//print_R($文本对像['extInfo']['property']);exit;
-						// 创建根节点 <a:gradFill>
-						$gradFill = $dom->createElement('a:gradFill');
+			// 创建 <a:noAutofit> 节点
+			$a_noAutofit = $dom->createElement('a:noAutofit');
 
-						// 创建 <a:gsLst> 节点
-						$gsLst = $dom->createElement('a:gsLst');
-						$gradFill->appendChild($gsLst);
+			// 将 <a:noAutofit> 添加到根节点（或适当的位置）
+			$bodyPr->appendChild($a_noAutofit);
+		}
+		
+		$lstStyle = $dom->createElement('a:lstStyle');
+		$txBody->appendChild($lstStyle);
 
-						// 遍历 colors 数组，生成 <a:gs> 节点
-						foreach ($文本对像['extInfo']['property']['fontColor']['gradient']['colors'] as $index => $color) {
-							// 创建 <a:gs>，并设置 pos 属性
-							$gs = $dom->createElement('a:gs');
-							$pos = $文本对像['extInfo']['property']['fontColor']['gradient']['fractions'][$index] * 100000; // 转换为 0 ~ 100000 的范围
-							$gs->setAttribute('pos', (string)$pos);
-							$gsLst->appendChild($gs);
+		// 6. 文本框, 创建段落 <a:p> 及其内容, <a:p>对像可能会有多个,所以需要循环过滤
+		$childrenList 	= $childrenItem['children'];
+		foreach($childrenList as $childrenListItem)  {
+			$文本属性 		= $childrenListItem['extInfo'];
+			if ($Type == "text" || $childrenListItem['extInfo']['type'] == "p") {
+				$p = $dom->createElement('a:p');
+				$txBody->appendChild($p);
 
-							// 创建 <a:srgbClr>，并设置 val 属性
+				$pPr = $dom->createElement('a:pPr');
+				$p->appendChild($pPr);
+				if(isset($文本属性['property']['indent'])) {
+					$pPr->setAttribute('indent', intval($文本属性['property']['indent'] * 12700));
+				}
+				if(isset($文本属性['property']['indentLevel'])) {
+					$pPr->setAttribute('lvl', intval($文本属性['property']['indentLevel']));
+				}
+				switch($文本属性['property']['textAlign']) {
+					case 'CENTER':
+						$pPr->setAttribute('algn', 'ctr');
+						break;
+					case 'LEFT':
+						$pPr->setAttribute('algn', 'l');
+						break;
+					case 'RIGHT':
+						$pPr->setAttribute('algn', 'r');
+						break;
+					case 'TOP':
+						$pPr->setAttribute('algn', 't');
+						break;
+					case 'BOTTOM':
+						$pPr->setAttribute('algn', 'b');
+						break;
+				}
+				if(isset($文本属性['property']['leftMargin'])) {
+					$pPr->setAttribute('marL', intval($文本属性['property']['leftMargin'] * 12700));
+				}
+				if(isset($文本属性['property']['bulletStyle']['bulletFont'])) {
+					$buFont = $dom->createElement('a:buFont');
+					$buFont->setAttribute('typeface', $文本属性['property']['bulletStyle']['bulletFont']);
+					$pPr->appendChild($buFont);
+				}
+				
+				if(isset($文本属性['property']['bulletStyle']['bulletCharacter'])) {
+					$buChar = $dom->createElement('a:buChar');
+					$buChar->setAttribute('char', $文本属性['property']['bulletStyle']['bulletCharacter']);
+					$pPr->appendChild($buChar);
+				}
+				
+				if(isset($文本属性['property']['lineSpacing'])) {
+					$lnSpc = $dom->createElement('a:lnSpc');
+					$spcPct = $dom->createElement('a:spcPct');
+					$spcPct->setAttribute('val', strval(intval($文本属性['property']['lineSpacing'] * 1000)));
+					$lnSpc->appendChild($spcPct);
+					$pPr->appendChild($lnSpc);
+				}
+				
+				if(isset($文本属性['property']['spaceBefore'])) {
+					$spcBef = $dom->createElement('a:spcBef');
+					$spcPts = $dom->createElement('a:spcPts');
+					$spcPts->setAttribute('val', strval(abs(intval($文本属性['property']['spaceBefore'] * 100))));
+					$spcBef->appendChild($spcPts);
+					$pPr->appendChild($spcBef);
+				}
+				
+				$defRPr = $dom->createElement('a:defRPr');
+				$pPr->appendChild($defRPr);
+				
+				
+				$文本对像List		= (array)$childrenListItem['children'];
+				foreach($文本对像List as $文本对像)   {
+					if(isset($文本对像['text']))  {
+						if($文本对像['extInfo']['property']['slideNum'] == 1) {
+							$r = $dom->createElement('a:fld');
+							$r->setAttribute('type', 'slidenum');
+							$r->setAttribute('id', 'NotSetting');
+						}
+						else {
+							$r = $dom->createElement('a:r');
+						}
+						$p->appendChild($r);
+
+						// 设置文本和样式属性		
+						$rPr = $dom->createElement('a:rPr');
+						$rPr->setAttribute('lang', $文本对像['extInfo']['property']['lang']);
+						$rPr->setAttribute('b', $文本对像['extInfo']['property']['bold'] == 1 ? "true" : "false");
+						$rPr->setAttribute('i', $文本对像['extInfo']['property']['italic'] == 1 ? "true" : "false");
+						$rPr->setAttribute('sz', ($文本对像['extInfo']['property']['fontSize'] * 100));
+						$rPr->setAttribute('baseline', $文本对像['extInfo']['property']['baseline']);
+						$rPr->setAttribute('u', 'none');
+						$rPr->setAttribute('altLang', 'en-US');
+						$r->appendChild($rPr);
+
+						$solidFill = $dom->createElement('a:solidFill');
+						$rPr->appendChild($solidFill);
+						
+						if($文本对像['extInfo']['property']['fontColor']['type'] == "gradient")  {
+							//print_R($文本对像['extInfo']['property']);exit;
+							// 创建根节点 <a:gradFill>
+							$gradFill = $dom->createElement('a:gradFill');
+
+							// 创建 <a:gsLst> 节点
+							$gsLst = $dom->createElement('a:gsLst');
+							$gradFill->appendChild($gsLst);
+
+							// 遍历 colors 数组，生成 <a:gs> 节点
+							foreach ($文本对像['extInfo']['property']['fontColor']['gradient']['colors'] as $index => $color) {
+								// 创建 <a:gs>，并设置 pos 属性
+								$gs = $dom->createElement('a:gs');
+								$pos = $文本对像['extInfo']['property']['fontColor']['gradient']['fractions'][$index] * 100000; // 转换为 0 ~ 100000 的范围
+								$gs->setAttribute('pos', (string)$pos);
+								$gsLst->appendChild($gs);
+
+								// 创建 <a:srgbClr>，并设置 val 属性
+								$srgbClr = $dom->createElement('a:srgbClr');
+								$srgbClr->setAttribute('val', 数字转颜色($color['color']));
+								$gs->appendChild($srgbClr);
+
+								// 如果有 alpha 属性，添加 <a:alpha> 节点
+								if (isset($color['alpha'])) {
+									$alpha = $dom->createElement('a:alpha');
+									$alpha->setAttribute('val', (string)$color['alpha']);
+									$srgbClr->appendChild($alpha);
+								}
+
+								// 如果有 lumMod 属性，添加 <a:lumMod> 节点
+								if (isset($color['lumMod'])) {
+									$lumMod = $dom->createElement('a:lumMod');
+									$lumMod->setAttribute('val', (string)$color['lumMod']);
+									$srgbClr->appendChild($lumMod);
+								}
+
+								// 如果有 lumOff 属性，添加 <a:lumOff> 节点
+								if (isset($color['lumOff'])) {
+									$lumOff = $dom->createElement('a:lumOff');
+									$lumOff->setAttribute('val', (string)$color['lumOff']);
+									$srgbClr->appendChild($lumOff);
+								}
+							}
+
+							// 创建 <a:lin> 节点，并设置 ang 属性
+							$lin = $dom->createElement('a:lin');
+							$angle = $文本对像['extInfo']['property']['fontColor']['gradient']['angle'] * 60000; // 将角度转换为 EMU 单位
+							$lin->setAttribute('ang', (string)$angle);
+							$gradFill->appendChild($lin);
+							
+							$rPr->appendChild($gradFill);
+						}
+						
+						//此处变量多增加了一个['color'],需要看是否会影响到其它slide页面,目前是在layout中有效
+						if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" )  {
 							$srgbClr = $dom->createElement('a:srgbClr');
-							$srgbClr->setAttribute('val', 数字转颜色($color['color']));
-							$gs->appendChild($srgbClr);
-
-							// 如果有 alpha 属性，添加 <a:alpha> 节点
-							if (isset($color['alpha'])) {
+							$srgbClr->setAttribute('val', 数字转颜色($文本对像['extInfo']['property']['fontColor']['color']['color']));
+							$solidFill->appendChild($srgbClr);
+							if($文本对像['extInfo']['property']['fontColor']['color']['alpha'] != "")  {
 								$alpha = $dom->createElement('a:alpha');
-								$alpha->setAttribute('val', (string)$color['alpha']);
+								$alpha->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['alpha']);
 								$srgbClr->appendChild($alpha);
 							}
-
-							// 如果有 lumMod 属性，添加 <a:lumMod> 节点
-							if (isset($color['lumMod'])) {
+							if($文本对像['extInfo']['property']['fontColor']['color']['lumMod'] != "")  {
 								$lumMod = $dom->createElement('a:lumMod');
-								$lumMod->setAttribute('val', (string)$color['lumMod']);
+								$lumMod->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['lumMod']);
 								$srgbClr->appendChild($lumMod);
 							}
-
-							// 如果有 lumOff 属性，添加 <a:lumOff> 节点
-							if (isset($color['lumOff'])) {
+							if($文本对像['extInfo']['property']['fontColor']['color']['lumOff'] != "")  {
 								$lumOff = $dom->createElement('a:lumOff');
-								$lumOff->setAttribute('val', (string)$color['lumOff']);
+								$lumOff->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['lumOff']);
 								$srgbClr->appendChild($lumOff);
 							}
 						}
-
-						// 创建 <a:lin> 节点，并设置 ang 属性
-						$lin = $dom->createElement('a:lin');
-						$angle = $文本对像['extInfo']['property']['fontColor']['gradient']['angle'] * 60000; // 将角度转换为 EMU 单位
-						$lin->setAttribute('ang', (string)$angle);
-						$gradFill->appendChild($lin);
-						
-						$rPr->appendChild($gradFill);
-					}
-					
-					if($文本对像['extInfo']['property']['fontColor']['color']['realColor'] !="" )  {
-						$srgbClr = $dom->createElement('a:srgbClr');
-						$srgbClr->setAttribute('val', 数字转颜色($文本对像['extInfo']['property']['fontColor']['color']['realColor']));
-						$solidFill->appendChild($srgbClr);
-						if($文本对像['extInfo']['property']['fontColor']['alpha'] != "")  {
-							$alpha = $dom->createElement('a:alpha');
-							$alpha->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['alpha']);
-							$srgbClr->appendChild($alpha);
+						if($文本对像['extInfo']['property']['fontColor']['color']['scheme'] !="" )  {
+							$schemeClr = $dom->createElement('a:schemeClr');
+							$schemeClr->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['scheme']);
+							$solidFill->appendChild($schemeClr);
 						}
-						if($文本对像['extInfo']['property']['fontColor']['lumMod'] != "")  {
-							$lumMod = $dom->createElement('a:lumMod');
-							$lumMod->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['lumMod']);
-							$srgbClr->appendChild($lumMod);
-						}
-						if($文本对像['extInfo']['property']['fontColor']['lumOff'] != "")  {
-							$lumOff = $dom->createElement('a:lumOff');
-							$lumOff->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['lumOff']);
-							$srgbClr->appendChild($lumOff);
-						}
+
+						$latin = $dom->createElement('a:latin');
+						$latin->setAttribute('typeface', $文本对像['extInfo']['property']['fontFamily']);
+						$rPr->appendChild($latin);
+
+						$ea = $dom->createElement('a:ea');
+						$ea->setAttribute('typeface', $文本对像['extInfo']['property']['fontFamily']);
+						$rPr->appendChild($ea);
+
+						$t = $dom->createElement('a:t', $文本对像['text']);
+						$r->appendChild($t);
 					}
-					if($文本对像['extInfo']['property']['fontColor']['color']['scheme'] !="" )  {
-						$schemeClr = $dom->createElement('a:schemeClr');
-						$schemeClr->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['scheme']);
-						$solidFill->appendChild($schemeClr);
-					}
-
-					$latin = $dom->createElement('a:latin');
-					$latin->setAttribute('typeface', $文本对像['extInfo']['property']['fontFamily']);
-					$rPr->appendChild($latin);
-
-					$ea = $dom->createElement('a:ea');
-					$ea->setAttribute('typeface', $文本对像['extInfo']['property']['fontFamily']);
-					$rPr->appendChild($ea);
-
-					$t = $dom->createElement('a:t', $文本对像['text']);
-					$r->appendChild($t);
 				}
+					
+				$endParaRPr = $dom->createElement('a:endParaRPr');
+				$endParaRPr->setAttribute('lang', 'en-US');
+				$endParaRPr->setAttribute('sz', '1100');
+				$p->appendChild($endParaRPr);
 			}
-				
-			$endParaRPr = $dom->createElement('a:endParaRPr');
-			$endParaRPr->setAttribute('lang', 'en-US');
-			$endParaRPr->setAttribute('sz', '1100');
-			$p->appendChild($endParaRPr);
+			
 		}
 		
 	}
-    
 	if(strval(intval($anchor[0] * 12700)) == '1490272')  {
 		print_R($childrenItem);
 		print_R($dom->saveXML());
@@ -1124,7 +1217,6 @@ function 数字转颜色($color) {
 	
 	return $hexColor;
 }
-
 
 
 ?>
