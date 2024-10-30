@@ -11,10 +11,6 @@ require_once('pptx.lib.inc.php');
 
 $SLIDEPAGE = 1;
 
-$SLIDE_PATH = "./json/0001/ppt/slides/slide".$SLIDEPAGE.".xml";
-$xmlString 	= file_get_contents($SLIDE_PATH);
-$xmlString 	= str_replace(':', '____', $xmlString);
-//$xml 		= simplexml_load_string($xmlString);
 
 $JsonContent      	= file_get_contents("./json/0001.json");
 $JsonData          	= json_decode($JsonContent, true);
@@ -23,10 +19,9 @@ $slideMasters = $JsonData['slideMasters'];
 $slideLayouts = $JsonData['slideMasters'][0]['slideLayouts'];
 //print_R($JsonData['slideMasters'][0]['slideLayouts']);exit;
 
-$绘制单个页面XML 		= 绘制单个页面($JsonData['pages'][intval($SLIDEPAGE-1)]);
-$绘制单个页面XML 		= str_replace('<?xml version="1.0"?>', '<?xml version="1.0" encoding="UTF-8"?>', $绘制单个页面XML);
-$最后输出PPTX_SLIDE1 	= '';
-file_put_contents($SLIDE_PATH, $绘制单个页面XML);
+$FilePath 			= "./json/0001/ppt/slides/slide".$SLIDEPAGE.".xml";
+
+$绘制单个页面XML 		= 绘制单个页面($JsonData['pages'][intval($SLIDEPAGE-1)], $FilePath);
 
 print $绘制单个页面XML;
 
