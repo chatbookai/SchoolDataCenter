@@ -8,7 +8,7 @@
 * Version: 0.0.1
 */
 
-require_once(__DIR__.'/functions.inc.php');
+require_once(__DIR__.'/lib/functions.inc.php');
 require_once(__DIR__.'/lib/AiToPptx_DrawGroupObject.php');
 require_once(__DIR__.'/lib/AiToPptx_DrawSingleObject.php');
 require_once(__DIR__.'/lib/AiToPptx_MakeContentTypesXml.php');

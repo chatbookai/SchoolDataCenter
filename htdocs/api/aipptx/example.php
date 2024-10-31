@@ -3,9 +3,9 @@ header("Content-Type: application/json; charset=utf-8");
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-require_once('../../config.inc.php');
-require_once('../../adodb5/adodb.inc.php');
-require_once("../../vendor/autoload.php");
+require_once('../config.inc.php');
+require_once('../adodb5/adodb.inc.php');
+require_once("../vendor/autoload.php");
 
 require_once('./AiToPPTX/include.inc.php');
 
@@ -15,7 +15,7 @@ $JsonData          	= json_decode($JsonContent, true);
 //print_R($JsonData);exit;
 
 $TargetCacheDir 		= realpath("./cache");
-$TargetPptxFilePath = './output/0002.pptx';
+$TargetPptxFilePath = './output/0001.pptx';
 
 AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath)
 
