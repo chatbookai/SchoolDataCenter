@@ -42,8 +42,8 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 	// 生成每个Slide页面
 	$pages = $JsonData['pages'];
 	for($i=0;$i<sizeof($pages);$i++) {
-		$FilePath 			= "./json/0001/ppt/slides/slide".($i+1).".xml";
-		$RelationPath 		= "./json/0001/ppt/slides/_rels/slide".($i+1).".xml.rels";
+		$FilePath 			  = $TargetCacheDir."/ppt/slides/slide".($i+1).".xml";
+		$RelationPath 		= $TargetCacheDir."/ppt/slides/_rels/slide".($i+1).".xml.rels";
 		AiToPptx_MakeSingleSlide($JsonData['pages'][$i], $FilePath, $RelationPath);
 	}
 

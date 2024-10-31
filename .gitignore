@@ -17,7 +17,8 @@ apache/logs/httpd.pid
 apache/logs/ssl_request.log
 
 php/php_error.log
-htdocs/api/ai/pptx/json
+htdocs/api/aipptx/cache
+htdocs/api/aipptx/output
 
 xampp-control.log
 

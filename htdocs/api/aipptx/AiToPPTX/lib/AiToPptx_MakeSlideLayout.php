@@ -96,8 +96,15 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	global $关系引用ID值列表SlideLayout;
 	$关系引用ID值列表SlideLayout 		= [];
 	$关系引用ID值列表SlideLayout[] 	= '<Relationship Id="rId1" Target="../slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
+
+  //得到图片路径信息
+  $得到图片路径信息 = explode('/', $FilePath);
+  array_pop($得到图片路径信息);
+  array_pop($得到图片路径信息);
+  $得到图片路径信息[] = 'media';
+  $DirPath = join('/', $得到图片路径信息);
 	foreach($Layout['children'] as $ChildrenItem) 		{
-		$绘制单个元素对像RESULT 	= AiToPptx_DrawSingleObject($ChildrenItem, $DirPath=''); //在这个函数中会更新 $关系引用ID值列表SlideLayout
+		$绘制单个元素对像RESULT 	= AiToPptx_DrawSingleObject($ChildrenItem, $DirPath); //在这个函数中会更新 $关系引用ID值列表SlideLayout
 		//print $绘制元素RESULT;//exit;
 		$importedpSp = $dom->importNode($绘制单个元素对像RESULT, true); // 深度导入整个节点及其子节点
 		$spTree->appendChild($importedpSp);

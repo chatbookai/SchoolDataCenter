@@ -17,12 +17,12 @@ function AiToPptx_SaveBase64ImageToFile($base64_string, $output_file) {
     $image_data = base64_decode($base64_string);
     // 检查解码是否成功
     if ($image_data === false) {
-        //echo "Base64解码失败。\n";
+        echo "Base64解码失败。\n";
         return false;
     }
     // 将二进制数据写入文件
     if (file_put_contents($output_file, $image_data) === false) {
-        //echo "文件写入失败。\n";
+        echo "文件写入失败。\n"; print $output_file;
         return false;
     }
     //echo "文件保存成功：$output_file\n";

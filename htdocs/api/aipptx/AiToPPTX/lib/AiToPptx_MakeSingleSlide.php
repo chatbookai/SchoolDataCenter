@@ -111,7 +111,13 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 			$绘制元素RESULT 	= AiToPptx_DrawGroupObject($childrenItem);
 		}
 		else {
-			$绘制元素RESULT 	= AiToPptx_DrawSingleObject($childrenItem, $DirPath='');
+      //得到图片路径信息
+      $得到图片路径信息 = explode('/', $FilePath);
+      array_pop($得到图片路径信息);
+      array_pop($得到图片路径信息);
+      $得到图片路径信息[] = 'media';
+      $DirPath = join('/', $得到图片路径信息);
+			$绘制元素RESULT 	= AiToPptx_DrawSingleObject($childrenItem, $DirPath);
 		}
 		$importedNode = $dom->importNode($绘制元素RESULT, true); // 深度导入整个节点及其子节点
 		$spTree->appendChild($importedNode);
@@ -127,7 +133,7 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 	// 将 <p:sld> 作为根节点添加到文档
 	$dom->appendChild($pSld);
 
-	//写入文件
+  //写入文件
 	$dom->save($FilePath);
 
 	//写入Relation文件

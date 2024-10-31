@@ -11,7 +11,7 @@
 function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 	global $SharpCounter;
 	$Type 			= $childrenItem['type'];
-    $Point 			= $childrenItem['point'];
+  $Point 			= $childrenItem['point'];
 	$anchor 		= $childrenItem['extInfo']['property']['anchor'];
 	$realType 		= $childrenItem['extInfo']['property']['realType'];
 	$realType 		= $childrenItem['extInfo']['property']['realType'];
@@ -86,7 +86,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 		if($fillStyle['texture']['imageData'] != "")  {
 			$alpha 		= $fillStyle['texture']['alpha'];
 			$stretch 	= $fillStyle['texture']['stretch'];
-			AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], "./json/0001/ppt/media/". $fileName);
+			AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/". $fileName);
 		}
 		//print_R($fillStyle);
 		// 3. 添加 <p:nvPicPr> 子元素及其子元素
