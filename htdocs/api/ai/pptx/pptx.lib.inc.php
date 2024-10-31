@@ -1,7 +1,7 @@
 <?php
 
 
-function MakeSlideLayout($Layout, $FilePath) {
+function MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	
 	// 创建DOM对象并设置XML版本和编码
 	$dom = new DOMDocument('1.0', 'UTF-8');
@@ -86,12 +86,22 @@ function MakeSlideLayout($Layout, $FilePath) {
 	$spTree->appendChild($grpSpPr);
 	
 	// 组装 <p:sp>
+	global $关系引用ID值列表SlideLayout;
+	$关系引用ID值列表SlideLayout 		= [];
+	$关系引用ID值列表SlideLayout[] 	= '<Relationship Id="rId1" Target="../slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
 	foreach($Layout['children'] as $ChildrenItem) 		{
-		$绘制单个元素对像RESULT 	= 绘制单个元素对像($ChildrenItem, $DirPath='');
+		$绘制单个元素对像RESULT 	= 绘制单个元素对像($ChildrenItem, $DirPath=''); //在这个函数中会更新 $关系引用ID值列表SlideLayout
 		//print $绘制元素RESULT;//exit;
 		$importedpSp = $dom->importNode($绘制单个元素对像RESULT, true); // 深度导入整个节点及其子节点
 		$spTree->appendChild($importedpSp);
 	}
+	//print_R($关系引用ID值列表SlideLayout);
+	//写入Relation文件
+	$RelationContent 	= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+'.join('', $关系引用ID值列表SlideLayout).'
+</Relationships>';
+	file_put_contents($RelationPath, $RelationContent);
 	
 	// Add spTree
 	$cSld->appendChild($spTree);
@@ -232,14 +242,23 @@ function MakeMasterXml($slideMasters, $DirPath)  {
 	$sldLayoutIdLst = $dom->createElement('p:sldLayoutIdLst');
 
 	// 定义幻灯片布局 ID 和 r:id 的数组
-	$layouts = [
-		['id' => '2147483655', 'r:id' => 'rId1'],
-		['id' => '2147483656', 'r:id' => 'rId3'],
-		['id' => '2147483657', 'r:id' => 'rId4'],
-		['id' => '2147483658', 'r:id' => 'rId5'],
-		['id' => '2147483659', 'r:id' => 'rId6'],
-		['id' => '2147483660', 'r:id' => 'rId7']
-	];
+	$slideLayouts = (array)$slideMasters[0]['slideLayouts'];
+	$layouts = [];
+	$slideMasterContent = [];
+	$slideMasterContent[] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+	$slideMasterContent[] = '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+	$slideLayoutIndex = 0;
+	foreach($slideLayouts as $slideLayout) {
+		$slideLayoutIndex ++;
+		$slideMasterContent[] = '<Relationship Id="rId'.$slideLayoutIndex.'" Target="../slideLayouts/slideLayout'.$slideLayoutIndex.'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout"/>';
+		$layouts[] = ['id' => 10000+$slideLayoutIndex, 'r:id' => 'rId'.$slideLayoutIndex];
+	}
+	$slideLayoutIndex ++;
+	$slideMasterContent[] = '<Relationship Id="rId'.$slideLayoutIndex.'" Target="../theme/theme1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme"/>';
+	$layouts[] = ['id' => 10000+$slideLayoutIndex, 'r:id' => 'rId'.$slideLayoutIndex];
+	
+	$slideMasterContent[] = '</Relationships>';
+	
 	foreach ($layouts as $layout) {
 		$sldLayoutId = $dom->createElement('p:sldLayoutId');
 		$sldLayoutId->setAttribute('id', $layout['id']);
@@ -248,23 +267,63 @@ function MakeMasterXml($slideMasters, $DirPath)  {
 	}
 	$sldMaster->appendChild($sldLayoutIdLst);
 	
+	$dom->appendChild($sldMaster);
+	
 	//写入文件
 	$FilePath = $DirPath."/ppt/slideMasters/slideMaster1.xml";
 	$dom->save($FilePath);
-
+	
+	//生成slideMaster的relation文件
+	$slideMasterPath = $DirPath."/ppt/slideMasters/_rels/slideMaster1.xml.rels";
+	$slideMasterContentString = join("\n", $slideMasterContent);
+	file_put_contents($slideMasterPath, $slideMasterContentString);
+	
 	return $dom->saveXML();
 
-	// 将XML输出到浏览器或保存到文件
-	//header('Content-Type: application/xml');
-	//echo $dom->saveXML();
-
-	// 或保存为文件
-	// $dom->save('slide_master.xml');
-	
 }
 
 
-function 绘制单个页面($PageData, $FilePath)  {
+function MakeThemeXml($slideMasters, $DirPath)  {
+	
+	// 创建一个新的DOM文档
+	$dom = new DOMDocument('1.0', 'UTF-8');
+	$dom->formatOutput = true; // 格式化输出
+	$dom->preserveWhiteSpace = false; // 忽略不必要的空白
+	// 加载theme模板文件
+	$dom->load('./lib/xml/theme.xml');
+	
+	$theme 				= $slideMasters[0]['theme'];
+	$colorsThemeList 	= (array)$theme['colors'];
+	$clrScheme = $dom->createElement('a:clrScheme');
+	$clrScheme->setAttribute('name', "Office");
+	foreach($colorsThemeList as $key => $value) 		{
+		$keyElement = $dom->createElement('a:'.$key);
+		$srgbClr = $dom->createElement('a:srgbClr');
+		$srgbClr->setAttribute('val', 数字转颜色($value));
+		$keyElement->appendChild($srgbClr);
+		$clrScheme->appendChild($keyElement);
+	}
+	
+	// 使用 DOMXPath 解析带有命名空间的 XML
+	$xpath = new DOMXPath($dom);
+	// 注册命名空间：前缀 'a' 和它在XML中的URI一致
+	$xpath->registerNamespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main');
+	// 使用 XPath 查询带有命名空间的节点
+	$wantToReplaceNodeList = $xpath->query('//a:clrScheme');
+	if ($wantToReplaceNodeList->length > 0) {
+		$wantToReplaceNode = $wantToReplaceNodeList->item(0); // 获取第一个 clrScheme 节点
+		$parent = $wantToReplaceNode->parentNode; // 获取父节点
+		$parent->replaceChild($clrScheme, $wantToReplaceNode); // 替换节点
+	}
+	
+	//写入文件
+	$FilePath = $DirPath."/ppt/theme/theme1.xml";
+	$dom->save($FilePath);
+
+}
+
+
+function 绘制单个页面($PageData, $FilePath, $RelationPath)  {
 	global $SharpCounter;
 	$childrenList	= $PageData['children'];
 	
@@ -385,6 +444,14 @@ function 绘制单个页面($PageData, $FilePath)  {
 
 	//写入文件
 	$dom->save($FilePath);
+	
+	//写入Relation文件
+	$slideLayoutIdx 	= $PageData['extInfo']['slideLayoutIdx'];
+	$RelationContent 	= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Target="../slideLayouts/slideLayout'.($slideLayoutIdx+1).'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout"/>
+</Relationships>';
+	file_put_contents($RelationPath, $RelationContent);
 
 	return $dom->saveXML();
 }
@@ -716,13 +783,18 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 		
 		$nvSpPr->appendChild($cNvPicPr);
 		
+		// 生成rId的值
+		global $关系引用ID值列表SlideLayout;
+		$关系引用ID = sizeof($关系引用ID值列表SlideLayout) + 1;
+		$关系引用ID值列表SlideLayout[] = '<Relationship Id="rId'.$关系引用ID.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
 		// 创建 <p:blipFill> 元素
 		$p_blipFill = $dom->createElement('p:blipFill');
 		// 创建 <a:blip> 元素，并添加 r:embed 属性
 		$a_blip = $dom->createElement('a:blip');
-		$a_blip->setAttribute('r:embed', 'rId2');
+		$a_blip->setAttribute('r:embed', 'rId'.$关系引用ID);
 		// 将 <a:blip> 添加到 <p:blipFill> 中
 		$p_blipFill->appendChild($a_blip);
+
 		
 		$a_srcRect = $dom->createElement('a:srcRect');
 		if(isset($clipping[0]) && $clipping[0]>0 ) $a_srcRect->setAttribute('t', $clipping[0]);
@@ -1454,6 +1526,198 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 	
 	return $pSp;	
 }
+
+
+function MakePresentationXmlRelations($JsonData, $写入文件目录)  {
+	$pages = $JsonData['pages'];
+	$$MakePresentationXmlList = [];
+	for($i=0;$i<sizeof($pages);$i++) {
+		$MakePresentationXmlList[] = '<Relationship Id="rId'.($i+6).'" Target="slides/slide'.($i+1).'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide"/>';
+	}
+	$MakePresentationXmlContent = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Target="slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>
+<Relationship Id="rId2" Target="presProps.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/presProps"/>
+<Relationship Id="rId3" Target="viewProps.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps"/>
+<Relationship Id="rId4" Target="theme/theme1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme"/>
+<Relationship Id="rId5" Target="tableStyles.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles"/>
+'.join("\n",$MakePresentationXmlList).'
+</Relationships>';
+	file_put_contents($写入文件目录."/ppt/_rels/presentation.xml.rels", $MakePresentationXmlContent);
+}
+
+function MakePresentationXml($JsonData, $写入文件目录) {
+	// 创建DOM对象
+	$dom = new DOMDocument('1.0', 'UTF-8');
+	$dom->formatOutput = true; // 格式化输出，便于阅读
+
+	// 创建 <p:presentation> 根元素，并设置命名空间
+	$presentation = $dom->createElementNS('http://schemas.openxmlformats.org/presentationml/2006/main', 'p:presentation');
+	$presentation->setAttribute('saveSubsetFonts', '1');
+	$presentation->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:a', 'http://schemas.openxmlformats.org/drawingml/2006/main');
+	$presentation->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
+
+	// <p:sldMasterIdLst> 节点
+	$sldMasterIdLst = $dom->createElement('p:sldMasterIdLst');
+	$sldMasterId = $dom->createElement('p:sldMasterId');
+	$sldMasterId->setAttribute('id', '2147483648');
+	$sldMasterId->setAttribute('r:id', 'rId1');
+	$sldMasterIdLst->appendChild($sldMasterId);
+	$presentation->appendChild($sldMasterIdLst);
+
+	// <p:sldIdLst> 节点
+	$sldIdLst = $dom->createElement('p:sldIdLst');
+
+	// 创建 <p:sldId> 子节点
+	$pages = $JsonData['pages'];
+	for($i=0;$i<sizeof($pages);$i++) {
+		$sldIdItem = $dom->createElement('p:sldId');
+		$sldIdItem->setAttribute('id', 255 + ($i+1));
+		$sldIdItem->setAttribute('r:id', 'rId'.($i+6));
+		$sldIdLst->appendChild($sldIdItem);
+	}
+	
+	$presentation->appendChild($sldIdLst);
+	
+	$幻灯片的尺寸 = [1280, 720];
+	$备注页的尺寸 = [1280, 720];
+	
+	// <p:sldSz> 节点
+	$sldSz = $dom->createElement('p:sldSz');
+	$sldSz->setAttribute('cx', $幻灯片的尺寸[0] * 9525);
+	$sldSz->setAttribute('cy', $幻灯片的尺寸[1] * 9525);
+	$presentation->appendChild($sldSz);
+
+	// <p:notesSz> 节点
+	$notesSz = $dom->createElement('p:notesSz');
+	$notesSz->setAttribute('cx', $备注页的尺寸[0] * 9525);
+	$notesSz->setAttribute('cy', $备注页的尺寸[1] * 9525);
+	$presentation->appendChild($notesSz);
+
+	// <p:defaultTextStyle> 节点
+	$defaultTextStyle = $dom->createElement('p:defaultTextStyle');
+	$presentation->appendChild($defaultTextStyle);
+
+	// 将根元素添加到DOM对象
+	$dom->appendChild($presentation);
+
+	// 输出XML内容
+	// print $写入文件目录."/ppt/presentation.xml";
+	$dom->save($写入文件目录."/ppt/presentation.xml");
+
+}
+
+function MakeContentTypesXml($JsonData, $写入文件目录) {
+	// 创建DOM对象
+	$dom = new DOMDocument('1.0', 'UTF-8');
+	$dom->formatOutput = true;  // 格式化输出
+	$dom->xmlStandalone = true; // 设置 standalone="yes"
+
+	// 创建根节点 <Types> 并设置命名空间
+	$types = $dom->createElementNS(
+		'http://schemas.openxmlformats.org/package/2006/content-types',
+		'Types'
+	);
+
+	// 添加 <Default> 节点的数据数组
+	$defaultTypes = [
+		['Extension' => 'jpeg', 'ContentType' => 'image/jpeg'],
+		['Extension' => 'rels', 'ContentType' => 'application/vnd.openxmlformats-package.relationships+xml'],
+		['Extension' => 'xml', 'ContentType' => 'application/xml']
+	];
+
+	// 创建并添加 <Default> 节点
+	foreach ($defaultTypes as $default) {
+		$defaultElement = $dom->createElement('Default');
+		$defaultElement->setAttribute('Extension', $default['Extension']);
+		$defaultElement->setAttribute('ContentType', $default['ContentType']);
+		$types->appendChild($defaultElement);
+	}
+
+	// 添加 <Override> 节点的数据数组
+	$overrideTypes = [
+		['PartName' => '/docProps/app.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.extended-properties+xml'],
+		['PartName' => '/docProps/core.xml', 'ContentType' => 'application/vnd.openxmlformats-package.core-properties+xml'],
+		['PartName' => '/ppt/presentation.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml'],
+		['PartName' => '/ppt/presProps.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.presentationml.presProps+xml'],
+		['PartName' => '/ppt/tableStyles.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.presentationml.tableStyles+xml'],
+		['PartName' => '/ppt/viewProps.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.presentationml.viewProps+xml'],
+		['PartName' => '/ppt/theme/theme1.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.theme+xml'],
+		['PartName' => '/ppt/slideMasters/slideMaster1.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml'],
+	];
+	
+	$slideLayoutIndex = 0;
+	$slideLayouts = (array)$JsonData['slideMasters'][0]['slideLayouts'];
+	foreach($slideLayouts as $slideLayout) {
+		$slideLayoutIndex ++;
+		$overrideTypes[] = ['PartName' => '/ppt/slideLayouts/slideLayout'.$slideLayoutIndex.'.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml'];
+	}
+	$pages = $JsonData['pages'];
+	for($i=0;$i<sizeof($pages);$i++) {
+		$overrideTypes[] = ['PartName' => '/ppt/slides/slide'.($i+1).'.xml', 'ContentType' => 'application/vnd.openxmlformats-officedocument.presentationml.slide+xml'];
+	}
+
+	// 创建并添加 <Override> 节点
+	foreach ($overrideTypes as $override) {
+		$overrideElement = $dom->createElement('Override');
+		$overrideElement->setAttribute('PartName', $override['PartName']);
+		$overrideElement->setAttribute('ContentType', $override['ContentType']);
+		$types->appendChild($overrideElement);
+	}
+
+	// 将根节点添加到DOM对象
+	$dom->appendChild($types);
+
+	// 输出XML内容
+	$dom->save($写入文件目录."/[Content_Types].xml");
+
+}
+
+function MakeRootRelations($JsonData, $写入文件目录) {
+	// 创建DOM对象
+	$dom = new DOMDocument('1.0', 'UTF-8');
+	$dom->formatOutput = true;  // 格式化输出
+	$dom->xmlStandalone = true; // 设置 standalone="yes"
+
+	// 创建根节点 <Relationships> 并设置命名空间
+	$relationships = $dom->createElementNS(
+		'http://schemas.openxmlformats.org/package/2006/relationships',
+		'Relationships'
+	);
+
+	// 创建关系数据数组
+	$relationshipsData = [
+		['Id' => 'rId1', 'Target' => 'ppt/presentation.xml', 'Type' => 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument'],
+		['Id' => 'rId2', 'Target' => 'docProps/thumbnail.jpeg', 'Type' => 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail'],
+		['Id' => 'rId3', 'Target' => 'docProps/core.xml', 'Type' => 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties'],
+		['Id' => 'rId4', 'Target' => 'docProps/app.xml', 'Type' => 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties'],
+	];
+	
+	$slideLayoutIndex = 0;
+	$slideLayouts = (array)$JsonData['slideMasters'][0]['slideLayouts'];
+	foreach($slideLayouts as $slideLayout) {
+		$slideLayoutIndex ++;
+		$relationshipsData[] = ['Id' => 'rId'.($slideLayoutIndex+4), 'Target' => 'ppt/slideLayouts/slideLayout'.($slideLayoutIndex+4).'.xml', 'Type' => 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout'];
+	}
+
+	// 遍历关系数据并创建 <Relationship> 节点
+	foreach ($relationshipsData as $data) {
+		$relationship = $dom->createElement('Relationship');
+		$relationship->setAttribute('Id', $data['Id']);
+		$relationship->setAttribute('Target', $data['Target']);
+		$relationship->setAttribute('Type', $data['Type']);
+		$relationships->appendChild($relationship);
+	}
+
+	// 将根节点添加到DOM对象
+	$dom->appendChild($relationships);
+
+	// 输出XML内容
+	//print $写入文件目录."/_rels/.rels";
+	$dom->save($写入文件目录."/_rels/.rels");
+
+}
+
 
 
 function createZip($source, $destination) {
