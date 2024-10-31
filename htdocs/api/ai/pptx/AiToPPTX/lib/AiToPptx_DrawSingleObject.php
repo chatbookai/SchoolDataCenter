@@ -842,8 +842,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 
 	}
 	if(strval(intval($anchor[0] * 12700)) == '1490272')  {
-		print_R($childrenItem);
-		print_R($dom->saveXML());
+		//print_R($childrenItem);
+		//print_R($dom->saveXML());
 	}
 
 	return $pSp;

@@ -208,8 +208,8 @@ function AiToPptx_DrawGroupObject($childrenItem)  {
 	//$绘制元素RESULT = $dom->saveXML();
 
 	if(strval(intval($anchor[0] * 12700)) == '9002135')  {
-		print_R($childrenItem);
-		print_R($绘制元素RESULT->saveXML());
+		//print_R($childrenItem);
+		//print_R($绘制元素RESULT->saveXML());
 	}
 	//print $绘制元素RESULT;
 

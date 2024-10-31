@@ -23,20 +23,20 @@ require_once(__DIR__.'/lib/AiToPptx_MakeThemeXml.php');
 function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 
 	// 确保子文件夹都存在
-	if(!is_dir($TargetDir."/_rels")) 		mkdir($TargetDir."/_rels");
-	if(!is_dir($TargetDir."/docProps")) 	mkdir($TargetDir."/docProps");
-	if(!is_dir($TargetDir."/ppt")) 		mkdir($TargetDir."/ppt");
-	if(!is_dir($TargetDir."/ppt/_rels")) 	mkdir($TargetDir."/ppt/_rels");
-	if(!is_dir($TargetDir."/ppt/media")) 	mkdir($TargetDir."/ppt/media");
-	if(!is_dir($TargetDir."/ppt/theme")) 	mkdir($TargetDir."/ppt/theme");
-	if(!is_dir($TargetDir."/ppt/slideLayouts")) 	mkdir($TargetDir."/ppt/slideLayouts");
-	if(!is_dir($TargetDir."/ppt/slideMasters")) 	mkdir($TargetDir."/ppt/slideMasters");
-	if(!is_dir($TargetDir."/ppt/slides")) 			mkdir($TargetDir."/ppt/slides");
-	if(!is_dir($TargetDir."/ppt/theme/_rels")) 	mkdir($TargetDir."/ppt/theme/_rels");
-	if(!is_dir($TargetDir."/ppt/slideLayouts/_rels")) 	mkdir($TargetDir."/ppt/slideLayouts/_rels");
-	if(!is_dir($TargetDir."/ppt/slideMasters/_rels")) 	mkdir($TargetDir."/ppt/slideMasters/_rels");
-	if(!is_dir($TargetDir."/ppt/slides/_rels")) 		mkdir($TargetDir."/ppt/slides/_rels");
-	if(!is_dir($TargetDir."/ppt/theme/_rels")) 		mkdir($TargetDir."/ppt/theme/_rels");
+	if(!is_dir($TargetCacheDir."/_rels")) 		mkdir($TargetCacheDir."/_rels");
+	if(!is_dir($TargetCacheDir."/docProps")) 	mkdir($TargetCacheDir."/docProps");
+	if(!is_dir($TargetCacheDir."/ppt")) 		mkdir($TargetCacheDir."/ppt");
+	if(!is_dir($TargetCacheDir."/ppt/_rels")) 	mkdir($TargetCacheDir."/ppt/_rels");
+	if(!is_dir($TargetCacheDir."/ppt/media")) 	mkdir($TargetCacheDir."/ppt/media");
+	if(!is_dir($TargetCacheDir."/ppt/theme")) 	mkdir($TargetCacheDir."/ppt/theme");
+	if(!is_dir($TargetCacheDir."/ppt/slideLayouts")) 	mkdir($TargetCacheDir."/ppt/slideLayouts");
+	if(!is_dir($TargetCacheDir."/ppt/slideMasters")) 	mkdir($TargetCacheDir."/ppt/slideMasters");
+	if(!is_dir($TargetCacheDir."/ppt/slides")) 			mkdir($TargetCacheDir."/ppt/slides");
+	if(!is_dir($TargetCacheDir."/ppt/theme/_rels")) 	mkdir($TargetCacheDir."/ppt/theme/_rels");
+	if(!is_dir($TargetCacheDir."/ppt/slideLayouts/_rels")) 	mkdir($TargetCacheDir."/ppt/slideLayouts/_rels");
+	if(!is_dir($TargetCacheDir."/ppt/slideMasters/_rels")) 	mkdir($TargetCacheDir."/ppt/slideMasters/_rels");
+	if(!is_dir($TargetCacheDir."/ppt/slides/_rels")) 		mkdir($TargetCacheDir."/ppt/slides/_rels");
+	if(!is_dir($TargetCacheDir."/ppt/theme/_rels")) 		mkdir($TargetCacheDir."/ppt/theme/_rels");
 
 
 	// 生成每个Slide页面
@@ -49,48 +49,45 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 
 	//生成slideMaster页面,也有可能会有多个页面
 	$slideMasters 		= $JsonData['slideMasters'];
-	$MakeMasterXmlData 	= AiToPptx_MakeMasterXml($JsonData['slideMasters'], $TargetDir);
+	$MakeMasterXmlData 	= AiToPptx_MakeMasterXml($JsonData['slideMasters'], $TargetCacheDir);
 
 	// 生成theme页面,也有可能会有多个页面
 	$slideMasters 		= $JsonData['slideMasters'];
-	$MakeThemeXmlData 	= AiToPptx_MakeThemeXml($JsonData['slideMasters'], $TargetDir);
+	$MakeThemeXmlData 	= AiToPptx_MakeThemeXml($JsonData['slideMasters'], $TargetCacheDir);
 
 	// 生成slideLayouts页面
 	$slideLayouts = (array)$JsonData['slideMasters'][0]['slideLayouts'];
 	for($i=0;$i<sizeof($slideLayouts);$i++) {
-		$MakeSlideLayoutData = AiToPptx_MakeSlideLayout($slideLayouts[$i], $TargetDir."/ppt/slideLayouts/slideLayout".($i+1).".xml", $TargetDir."/ppt/slideLayouts/_rels/slideLayout".($i+1).".xml.rels");
+		$MakeSlideLayoutData = AiToPptx_MakeSlideLayout($slideLayouts[$i], $TargetCacheDir."/ppt/slideLayouts/slideLayout".($i+1).".xml", $TargetCacheDir."/ppt/slideLayouts/_rels/slideLayout".($i+1).".xml.rels");
 		//print $MakeSlideLayoutData;
 	}
 
 	// 生成 /ppt/presentation.xml
-	AiToPptx_MakePresentationXml($JsonData, $TargetDir);
+	AiToPptx_MakePresentationXml($JsonData, $TargetCacheDir);
 
 
 	// 生成 /ppt/_rels/presentation.xml.rels
-	AiToPptx_MakePresentationXmlRelations($JsonData, $TargetDir);
+	AiToPptx_MakePresentationXmlRelations($JsonData, $TargetCacheDir);
 
 	// 复制必备文件
-	copy("/lib/xml/presProps.xml", $TargetDir."/ppt/presProps.xml");
-	copy("/lib/xml/tableStyles.xml", $TargetDir."/ppt/tableStyles.xml");
-	copy("/lib/xml/theme.xml", $TargetDir."/ppt/theme.xml");
-	copy("/lib/xml/viewProps.xml", $TargetDir."/ppt/viewProps.xml");
-	copy("/lib/xml/app.xml", $TargetDir."/docProps/app.xml");
-	copy("/lib/xml/core.xml", $TargetDir."/docProps/core.xml");
+	copy(__DIR__."/xml/presProps.xml", $TargetCacheDir."/ppt/presProps.xml");
+	copy(__DIR__."/xml/tableStyles.xml", $TargetCacheDir."/ppt/tableStyles.xml");
+	copy(__DIR__."/xml/theme.xml", $TargetCacheDir."/ppt/theme.xml");
+	copy(__DIR__."/xml/viewProps.xml", $TargetCacheDir."/ppt/viewProps.xml");
+	copy(__DIR__."/xml/app.xml", $TargetCacheDir."/docProps/app.xml");
+	copy(__DIR__."/xml/core.xml", $TargetCacheDir."/docProps/core.xml");
 
 	// 生成 /ppt/_rels/presentation.xml.rels
-	AiToPptx_MakePresentationXmlRelations($JsonData, $TargetDir);
-
+	AiToPptx_MakePresentationXmlRelations($JsonData, $TargetCacheDir);
 
 	// 生成 /_rels/.rels
-	AiToPptx_MakeRootRelations($JsonData, $TargetDir);
+	AiToPptx_MakeRootRelations($JsonData, $TargetCacheDir);
 
 	// 生成 /Content_Types.xml
-	AiToPptx_MakeContentTypesXml($JsonData, $TargetDir);
-
+	AiToPptx_MakeContentTypesXml($JsonData, $TargetCacheDir);
 
 	// 压缩所有文件,并且生成PPTX
-	$source			= $TargetCacheDir;  // 要压缩的文件或文件夹路径
-	AiToPptx_CreateZip($source, $TargetPptxFilePath);
+	AiToPptx_CreateZip($TargetCacheDir, $TargetPptxFilePath);
 
 }
 

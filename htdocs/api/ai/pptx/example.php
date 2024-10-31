@@ -14,7 +14,7 @@ $JsonContent      	= file_get_contents("./json/0001.json");
 $JsonData          	= json_decode($JsonContent, true);
 //print_R($JsonData);exit;
 
-$TargetCacheDir 		= "./json/0001";
+$TargetCacheDir 		= realpath("./json/0001");
 $TargetPptxFilePath = '0002.pptx';
 
 AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath)
