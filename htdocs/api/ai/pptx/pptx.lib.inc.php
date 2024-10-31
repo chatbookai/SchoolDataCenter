@@ -1,7 +1,7 @@
 <?php
 
 
-function MakeSlideLayout($Layout, $FilePath, $RelationPath) {
+function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	
 	// 创建DOM对象并设置XML版本和编码
 	$dom = new DOMDocument('1.0', 'UTF-8');
@@ -90,7 +90,7 @@ function MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	$关系引用ID值列表SlideLayout 		= [];
 	$关系引用ID值列表SlideLayout[] 	= '<Relationship Id="rId1" Target="../slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
 	foreach($Layout['children'] as $ChildrenItem) 		{
-		$绘制单个元素对像RESULT 	= 绘制单个元素对像($ChildrenItem, $DirPath=''); //在这个函数中会更新 $关系引用ID值列表SlideLayout
+		$绘制单个元素对像RESULT 	= AiToPptx_绘制单个元素对像($ChildrenItem, $DirPath=''); //在这个函数中会更新 $关系引用ID值列表SlideLayout
 		//print $绘制元素RESULT;//exit;
 		$importedpSp = $dom->importNode($绘制单个元素对像RESULT, true); // 深度导入整个节点及其子节点
 		$spTree->appendChild($importedpSp);
@@ -126,7 +126,7 @@ function MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 }
 
 
-function MakeMasterXml($slideMasters, $DirPath)  {
+function AiToPptx_MakeMasterXml($slideMasters, $DirPath)  {
 	
 	// 创建一个新的DOM文档
 	$dom = new DOMDocument('1.0', 'UTF-8');
@@ -215,7 +215,7 @@ function MakeMasterXml($slideMasters, $DirPath)  {
 	
 	$slideChildrenList = $slideMasters[0]['children'];
 	foreach($slideChildrenList as $ChildrenItem) 		{
-		$绘制单个元素对像RESULT 	= 绘制单个元素对像($ChildrenItem, $DirPath);
+		$绘制单个元素对像RESULT 	= AiToPptx_绘制单个元素对像($ChildrenItem, $DirPath);
 		//print $绘制元素RESULT;//exit;
 		$importedpSp = $dom->importNode($绘制单个元素对像RESULT, true); // 深度导入整个节点及其子节点
 		$spTree->appendChild($importedpSp);
@@ -283,7 +283,7 @@ function MakeMasterXml($slideMasters, $DirPath)  {
 }
 
 
-function MakeThemeXml($slideMasters, $DirPath)  {
+function AiToPptx_MakeThemeXml($slideMasters, $DirPath)  {
 	
 	// 创建一个新的DOM文档
 	$dom = new DOMDocument('1.0', 'UTF-8');
@@ -299,7 +299,7 @@ function MakeThemeXml($slideMasters, $DirPath)  {
 	foreach($colorsThemeList as $key => $value) 		{
 		$keyElement = $dom->createElement('a:'.$key);
 		$srgbClr = $dom->createElement('a:srgbClr');
-		$srgbClr->setAttribute('val', 数字转颜色($value));
+		$srgbClr->setAttribute('val', AiToPptx_数字转颜色($value));
 		$keyElement->appendChild($srgbClr);
 		$clrScheme->appendChild($keyElement);
 	}
@@ -323,7 +323,7 @@ function MakeThemeXml($slideMasters, $DirPath)  {
 }
 
 
-function 绘制单个页面($PageData, $FilePath, $RelationPath)  {
+function AiToPptx_绘制单个页面($PageData, $FilePath, $RelationPath)  {
 	global $SharpCounter;
 	$childrenList	= $PageData['children'];
 	
@@ -423,10 +423,10 @@ function 绘制单个页面($PageData, $FilePath, $RelationPath)  {
 		
 		if($realType == "Group") {
 			//print_R($childrenItem);
-			$绘制元素RESULT 	= 绘制Group元素($childrenItem);
+			$绘制元素RESULT 	= AiToPptx_绘制Group元素($childrenItem);
 		}
 		else {
-			$绘制元素RESULT 	= 绘制单个元素对像($childrenItem, $DirPath='');
+			$绘制元素RESULT 	= AiToPptx_绘制单个元素对像($childrenItem, $DirPath='');
 		}
 		$importedNode = $dom->importNode($绘制元素RESULT, true); // 深度导入整个节点及其子节点
 		$spTree->appendChild($importedNode);
@@ -457,7 +457,7 @@ function 绘制单个页面($PageData, $FilePath, $RelationPath)  {
 }
 
 
-function 绘制Group元素($childrenItem)  {
+function AiToPptx_绘制Group元素($childrenItem)  {
 	global $SharpCounter;
 	$anchor 			= $childrenItem['extInfo']['property']['anchor'];
 	$interiorAnchor 	= $childrenItem['extInfo']['property']['interiorAnchor'];
@@ -552,7 +552,7 @@ function 绘制Group元素($childrenItem)  {
 				$srgbClr->setAttribute('val', 'FFFFFF');
 			}
 			else {
-				$srgbClr->setAttribute('val', 数字转颜色($groupFillStyle['color']['color']));
+				$srgbClr->setAttribute('val', AiToPptx_数字转颜色($groupFillStyle['color']['color']));
 			}
 			if($groupFillStyle['color']['alpha'] != "" && $groupFillStyle['color']['scheme'] == "")  {
 				$a_alpha = $dom->createElement('a:alpha');
@@ -645,7 +645,7 @@ function 绘制Group元素($childrenItem)  {
 	$childrenList = $childrenItem['children'];
 	foreach($childrenList as $children) {
 		//print_R($children);
-		$绘制元素RESULT 	= 绘制单个元素对像($children, $DirPath='');
+		$绘制元素RESULT 	= AiToPptx_绘制单个元素对像($children, $DirPath='');
 		$importedNode = $dom->importNode($绘制元素RESULT, true);
 		$grpSp->appendChild($importedNode);
 	}
@@ -665,28 +665,7 @@ function 绘制Group元素($childrenItem)  {
 	return $grpSp;
 }
 
-function saveBase64ImageToFile($base64_string, $output_file) {
-    // 检查并移除"data:image/jpeg;base64,"或"data:image/png;base64,"前缀
-    if (strpos($base64_string, 'base64,') !== false) {
-        $base64_string = explode('base64,', $base64_string)[1];
-    }
-    // 将Base64解码为二进制数据
-    $image_data = base64_decode($base64_string);
-    // 检查解码是否成功
-    if ($image_data === false) {
-        //echo "Base64解码失败。\n";
-        return false;
-    }
-    // 将二进制数据写入文件
-    if (file_put_contents($output_file, $image_data) === false) {
-        //echo "文件写入失败。\n";
-        return false;
-    }
-    //echo "文件保存成功：$output_file\n";
-    return true;
-}
-
-function 绘制单个元素对像($childrenItem, $DirPath='')  {
+function AiToPptx_绘制单个元素对像($childrenItem, $DirPath='')  {
 	global $SharpCounter;
 	$Type 			= $childrenItem['type'];
     $Point 			= $childrenItem['point'];
@@ -1039,7 +1018,7 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 				$srgbClr->setAttribute('val', 'FFFFFF');
 			}
 			else {
-				$srgbClr->setAttribute('val', 数字转颜色($fillStyle['color']['color']));
+				$srgbClr->setAttribute('val', AiToPptx_数字转颜色($fillStyle['color']['color']));
 			}
 			if($fillStyle['color']['alpha'] != "" && $fillStyle['color']['scheme'] == "")  {
 				$a_alpha = $dom->createElement('a:alpha');
@@ -1151,7 +1130,7 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 				$srgbClr->setAttribute('val', 'FFFFFF');
 			}
 			else {
-				$srgbClr->setAttribute('val', 数字转颜色($strokeStyle['paint']['color']['color']));
+				$srgbClr->setAttribute('val', AiToPptx_数字转颜色($strokeStyle['paint']['color']['color']));
 			}
 			if($strokeStyle['paint']['color']['lumMod'] != '')  {
 				$lumMod = $dom->createElement('a:lumMod');
@@ -1201,7 +1180,7 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 
 				// 创建 <a:srgbClr>，并设置 val 属性
 				$srgbClr = $dom->createElement('a:srgbClr');
-				$srgbClr->setAttribute('val', 数字转颜色($color['color']));
+				$srgbClr->setAttribute('val', AiToPptx_数字转颜色($color['color']));
 				$gs->appendChild($srgbClr);
 
 				// 如果有 alpha 属性，添加 <a:alpha> 节点
@@ -1436,7 +1415,7 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 
 								// 创建 <a:srgbClr>，并设置 val 属性
 								$srgbClr = $dom->createElement('a:srgbClr');
-								$srgbClr->setAttribute('val', 数字转颜色($color['color']));
+								$srgbClr->setAttribute('val', AiToPptx_数字转颜色($color['color']));
 								$gs->appendChild($srgbClr);
 
 								// 如果有 alpha 属性，添加 <a:alpha> 节点
@@ -1473,7 +1452,7 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 						//此处变量多增加了一个['color'],需要看是否会影响到其它slide页面,目前是在layout中有效
 						if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" )  {
 							$srgbClr = $dom->createElement('a:srgbClr');
-							$srgbClr->setAttribute('val', 数字转颜色($文本对像['extInfo']['property']['fontColor']['color']['color']));
+							$srgbClr->setAttribute('val', AiToPptx_数字转颜色($文本对像['extInfo']['property']['fontColor']['color']['color']));
 							$solidFill->appendChild($srgbClr);
 							if($文本对像['extInfo']['property']['fontColor']['color']['alpha'] != "")  {
 								$alpha = $dom->createElement('a:alpha');
@@ -1527,8 +1506,7 @@ function 绘制单个元素对像($childrenItem, $DirPath='')  {
 	return $pSp;	
 }
 
-
-function MakePresentationXmlRelations($JsonData, $写入文件目录)  {
+function AiToPptx_MakePresentationXmlRelations($JsonData, $写入文件目录)  {
 	$pages = $JsonData['pages'];
 	$$MakePresentationXmlList = [];
 	for($i=0;$i<sizeof($pages);$i++) {
@@ -1546,7 +1524,7 @@ function MakePresentationXmlRelations($JsonData, $写入文件目录)  {
 	file_put_contents($写入文件目录."/ppt/_rels/presentation.xml.rels", $MakePresentationXmlContent);
 }
 
-function MakePresentationXml($JsonData, $写入文件目录) {
+function AiToPptx_MakePresentationXml($JsonData, $写入文件目录) {
 	// 创建DOM对象
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true; // 格式化输出，便于阅读
@@ -1607,7 +1585,7 @@ function MakePresentationXml($JsonData, $写入文件目录) {
 
 }
 
-function MakeContentTypesXml($JsonData, $写入文件目录) {
+function AiToPptx_MakeContentTypesXml($JsonData, $写入文件目录) {
 	// 创建DOM对象
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true;  // 格式化输出
@@ -1673,7 +1651,7 @@ function MakeContentTypesXml($JsonData, $写入文件目录) {
 
 }
 
-function MakeRootRelations($JsonData, $写入文件目录) {
+function AiToPptx_MakeRootRelations($JsonData, $写入文件目录) {
 	// 创建DOM对象
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true;  // 格式化输出
@@ -1720,7 +1698,28 @@ function MakeRootRelations($JsonData, $写入文件目录) {
 
 
 
-function createZip($source, $destination) {
+function AiToPptx_saveBase64ImageToFile($base64_string, $output_file) {
+    // 检查并移除"data:image/jpeg;base64,"或"data:image/png;base64,"前缀
+    if (strpos($base64_string, 'base64,') !== false) {
+        $base64_string = explode('base64,', $base64_string)[1];
+    }
+    // 将Base64解码为二进制数据
+    $image_data = base64_decode($base64_string);
+    // 检查解码是否成功
+    if ($image_data === false) {
+        //echo "Base64解码失败。\n";
+        return false;
+    }
+    // 将二进制数据写入文件
+    if (file_put_contents($output_file, $image_data) === false) {
+        //echo "文件写入失败。\n";
+        return false;
+    }
+    //echo "文件保存成功：$output_file\n";
+    return true;
+}
+
+function AiToPptx_createZip($source, $destination) {
     if (!extension_loaded('zip') || !file_exists($source)) {
         return false;
     }
@@ -1758,7 +1757,7 @@ function createZip($source, $destination) {
 }
 
 
-function 数字转颜色($color) {
+function AiToPptx_数字转颜色($color) {
 	// 提取 RGB 部分
 	$realColor = $color & 0xFFFFFF; // 获取 RGB 部分
 	
