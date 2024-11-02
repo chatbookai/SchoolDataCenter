@@ -2,23 +2,32 @@
 require_once('config.inc.php');
 
 $HTTP_ORIGIN    = $_SERVER['HTTP_ORIGIN'];
+$allowedOrigins = ['http://localhost:3000']; // 允许的域名列表
+
 if (in_array($HTTP_ORIGIN, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin:" . $HTTP_ORIGIN);
+    header("Access-Control-Allow-Origin: " . $HTTP_ORIGIN);
+} else {
+    header("Access-Control-Allow-Origin: *");
 }
+
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken");
-header("Content-type: text/html; charset=utf-8");
-header('Content-Type: text/event-stream');
+header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken, token");
+
+// 处理 OPTIONS 请求
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    exit;
+}
+
+// 设置 Content-Type 为 text/event-stream
+header("Content-type: text/event-stream; charset=utf-8");
 header('Cache-Control: no-cache');
 
-// Handle preflight requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
+
 
 $_POST = json_decode(file_get_contents("php://input"), true);
+print_R(json_encode($_POST));
 
-if($_POST['action'] == 'stream' && $_POST['asyncGenPptx'] == true)   {
+if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
     
     $outlineMarkdown    = $_POST['outlineMarkdown'];
     $templateId         = $_POST['templateId'];
@@ -196,13 +205,42 @@ if($_POST['action'] == 'stream' && $_POST['asyncGenPptx'] == true)   {
         CURLOPT_URL => $API_URL . '/chat/completions',
         CURLOPT_RETURNTRANSFER => false,
         CURLOPT_WRITEFUNCTION => function($curl, $data) {
-            if($data != "[DONE]" && $data != "")   {
-                echo $data;
-                ob_flush();
-                flush();
-                return strlen($data);
-            }
-        },
+			if ($data != "[DONE]" && $data != "") {
+				// 记录原始数据
+				error_log("Raw data: " . $data);
+
+				// 去除可能的 "data: " 前缀
+				$data = str_replace('data: ', '', $data);
+
+				// 尝试解码 JSON
+				$data2 = json_decode($data, true);
+
+				// 检查解码是否成功
+				if (json_last_error() !== JSON_ERROR_NONE) {
+					error_log("JSON decode error: " . json_last_error_msg());
+					return strlen($data);
+				}
+
+				// 重新编码为 JSON
+				$data = json_encode($data2);
+
+				// 检查编码是否成功
+				if (json_last_error() !== JSON_ERROR_NONE) {
+					error_log("JSON encode error: " . json_last_error_msg());
+					return strlen($data);
+				}
+
+				// 输出数据
+				echo 'data: ' . $data;
+				ob_flush();
+				flush();
+
+				// 返回处理后的数据长度
+				return strlen('data: ' . $data);
+			}
+			return strlen($data);
+		},
+
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
         CURLOPT_TIMEOUT => 0,
@@ -224,4 +262,30 @@ if($_POST['action'] == 'stream' && $_POST['asyncGenPptx'] == true)   {
 
 }
 
+
+/*
+
+if($data != "[DONE]" && $data != "")   {
+$Content = '';
+try {
+	$JsonArray = (array)json_decode($data, true);
+	if (isset($JsonArray['choices']) && is_array($JsonArray['choices'])) {
+		foreach ($JsonArray['choices'] as $Item) {
+			if (isset($Item['delta']['content'])) {
+				$Content .= $Item['delta']['content'];
+			}
+		}
+	}
+	$ContentArray = ['text' => $Content];
+	$Content = json_encode($ContentArray);
+} catch (Exception $Error) {
+	error_log("Error processing JSON data: " . $Error->getMessage());
+}
+echo $Content;
+ob_flush();
+flush();
+return strlen($Content);
+}
+
+*/
 ?>
