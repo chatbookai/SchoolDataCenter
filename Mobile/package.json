@@ -60,7 +60,7 @@
     "install": "^0.13.0",
     "keen-slider": "^6.8.6",
     "mousetrap": "^1.6.5",
-    "next": "14.2.5",
+    "next": "^14.2.16",
     "npm": "^10.2.3",
     "nprogress": "0.2.0",
     "prismjs": "1.29.0",
@@ -87,7 +87,6 @@
     "stylis-plugin-rtl": "2.1.1",
     "tar": "^7.4.3",
     "uuid": "^9.0.1",
-    "xlsx": "^0.18.5",
     "yup": "1.1.1"
   },
   "devDependencies": {
