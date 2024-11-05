@@ -23,8 +23,8 @@ foreach($rs_a as $Line) {
     $图标和颜色[$Line['名称']]['图标'] = $Line['图标'];
 }
 
-$sql        = "select 班级名称 from data_banji where 是否毕业='否' and (find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
-$sql        = "select 班级名称 from data_banji where 是否毕业='否'";
+$sql        = "select 班级名称 from data_banji where (是否毕业='否' or 是否毕业='0') and (find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
+$sql        = "select 班级名称 from data_banji where (是否毕业='否' or 是否毕业='0')";
 $rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $班级名称Array = [];

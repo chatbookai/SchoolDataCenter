@@ -23,8 +23,6 @@ import DialogContentText from '@mui/material/DialogContentText'
 import { GridRowId } from '@mui/x-data-grid'
 import toast from 'react-hot-toast'
 
-import {isMobile} from 'src/configs/functions'
-
 import { useForm, Controller } from 'react-hook-form'
 
 interface TableHeaderProps {
@@ -52,18 +50,16 @@ interface TableHeaderProps {
   MobileEndShowGroupFilter: string
 }
 
-const IndexTableHeader = (props: TableHeaderProps) => {
+const IndexTableHeaderMobile = (props: TableHeaderProps) => {
 
   // ** Props
-  const { filter, handleFilterChange, handleFilter, toggleAddTableDrawer, toggleImportTableDrawer, toggleExportTableDrawer, searchFieldText, searchFieldArray, selectedRows, multireview, multiReviewHandleFilter, button_search, button_add, button_import, button_export, isAddButton, isImportButton, isExportButton, CSRF_TOKEN, MobileEndShowSearch, MobileEndShowGroupFilter } = props
+  const { filter, handleFilterChange, handleFilter, toggleAddTableDrawer, toggleImportTableDrawer, toggleExportTableDrawer, searchFieldText, searchFieldArray, selectedRows, multireview, multiReviewHandleFilter, button_search, button_add, isAddButton, isImportButton, isExportButton, CSRF_TOKEN, MobileEndShowSearch, MobileEndShowGroupFilter } = props
   const defaultValuesInitial = { "searchFieldName": searchFieldArray && searchFieldArray[0] && searchFieldArray[0].value ? searchFieldArray[0].value : undefined, "searchFieldValue": "", "multiReviewInputName": "" }
 
-  //console.log("IndexTableHeader props", props)
+  //console.log("IndexTableHeaderMobile props", props)
 
   const defaultValues = JSON.parse(JSON.stringify(defaultValuesInitial))
   const [filterSelectValue, setFilterSelectValue] = useState<any[]>([])
-
-  const isMobileData = isMobile()
 
   useEffect(() => {
 
@@ -141,7 +137,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} id="searchOneField">
-        {filter.length > 0 && ( (isMobileData==false) || (isMobileData==true && MobileEndShowGroupFilter=='Yes')) ?
+        {filter.length > 0 && MobileEndShowGroupFilter=='Yes' ?
           <CardContent sx={{ pl: 3, pb: 1, pt: 1 }}>
             <Grid container spacing={6}>
               {filter.length > 0 && filter.map((Filter: any, Filter_index: number) => {
@@ -153,8 +149,6 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                     <FormControl fullWidth size="small">
                       <InputLabel id={Filter.name}>{Filter.text}</InputLabel>
                       <Select
-
-                        //multiple
                         fullWidth
                         value={filterSelectValue[Filter_index] || [Filter.selected]}
                         id={Filter.text}
@@ -191,7 +185,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 )
 
               })}
-              {isAddButton && (isMobileData==true && MobileEndShowSearch=='No') ?
+              {isAddButton && MobileEndShowSearch=='No' ?
               <Grid item sm={3} xs={6}>
                 <Tooltip title="Alt+a">
                   <Button sx={{ ml: 0, mb: 0 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
@@ -203,12 +197,12 @@ const IndexTableHeader = (props: TableHeaderProps) => {
           </CardContent>
           : ''
         }
-        {(!selectedRows || selectedRows.length == 0) && ( (isMobileData==false) || (isMobileData==true && MobileEndShowSearch=='Yes')) ?
-          <Box sx={{ pt: 2, pl: 3, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        {(!selectedRows || selectedRows.length == 0) && MobileEndShowSearch=='Yes' ?
+          <Box sx={{ pt: 4, px: 3, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <Grid container spacing={2}>
               {searchFieldArray ?
-                <Grid item sm={3} xs={6}>
-                  <FormControl fullWidth={!isMobileData} size="small">
+                <Grid item xs={12}>
+                  <FormControl fullWidth size="small">
                     <InputLabel id={searchFieldText}>{searchFieldText}</InputLabel>
                     <Controller
                       name='searchFieldName'
@@ -235,8 +229,8 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 </Grid>
                 : ''}
               {searchFieldArray ?
-                <Grid item sm={2} xs={5}>
-                  <FormControl fullWidth={!isMobileData} size="small" sx={{}}>
+                <Grid item xs={12}>
+                  <FormControl fullWidth size="small" sx={{}}>
                     <Controller
                       name="searchFieldValue"
                       control={control}
@@ -244,7 +238,6 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                         <TextField
                           size='small'
                           value={value}
-                          sx={{ mb: 2 }}
                           label={searchFieldText}
                           onChange={onChange}
                           placeholder={searchFieldText}
@@ -256,10 +249,10 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 </Grid>
                 : ''}
               {searchFieldArray ?
-                <Grid item sm={2} xs={6}>
-                  <FormControl fullWidth size="small" sx={{}}>
+                <Grid item sm={12} sx={{width: 'calc(100%)'}}>
+                  <FormControl fullWidth>
                     <Tooltip title="Alt+f">
-                      <Button sx={{ ml: 0, mb: 0 }} variant='contained' type='submit'>{button_search}</Button>
+                      <Button variant='contained' type='submit'>{button_search}</Button>
                     </Tooltip>
                   </FormControl>
                 </Grid>
@@ -269,16 +262,6 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                   {isAddButton ?
                   <Tooltip title="Alt+a">
                     <Button sx={{ ml: 3, mb: 2 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
-                  </Tooltip>
-                  : ''}
-                  {isMobileData == false && isImportButton ?
-                  <Tooltip title="Alt+i">
-                    <Button sx={{ ml: 3, mb: 2 }} onClick={toggleImportTableDrawer} variant='contained'>{button_import}</Button>
-                  </Tooltip>
-                  : ''}
-                  {isMobileData == false && isExportButton ?
-                  <Tooltip title="Alt+e">
-                    <Button sx={{ ml: 3, mb: 2 }} onClick={toggleExportTableDrawer} variant='contained'>{button_export}</Button>
                   </Tooltip>
                   : ''}
                 </Grid>
@@ -330,5 +313,5 @@ const IndexTableHeader = (props: TableHeaderProps) => {
   )
 }
 
-export default React.memo(IndexTableHeader);
+export default React.memo(IndexTableHeaderMobile);
 

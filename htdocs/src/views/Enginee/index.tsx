@@ -37,8 +37,9 @@ import Pagination from '@mui/material/Pagination'
 import { getInitials } from 'src/@core/utils/get-initials'
 
 import { isMobile, windowWidth } from 'src/configs/functions'
+import Backdrop from '@mui/material/Backdrop'
 
-import * as XLSX from 'xlsx'
+//import * as XLSX from 'xlsx'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -59,6 +60,7 @@ import toast from 'react-hot-toast'
 
 // ** Myself file
 import IndexTableHeader from 'src/views/Enginee/IndexTableHeader'
+import IndexTableHeaderMobile from 'src/views/Enginee/IndexTableHeaderMobile'
 import AddOrEditTable from './AddOrEditTable'
 import ViewTable from './ViewTable'
 import ImagesPreview from './ImagesPreview'
@@ -108,6 +110,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   // ** State
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingTipDisabled, setIsLoadingTipDisabled] = useState(false);
+  const [isFirstLoadingTip, setIsFirstLoadingTip] = useState(false);
   const [isLoadingTip, setIsLoadingTip] = useState(false);
   const [isLoadingTipText, setIsLoadingTipText] = useState("");
   const [forceUpdate, setForceUpdate] = useState(0);
@@ -206,6 +209,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     }
 
     if (storedToken) {
+      params['page'] == 0 && setIsFirstLoadingTip(true)
       setIsLoading(true)
       const response = await axios.get(authConfig.backEndApiHost + backEndApi, {
         headers: {
@@ -213,6 +217,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         },
         params: newAllFilters
       }).then(res => {
+        params['page'] == 0 && setIsFirstLoadingTip(false)
         const data = res.data
         if(data && data.isEncrypted == "1" && data.data)  {
           const i = data.data.slice(0, 32);
@@ -307,9 +312,10 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
       //setIsLoadingTipText(response.export_default.ExportLoading)
 
       //setFilter(response.init_default.filter)
+      //setPageSize(response.init_default.pageNumber) //不能开启此项
+      params['page'] == 0 && setIsFirstLoadingTip(false)
       setIsLoading(false);
       setIsLoadingTip(false);
-      setPageSize(response.init_default.pageNumber)
       setPageCount(response.init_default.pageCount)
 
       return response
@@ -351,8 +357,9 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     }
     console.log("mobileEditPageId > -1 && mobileEditPageIdEnable ? mobileEditPageId : page", page)
     console.log("mobileEditPageId > -1 && mobileEditPageIdEnable ? mobileEditPageId : pageCount", pageCount)
+    console.log("111111", searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, pageCount, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId)
     setMobileEditPageIdEnable(false);
-  }, [dispatch, searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, pageCount, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId])
+  }, [dispatch, searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId])
 
   const [isGetNextPageData, setIsGetNextPageData] = useState<boolean>(false)
 
@@ -475,6 +482,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     .then(response => response.json())
     .then(jsonData => {
       if(jsonData && jsonData['data'] && jsonData['data'].length > 0)  {
+        /*
         const ws: any = XLSX.utils.json_to_sheet(jsonData['data']);
         ws['!cols'] = jsonData['header'];
         ws['!rows'] = [];
@@ -492,8 +500,11 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
         XLSX.writeFile(wb, store.export_default.titletext+'.xlsx');
+        */
       }
       else {
+
+        /*
         const ws: any = XLSX.utils.json_to_sheet(jsonData['data']);
         ws['!cols'] = jsonData['header'];
         ws['!rows'] = [];
@@ -509,6 +520,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
         XLSX.writeFile(wb, store.export_default.titletext+'.xlsx');
+        */
       }
 
       /*
@@ -1003,8 +1015,11 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   //console.log("addEditActionId-addEditActionId-addEditActionId",store, addEditActionName)
   const renderMobileEndAvatar = (item: any) => {
     if (item.MobileEndNewsLeftImage) {
+
       return <CustomAvatar src={authConfig.backEndApiHost+item.MobileEndNewsLeftImage} sx={{ mr: 3, width: 42, height: 42 }} />
-    } else {
+    }
+    else {
+
       return (
         <CustomAvatar
           skin='light'
@@ -1058,7 +1073,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
             )
           })}
 
-          {store && store.init_default && store.init_default.searchFieldText && store.init_default.searchFieldArray && store.init_default.searchFieldArray.length>0 && isLoadingTip==false ? <IndexTableHeader filter={store.init_default.filter} handleFilterChange={handleFilterChange} value={searchFieldName} handleFilter={tableHeaderHandleFilter} toggleAddTableDrawer={toggleAddTableDrawer} toggleImportTableDrawer={toggleImportTableDrawer} toggleExportTableDrawer={toggleExportTableDrawer} searchFieldText={store.init_default.searchFieldText} searchFieldArray={store.init_default.searchFieldArray} selectedRows={selectedRows} multireview={store.init_default.multireview} multiReviewHandleFilter={multiReviewHandleFilter} button_search={store.init_default.button_search} button_add={store.init_default.button_add} button_import={store.init_default.button_import} button_export={store.init_default.button_export} isAddButton={store && store.add_default && store.add_default.allFields ? true : false} isImportButton={store && store.import_default && store.import_default.allFields ? true : false} isExportButton={store && store.export_default && store.export_default.allFields && store.export_default.exportUrl ? true : false} CSRF_TOKEN={store.init_default.CSRF_TOKEN} MobileEndShowSearch={store.init_default.MobileEndShowSearch} MobileEndShowGroupFilter={store.init_default.MobileEndShowGroupFilter} /> : ''}
+          {store && store.init_default && store.init_default.searchFieldText && store.init_default.searchFieldArray && store.init_default.searchFieldArray.length>0 && isLoadingTip==false && isFirstLoadingTip==false ? <IndexTableHeader filter={store.init_default.filter} handleFilterChange={handleFilterChange} value={searchFieldName} handleFilter={tableHeaderHandleFilter} toggleAddTableDrawer={toggleAddTableDrawer} toggleImportTableDrawer={toggleImportTableDrawer} toggleExportTableDrawer={toggleExportTableDrawer} searchFieldText={store.init_default.searchFieldText} searchFieldArray={store.init_default.searchFieldArray} selectedRows={selectedRows} multireview={store.init_default.multireview} multiReviewHandleFilter={multiReviewHandleFilter} button_search={store.init_default.button_search} button_add={store.init_default.button_add} button_import={store.init_default.button_import} button_export={store.init_default.button_export} isAddButton={store && store.add_default && store.add_default.allFields ? true : false} isImportButton={store && store.import_default && store.import_default.allFields ? true : false} isExportButton={store && store.export_default && store.export_default.allFields && store.export_default.exportUrl ? true : false} CSRF_TOKEN={store.init_default.CSRF_TOKEN} MobileEndShowSearch={store.init_default.MobileEndShowSearch} MobileEndShowGroupFilter={store.init_default.MobileEndShowGroupFilter} /> : ''}
 
           {isLoadingTip ?
             <Grid item xs={12} sm={12} container justifyContent="space-around">
@@ -1140,28 +1155,24 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         }
       </Grid>
       : '' }
-      {store && store.init_action.action == 'init_default' && isMobileData == true ?
+      {store && store.init_action.action == 'init_default' && isMobileData == true && isFirstLoadingTip==false ?
         <Grid item xs={12}>
           <Card sx={{ mb: 3}}>
             {store.init_default.returnButton && store.init_default.returnButton.status ?
               <Grid sx={{ pr: 3, pb: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-                <CardHeader title={store.init_default.searchtitle} />
                 <Grid sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                   <Button sx={{ mb: 2 }} variant='outlined' size='small' onClick={() => { window.history.back(); }}>{store.init_default.returnButton.text}</Button>
                 </Grid>
               </Grid>
               :
               <Fragment>
-              {store.init_default.filter && store.init_default.filter.length == 0 && store.add_default && store.add_default.allFields && isMobileData && store.init_default.button_add && store.init_default.MobileEndShowSearch == 'No' ?
+              {store.init_default.filter && store.init_default.filter.length == 0 && store.add_default && store.add_default.allFields && isMobileData && store.init_default.button_add && store.init_default.MobileEndShowSearch == 'No' && (
                 <Grid sx={{ pr: 3, pb: 0, pt: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <CardHeader title={store.init_default.searchtitle} sx={{ pb: 2, pt: 3 }}/>
                   <Grid sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                     <Button variant='outlined' size='small' onClick={toggleAddTableDrawer}>{store.init_default.button_add}</Button>
                   </Grid>
                 </Grid>
-                :
-                <CardHeader title={store.init_default.searchtitle} sx={{ pb: 2, pt: 3 }}/>
-              }
+              )}
               </Fragment>
             }
             {store.init_default.MobileSummary && store.init_default.MobileSummary.length > 0 && (
@@ -1205,7 +1216,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
               )
             })}
 
-            {store && store.init_default && store.init_default.searchFieldText && store.init_default.searchFieldArray && store.init_default.searchFieldArray.length>0 ? <IndexTableHeader filter={store.init_default.filter} handleFilterChange={handleFilterChange} value={searchFieldName} handleFilter={tableHeaderHandleFilter} toggleAddTableDrawer={toggleAddTableDrawer} toggleImportTableDrawer={toggleImportTableDrawer} toggleExportTableDrawer={toggleExportTableDrawer} searchFieldText={store.init_default.searchFieldText} searchFieldArray={store.init_default.searchFieldArray} selectedRows={selectedRows} multireview={store.init_default.multireview} multiReviewHandleFilter={multiReviewHandleFilter} button_search={store.init_default.button_search} button_add={store.init_default.button_add} button_import={store.init_default.button_import} button_export={store.init_default.button_export} isAddButton={store && store.add_default && store.add_default.allFields ? true : false} isImportButton={store && store.import_default && store.import_default.allFields ? true : false} isExportButton={store && store.export_default && store.export_default.allFields && store.export_default.exportUrl ? true : false} CSRF_TOKEN={CSRF_TOKEN} MobileEndShowSearch={store.init_default.MobileEndShowSearch} MobileEndShowGroupFilter={store.init_default.MobileEndShowGroupFilter} /> : ''}
+            {store && store.init_default && store.init_default.searchFieldText && store.init_default.searchFieldArray && store.init_default.searchFieldArray.length>0 && isFirstLoadingTip==false ? <IndexTableHeaderMobile filter={store.init_default.filter} handleFilterChange={handleFilterChange} value={searchFieldName} handleFilter={tableHeaderHandleFilter} toggleAddTableDrawer={toggleAddTableDrawer} toggleImportTableDrawer={toggleImportTableDrawer} toggleExportTableDrawer={toggleExportTableDrawer} searchFieldText={store.init_default.searchFieldText} searchFieldArray={store.init_default.searchFieldArray} selectedRows={selectedRows} multireview={store.init_default.multireview} multiReviewHandleFilter={multiReviewHandleFilter} button_search={store.init_default.button_search} button_add={store.init_default.button_add} button_import={store.init_default.button_import} button_export={store.init_default.button_export} isAddButton={store && store.add_default && store.add_default.allFields ? true : false} isImportButton={store && store.import_default && store.import_default.allFields ? true : false} isExportButton={store && store.export_default && store.export_default.allFields && store.export_default.exportUrl ? true : false} CSRF_TOKEN={CSRF_TOKEN} MobileEndShowSearch={store.init_default.MobileEndShowSearch} MobileEndShowGroupFilter={store.init_default.MobileEndShowGroupFilter} /> : ''}
           </Card>
           <Fragment>
             <Grid container spacing={2}>
@@ -1215,15 +1226,19 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
                 const colorRightValue = (item['MobileEndSecondLineRightColor'] !== null && item['MobileEndSecondLineRightColor'] !== undefined) ? item['MobileEndSecondLineRightColor'] : 'secondary';
 
+                const columnActions = store && store.columns && store.columns[0] && store.columns[0]['actions'] && store.columns[0]['actions'].map((Item: any)=>Item.action)
+
+                const IsShowRightIconSection = (columnActions.includes('edit_default') && (!forbiddenEditRow.includes(item.Id)) && item.EditUrl) || (columnActions.includes('delete_array') && (!forbiddenDeleteRow.includes(item.Id)))
+
+                //console.log("IsShowRightIconSection", IsShowRightIconSection)
+
                 return (
                   <Grid item xs={12} sx={{ py: 0 }} key={index}>
                     <Card>
-                    <Grid container spacing={0} sx={{ p: 2 }}>
-                      <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center'}}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 1, px: 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 1, px: 1, width: 'calc(100%)'}}>
                             {renderMobileEndAvatar(item)}
-                            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', maxWidth: 'calc(100% - 50px)' }}
+                            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: 'calc(100%)' }}
                               onClick={() => togglePageActionDrawer('view_default', item['Id'], CSRF_TOKEN_MAP[item['Id']])}
                               >
                               <Typography sx={{
@@ -1251,42 +1266,35 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
-                                  ml:1
+                                  ml: 1,
+                                  mr: 1
                                 }}>
                                   {item['MobileEndSecondLineRight']}
                                 </Typography>
                               </Box>
                             </Box>
                           </Box>
-                          <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                            {(!forbiddenEditRow.includes(item.Id)) && item.EditUrl ?
-                            <IconButton size='small' onClick={() =>
-                            {
-                              setMobileEditPageId(item.PageId)
-                              togglePageActionDrawer('edit_default', item.Id, CSRF_TOKEN_MAP[item['Id']])
-                            }
-                            }>
-                              <Icon icon={item.EditIcon} fontSize={20} />
-                            </IconButton>
-                            :
-                            null
-                            }
-                            {(!forbiddenDeleteRow.includes(item.Id)) ?
-                            <IconButton size='small' onClick={() =>
-                            {
-                              //setMobileEditPageId(item.PageId)
-                              togglePageActionDrawer('delete_array', item.Id, CSRF_TOKEN_MAP[item['Id']])
-                            }
-                            }>
-                              <Icon icon='mdi:delete-outline' fontSize={20} />
-                            </IconButton>
-                            :
-                            null
-                            }
-                          </Box>
+                          {IsShowRightIconSection && (
+                              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                {columnActions.includes('edit_default') && (!forbiddenEditRow.includes(item.Id)) && item.EditUrl && (
+                                  <IconButton size='small' sx={{ml: 1}} onClick={() => {
+                                                                      setMobileEditPageId(item.PageId)
+                                                                      togglePageActionDrawer('edit_default', item.Id, CSRF_TOKEN_MAP[item['Id']])
+                                                                    }}>
+                                    <Icon icon={item.EditIcon} fontSize={20} />
+                                  </IconButton>
+                                )}
+                                {columnActions.includes('delete_array') && (!forbiddenDeleteRow.includes(item.Id)) && (
+                                  <IconButton size='small' sx={{ml: 1}} onClick={() => {
+                                                                      //setMobileEditPageId(item.PageId)
+                                                                      togglePageActionDrawer('delete_array', item.Id, CSRF_TOKEN_MAP[item['Id']])
+                                                                    }}>
+                                    <Icon icon='mdi:delete-outline' fontSize={20} />
+                                  </IconButton>
+                                )}
+                              </Box>
+                          )}
                         </Box>
-                      </Grid>
-                    </Grid>
                     </Card>
                   </Grid>
                 )
@@ -1420,6 +1428,16 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
           }
       </Grid>
       : '' }
+
+      {isMobileData == true && isFirstLoadingTip && (
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isFirstLoadingTip}
+        >
+          <CircularProgress color="inherit" size={45}/>
+        </Backdrop>
+      )}
+
       {store && store.import_default && store.import_default.defaultValues && addEditActionName.indexOf("import_default") != -1 ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.import_default} open={addEditActionOpen} toggleAddTableDrawer={toggleImportTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
       {store && store.add_default && store.add_default.defaultValues && addEditActionName.indexOf("add_default") != -1 ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.add_default} open={addEditActionOpen} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
       {store && store[addEditActionName] && store[addEditActionName]['defaultValues'] && addEditActionName.indexOf("edit_default") != -1 && addEditActionId!='' ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store[addEditActionName]} open={addEditActionOpen} toggleAddTableDrawer={toggleEditTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}

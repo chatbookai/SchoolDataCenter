@@ -1104,7 +1104,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         {allFieldsMode && allFieldsMode.map((allFieldsModeItem: any, allFieldsModeIndex: number) => {
 
                             return (
-                                        <Grid container spacing={5} key={allFieldsModeIndex} sx={{my: 0, py: 0}}>
+                                        <Grid container spacing={5} key={allFieldsModeIndex}>
                                             {allFields && allFields[allFieldsModeItem.value] && allFields[allFieldsModeItem.value].map((FieldArray: any, FieldArray_index: number) => {
 
                                                 //开始根据表单中每个字段的类型,进行不同的渲染,此部分比较复杂,注意代码改动.
@@ -1499,7 +1499,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
-                                                                <FormControl fullWidth sx={{ mb: 3 }}>
+                                                                <FormControl fullWidth sx={{ mb: 0 }}>
                                                                     <InputLabel
                                                                         id='validation-basic-select'
                                                                         error={Boolean(errors[FieldArray.name])}
@@ -2523,7 +2523,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
-                                                                <FormControl fullWidth sx={{ mb: 3 }}>
+                                                                <FormControl fullWidth sx={{ mb: 0 }}>
                                                                     <FormLabel>{FieldArray.label}</FormLabel>
                                                                     <Controller
                                                                         name={FieldArray.name}

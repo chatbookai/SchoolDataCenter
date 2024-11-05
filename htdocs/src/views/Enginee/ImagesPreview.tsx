@@ -1,5 +1,5 @@
 // ** React Imports
-import { forwardRef, ReactElement, Ref, Fragment, useState, useEffect, SetStateAction } from 'react'
+import { forwardRef, ReactElement, Ref, Fragment, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -15,14 +15,13 @@ import Fade, { FadeProps } from '@mui/material/Fade'
 //import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 //EXCEL
-import {OutTable, ExcelRenderer} from 'react-excel-renderer';
+//import {OutTable, ExcelRenderer} from 'react-excel-renderer';
 
 // Set up pdf.js worker
 //pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import styles from './components/Excel2007.module.css';
 
 const Transition = forwardRef(function Transition(
     props: FadeProps & { children?: ReactElement<any, any> },
@@ -34,73 +33,6 @@ const Transition = forwardRef(function Transition(
 // ** Third Party Components
 import clsx from 'clsx'
 import { useKeenSlider } from 'keen-slider/react'
-
-function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
-  const [rows, setRows] = useState([]);
-  const [cols, setCols] = useState([]);
-
-  useEffect(() => {
-    const fetchExcel = async () => {
-      try {
-        const response = await fetch(fileUrl);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const blob = await response.blob();
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          ExcelRenderer(blob, (err: any, resp: { cols: SetStateAction<never[]>; rows: SetStateAction<never[]> }) => {
-            if (err) {
-              console.error(err);
-            } else {
-              console.log("resp.cols", resp.cols)
-              const tempCols: SetStateAction<any[]> = []
-              tempCols.push({name: '', key: 0})
-
-              // @ts-ignore
-              resp && resp.cols && resp.cols.map((Item: {'name': string, 'key': number}, Index: number)=>{
-                if(Item.name) {
-                  tempCols.push({name: Item.name, key: Index+1})
-                }
-              })
-
-              // @ts-ignore
-              setCols(tempCols);
-
-              // @ts-ignore
-              setRows(resp.rows);
-            }
-          });
-        };
-
-        reader.onerror = () => {
-          throw new Error("Failed to read the blob data");
-        };
-
-        reader.readAsBinaryString(blob);
-      } catch (error) {
-        console.error("Error fetching or parsing the Excel file:", error);
-      }
-    };
-
-    fetchExcel();
-  }, [fileUrl]);
-
-  return (
-      <div>
-        {rows && cols && (
-          <OutTable
-            data={rows}
-            columns={cols}
-            tableClassName={styles.ExcelTable2007}
-            tableHeaderRowClass={styles.heading}
-          />
-        )}
-      </div>
-  );
-}
 
 interface ImagesPreviewType {
     open: boolean
@@ -178,9 +110,6 @@ const ImagesPreview = (props: ImagesPreviewType) => {
                         <div style={{ width: '100%', color:'black'}} key={UrlIndex}>
                         </div>
                       )
-                    case 'Excel':
-
-                      return <ExcelViewer fileUrl={Url} />
                     default:
 
                       return (

@@ -31,7 +31,7 @@ switch($Page_Role_Name)  {
         break;
     case 'ClassMaster':
     case '班主任':
-        $sql = "select 班级名称 from data_banji where 是否毕业='否' and (find_in_set('$USER_NAME',实习班主任) or find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
+        $sql = "select 班级名称 from data_banji where ((是否毕业='否' or 是否毕业='0') or 是否毕业='0') and (find_in_set('$USER_NAME',实习班主任) or find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
         $rs = $db->Execute($sql);
         $rs_a = $rs->GetArray();
         $班级名称Array = [];
@@ -70,7 +70,7 @@ switch($Page_Role_Name)  {
         foreach($rs_a as $Line) {
             $系部名称Array[] = ForSqlInjection($Line['系部名称']);
         }
-        $sql = "select 班级名称 from data_banji where 是否毕业='否' and 所属系部 in ('".join("','",$系部名称Array)."')";
+        $sql = "select 班级名称 from data_banji where (是否毕业='否' or 是否毕业='0') and 所属系部 in ('".join("','",$系部名称Array)."')";
         $rs = $db->Execute($sql);
         $rs_a = $rs->GetArray();
         $班级名称Array = [];
