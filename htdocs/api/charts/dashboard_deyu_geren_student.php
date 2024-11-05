@@ -156,7 +156,7 @@ $ApexAreaChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$op
 */
 
 //ApexAreaChart
-$sql = "select 积分时间,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql and 积分分值>0 group by 积分时间 order by 积分时间 asc";
+$sql = "select 积分时间,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql group by 积分时间 order by 积分时间 asc";
 $rs = $db->CacheExecute(180,$sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
@@ -193,7 +193,7 @@ $ApexLineChart['type']                  = "ApexLineChart";
 
 
 //AnalyticsWeeklyOverview
-$sql = "select 积分时间,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql and 积分分值>0 group by 积分时间 order by 积分时间 desc limit 7";
+$sql = "select 积分时间,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql group by 积分时间 order by 积分时间 desc limit 7";
 $rs = $db->CacheExecute(180,$sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
@@ -249,7 +249,7 @@ $AnalyticsPerformance['type']                 = "AnalyticsPerformance";
 
 
 //ApexDonutChart
-$sql = "select 一级指标,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql and 积分分值>0 group by 一级指标 order by 一级指标 asc";
+$sql = "select 一级指标,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql group by 一级指标 order by 一级指标 asc";
 $rs = $db->CacheExecute(180,$sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
@@ -275,7 +275,7 @@ $ApexDonutChart['type']                 = "ApexDonutChart";
 
 
 //ApexRadialBarChart
-$sql = "select 一级指标,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql and 积分分值>0 group by 一级指标 order by 一级指标 asc limit 5";
+$sql = "select 一级指标,sum(积分分值) AS NUM from data_deyu_geren_record where 学号='$学号' $whereSql group by 一级指标 order by 一级指标 asc limit 5";
 $rs = $db->CacheExecute(180,$sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
