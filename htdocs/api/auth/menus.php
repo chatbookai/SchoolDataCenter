@@ -73,9 +73,9 @@ if($USER_TYPE=="User")    {
     $MenuOneArray = [];
     foreach($MenuOneRSA as $Item)  {
         $Menu = [];
-        $Menu['icon']   = $Item['MenuIcon'];
-        $Menu['title']  = $Item['MenuOneName'];
-        $MenuOneName    = $Item['MenuOneName'];
+        $Menu['icon']   	= $Item['MenuIcon'];
+        $Menu['title']  	= $Item['MenuOneName'];
+        $MenuOneName    	= $Item['MenuOneName'];
         $MenuTwoItemArray = $MenuTwoArray[$Item['MenuOneName']];
         if(is_array($MenuTwoItemArray))    {
             foreach($MenuTwoItemArray as $Name=>$Line)    {
@@ -85,16 +85,16 @@ if($USER_TYPE=="User")    {
                     foreach($allpathItems as $TempItem) {
                         $allpath[] = '/tab/apps_'.$TempItem['id'];
                     }
-                    $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'] ,'allpath' =>$allpath ];
+                    $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'], 'allpath' => $allpath, 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
                 }
                 else if(strpos($Name,"SystemMenuTwo_")===0)  {
                     //Menu Two
                     foreach($Line as $ItemTwo) {
                         if($ItemTwo['FlowId']>0) {
-                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => '/apps/'.$ItemTwo['id'] ,'allpath' => [] ];
+                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => '/apps/'.$ItemTwo['id'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
                         }
                         if($ItemTwo['FlowId']==0&&$ItemTwo['MenuPath']!="") {
-                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => $ItemTwo['MenuPath'] ,'allpath' => [] ];
+                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => $ItemTwo['MenuPath'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
                         }
                     }
                 }
@@ -102,9 +102,9 @@ if($USER_TYPE=="User")    {
                     //Menu Three
                     $subChildren = [];
                     foreach($Line as $Name3=>$Line3)    {
-                        $subChildren[] = ['title' => $Line3['MenuThreeName'], 'path' => '/apps/'.$Line3['id'] ];
+                        $subChildren[] = ['title' => $Line3['MenuThreeName'], 'path' => '/apps/'.$Line3['id'], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
                     }
-                    $Menu['children'][] = ['title' => $Name, 'children' => $subChildren ,'allpath' => [] ];
+                    $Menu['children'][] = ['title' => $Name, 'children' => $subChildren ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
                 }
             }
             $Menus[] = $Menu;

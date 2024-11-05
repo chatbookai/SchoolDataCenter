@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -12,7 +12,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
             switch($Item['ShowType']) {
                 case 'Banji:Name':
                     $sql     = "select * from data_banji where 班级名称 = '".ForSqlInjection($_POST[$Item['FieldName']])."'";
-                    $rsf     = $db->CacheExecute(10,$sql);
+                    $rsf     = $db->Execute($sql);
                     if($_POST['专业']=="")          $_POST['专业']      = $rsf->fields['所属专业'];
                     if($_POST['专业名称']=="")      $_POST['专业名称']   = $rsf->fields['所属专业'];
                     if($_POST['系部']=="")          $_POST['系部']      = $rsf->fields['所属系部'];
@@ -22,7 +22,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     $_POST['校区']      = $rsf->fields['所属校区'];
                     $_POST['固定教室']   = $rsf->fields['固定教室'];
                     $sql                = "select count(*) AS NUM from data_student where 班级='".ForSqlInjection($_POST[$Item['FieldName']])."' and 学生状态='正常状态'";
-                    $rsf                = $db->CacheExecute(10,$sql);
+                    $rsf                = $db->Execute($sql);
                     $_POST['班级人数']   = $rsf->fields['NUM'];
                     //print_R($rsf->fields);
                     //print_R($sql);
@@ -51,7 +51,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     break;
                 case 'Course:Name':
                     $sql     = "select * from data_course where 课程名称 = '".ForSqlInjection($_POST[$Item['FieldName']])."'";
-                    $rsf     = $db->CacheExecute(10,$sql);
+                    $rsf     = $db->Execute($sql);
                     $_POST['课程类型']      = $rsf->fields['课程类型'];
                     $_POST['课程类别']      = $rsf->fields['课程类别'];
                     $_POST['教研室']        = $rsf->fields['教研室'];
@@ -68,7 +68,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     break;
                 case '德育量化:积分项目':
                     $sql     = "select * from data_deyu_geren_gradethree where 积分编码 = '".ForSqlInjection($_POST[$Item['FieldName']])."'";
-                    $rsf     = $db->CacheExecute(10,$sql);
+                    $rsf     = $db->Execute($sql);
                     $_POST['积分编码']      = $rsf->fields['积分编码'];
                     $_POST['积分项目']      = $rsf->fields['积分项目'];
                     $_POST['一级指标']      = $rsf->fields['一级指标'];
@@ -77,7 +77,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     break;
                 case '班级评价:积分项目':
                     $sql     = "select * from data_deyu_banji_gradethree where 积分编码 = '".ForSqlInjection($_POST[$Item['FieldName']])."'";
-                    $rsf     = $db->CacheExecute(10,$sql);
+                    $rsf     = $db->Execute($sql);
                     $_POST['积分编码']      = $rsf->fields['积分编码'];
                     $_POST['积分项目']      = $rsf->fields['积分项目'];
                     $_POST['一级指标']      = $rsf->fields['一级指标'];

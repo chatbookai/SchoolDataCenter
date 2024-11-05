@@ -291,14 +291,14 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                             case '班主任':
                                 if($RS['班级']!="") {
                                     $sql = "select 班主任用户名 from data_banji where 班级名称='".ForSqlInjection($RS['班级'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     if($rs->fields['班主任用户名']!="")  {
                                         $Need_To_Reminder_Object['User'][] = $rs->fields['班主任用户名'];
                                     }
                                 }
                                 if($RS['班级名称']!="") {
                                     $sql = "select 班主任用户名 from data_banji where 班级名称='".ForSqlInjection($RS['班级名称'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     if($rs->fields['班主任用户名']!="")  {
                                         $Need_To_Reminder_Object['User'][] = $rs->fields['班主任用户名'];
                                     }
@@ -311,9 +311,9 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                             case '系部':
                                 if($RS['班级']!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="None") {
                                     $sql = "select 所属系部 from data_banji where 班级名称='".ForSqlInjection($RS['班级'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $sql = "select ".$Msg_Reminder_Rule_Strorage_Faculty_Object." from data_xi where 系部名称='".ForSqlInjection($rs->fields['所属系部'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $Temp = $rs->fields[$Msg_Reminder_Rule_Strorage_Faculty_Object];
                                     $TempArray = explode(',',$Temp);
                                     foreach($TempArray as $Item) {
@@ -324,9 +324,9 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 }
                                 if($RS['班级名称']!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="None") {
                                     $sql = "select 所属系部 from data_banji where 班级名称='".ForSqlInjection($RS['班级名称'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $sql = "select ".$Msg_Reminder_Rule_Strorage_Faculty_Object." from data_xi where 系部名称='".ForSqlInjection($rs->fields['所属系部'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $Temp = $rs->fields[$Msg_Reminder_Rule_Strorage_Faculty_Object];
                                     $TempArray = explode(',',$Temp);
                                     foreach($TempArray as $Item) {
@@ -340,9 +340,9 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 $Msg_Reminder_Rule_Strorage_Faculty_Object = "专业秘书1";
                                 if($RS['班级']!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="None") {
                                     $sql = "select 所属专业 from data_banji where 班级名称='".ForSqlInjection($RS['班级'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $sql = "select ".$Msg_Reminder_Rule_Strorage_Faculty_Object." from data_zhuanye where 专业名称='".ForSqlInjection($rs->fields['所属专业'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $Temp = $rs->fields[$Msg_Reminder_Rule_Strorage_Faculty_Object];
                                     $TempArray = explode(',',$Temp);
                                     foreach($TempArray as $Item) {
@@ -353,9 +353,9 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 }
                                 if($RS['班级名称']!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="" && $Msg_Reminder_Rule_Strorage_Faculty_Object!="None") {
                                     $sql = "select 所属专业 from data_banji where 班级名称='".ForSqlInjection($RS['班级名称'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $sql = "select ".$Msg_Reminder_Rule_Strorage_Faculty_Object." from data_zhuanye where 专业名称='".ForSqlInjection($rs->fields['所属专业'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $Temp = $rs->fields[$Msg_Reminder_Rule_Strorage_Faculty_Object];
                                     $TempArray = explode(',',$Temp);
                                     foreach($TempArray as $Item) {
@@ -368,7 +368,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                             case '本班所有学生':
                                 if($RS['班级']!="") {
                                     $sql = "select 学号 from data_student where 学生状态='正常状态' and 班级='".ForSqlInjection($RS['班级'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $rs_a = $rs->GetArray();
                                     foreach($rs_a as $Element) {
                                         $Need_To_Reminder_Object['Student'][] = $Element['学号'];
@@ -376,7 +376,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 }
                                 if($RS['班级名称']!="") {
                                     $sql = "select 学号 from data_student where 学生状态='正常状态' and 班级='".ForSqlInjection($RS['班级名称'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     $rs_a = $rs->GetArray();
                                     foreach($rs_a as $Element) {
                                         $Need_To_Reminder_Object['Student'][] = $Element['学号'];
@@ -386,17 +386,17 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                             case '本专业所有学生':
                                 if($RS['班级']!="") {
                                     $sql = "select 所属专业 from data_banji where 班级名称='".ForSqlInjection($RS['班级'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     if($rs->fields['所属专业']!="")  {
                                         $sql = "select 班级名称 from data_banji where 所属专业='".ForSqlInjection($rs->fields['所属专业'])."'";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         $班级名称Array = [];
                                         foreach($rs_a as $Element) {
                                             $班级名称Array[] = ForSqlInjection($Element['班级名称']);
                                         }
                                         $sql = "select 学号 from data_student where 学生状态='正常状态' and 班级 in ('".join("','",$班级名称Array)."')";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         foreach($rs_a as $Element) {
                                             $Need_To_Reminder_Object['Student'][] = $Element['学号'];
@@ -405,17 +405,17 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 }
                                 if($RS['班级名称']!="") {
                                     $sql = "select 所属专业 from data_banji where 班级名称='".ForSqlInjection($RS['班级名称'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     if($rs->fields['所属专业']!="")  {
                                         $sql = "select 班级名称 from data_banji where 所属专业='".ForSqlInjection($rs->fields['所属专业'])."'";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         $班级名称Array = [];
                                         foreach($rs_a as $Element) {
                                             $班级名称Array[] = ForSqlInjection($Element['班级名称']);
                                         }
                                         $sql = "select 学号 from data_student where 学生状态='正常状态' and 班级 in ('".join("','",$班级名称Array)."')";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         foreach($rs_a as $Element) {
                                             $Need_To_Reminder_Object['Student'][] = $Element['学号'];
@@ -426,17 +426,17 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                             case '本系所有学生':
                                 if($RS['班级']!="") {
                                     $sql = "select 所属系部 from data_banji where 班级名称='".ForSqlInjection($RS['班级'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     if($rs->fields['所属系部']!="")  {
                                         $sql = "select 班级名称 from data_banji where 所属系部='".ForSqlInjection($rs->fields['所属系部'])."'";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         $班级名称Array = [];
                                         foreach($rs_a as $Element) {
                                             $班级名称Array[] = ForSqlInjection($Element['班级名称']);
                                         }
                                         $sql = "select 学号 from data_student where 学生状态='正常状态' and 班级 in ('".join("','",$班级名称Array)."')";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         foreach($rs_a as $Element) {
                                             $Need_To_Reminder_Object['Student'][] = $Element['学号'];
@@ -445,17 +445,17 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 }
                                 if($RS['班级名称']!="") {
                                     $sql = "select 所属系部 from data_banji where 班级名称='".ForSqlInjection($RS['班级名称'])."'";
-                                    $rs = $db->CacheExecute(10,$sql);
+                                    $rs = $db->Execute($sql);
                                     if($rs->fields['所属系部']!="")  {
                                         $sql = "select 班级名称 from data_banji where 所属系部='".ForSqlInjection($rs->fields['所属系部'])."'";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         $班级名称Array = [];
                                         foreach($rs_a as $Element) {
                                             $班级名称Array[] = ForSqlInjection($Element['班级名称']);
                                         }
                                         $sql = "select 学号 from data_student where 学生状态='正常状态' and 班级 in ('".join("','",$班级名称Array)."')";
-                                        $rs = $db->CacheExecute(10,$sql);
+                                        $rs = $db->Execute($sql);
                                         $rs_a = $rs->GetArray();
                                         foreach($rs_a as $Element) {
                                             $Need_To_Reminder_Object['Student'][] = $Element['学号'];
@@ -465,7 +465,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
                                 break;
                             case '本校所有学生':
                                 $sql = "select 学号 from data_student where 学生状态='正常状态'";
-                                $rs = $db->CacheExecute(10,$sql);
+                                $rs = $db->Execute($sql);
                                 $rs_a = $rs->GetArray();
                                 foreach($rs_a as $Element) {
                                     $Need_To_Reminder_Object['Student'][] = $Element['学号'];
@@ -491,7 +491,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
             if($Msg_Reminder_Rule_Strorage_DeptID!="" && in_array($Msg_Reminder_Rule_Strorage_DeptID, $MetaColumnNames) && $Msg_Reminder_Rule_Strorage_Dept_Object!="" && $Msg_Reminder_Rule_Strorage_Dept_Object!="None")   {
                 if($RS[$Msg_Reminder_Rule_Strorage_DeptID]!="")  {
                     $sql = "select ".$Msg_Reminder_Rule_Strorage_Dept_Object." from data_department where DEPT_ID='".ForSqlInjection($RS[$Msg_Reminder_Rule_Strorage_DeptID])."'";
-                    $rs  = $db->CacheExecute(10,$sql);
+                    $rs  = $db->Execute($sql);
                     $Temp = $rs->fields[$Msg_Reminder_Rule_Strorage_Dept_Object];
                     $TempArray = explode(',',$Temp);
                     foreach($TempArray as $Item) {
@@ -504,7 +504,7 @@ function Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id) {
             //Reminder Faculty Managers
             if($Msg_Reminder_Rule_Strorage_FacultyID!="" && $Msg_Reminder_Rule_Strorage_FacultyID!="None" && in_array($Msg_Reminder_Rule_Strorage_FacultyID,$MetaColumnNames) && $RS[$Msg_Reminder_Rule_Strorage_FacultyID]!="") {
                 $sql = "select ".$Msg_Reminder_Rule_Strorage_Faculty_Object." from data_xi where 系部名称='".ForSqlInjection($RS[$Msg_Reminder_Rule_Strorage_FacultyID])."'";
-                $rs = $db->CacheExecute(10,$sql);
+                $rs = $db->Execute($sql);
                 $Temp = $rs->fields[$Msg_Reminder_Rule_Strorage_Faculty_Object];
                 $TempArray = explode(',',$Temp);
                 foreach($TempArray as $Item) {
@@ -1178,7 +1178,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 global $USER_ID;
                 $FieldType  = [];
                 $sql        = "select 维修人员 from data_wygl_biaoxiuxiangmu where find_in_set('$USER_ID',负责人)";
-                $rs         = $db->CacheExecute(10,$sql);
+                $rs         = $db->Execute($sql);
                 $rs_a       = $rs->GetArray();
                 $维修人员    = $rs_a[0]['维修人员'];
                 $维修人员Array  = explode(',',$维修人员);

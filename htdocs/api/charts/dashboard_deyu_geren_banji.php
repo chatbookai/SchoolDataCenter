@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('../cors.php');
 require_once('../include.inc.php');
 
@@ -15,7 +15,7 @@ $学期 = returntablefield("data_xueqi","当前学期","是","学期名称")['�
 $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
 
 $sql        = "select * from data_deyu_geren_gradeone";
-$rs         = $db->CacheExecute(10,$sql);
+$rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $图标和颜色 = [];
 foreach($rs_a as $Line) {
@@ -24,7 +24,7 @@ foreach($rs_a as $Line) {
 }
 
 $sql        = "select 班级名称 from data_banji where 是否毕业='否' and (find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
-$rs         = $db->CacheExecute(10,$sql);
+$rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $班级名称Array = [];
 $TopRightOptions = [];
@@ -120,7 +120,7 @@ $AnalyticsDepositWithdraw['grid']                       = 8;
 $AnalyticsDepositWithdraw['type']                       = "AnalyticsDepositWithdraw";
 
 
-//本班积分排行 
+//本班积分排行
 $colorArray = ['primary','success','warning','info','info'];
 $iconArray  = ['mdi:trending-up','mdi:account-outline','mdi:cellphone-link','mdi:currency-usd','mdi:currency-usd','mdi:currency-usd'];
 $sql    = "select 学号, 姓名, SUM(积分分值) AS 积分分值 from data_deyu_geren_record where 班级='$班级' $whereSql group by 学号 order by 积分分值 desc limit 5";

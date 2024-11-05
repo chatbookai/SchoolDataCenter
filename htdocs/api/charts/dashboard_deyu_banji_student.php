@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('../cors.php');
 require_once('../include.inc.php');
 
@@ -16,7 +16,7 @@ $学号 = $GLOBAL_USER->学号;
 $班级 = $GLOBAL_USER->班级;
 
 $sql        = "select * from data_deyu_banji_gradeone";
-$rs         = $db->CacheExecute(10,$sql);
+$rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $图标和颜色 = [];
 foreach($rs_a as $Line) {

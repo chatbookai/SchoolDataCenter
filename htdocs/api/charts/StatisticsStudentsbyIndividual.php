@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('../cors.php');
 require_once('../include.inc.php');
 
@@ -13,7 +13,7 @@ if($optionsMenuItem=="")  {
 $学期 = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
 
 $sql        = "select * from data_deyu_geren_gradeone";
-$rs         = $db->CacheExecute(10,$sql);
+$rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $图标和颜色 = [];
 foreach($rs_a as $Line) {
@@ -22,7 +22,7 @@ foreach($rs_a as $Line) {
 }
 
 $sql        = "select 学号,姓名,班级 from data_student where 学生状态='正常状态'";
-$rs         = $db->CacheExecute(10,$sql);
+$rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $学生姓名Aarray = [];
 $TopRightOptions = [];
@@ -138,7 +138,7 @@ $AnalyticsDepositWithdraw['grid']                       = 8;
 $AnalyticsDepositWithdraw['type']                       = "AnalyticsDepositWithdraw";
 
 
-//本班积分排行 
+//本班积分排行
 $colorArray = ['primary','success','warning','info','info'];
 $iconArray  = ['mdi:trending-up','mdi:account-outline','mdi:cellphone-link','mdi:currency-usd','mdi:currency-usd','mdi:currency-usd'];
 $sql    = "select 学号, 姓名, SUM(积分分值) AS 积分分值 from data_deyu_geren_record where 班级='".$学号转班级[$学号]."' $whereSql group by 学号 order by 积分分值 desc limit 5";

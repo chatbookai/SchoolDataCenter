@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -32,7 +32,7 @@ switch($Page_Role_Name)  {
     case 'ClassMaster':
     case '班主任':
         $sql = "select 班级名称 from data_banji where 是否毕业='否' and (find_in_set('$USER_NAME',实习班主任) or find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
-        $rs = $db->CacheExecute(10,$sql);
+        $rs = $db->Execute($sql);
         $rs_a = $rs->GetArray();
         $班级名称Array = [];
         foreach($rs_a as $Line) {
@@ -64,14 +64,14 @@ switch($Page_Role_Name)  {
             break;
         }
         $sql = "select 系部名称 from data_xi where find_in_set('$USER_ID',$Faculty_Filter_Field)";
-        $rs = $db->CacheExecute(10,$sql);
+        $rs = $db->Execute($sql);
         $rs_a = $rs->GetArray();
         $系部名称Array = [];
         foreach($rs_a as $Line) {
             $系部名称Array[] = ForSqlInjection($Line['系部名称']);
         }
         $sql = "select 班级名称 from data_banji where 是否毕业='否' and 所属系部 in ('".join("','",$系部名称Array)."')";
-        $rs = $db->CacheExecute(10,$sql);
+        $rs = $db->Execute($sql);
         $rs_a = $rs->GetArray();
         $班级名称Array = [];
         foreach($rs_a as $Line) {
@@ -99,7 +99,7 @@ switch($Page_Role_Name)  {
     case 'Dormitory':
     case '宿舍管理员':
         $sql = "select * from data_dorm_building where find_in_set('$USER_ID',生管老师一) or find_in_set('$USER_ID',生管老师二) or find_in_set('$USER_ID',生管老师三) or find_in_set('$USER_ID',生管老师四) or find_in_set('$USER_ID',生管老师五) or find_in_set('$USER_ID',生管老师六) or find_in_set('$USER_ID',生管老师七) or find_in_set('$USER_ID',生管老师八) or find_in_set('$USER_ID',生管老师九) or find_in_set('$USER_ID',生管老师十) or find_in_set('$USER_NAME',生管老师一) or find_in_set('$USER_NAME',生管老师二) or find_in_set('$USER_NAME',生管老师三) or find_in_set('$USER_NAME',生管老师四) or find_in_set('$USER_NAME',生管老师五) or find_in_set('$USER_NAME',生管老师六) or find_in_set('$USER_NAME',生管老师七) or find_in_set('$USER_NAME',生管老师八) or find_in_set('$USER_NAME',生管老师九) or find_in_set('$USER_NAME',生管老师十)";
-        $rs = $db->CacheExecute(10,$sql);
+        $rs = $db->Execute($sql);
         $rs_a = $rs->GetArray();
         $宿舍房间Array = [];
         $宿舍楼名称Array = [];
@@ -121,7 +121,7 @@ switch($Page_Role_Name)  {
             $管理楼层FLIP       = array_flip($管理楼层ARRAY);
             $管理楼层FLIP       = array_keys($管理楼层FLIP);
             $sql = "select 宿舍房间 from data_dorm_dorm where 宿舍楼='$宿舍楼名称' and 楼层数 in ('".join("','",$管理楼层FLIP)."')";
-            $rs = $db->CacheExecute(10,$sql);
+            $rs = $db->Execute($sql);
             $rsX_a = $rs->GetArray();
             foreach($rsX_a as $LineX) {
                 $宿舍房间Array[] = ForSqlInjection($LineX['宿舍房间']);

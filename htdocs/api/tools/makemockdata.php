@@ -19,11 +19,11 @@ function 生成学生积分测试数据() {
     $学期       = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
 
     $sql        = "select * from data_student";
-    $rs         = $db->CacheExecute(10,$sql);
+    $rs         = $db->Execute($sql);
     $学生       = $rs->GetArray();
 
     $sql        = "select * from data_deyu_geren_gradethree";
-    $rs         = $db->CacheExecute(10,$sql);
+    $rs         = $db->Execute($sql);
     $积分项目    = $rs->GetArray();
 
     for($i=0;$i<90;$i++)  {
@@ -60,11 +60,11 @@ function 生成班级评价测试数据() {
     $学期       = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
 
     $sql        = "select * from data_banji";
-    $rs         = $db->CacheExecute(10,$sql);
+    $rs         = $db->Execute($sql);
     $班级       = $rs->GetArray();
 
     $sql        = "select * from data_deyu_banji_gradethree";
-    $rs         = $db->CacheExecute(10,$sql);
+    $rs         = $db->Execute($sql);
     $积分项目    = $rs->GetArray();
 
     for($i=0;$i<60;$i++)  {
