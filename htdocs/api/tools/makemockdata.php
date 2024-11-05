@@ -16,7 +16,7 @@ exit;
 function 生成学生积分测试数据() {
     global $db;
 
-    $学期       = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
+    $学期       = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
 
     $sql        = "select * from data_student";
     $rs         = $db->Execute($sql);
@@ -57,7 +57,7 @@ function 生成学生积分测试数据() {
 function 生成班级评价测试数据() {
     global $db;
 
-    $学期       = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
+    $学期       = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
 
     $sql        = "select * from data_banji";
     $rs         = $db->Execute($sql);

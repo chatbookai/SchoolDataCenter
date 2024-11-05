@@ -1082,7 +1082,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 if($CurrentFieldTypeArray[4]=="CurrentTerm")   {
                     $DefaultValue = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
                     if($DefaultValue=="") {
-                        $DefaultValue = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
+                        $DefaultValue = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
                     }
                     $sql .= " limit 100";
                 }

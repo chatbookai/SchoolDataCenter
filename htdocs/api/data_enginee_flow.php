@@ -2189,7 +2189,7 @@ foreach($groupField as $FieldName) {
     else if(strpos($FieldName, "学期") !== false) {
         $selected = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
         if($selected=='') {
-            $selected = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
+            $selected = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
         }
         global $AddSql;
         if(in_array("当前学期", $MetaColumnNames) && !isset($_GET['当前学期']) ) {

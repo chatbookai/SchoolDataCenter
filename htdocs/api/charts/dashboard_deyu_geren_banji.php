@@ -10,7 +10,7 @@ if($optionsMenuItem=="")  {
     $optionsMenuItem = "当前学期";
 }
 
-$学期 = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
+$学期 = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
 
 $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
 
@@ -23,7 +23,7 @@ foreach($rs_a as $Line) {
     $图标和颜色[$Line['名称']]['图标'] = $Line['图标'];
 }
 
-$sql        = "select 班级名称 from data_banji where (是否毕业='否' or 是否毕业='0') and (find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
+$sql        = "select 班级名称 from data_banji where (是否毕业='否' or 是否毕业='0') and (find_in_set('$USER_ID',实习班主任) or (实习班主任='$USER_ID') or (班主任用户名='$USER_ID'))";
 $rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $班级名称Array = [];
@@ -71,6 +71,7 @@ $AnalyticsTrophy['ViewButton']['url']   = "/tab/apps_180";
 $AnalyticsTrophy['TopRightOptions']     = $TopRightOptions;
 $AnalyticsTrophy['grid']        = 4;
 $AnalyticsTrophy['type']        = "AnalyticsTrophy";
+$AnalyticsTrophy['sql']         = $sql;
 
 //按一级指标统计积分
 $sql = "select 一级指标 AS title, SUM(积分分值) AS NUM from data_deyu_geren_record where 班级='$班级' $whereSql group by 一级指标 order by 一级指标 asc";
@@ -92,6 +93,8 @@ $AnalyticsTransactionsCard['TopRightOptions'][]    = ['name'=>'当前学期','se
 $AnalyticsTransactionsCard['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
 $AnalyticsTransactionsCard['grid']                 = 8;
 $AnalyticsTransactionsCard['type']                 = "AnalyticsTransactionsCard";
+$AnalyticsTransactionsCard['sql']                  = $sql;
+
 
 
 //得到最新加分或是扣分的几条记录
@@ -118,6 +121,8 @@ $AnalyticsDepositWithdraw['扣分']['TopRightButton']     = ['name'=>'查看所�
 $AnalyticsDepositWithdraw['扣分']['data']               = $rs_a;
 $AnalyticsDepositWithdraw['grid']                       = 8;
 $AnalyticsDepositWithdraw['type']                       = "AnalyticsDepositWithdraw";
+$AnalyticsDepositWithdraw['sql']                        = $sql;
+
 
 
 //本班积分排行
@@ -141,6 +146,8 @@ $AnalyticsSalesByCountries['TopRightOptions'][]    = ['name'=>'当前学期','se
 $AnalyticsSalesByCountries['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
 $AnalyticsSalesByCountries['grid']                 = 4;
 $AnalyticsSalesByCountries['type']                 = "AnalyticsSalesByCountries";
+$AnalyticsSalesByCountries['sql']                  = $sql;
+
 
 /*
 //ApexAreaChart
@@ -199,6 +206,8 @@ $ApexAreaChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$op
 $ApexAreaChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
 $ApexAreaChart['grid']                  = 8;
 $ApexAreaChart['type']                  = "ApexAreaChart";
+$ApexAreaChart['sql']                   = $sql;
+
 
 $ApexLineChart['Title']         = "班级学生积分之和";
 $ApexLineChart['SubTitle']      = "按天统计班级学生积分之和";
@@ -270,6 +279,8 @@ $AnalyticsWeeklyOverview['ViewButton']['name']  = "明细";
 $AnalyticsWeeklyOverview['ViewButton']['url']   = "/tab/apps_180";
 $AnalyticsWeeklyOverview['grid']                = 4;
 $AnalyticsWeeklyOverview['type']                = "AnalyticsWeeklyOverview";
+$AnalyticsWeeklyOverview['sql']                 = $sql;
+
 
 
 //AnalyticsPerformance
@@ -296,6 +307,8 @@ $AnalyticsPerformance['TopRightOptions'][]    = ['name'=>'当前学期','selecte
 $AnalyticsPerformance['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
 $AnalyticsPerformance['grid']                 = 4;
 $AnalyticsPerformance['type']                 = "AnalyticsPerformance";
+$AnalyticsPerformance['sql']                  = $sql;
+
 
 
 //ApexDonutChart
@@ -322,6 +335,8 @@ $ApexDonutChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$o
 $ApexDonutChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
 $ApexDonutChart['grid']                 = 4;
 $ApexDonutChart['type']                 = "ApexDonutChart";
+$ApexDonutChart['sql']                  = $sql;
+
 
 
 //ApexRadialBarChart
@@ -348,6 +363,8 @@ $ApexRadialBarChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'
 $ApexRadialBarChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
 $ApexRadialBarChart['grid']                 = 4;
 $ApexRadialBarChart['type']                 = "ApexRadialBarChart";
+$ApexRadialBarChart['sql']                = $sql;
+
 
 
 $RS                             = [];
