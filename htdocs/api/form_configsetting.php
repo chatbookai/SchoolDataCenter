@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -11,7 +11,7 @@ $FlowInfo   = returntablefield("form_formflow","id",$externalId,"FormId,FlowName
 $FormId     = $FlowInfo['FormId'];
 
 $sql        = "select * from form_formname where id='$FormId'";
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $FormInfo   = $rs->fields;
 $FullName  = $FormInfo['FullName'];
 $TableName  = $FormInfo['TableName'];
@@ -20,7 +20,7 @@ $TitleName  = $FullName."-".$FlowInfo['FlowName'];
 
 $columnNames = [];
 $sql = "show columns from form_configsetting";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 foreach ($rs_a as $Line) {
     $columnNames[] = $Line['Field'];
@@ -35,7 +35,7 @@ $allFieldsAdd = [];
 $allFieldsAdd[] = ['name' => 'FieldName', 'show'=>true, 'type'=>'input', 'label' => __('Field Name'), 'value' => '', 'placeholder' => __('Field Name in Database'), 'helptext' => __('Field Name in Database'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>12, 'disabled' => false,'min'=>1]];
 
 $sql = "select `Name` as value, `Name` as label, EnableFields, DisableFields from form_formfield_showtype order by SortNumber asc, id asc";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $ShowType = $rs->GetArray();
 $EnableFields = [];
 $DisableFields = [];
@@ -139,7 +139,7 @@ if( ($_GET['action']=="add_default_data") && $_POST['FieldName']!="" && $externa
                 $RS['sql'] = $sql;
                 $RS['_POST'] = $_POST;
                 print json_encode($RS);
-                exit; 
+                exit;
             }
         }
     }
@@ -147,7 +147,7 @@ if( ($_GET['action']=="add_default_data") && $_POST['FieldName']!="" && $externa
         $RS['status'] = "OK";
         $RS['msg'] = __("Submit Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
 }
 
@@ -179,14 +179,14 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="" && $externalId!=""
     $sql = "select FieldName from form_configsetting where id='".$_GET['id']."'";
     $rs = $db->Execute($sql);
     $FieldNameOld = $rs->fields['FieldName'];
-    
+
     if(1)   {
         [$rs,$sql] = InsertOrUpdateTableByArray("form_configsetting",$FieldsArray,"id",0,"Update");
         if($rs->EOF) {
             $RS['status'] = "OK";
             $RS['msg'] = __("Submit Success");
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -212,7 +212,7 @@ if(($_GET['action']=="edit_default")&&$_GET['id']!="")  {
             $EditValue[$FieldName] = $FieldValue;
         }
         $EditValue['Setting'] = '';
-    }    
+    }
     foreach($rsf->fields as $FieldName=>$FieldValue)  {
         $EditValue[$FieldName] = $FieldValue;
     }
@@ -224,7 +224,7 @@ if(($_GET['action']=="edit_default")&&$_GET['id']!="")  {
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
@@ -239,7 +239,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
             $EditValue[$FieldName] = $FieldValue;
         }
         $EditValue['Setting'] = '';
-    }    
+    }
     foreach($rsf->fields as $FieldName=>$FieldValue)  {
         $EditValue[$FieldName] = $FieldValue;
     }
@@ -250,7 +250,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['EnableFields'] = explode(",",$EnableFields['EnableFields']);
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
-    
+
     $FieldNameArray             = array_keys($EditValue);
     $ApprovalNodeFieldsHidden   = [];
     for($X=0;$X<sizeof($FieldNameArray);$X=$X+2)        {
@@ -274,7 +274,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['newTableRowData']          = $NewTableRowData;
 
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if($_GET['action']=="updateone")  {
@@ -299,7 +299,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -338,7 +338,7 @@ if($_GET['action']=="delete_array")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 $AddSql = " where 1=1 and FlowId='$externalId'";
@@ -383,7 +383,7 @@ if(!in_array($pageSize,[10,20,30,40,50,100,200,500]))  {
 $fromRecord = $page * $pageSize;
 
 $sql    = "select count(*) AS NUM from form_configsetting " . $AddSql . "";
-$rs     = $db->CacheExecute(10, $sql);
+$rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 if($TitleName!=""&&$TitleName!="-")   {
     $RS['init_default']['searchtitle']  = $TitleName;
@@ -485,7 +485,7 @@ $RS['init_default']['returnButton']['status']  = true;
 $RS['init_default']['returnButton']['text']  = __("return");
 $RS['init_default']['rowHeight']        = 38;
 $RS['init_default']['dialogContentHeight']  = "850px";
-$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs 
+$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs
 $RS['init_default']['timeline']         = time();
 $RS['init_default']['pageNumber']       = $pageSize;
 $RS['init_default']['pageCount']        = ceil($RS['init_default']['total']/$pageSize);

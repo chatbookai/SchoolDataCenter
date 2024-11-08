@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -7,7 +7,7 @@ require_once('include.inc.php');
 
 //Get Table Infor
 $sql        = "select * from data_interface";
-$rs         = $db->CacheExecute(30, $sql);
+$rs         = $db->Execute($sql);
 $Info       = $rs->fields;
 
 print_R(json_encode($Info, true));

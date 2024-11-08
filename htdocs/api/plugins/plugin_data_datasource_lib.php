@@ -58,7 +58,7 @@ foreach($rs_a as $LineX) {
                 $rs_fields      = $db->Execute($sql);
                 $rs_a_fields    = $rs_fields->GetArray();
                 $字段名称转中文名称 = [];
-                
+
                 //开始做远程数据表同步到本数据中心的操作
                 if($数据同步方式=="全量同步")  {
                     $学校十位代码              = returntablefield("ods_zzxxgkjcsj","id",1,"XXDM")['XXDM'];
@@ -82,9 +82,9 @@ foreach($rs_a as $LineX) {
                         foreach($rs_a_fields as $Item) {
                             $字段名称转中文名称[$Item['FieldName']] = $Item['ChineseName'];
                             $FieldsSeting               = json_decode($Item['Setting'], true);
-                            $RemoteRelativeField        = $FieldsSeting['RemoteRelativeField'];    
-                            $LocalFieldExtraFilter      = $FieldsSeting['LocalFieldExtraFilter'];   
-                            $IsMustFill                 = $FieldsSeting['IsMustFill'];                          
+                            $RemoteRelativeField        = $FieldsSeting['RemoteRelativeField'];
+                            $LocalFieldExtraFilter      = $FieldsSeting['LocalFieldExtraFilter'];
+                            $IsMustFill                 = $FieldsSeting['IsMustFill'];
                             //第三步:同步远程数据表数据,并且进行数据清洗. 这一步要先做,然后才能在本地默认值处理时,可以做本地的数据表关联
                             if($RemoteRelativeField!="" && $RemoteRelativeField!="None" && in_array($RemoteRelativeField, $远程数据表结构))  {
                                 $FieledShowTypeArray = explode(':',$FieldsSeting['ShowType']);
@@ -139,7 +139,7 @@ foreach($rs_a as $LineX) {
                                             }
                                         }
                                         break;
-                                    
+
                                 }
                             }
                             //第四步:不使用远程数据表使用,而是使用本地数据的配置来产生一个默认值
@@ -147,10 +147,10 @@ foreach($rs_a as $LineX) {
                                 switch($FieldsSeting['ShowType']) {
                                     case 'Hidden:Createandupdatetime':
                                         if($FieldsSeting['DateTimeFormat']!="") {
-                                            $NewRecord[$FieldsSeting['FieldName']] = date($FieldsSeting['DateTimeFormat']);    
+                                            $NewRecord[$FieldsSeting['FieldName']] = date($FieldsSeting['DateTimeFormat']);
                                         }
                                         else {
-                                            $NewRecord[$FieldsSeting['FieldName']] = date("Y-m-d H:i:s");  
+                                            $NewRecord[$FieldsSeting['FieldName']] = date("Y-m-d H:i:s");
                                         }
                                         break;
                                     case '32位全局唯一编码字符串':
@@ -170,14 +170,14 @@ foreach($rs_a as $LineX) {
                                         if(sizeof($ADDTYPE_ARRAY)==4) {
                                             $Temp_MetaColumnNames = GLOBAL_MetaColumnNames($ADDTYPE_ARRAY[1]);
                                             $sql        = "select ".$Temp_MetaColumnNames[$ADDTYPE_ARRAY[2]]." AS NAME from ".$ADDTYPE_ARRAY[1]."";
-                                            $rs_temp    = $db->CacheExecute(180, $sql);
+                                            $rs_temp    = $db->Execute($sql);
                                             $NewRecord[$FieldsSeting['FieldName']] = $rs_temp->fields['NAME'];
                                             //print_R($NewRecord);;exit;
                                         }
                                         else if($ADDTYPE_ARRAY[1]=="form_formdict" && sizeof($ADDTYPE_ARRAY)==7) {
                                             //$Temp_MetaColumnNames = GLOBAL_MetaColumnNames($ADDTYPE_ARRAY[1]);
                                             //$sql        = "select ".$Temp_MetaColumnNames[$ADDTYPE_ARRAY[2]]." AS NAME from ".$ADDTYPE_ARRAY[1]."";
-                                            //$rs_temp    = $db->CacheExecute(180, $sql);
+                                            //$rs_temp    = $db->Execute($sql);
                                             //$NewRecord[$FieldsSeting['FieldName']] = $rs_temp->fields['NAME'];
                                             print_R($ADDTYPE_ARRAY);
                                             print_R($NewRecord);;exit;
@@ -221,7 +221,7 @@ foreach($rs_a as $LineX) {
                                             if($所属系!="")   {
                                                 $sql        = "select 系名称 from edu_xi where 系代码='$所属系'";
                                                 $RST        = $db_remote->Execute($sql);
-                                                $NewRecord[$FieldsSeting['FieldName']]  = $RST->fields['系名称'];                                            
+                                                $NewRecord[$FieldsSeting['FieldName']]  = $RST->fields['系名称'];
                                             }
                                             else {
                                                 $NewRecord[$FieldsSeting['FieldName']]  = "";
@@ -239,7 +239,7 @@ foreach($rs_a as $LineX) {
                                             if($所属专业!="")   {
                                                 $sql        = "select 专业名称 from edu_zhuanye where 专业代码='$所属专业'";
                                                 $RST        = $db_remote->Execute($sql);
-                                                $NewRecord[$FieldsSeting['FieldName']]  = $RST->fields['专业名称'];                                            
+                                                $NewRecord[$FieldsSeting['FieldName']]  = $RST->fields['专业名称'];
                                             }
                                             else {
                                                 $NewRecord[$FieldsSeting['FieldName']]  = "";
@@ -352,15 +352,15 @@ foreach($rs_a as $LineX) {
                         $同步结果数据['未同步数据记录数']    = "<font color=$Color>".($远程数据表记录数量-count($BatchSqlBody))."</font>";
                         $同步结果数据['同步状态']           = "<font color=$Color>$Status</font>";
                         $同步结果数据Array[]                = $同步结果数据;
-                        print RSA2HTML($同步结果数据Array,$width='95%',"数据同步结果");  
+                        print RSA2HTML($同步结果数据Array,$width='95%',"数据同步结果");
                         print RSA2HTML(array_values($错误设置远程数据表关联字段),$width='95%',"错误设置远程数据表关联字段");
-                        print RSA2HTML($数据字典同步异常数据Array,$width='95%',"数据字典同步异常数据");  
-                        print RSA2HTML($数据必须填写项数据Array,$width='95%',"数据必须填写项数据校验");    
+                        print RSA2HTML($数据字典同步异常数据Array,$width='95%',"数据字典同步异常数据");
+                        print RSA2HTML($数据必须填写项数据Array,$width='95%',"数据必须填写项数据校验");
                         print RSA2HTML(array_values($数据字典同步异常数据Detail),$width='95%',"数据字典同步异常数据");
                         //显示最近200条记录
                         $sql    = "select * from $TableName order by id desc limit 200";
                         $rsX    = $db->Execute($sql);
-                        $rsX_a  = $rsX->GetArray();  
+                        $rsX_a  = $rsX->GetArray();
                         $NewElement = [];
                         foreach($rsX_a[0] as $FieldName=>$FieldName) {
                             $NewElement[$FieldName] = $字段名称转中文名称[$FieldName];
@@ -381,10 +381,10 @@ foreach($rs_a as $LineX) {
                         $同步结果数据['未同步数据记录数']    = "<font color=red>".($远程数据表记录数量-count($BatchSqlBody))."</font>";
                         $同步结果数据['同步状态']           = "<font color=red>已执行,但没有获取任何数据</font>";
                         $同步结果数据Array[]                = $同步结果数据;
-                        print RSA2HTML($同步结果数据Array,$width='95%',"数据同步结果");  
+                        print RSA2HTML($同步结果数据Array,$width='95%',"数据同步结果");
                         print RSA2HTML(array_values($错误设置远程数据表关联字段),$width='95%',"错误设置远程数据表关联字段");
-                        print RSA2HTML($数据字典同步异常数据Array,$width='95%',"数据字典同步异常数据");  
-                        print RSA2HTML($数据必须填写项数据Array,$width='95%',"数据必须填写项数据校验");    
+                        print RSA2HTML($数据字典同步异常数据Array,$width='95%',"数据字典同步异常数据");
+                        print RSA2HTML($数据必须填写项数据Array,$width='95%',"数据必须填写项数据校验");
                         print RSA2HTML(array_values($数据字典同步异常数据Detail),$width='95%',"数据字典同步异常数据");
                     }
                     //print_R($所有异常数据);

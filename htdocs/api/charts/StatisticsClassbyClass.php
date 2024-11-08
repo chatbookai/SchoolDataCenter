@@ -63,7 +63,7 @@ switch($optionsMenuItem) {
 
 //奖杯模块
 $sql = "select SUM(积分分值) AS NUM from data_deyu_banji_record where 班级='$班级' $whereSql";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $AnalyticsTrophy['Welcome']     = "您好，".$班级."！🥳";
 $AnalyticsTrophy['SubTitle']    = $班级."总积分";
 $AnalyticsTrophy['TotalScore']  = $rs->fields['NUM'];
@@ -75,7 +75,7 @@ $AnalyticsTrophy['type']        = "AnalyticsTrophy";
 
 //按一级指标统计积分
 $sql = "select 一级指标 AS title, SUM(积分分值) AS NUM from data_deyu_banji_record where 班级='$班级' $whereSql group by 一级指标 order by 一级指标 asc";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $Item = [];
 $data = [];
@@ -97,7 +97,7 @@ $AnalyticsTransactionsCard['type']                 = "AnalyticsTransactionsCard"
 
 //得到最新加分或是扣分的几条记录
 $sql = "select 一级指标,二级指标,积分项目,积分分值 from data_deyu_banji_record where 班级='$班级' $whereSql and 积分分值>0 order by id desc limit 5";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 for($i=0;$i<sizeof($rs_a);$i++) {
     $rs_a[$i]['项目图标'] = "mdi:".$图标和颜色[$rs_a[$i]['一级指标']]['图标'];
@@ -108,7 +108,7 @@ $AnalyticsDepositWithdraw['加分']['TopRightButton']    = ['name'=>'查看所�
 $AnalyticsDepositWithdraw['加分']['data']              = $rs_a;
 
 $sql = "select 一级指标,二级指标,积分项目,积分分值 from data_deyu_banji_record where 班级='$班级' $whereSql and 积分分值<0 order by id desc limit 5";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 for($i=0;$i<sizeof($rs_a);$i++) {
     $rs_a[$i]['项目图标'] = "mdi:".$图标和颜色[$rs_a[$i]['一级指标']]['图标'];
@@ -125,7 +125,7 @@ $AnalyticsDepositWithdraw['type']                       = "AnalyticsDepositWithd
 $colorArray = ['primary','success','warning','info','info'];
 $iconArray  = ['mdi:trending-up','mdi:account-outline','mdi:cellphone-link','mdi:currency-usd','mdi:currency-usd','mdi:currency-usd'];
 $sql    = "select 班级 AS 姓名, SUM(积分分值) AS 积分分值 from data_deyu_banji_record where 1=1 $whereSql group by 班级 order by 积分分值 desc limit 5";
-$rs     = $db->CacheExecute(180,$sql);
+$rs     = $db->Execute($sql);
 $rs_a   = $rs->GetArray();
 $Item   = [];
 $Index  = 0;
@@ -147,7 +147,7 @@ $AnalyticsSalesByCountries['type']                 = "AnalyticsSalesByCountries"
 /*
 //ApexAreaChart
 $sql = "select 一级指标,积分时间,sum(积分分值) AS NUM from data_deyu_banji_record where 班级='$班级' $whereSql group by 一级指标,积分时间 order by 积分时间 asc";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
 $一级指标Array = [];
@@ -180,7 +180,7 @@ $ApexAreaChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$op
 
 //ApexAreaChart
 $sql = "select 积分时间,sum(积分分值) AS NUM from data_deyu_banji_record where 班级='$班级' $whereSql and 积分分值>0 group by 积分时间 order by 积分时间 asc";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
 for($i=0;$i<sizeof($rs_a);$i++) {
@@ -225,7 +225,7 @@ $ApexLineChart['GoView']['source']    = $GoViewSource;
 //额外一个班级的统计数据 -- 开始
 $额外一个班级的统计数据 = $班级名称Array[1];
 $sql = "select 积分时间,sum(积分分值) AS NUM from data_deyu_banji_record where 班级='$额外一个班级的统计数据' $whereSql and 积分分值>0 group by 积分时间 order by 积分时间 asc";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据T = [];
 for($i=0;$i<sizeof($rs_a);$i++) {
@@ -245,7 +245,7 @@ $ApexLineChart['GoView2']['source']    = $GoViewSource;
 
 //AnalyticsPerformance
 $sql = "select 一级指标,sum(积分分值) AS NUM from data_deyu_banji_record where 班级='$班级' $whereSql group by 一级指标 order by 一级指标 asc";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
 for($i=0;$i<sizeof($rs_a);$i++) {
@@ -271,7 +271,7 @@ $AnalyticsPerformance['type']                 = "AnalyticsPerformance";
 
 //ApexDonutChart
 $sql = "select 一级指标,sum(积分分值) AS NUM from data_deyu_banji_record where 班级='$班级' $whereSql group by 一级指标 order by 一级指标 asc";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
 for($i=0;$i<sizeof($rs_a);$i++) {
@@ -297,7 +297,7 @@ $ApexDonutChart['type']                 = "ApexDonutChart";
 
 //ApexRadialBarChart
 $sql = "select 一级指标,sum(积分分值) AS NUM from data_deyu_banji_record where 班级='$班级' $whereSql and 积分分值>0 group by 一级指标 order by 一级指标 asc limit 5";
-$rs = $db->CacheExecute(180,$sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
 for($i=0;$i<sizeof($rs_a);$i++) {

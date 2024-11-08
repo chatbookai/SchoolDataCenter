@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -17,7 +17,7 @@ $FlowId         = $DATA['FlowId'];
 
 if($Action=="export_template"&&$FormId!=""&&$FlowId!="")              {
     $sql        = "select * from form_formflow where id='$FlowId'";
-    $rs         = $db->CacheExecute(10, $sql);
+    $rs         = $db->Execute($sql);
     $FromInfo   = $rs->fields;
     $FormId  	= $FromInfo['FormId'];
     $FlowId  	= $FromInfo['id'];
@@ -30,7 +30,7 @@ if($Action=="export_template"&&$FormId!=""&&$FlowId!="")              {
     $rs         = $db->Execute($sql);
     $AllFieldsFromTable   = $rs->GetArray();
     $AllFields = [];
-    foreach($AllFieldsFromTable as $Item)  {        
+    foreach($AllFieldsFromTable as $Item)  {
         if($SettingMap["FieldImport_".$Item['FieldName']]=="true" || $SettingMap["FieldImport_".$Item['FieldName']]=="1")   {
             $AllFields[0][] = $Item['ChineseName'];
             $AllFields[1][] = "";
@@ -54,7 +54,7 @@ if($Action=="export_template"&&$FormId!=""&&$FlowId!="")              {
             $cell->setValue($value);
             $cell->getStyle()->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             $cell->getStyle()->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-            $cell->getStyle()->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);   
+            $cell->getStyle()->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             if($row==1)  {
                 $worksheet->getColumnDimensionByColumn($col)->setWidth(15);
                 $cell->getStyle()->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
@@ -66,7 +66,7 @@ if($Action=="export_template"&&$FormId!=""&&$FlowId!="")              {
         $row++;
     }
 
-    
+
     $worksheet->getColumnDimensionByColumn(1)->setWidth(15);
 
     header('Content-Type: ' . $filetype);
@@ -95,7 +95,7 @@ if($Action=="export_data"&&$FormId!=""&&$FlowId!=""&&$DATA['AddSql']!=""&&$DATA[
     $orderby    = $DATA['orderby'];
 
     $sql        = "select * from form_formflow where id='$FlowId'";
-    $rs         = $db->CacheExecute(180, $sql);
+    $rs         = $db->Execute($sql);
     $FromInfo   = $rs->fields;
     $FormId  	= $FromInfo['FormId'];
     $FlowId  	= $FromInfo['id'];
@@ -105,11 +105,11 @@ if($Action=="export_data"&&$FormId!=""&&$FlowId!=""&&$DATA['AddSql']!=""&&$DATA[
     $SettingMap = unserialize(base64_decode($Setting));
 
     $sql        = "select * from form_formfield where FormId='$FormId' and IsEnable='1' order by SortNumber asc, id asc";
-    $rs         = $db->CacheExecute(180, $sql);
+    $rs         = $db->Execute($sql);
     $AllFieldsFromTable   = $rs->GetArray();
     $AllFields      = [];
     $FieldNameArray = [];
-    foreach($AllFieldsFromTable as $Item)  {        
+    foreach($AllFieldsFromTable as $Item)  {
         if($SettingMap["FieldExport_".$Item['FieldName']]=="true" || $SettingMap["FieldExport_".$Item['FieldName']]=="1")   {
             $FieldNameArray[]   = $Item['FieldName'];
             $AllFields[0][]     = $Item['ChineseName'];
@@ -137,7 +137,7 @@ if($Action=="export_data"&&$FormId!=""&&$FlowId!=""&&$DATA['AddSql']!=""&&$DATA[
     $orderby = str_replace("UNION","",$orderby);
     if(sizeof($FieldNameArray)>0 && $TableName!="")    {
         $sql    = "select ".join(",",$FieldNameArray)." from $TableName $AddSql $orderby";
-        $rs     = $db->CacheExecute(180, $sql) or print $sql;
+        $rs     = $db->Execute($sql) or print $sql;
         $rs_a   = $rs->GetArray();
     }
     else {
@@ -150,7 +150,7 @@ if($Action=="export_data"&&$FormId!=""&&$FlowId!=""&&$DATA['AddSql']!=""&&$DATA[
     }
     //Make Body Data
     for($i=0;$i<sizeof($rs_a);$i++)  {
-        foreach ($rs_a[$i] as $FieldName=>$value) {            
+        foreach ($rs_a[$i] as $FieldName=>$value) {
             //Decrypt Field Value
             $SettingTempMap                 = $AllFieldsMap[$FieldName]['Setting'];
             $DataFieldEncryptMethod         = $SettingTempMap['DataFieldEncryptMethod'];
@@ -167,6 +167,6 @@ if($Action=="export_data"&&$FormId!=""&&$FlowId!=""&&$DATA['AddSql']!=""&&$DATA[
     print_R(json_encode($RS));
     exit;
 }
-        
+
 
 ?>

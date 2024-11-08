@@ -223,7 +223,7 @@ function CheckAuthUserRoleHaveMenu($FlowId, $MenuPath='')  {
 		$RS         = returntablefield("data_user","USER_ID",$GLOBAL_USER->USER_ID,"USER_PRIV,USER_PRIV_OTHER");
 		$USER_PRIV_Array = explode(',',$RS['USER_PRIV'].",".$RS['USER_PRIV_OTHER']);
 		$sql        = "select * from data_role where id in ('".join("','",$USER_PRIV_Array)."')";
-		$rsf        = $db->CacheExecute(180,$sql);
+		$rsf        = $db->Execute($sql);
 		$RoleRSA    = $rsf->GetArray();
 		$RoleArray  = "";
 		foreach($RoleRSA as $Item)  {
@@ -499,7 +499,7 @@ function CheckCsrsToken() {
 function returntablefield($tablename,$where,$value,$return,$cache=60)  {
 	global $db;
 	$sql	= "select $return from $tablename where $where = '".$value."' ";
-	$rs		= $db->CacheExecute(intval($cache),$sql);
+	$rs		= $db->Execute($sql);
 	return $rs->fields;
 }
 

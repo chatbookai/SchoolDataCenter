@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -43,7 +43,7 @@ if($TableNameTarget=="")  {
 
 $columnNames = [];
 $sql = "show columns from form_formflow";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 foreach ($rs_a as $Line) {
     $columnNames[] = $Line['Field'];
@@ -97,7 +97,7 @@ if( ($_GET['action']=="add_default_data") && $_POST['FlowName']!="" && $external
             $RS['status'] = "OK";
             $RS['msg'] = __("Submit Success");
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -154,7 +154,7 @@ $YesOrNotOptions[] = ['value'=>'No', 'label'=>__('No')];
 //#########################################################################################################################
 //Field Type###############################################################################################################
 //#########################################################################################################################
-if($_GET['action']=="edit_default_1"&&$id!='')         {    
+if($_GET['action']=="edit_default_1"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
     $rs     = $db->Execute($sql);
     $FlowName   = $rs->fields['FlowName'];
@@ -224,11 +224,11 @@ foreach($ShowTypeMap as $FieldName=>$ShowTypeMapItem) {
         elseif(strpos($FieldName,"申请时间")>0) {
             $FormFieldDefaultValue = "ListView_Use_AddEdit_NotUse";
         }
-        
+
 
         $defaultValues_1["FieldType_".$FieldName] = $FormFieldDefaultValue;
         $edit_default_1['Default'][] = ['name' => "FieldType_".$FieldName, 'show'=>true, 'type'=>'select', 'options'=>$FormFieldSelectOptions, 'label' => $FieldName, 'value' => $FormFieldSelectOptions[7]['value'], 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-        
+
         if(in_array($FieldName,["学期","学期名称","班级","班级名称","课程","课程名称"])) {
             $defaultValues_1["FieldGroup_".$FieldName] = true;
         }
@@ -236,16 +236,16 @@ foreach($ShowTypeMap as $FieldName=>$ShowTypeMapItem) {
             $defaultValues_1["FieldGroup_".$FieldName] = false;
         }
         $edit_default_1['Default'][] = ['name' => "FieldGroup_".$FieldName, 'show'=>true, 'type'=>'Switch', 'label' => __("Field Group"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>4, 'sm'=>2]];
-        
+
         $defaultValues_1["FieldSearch_".$FieldName] = true;
         $edit_default_1['Default'][] = ['name' => "FieldSearch_".$FieldName, 'show'=>true, 'type'=>'Switch', 'label' => __("Search"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>4, 'sm'=>1]];
-        
+
         $defaultValues_1["FieldImport_".$FieldName] = true;
         $edit_default_1['Default'][] = ['name' => "FieldImport_".$FieldName, 'show'=>true, 'type'=>'Switch', 'label' => __("Import"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>4, 'sm'=>1]];
 
         $defaultValues_1["FieldExport_".$FieldName] = true;
         $edit_default_1['Default'][] = ['name' => "FieldExport_".$FieldName, 'show'=>true, 'type'=>'Switch', 'label' => __("Export"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>4, 'sm'=>1]];
-        
+
         $defaultValues_1["FieldEditable_".$FieldName] = false;
         $edit_default_1['Default'][] = ['name' => "FieldEditable_".$FieldName, 'show'=>true, 'type'=>'Switch', 'label' => __("List Editable"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>4, 'sm'=>1]];
     }
@@ -253,7 +253,7 @@ foreach($ShowTypeMap as $FieldName=>$ShowTypeMapItem) {
 
 $edit_default_1_mode = [['value'=>"Default", 'label'=>__("")]];
 
-if($_GET['action']=="edit_default_1"&&$id!='')         {    
+if($_GET['action']=="edit_default_1"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
     $rs     = $db->Execute($sql);
     $FlowName   = $rs->fields['FlowName'];
@@ -262,12 +262,12 @@ if($_GET['action']=="edit_default_1"&&$id!='')         {
     if(is_array($SettingMap))   {
         $defaultValues_1_keys = array_keys($defaultValues_1);
         foreach($SettingMap as $value => $label)  {
-            // && substr($value,0,strlen("FieldImport_"))!="FieldImport_" 
+            // && substr($value,0,strlen("FieldImport_"))!="FieldImport_"
             if(in_array($value, $defaultValues_1_keys))  {
                 $defaultValues_1[$value] = $label;
             }
         }
-    }  
+    }
     $edit_default['allFields']      = $edit_default_1;
     $edit_default['allFieldsMode']  = $edit_default_1_mode;
     $edit_default['defaultValues']  = $defaultValues_1;
@@ -544,7 +544,7 @@ $edit_default_2['Import_Fields_Unique'][] = ['name' => "Import_Fields_Unique_3",
 
 //Relative_Child_Table
 $sql    = "select id,FlowName from form_formflow where FlowName!='' and FaceTo='AuthUser'";
-$rsT    = $db->CacheExecute(180,$sql);
+$rsT    = $db->Execute($sql);
 $rsA    = $rsT->GetArray();
 $Relative_Child_Table = [];
 $Relative_Child_Table[] = ['value'=>0, 'label'=>__("None")];
@@ -576,7 +576,7 @@ $edit_default_2_mode[] = ['value'=>"Unique_Fields", 'label'=>__("Unique_Fields")
 $edit_default_2_mode[] = ['value'=>"Import_Fields_Unique", 'label'=>__("Import_Fields_Unique")];
 $edit_default_2_mode[] = ['value'=>"Relative_Child_Table", 'label'=>__("Relative_Child_Table")];
 
-if($_GET['action']=="edit_default_2"&&$id!='')         {    
+if($_GET['action']=="edit_default_2"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
     $rs     = $db->Execute($sql);
     $FlowName   = $rs->fields['FlowName'];
@@ -615,7 +615,7 @@ if($_GET['action']=="edit_default_2"&&$id!='')         {
                 $defaultValues_2[$value] = $label;
             }
         }
-    } 
+    }
 
     $EnableFields = [];
     switch($defaultValues_2['Page_Role_Name']) {
@@ -854,7 +854,7 @@ for($i=1;$i<=$MaxMsgSections;$i++)     {
     $DefaultValue       = $CurrentFieldTypeArray[4];
     $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
     $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-    $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp); 
+    $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
     if($TableNameTemp=="form_formdict" && sizeof($CurrentFieldTypeArray)==7)   {
         $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label,ExtraControl from $TableNameTemp where $AddSqlTemp $WhereField = '".$WhereValue."' order by SortNumber asc, `".$MetaColumnNamesTemp[$ValueField]."` asc";
     }
@@ -867,7 +867,7 @@ for($i=1;$i<=$MaxMsgSections;$i++)     {
     else {
         print "autocompletemulti para error!";exit;
     }
-    $rs = $db->CacheExecute(10, $sql) or print($sql);
+    $rs = $db->Execute($sql) or print($sql);
     $FieldType = $rs->GetArray();
     $DefaultValueTemp = $SettingMap["Msg_Reminder_Object_Select_Users_{$i}"];
     $FieldCodeName = $FieldName;
@@ -1001,7 +1001,7 @@ $edit_default_5['NewsTemplate1'][] = ['name' => "MobileEndNewsReadUsers", 'show'
 $edit_default_5['NewsTemplate1'][] = ['name' => "MobileEndNewsCreator", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("MobileEndNewsCreator"), 'value' => 'Disable', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 $edit_default_5['NewsTemplate1'][] = ['name' => "MobileEndNewsCreateTime", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("MobileEndNewsCreateTime"), 'value' => 'Disable', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 $edit_default_5['NewsTemplate1'][] = ['name' => "MobileEndNewsLeftImage", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("MobileEndNewsLeftImage"), 'value' => 'Disable', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
- 
+
 
 
 $edit_default_5['ZiXun'][] = ['name' => "MobileEndNewsTitle", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("MobileEndNewsTitle"), 'value' => 'Disable', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
@@ -1066,7 +1066,7 @@ foreach($edit_default_5 as $ModeName=>$allFieldItem) {
     }
 }
 
-if($_GET['action']=="edit_default_3"&&$id!='')         {    
+if($_GET['action']=="edit_default_3"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
     $rs     = $db->Execute($sql);
     $FlowName   = $rs->fields['FlowName'];
@@ -1080,7 +1080,7 @@ if($_GET['action']=="edit_default_3"&&$id!='')         {
                 $defaultValues_3[$value] = $label;
             }
         }
-    } 
+    }
     $edit_default['allFields']      = $edit_default_3;
     $edit_default['allFieldsMode']  = $edit_default_3_mode;
     $edit_default['defaultValues']  = $defaultValues_3;
@@ -1102,7 +1102,7 @@ if($_GET['action']=="edit_default_3"&&$id!='')         {
     exit;
 }
 
-if($_GET['action']=="edit_default_4"&&$id!='')         {    
+if($_GET['action']=="edit_default_4"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
     $rs     = $db->Execute($sql);
     $FlowName   = $rs->fields['FlowName'];
@@ -1116,7 +1116,7 @@ if($_GET['action']=="edit_default_4"&&$id!='')         {
                 $defaultValues_4[$value] = $label;
             }
         }
-    } 
+    }
     $edit_default['allFields']      = $edit_default_4;
     $edit_default['allFieldsMode']  = $edit_default_4_mode;
     $edit_default['defaultValues']  = $defaultValues_4;
@@ -1140,7 +1140,7 @@ if($_GET['action']=="edit_default_4"&&$id!='')         {
 
 
 
-if($_GET['action']=="edit_default_5"&&$id!='')         {    
+if($_GET['action']=="edit_default_5"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
     $rs     = $db->Execute($sql);
     $FormId     = $rs->fields['FormId'];
@@ -1155,14 +1155,14 @@ if($_GET['action']=="edit_default_5"&&$id!='')         {
             if(in_array($value, $defaultValues_5_keys))  {
                 $defaultValues_5[$value] = $label;
             }
-        }        
+        }
         if($defaultValues_5['MobileEndIconName']=="" || $defaultValues_5['MobileEndIconName']==null)     {
             $defaultValues_5['MobileEndIconName'] = $SettingMap['Menu_Three']!=""?$SettingMap['Menu_Three']:$SettingMap['Menu_Two'];
-        }       
+        }
         if($defaultValues_5['MobileEndTitleName']=="" || $defaultValues_5['MobileEndTitleName']==null)     {
             $defaultValues_5['MobileEndTitleName'] = $SettingMap['Menu_Three']!=""?$SettingMap['Menu_Three']:$SettingMap['Menu_Two'];
         }
-    } 
+    }
     if($FormId!="" && $Step>1)   {
         $sql        = "select * from form_formflow where FormId = '$FormId' and Step='".($Step-1)."'";
         $rs         = $db->Execute($sql);
@@ -1175,7 +1175,7 @@ if($_GET['action']=="edit_default_5"&&$id!='')         {
         if($defaultValues_5['MobileEndSecondLineLeft']==""&&isset($SettingMapPrevious['MobileEndSecondLineLeft']))         $defaultValues_5['MobileEndSecondLineLeft'] = $SettingMapPrevious['MobileEndSecondLineLeft'];
         if($defaultValues_5['MobileEndSecondLineLeftColorField']==""&&isset($SettingMapPrevious['MobileEndSecondLineLeftColorField']))         $defaultValues_5['MobileEndSecondLineLeftColorField'] = $SettingMapPrevious['MobileEndSecondLineLeftColorField'];
         if($defaultValues_5['MobileEndSecondLineLeftColorRule']==""&&isset($SettingMapPrevious['MobileEndSecondLineLeftColorRule']))         $defaultValues_5['MobileEndSecondLineLeftColorRule'] = $SettingMapPrevious['MobileEndSecondLineLeftColorRule'];
-        
+
         if($defaultValues_5['MobileEndSecondLineRight']==""&&isset($SettingMapPrevious['MobileEndSecondLineRight']))         $defaultValues_5['MobileEndSecondLineRight'] = $SettingMapPrevious['MobileEndSecondLineRight'];
         if($defaultValues_5['MobileEndSecondLineRightColorField']==""&&isset($SettingMapPrevious['MobileEndSecondLineRightColorField']))         $defaultValues_5['MobileEndSecondLineRightColorField'] = $SettingMapPrevious['MobileEndSecondLineRightColorField'];
         if($defaultValues_5['MobileEndSecondLineRightColorRule']==""&&isset($SettingMapPrevious['MobileEndSecondLineRightColorRule']))         $defaultValues_5['MobileEndSecondLineRightColorRule'] = $SettingMapPrevious['MobileEndSecondLineRightColorRule'];
@@ -1209,7 +1209,7 @@ if(($_GET['action']=="edit_default_6_data") && $id!="")     {
     $FieldsArray['id']          = NULL;
     $FieldsArray['FlowName']    = ForSqlInjection($_POST['FlowName']);
     $FieldsArray['FaceTo']      = ForSqlInjection($_POST['FaceTo']);
-    
+
     $sql        = "select Max(Step) AS Step from form_formflow where FormId = '".$FieldsArray['FormId']."'";
     $rs         = $db->Execute($sql);
     $FieldsArray['Step']        = $rs->fields['Step']+1;
@@ -1219,7 +1219,7 @@ if(($_GET['action']=="edit_default_6_data") && $id!="")     {
         $RS['_POST'] = $_POST;
         $RS['msg'] = __("Submit Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
     else {
         $RS = [];
@@ -1234,7 +1234,7 @@ if(($_GET['action']=="edit_default_6_data") && $id!="")     {
 }
 
 if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_data" || $_GET['action']=="edit_default_3_data" || $_GET['action']=="edit_default_4_data" || $_GET['action']=="edit_default_5_data") && $id!="")     {
-    
+
     if($_POST['Menu_One']!=""&&$_POST['Menu_Two']!=""&&$id!="")   {
         $FieldsArray = [];
         $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
@@ -1266,8 +1266,8 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
 header("Content-Type: application/json");
 require_once("../cors.php");
 require_once("../include.inc.php");
-$FlowId   = '.$id.';          
-require_once("../data_enginee_flow.php");            
+$FlowId   = '.$id.';
+require_once("../data_enginee_flow.php");
 ?>';
             $rs = file_put_contents($MenuTwoInterfaceFilePath,$Content);
             if($rs==false) {
@@ -1277,7 +1277,7 @@ require_once("../data_enginee_flow.php");
                 print json_encode($RS);
                 exit;
             }
-        }        
+        }
     }
 
     //Make Plugin File
@@ -1339,7 +1339,7 @@ require_once("../data_enginee_flow.php");
         $RS['_POST'] = $_POST;
         $RS['msg'] = __("Submit Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
     else {
         $RS = [];
@@ -1375,7 +1375,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -1443,7 +1443,7 @@ if(!in_array($pageSize,[10,20,30,40,50,100,200,500]))  {
 $fromRecord = $page * $pageSize;
 
 $sql    = "select count(*) AS NUM from form_formflow " . $AddSql . "";
-$rs     = $db->CacheExecute(10, $sql);
+$rs     = $db->Execute($sql);
 $RS['init_default']['total']        = intval($rs->fields['NUM']);
 $RS['init_default']['searchtitle']  = __("Design Form Flow");
 $RS['init_default']['primarykey']   = $columnNames[0];
@@ -1614,7 +1614,7 @@ $RS['init_default']['returnButton']['status']  = true;
 $RS['init_default']['returnButton']['text']  = __("return");
 $RS['init_default']['rowHeight']        = 38;
 $RS['init_default']['dialogContentHeight']  = "850px";
-$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs 
+$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs
 $RS['init_default']['timeline']         = time();
 $RS['init_default']['pageNumber']       = $pageSize;
 $RS['init_default']['pageCount']        = ceil($RS['init_default']['total']/$pageSize);

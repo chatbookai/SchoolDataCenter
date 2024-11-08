@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('../cors.php');
 require_once('../include.inc.php');
 
@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
 
-$_REQUEST['JSON'] = 1; 
+$_REQUEST['JSON'] = 1;
 global $微信小程序_全局编号;
 global $微信小程序_TableName;
 global $HTTP_HOST;
@@ -21,7 +21,7 @@ $学校ID 	= $_REQUEST['LOGIN_SCHOOL_ID'];
 $SYSTEM_CACHE_SECOND_TDFORMICAMPUS = 10;
 
 $sql 		= "select * from data_miniprogram where 是否启用='是' and id='$微信小程序_全局编号'";
-$rs 		= $db->CacheExecute($SYSTEM_CACHE_SECOND_TDFORMICAMPUS,$sql);
+$rs 		= $db->Execute($sql);
 $rs_a 		= $rs->GetArray();
 $小程序名称 = $rs_a[0]['小程序名称'];
 $TableName 	= $rs_a[0]['TableName'];
@@ -65,7 +65,7 @@ if($_GET['action']=='update')							{
 	$RESULT['小程序使用协议']	    = $用户使用协议;
 	$RESULT['小程序服务内容']	    = $服务内容;
 	$RESULT['小程序使用前说明']	    = $使用前说明;
-	$RESULT['小程序LOGO']		    = "/images/wechat/logo.png";	
+	$RESULT['小程序LOGO']		    = "/images/wechat/logo.png";
 	print_R(json_encode($RESULT));
     exit;
 }
@@ -73,11 +73,11 @@ if($_GET['action']=='update')							{
 
 //私有部署
 if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
-	
+
 	$SYSTEM_APPSTORE_ID = $_REQUEST['SYSTEM_APPSTORE_ID'];
 	$得到用户所属的FormId列表X = array();
 	$SqlList = [];
-	
+
 	//第一步 得到权限
 	global $systemprivate_rsa;
 	$LOGIN_USER_PRIV_OTHER	= $_SESSION['LOGIN_USER_PRIV_OTHER'];
@@ -88,13 +88,13 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
 		$LOGIN_USER_PRIV_TEXT_ARRAY[] = $systemprivate_rsa[$LOGIN_USER_PRIV_STR_ARRAY[$i]]['CONTENT'];
 	}
 	$LOGIN_USER_PRIV_TEXT  = join(',',$LOGIN_USER_PRIV_TEXT_ARRAY);
-	$LOGIN_USER_PRIV_TEXT .= "...";	
+	$LOGIN_USER_PRIV_TEXT .= "...";
 	$_SESSION['LOGIN_USER_PRIV_TEXT'] = $LOGIN_USER_PRIV_TEXT;
-	
+
 	//第二步 基本信息
 	$sql	= "SELECT 基础架构,业务表单,小程序名称 FROM data_miniprogram WHERE id='$SYSTEM_APPSTORE_ID'";
 	$SqlList[] = $sql;
-	$rs		= $db->CacheExecute($SYSTEM_CACHE_SECOND_TDFORMICAMPUS,$sql);
+	$rs		= $db->Execute($sql);
 	$rs_a 	= $rs->GetArray();
 	$基础设置 = $业务表单 = "";
     $小程序名称	 					= $rs_a[0]['小程序名称'];
@@ -109,13 +109,13 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
     }
 	$业务表单ARRAY 	= explode(',',$业务表单);
 	$所有表单ARRAY 	= explode(',',$业务表单);
-	
+
 	//print_R($业务表单TEMPARRAY);exit;
 	$sql 			= "select id,FullName,TableName from form_formname where id in ('".join("','",$所有表单ARRAY)."')";
 	$SqlList[] = $sql;
-	$rs				= $db->CacheExecute($SYSTEM_CACHE_SECOND_TDFORMICAMPUS,$sql);
+	$rs				= $db->Execute($sql);
 	$rs_a 			= $rs->GetArray();
-	$表单编号ARRAY 	= array();	
+	$表单编号ARRAY 	= array();
 	for($R=0;$R<sizeof($rs_a);$R++)						{
 		$表单编号	 						 = $rs_a[$R]['id'];
 		$表单MAP[$表单编号] 				 = $rs_a[$R];
@@ -129,12 +129,12 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
 	if($RS['USER_PRIV_OTHER']!="") {
 		$USER_PRIV_Array = explode(',',$RS['USER_PRIV'].",".$RS['USER_PRIV_OTHER']);
 	}
-	else {		
+	else {
 		$USER_PRIV_Array = explode(',',$RS['USER_PRIV']);
 	}
     $sql        = "select * from data_role where id in ('".join("','",$USER_PRIV_Array)."')";
 	$SqlList[] = $sql;
-    $rsf        = $db->CacheExecute(180,$sql);
+    $rsf        = $db->Execute($sql);
     $RoleRSA    = $rsf->GetArray();
     $RoleArray  = "";
     foreach($RoleRSA as $Item)  {
@@ -145,12 +145,12 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
 
     //Menu From Database
     $sql    = "select * from data_menuone order by SortNumber asc, MenuOneName asc";
-    $rsf    = $db->CacheExecute(180,$sql);
+    $rsf    = $db->Execute($sql);
     $MenuOneRSA  = $rsf->GetArray();
 
     $sql 		= "select * from form_formflow where FormId in ('".join("','",$所有表单ARRAY)."') and FaceTo='AuthUser' and MobileEnd='Yes' order by FormId asc,Step asc";
 	$SqlList[] = $sql;
-	$rs			= $db->CacheExecute($SYSTEM_CACHE_SECOND_TDFORMICAMPUS,$sql);
+	$rs			= $db->Execute($sql);
 	$rs_a 		= $rs->GetArray();
     $FlowIdMapArray = [];
 	for($R=0;$R<sizeof($rs_a);$R++)				{
@@ -161,7 +161,7 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
     //$sql    	= "select * from data_menutwo where FaceTo='AnonymousUser' order by MenuOneName asc,SortNumber asc";
     $sql    	= "select * from data_menutwo where FaceTo='AuthUser' and id in ('".join("','",$RoleArray)."') order by MenuOneName asc,SortNumber asc";
 	$SqlList[] 	= $sql;
-    $rsf    	= $db->CacheExecute(180,$sql);
+    $rsf    	= $db->Execute($sql);
     $MenuTwoRSA  = $rsf->GetArray();
     $MenuTwoArray = [];
     $TabMap = [];
@@ -172,7 +172,7 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
         if($Item['MenuThreeName']!="")   {
             $MenuTwoArray[$Item['MenuOneName']][$Item['MenuTwoName']][] = $Item;
         }
-        else { 
+        else {
             $MenuTwoArray[$Item['MenuOneName']]['SystemMenuTwo_'.$Item['id']][] = $Item;
         }
         if(isset($FlowIdMapArray[$Item['FlowId']])) {
@@ -202,7 +202,7 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
 	//把[基础数据]这个值放到最下面-开始
 	$分组KEYSNEW= array();
 	$通知公告_是否启用 = 0;
-	$基础数据_是否启用 = 0;	
+	$基础数据_是否启用 = 0;
 	if(in_array("通知公告",$分组KEYS))		{
 		$分组KEYSNEW[] 	= "通知公告";
 	}
@@ -237,7 +237,7 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
 			$Element['FlowId']		= $当前分组下面的菜单[$当前分组下面的菜单KEY]['id'];
 			$Element['ForceLogin']	= 1;//图标的右上角提示信息
 			$Element['UserDefineMobilePageUrl']	= strval($当前分组下面的菜单[$当前分组下面的菜单KEY]['UserDefineMobilePageUrl']);
-			
+
 			//通知公告的前面两个菜单项目,直接在微信小程序的代码中写死,需要在"校园"图标中显示出来.
 			$MainDataList[$分组KEY][]       = $Element;
             $MainDataMap[$COUNTER]          = $Element;
@@ -260,7 +260,7 @@ if($_GET['action']=='maindata'&&$SYSTEM_IS_CLOUD==0)															{
 	$RESULT['FlowIdMapArray']			= $FlowIdMapArray;
 	$RESULT['MenuTwoRSA']				= $MenuTwoRSA;
 	$RESULT['SqlList']					= $SqlList;
-	
+
 	print_R(json_encode($RESULT));
 	exit;
 }

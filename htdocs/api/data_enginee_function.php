@@ -925,7 +925,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
             case 'autocomplete0':
                 if($actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
                 $sql = "select `FieldType` as value, `FieldType` as label from form_formfield_logictype order by SortNumber asc, id asc";
-                $rs = $db->CacheExecute(10, $sql);
+                $rs = $db->Execute($sql);
                 $FieldType = $rs->GetArray();
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>$CurrentFieldTypeArray[0], 'options'=>$FieldType, 'label' => $ShowTextName, 'value' => $FieldType[2]['value'], 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth),'disabled' => false]];
                 break;
@@ -1008,7 +1008,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 if($TableNameTemp=="data_wygl_peijian") {
                     $sql = "select 物品名称 as value, CONCAT(物品名称, '[', 物品类别, ']', '(', 单价, '元)') as label from data_wygl_peijian order by 物品名称";
                 }
-                $rs = $db->CacheExecute(10, $sql) or print($sql);
+                $rs = $db->Execute($sql) or print($sql);
                 $FieldType = $rs->GetArray();
                 if($CurrentFieldTypeArray[0]=="autocomplete"&&$DefaultValue!="") {
                     $DefaultValueTemp = $DefaultValue;
@@ -1086,7 +1086,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                     }
                     $sql .= " limit 100";
                 }
-                $rs = $db->CacheExecute(10, $sql) or print($sql);
+                $rs = $db->Execute($sql) or print($sql);
                 $FieldType = $rs->GetArray();
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>$CurrentFieldTypeArray[0], 'options'=>$FieldType, 'label' => $ShowTextName, 'value' => $DefaultValue, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth),'disabled' => $disabledItem==true?true:false, 'row'=>true], 'sql'=>$sql, 'CurrentFieldTypeArray'=>$CurrentFieldTypeArray, 'MetaColumnNamesTemp'=>$MetaColumnNamesTemp];
                 break;
@@ -1124,7 +1124,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 //其它建筑
                 $其它建筑 = [];
                 $sql	= "select 建筑名称 as 名称 from data_buiding_others order by 建筑名称";
-                $rs		= $db->CacheExecute(180,$sql);
+                $rs		= $db->Execute($sql);
                 $rs_a	= $rs->GetArray();
                 for($R=0;$R<sizeof($rs_a);$R++)							{
                     $其它建筑[] = $rs_a[$R]['名称'];
@@ -1132,7 +1132,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 //宿舍楼
                 $宿舍楼 = [];
                 $sql	= "select 宿舍楼名称 as 名称 from data_dorm_building order by 宿舍楼名称";
-                $rs		= $db->CacheExecute(180,$sql);
+                $rs		= $db->Execute($sql);
                 $rs_a	= $rs->GetArray();
                 for($R=0;$R<sizeof($rs_a);$R++)							{
                     $宿舍楼[] = $rs_a[$R]['名称'];
@@ -1140,7 +1140,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 //教学楼
                 $教学楼 = [];
                 $sql	= "select 建筑名称 as 名称 from data_building order by 建筑名称";
-                $rs		= $db->CacheExecute(180,$sql);
+                $rs		= $db->Execute($sql);
                 $rs_a	= $rs->GetArray();
                 for($R=0;$R<sizeof($rs_a);$R++)							{
                     $教学楼[] = $rs_a[$R]['名称'];
@@ -1158,7 +1158,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                     //报修故障分类
                     $其它建筑 = [];
                     $sql	= "select 内容,项目 from data_wygl_biaoxiucontent order by 项目,内容";
-                    $rs		= $db->CacheExecute(180,$sql);
+                    $rs		= $db->Execute($sql);
                     $rs_a	= $rs->GetArray();
                     $GroupTwoMap = [];
                     $二级菜单MAP = [];

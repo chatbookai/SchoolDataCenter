@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -13,7 +13,7 @@ $TableName  = "form_formdict";
 
 $columnNames = [];
 $sql = "show columns from form_formdict";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 foreach ($rs_a as $Line) {
     $columnNames[] = $Line['Field'];
@@ -38,8 +38,8 @@ $allFieldsEdit = $allFieldsAdd;
 if( ($_GET['action']=="add_default_data") && $_POST['DictMark']!="")  {
     $MetaColumnNames    = $db->MetaColumnNames($TableName);
     $MetaColumnNames    = array_values($MetaColumnNames);
-    
-    $ChineseNameArray   = explode(',',trim($_POST['ChineseName']));    
+
+    $ChineseNameArray   = explode(',',trim($_POST['ChineseName']));
     $CodeArray          = explode(',',trim($_POST['Code']));
 
     $_POST['DictMark']  = str_replace(":","_",$_POST['DictMark']);
@@ -59,11 +59,11 @@ if( ($_GET['action']=="add_default_data") && $_POST['DictMark']!="")  {
             [$rs,$sql] = InsertOrUpdateTableByArray("form_formdict",$FieldsArray,"DictMark,ChineseName",0,"Insert");
         }
     }
-    if($Exec_Total) {        
+    if($Exec_Total) {
         $RS['status'] = "OK";
         $RS['msg'] = __("Submit Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
     else {
         $Exec_Total = 0;
@@ -93,7 +93,7 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="")  {
             $RS['status'] = "OK";
             $RS['msg'] = __("Submit Success");
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -119,14 +119,14 @@ if(($_GET['action']=="edit_default")&&$_GET['id']!="")  {
             $EditValue[$FieldName] = $FieldValue;
         }
         $EditValue['Setting'] = '';
-    }    
+    }
     foreach($rsf->fields as $FieldName=>$FieldValue)  {
         $EditValue[$FieldName] = $FieldValue;
     }
     $EnableFields = returntablefield("form_formdict_showtype","Name",$EditValue['ShowType'],"EnableFields");
     $RS = [];
     //IsGetStructureFromEditDefault
-    if($_GET['IsGetStructureFromEditDefault']==1)  {        
+    if($_GET['IsGetStructureFromEditDefault']==1)  {
         //print_R($CurrentFieldTypeArray);
         $RemoteFieldArray   = [];
         $FieldName          = "OtherPossibleValues";
@@ -135,13 +135,13 @@ if(($_GET['action']=="edit_default")&&$_GET['id']!="")  {
         //得到相匹配的字段
         if($DictName!="")     {
             $sql            = "select * from form_formfield where ShowType='$DictName'";
-            $rs_temp        = $db->CacheExecute(180, $sql);
+            $rs_temp        = $db->Execute($sql);
             $SettingTemp    = json_decode($rs_temp->fields['Setting'], true);
             $RemoteRelativeField = $SettingTemp['RemoteRelativeField'];
             $FormId             = $rs_temp->fields['FormId'];
             $TableName          = $rs_temp->fields['FormName'];
             $sql                = "select * from data_datasyncedrules where FormId='$FormId'";
-            $rs                 = $db->CacheExecute(180,$sql);
+            $rs                 = $db->Execute($sql);
             $数据源             = $rs->fields['数据源'];
             $远程数据表         = $rs->fields['远程数据表'];
             $远程数据库信息      = returntablefield("data_datasource","id",$数据源,"数据库主机,数据库用户名,数据库密码,数据库名称");
@@ -189,14 +189,14 @@ if(($_GET['action']=="edit_default")&&$_GET['id']!="")  {
             $RS['forceuse'] = true; //强制使用当前结构数据来渲染表单
         }
     }
-    
+
     $RS['status']       = "OK";
     $RS['data']         = $EditValue;
     $RS['EnableFields'] = explode(",",$EnableFields['EnableFields']);
     $RS['sql']          = $sql;
     $RS['msg']          = __("Get Data Success");
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
@@ -211,7 +211,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
             $EditValue[$FieldName] = $FieldValue;
         }
         $EditValue['Setting'] = '';
-    }    
+    }
     foreach($rsf->fields as $FieldName=>$FieldValue)  {
         $EditValue[$FieldName] = $FieldValue;
     }
@@ -222,7 +222,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['EnableFields'] = explode(",",$EnableFields['EnableFields']);
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
-    
+
     $FieldNameArray             = array_keys($EditValue);
     $ApprovalNodeFieldsHidden   = [];
     for($X=0;$X<sizeof($FieldNameArray);$X=$X+2)        {
@@ -246,7 +246,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['newTableRowData']          = $NewTableRowData;
 
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if($_GET['action']=="updateone")  {
@@ -271,7 +271,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -297,7 +297,7 @@ if($_GET['action']=="delete_array")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 $AddSql = " where 1=1";
@@ -335,11 +335,11 @@ if ($searchFieldName != "" && $searchFieldValue != "" && in_array($searchFieldNa
 }
 
 $sql        = "select count(*) as NUM from form_formdict $AddSql ";
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $ALL_NUM    = intval($rs->fields['NUM']);
 
 $sql = "select DictMark as name, DictMark as value, count(*) AS num from form_formdict $AddSql group by DictMark";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 array_unshift($rs_a,['name'=>__('All Data'), 'value'=>'All Data', 'num'=>$ALL_NUM]);
 $RS['init_default']['filter'][] = ['name' => 'DictMark', 'text' => __('DictMark'), 'list' => $rs_a, 'selected' => "All Data"];
@@ -456,7 +456,7 @@ $RS['import_default'] = [];
 
 $RS['init_default']['rowHeight']        = 38;
 $RS['init_default']['dialogContentHeight']  = "850px";
-$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs 
+$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs
 $RS['init_default']['timeline']         = time();
 $RS['init_default']['pageNumber']       = $pageSize;
 $RS['init_default']['pageCount']        = ceil($RS['init_default']['total']/$pageSize);

@@ -50,7 +50,7 @@ function plugin_data_exam_paper_2_edit_default($id)  {
     $defaultValues      = [];
 
     $sql            = "SELECT * FROM `data_exam_paper` where id='$id'";
-    $rs             = $db->CacheExecute(180,$sql);
+    $rs             = $db->Execute($sql);
     $试卷信息       = $rs->fields;
     $试题抽取方式   = $试卷信息['试题抽取方式'];
     $题库分类       = $试卷信息['题库分类'];
@@ -166,7 +166,7 @@ function plugin_data_exam_paper_2_edit_default_data_before_submit($id)  {
     //Here is your write code
 
     $sql            = "SELECT * FROM `data_exam_paper` where id='$id'";
-    $rs             = $db->CacheExecute(180,$sql);
+    $rs             = $db->Execute($sql);
     $试卷信息       = $rs->fields;
     $试题抽取方式   = $试卷信息['试题抽取方式'];
     $题库分类       = $试卷信息['题库分类'];
@@ -186,7 +186,7 @@ function plugin_data_exam_paper_2_edit_default_data_before_submit($id)  {
             $用户所选 = $_POST["题目_".$Item];
             if($用户所选!="")  {
                 $sql            = "SELECT * FROM `data_exam_question` where id='$Item'";
-                $rs             = $db->CacheExecute(180,$sql);
+                $rs             = $db->Execute($sql);
                 $题目信息        = $rs->fields;
                 $Element = [];
                 $Element['考试名称']    = $考试名称;

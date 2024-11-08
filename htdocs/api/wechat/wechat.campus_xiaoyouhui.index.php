@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('../cors.php');
 require_once('../include.inc.php');
 require_once('../data_enginee_function.php');
@@ -8,7 +8,7 @@ ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
 
-$_REQUEST['JSON'] = 1; 
+$_REQUEST['JSON'] = 1;
 global $微信小程序_全局编号;
 global $微信小程序_TableName;
 global $HTTP_HOST;
@@ -27,8 +27,8 @@ $id		= DecryptID($_POST['id']);
 $输出数据   = [];
 
 //保存用户头像
-if($action=="Avatar"&&$openid!="")     {	
-    //CheckAuthUserLoginStatus();	 
+if($action=="Avatar"&&$openid!="")     {
+    //CheckAuthUserLoginStatus();
 	$sql    = "select id from data_xiaoyou_member where openid='".$openid."'";
 	$rs     = $db->Execute($sql);
 	$id     = intval($rs->fields['id']);
@@ -41,8 +41,8 @@ if($action=="Avatar"&&$openid!="")     {
 }
 
 //活动报名
-if($action=="Enroll"&&$domain=="data_xiaoyou_activity"&&$id>0)     {	
-    //CheckAuthUserLoginStatus();	 
+if($action=="Enroll"&&$domain=="data_xiaoyou_activity"&&$id>0)     {
+    //CheckAuthUserLoginStatus();
 	$sql    = "select COUNT(*) AS NUM from data_xiaoyou_activity_record where 活动ID='".intval($id)."' and 用户ID='".$GLOBAL_USER->USER_ID."' ";
 	$rs     = $db->Execute($sql);
 	$NUM    = intval($rs->fields['NUM']);
@@ -59,8 +59,8 @@ if($action=="Enroll"&&$domain=="data_xiaoyou_activity"&&$id>0)     {
 }
 
 //活动取消报名
-if($action=="EnrollCancel"&&$domain=="data_xiaoyou_activity"&&$id>0)     {	
-    //CheckAuthUserLoginStatus();	 
+if($action=="EnrollCancel"&&$domain=="data_xiaoyou_activity"&&$id>0)     {
+    //CheckAuthUserLoginStatus();
 	$sql    = "delete from data_xiaoyou_activity_record where 活动ID='".intval($id)."' and 用户ID='".$GLOBAL_USER->USER_ID."' ";
 	$rs     = $db->Execute($sql);
 	$RS             = [];
@@ -72,7 +72,7 @@ if($action=="EnrollCancel"&&$domain=="data_xiaoyou_activity"&&$id>0)     {
 }
 
 //点赞次数加1
-if($action=="Like"&&$id>0)     {	
+if($action=="Like"&&$id>0)     {
     //CheckAuthUserLoginStatus();
 	switch($domain) {
 		case 'data_xiaoyou_news':
@@ -145,7 +145,7 @@ if($action=="Like"&&$id>0)     {
 }
 
 //收藏次数加1
-if($action=="Favorite"&&$id>0)     	{	
+if($action=="Favorite"&&$id>0)     	{
     //CheckAuthUserLoginStatus();
 	switch($domain) {
 		case 'data_xiaoyou_news':
@@ -226,7 +226,7 @@ if($action=="Favorite"&&$id>0)     	{
 if($action=="")						{
 	//校友资讯
 	$sql 		= "select * from data_xiaoyou_news where 类别='校友资讯' and 发布状态='是' order by id desc limit 3";
-	$rs 		= $db->CacheExecute($SYSTEM_CACHE_SECOND_TDFORMICAMPUS,$sql);
+	$rs 		= $db->Execute($sql);
 	$rs_a 		= $rs->GetArray();
 	for($i=0;$i<sizeof($rs_a);$i++) {
 		$rs_a[$i]['内容'] 		= strip_tags($rs_a[$i]['内容']);
@@ -239,7 +239,7 @@ if($action=="")						{
 
 	//校友活动
 	$sql 		= "select * from data_xiaoyou_activity where 审核状态='通过' order by id desc limit 3";
-	$rs 		= $db->CacheExecute($SYSTEM_CACHE_SECOND_TDFORMICAMPUS,$sql);
+	$rs 		= $db->Execute($sql);
 	$rs_a 		= $rs->GetArray();
 	for($i=0;$i<sizeof($rs_a);$i++) {
 		$rs_a[$i]['描述'] 		= strip_tags($rs_a[$i]['描述']);

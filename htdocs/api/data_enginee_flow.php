@@ -62,7 +62,7 @@ $Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header'
 
 //Get Table Infor
 $sql        = "select * from form_formname where id='$FormId'";
-$rs         = $db->CacheExecute(180, $sql);
+$rs         = $db->Execute($sql);
 $FromInfo   = $rs->fields;
 $TableName  = $FromInfo['TableName'];
 global $FormName;
@@ -75,7 +75,7 @@ if($SettingMap['EnablePluginsForIndividual']=="Enable" && $TableName!="" && $Ste
 
 //Get form_formfield_showtype
 $sql        = "select * from form_formfield_showtype";
-$rs         = $db->CacheExecute(180, $sql);
+$rs         = $db->Execute($sql);
 $AllShowTypes   = $rs->GetArray();
 $AllShowTypesArray = [];
 foreach($AllShowTypes as $Item)  {
@@ -1083,7 +1083,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                     //行政区 三级
                     global $微信小程序_省市区_子选项;
                     $sql	= "select * from edu_xingzhengdaima where length(代码)='12' order by 代码";
-                    $rs		= $db->CacheExecute(180,$sql);
+                    $rs		= $db->Execute($sql);
                     $rs_a	= $rs->GetArray();
                     $微信小程序_省市区_子选项     = [];
                     $Element           = [];
@@ -1165,7 +1165,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                     //行政区 三级
                     global $微信小程序_省市区_子选项;
                     $sql	= "select * from edu_xingzhengdaima where length(代码)='12' order by 代码";
-                    $rs		= $db->CacheExecute(180,$sql);
+                    $rs		= $db->Execute($sql);
                     $rs_a	= $rs->GetArray();
                     $微信小程序_省市区_子选项     = [];
                     $Element           = [];

@@ -16,7 +16,7 @@ Class StudentFeeMiddleSchool
        $this->db 	= $db;
 	   $this->debug = $debug;
     }
-	
+
 	public function 学期进一位($学期,$位数)
 	{
 		$入学学期ARRAY 	= explode('-',$学期);
@@ -42,7 +42,7 @@ Class StudentFeeMiddleSchool
 		}
 		return join("-",$入学学期ARRAY);;
 	}
-	
+
 	public function 是否学部最后一个学期($当前年级,$当前学期)
 	{
 		$当前学期ARRAY 	= explode('-',$当前学期);
@@ -69,7 +69,7 @@ Class StudentFeeMiddleSchool
 		}
 		return $是否学部最后一个学期;
 	}
-	
+
 	public function 学生应缴费学期($stuinfo)
 	{
 		global $全局变量_班级表;
@@ -77,7 +77,7 @@ Class StudentFeeMiddleSchool
 		$年级		= $stuinfo['年级'];
 		$学部		= $stuinfo['学部'];
 		$入学学期	= $stuinfo['入学学期'];
-		$结果						= [];		
+		$结果						= [];
 		for($i=0;$i<12;$i++)			{
 			$当前学期X 					= $this->学期进一位($入学学期,$i);
 			$是否学部最后一个学期		= $this->是否学部最后一个学期($年级,$当前学期X);
@@ -89,7 +89,7 @@ Class StudentFeeMiddleSchool
 		//print_R($入学学期);exit;
 		return $结果;
 	}
-	
+
 	public function 得到所有学期的收费标准()
 	{
 		global $全局变量_班级表;
@@ -102,12 +102,12 @@ Class StudentFeeMiddleSchool
 		}
 		return $得到所有学期的收费标准;
 	}
-	
+
 	public function 得到支付方式()
 	{
 		$SQLADD = " and DictMark='收费单_支付方式' and IsEnable='1'";
 		$sql 	= "select * from form_formdict where 1=1 $SQLADD order by SortNumber asc, id asc";
-		$rs		= $this->db->CacheExecute(180,$sql);
+		$rs		= $this->db->Execute($sql);
 		$rs_a 	= $rs->GetArray();
 		$RS		= [];
 		foreach($rs_a AS $Element)			{
@@ -115,7 +115,7 @@ Class StudentFeeMiddleSchool
 		}
 		return $RS;
 	}
-	
+
 	public function 学生缴费标准($stuinfo)
 	{
 		global $全局变量_班级表,$得到所有学期的收费标准;
@@ -130,7 +130,7 @@ Class StudentFeeMiddleSchool
 		$伙食费折扣	= $stuinfo['伙食费折扣'];
 		$床上用品校服费折扣	= $stuinfo['床上用品校服费折扣'];
 		$代管费折扣	= $stuinfo['代管费折扣'];
-		
+
 		$sql 		= "select 学期名称 from data_xueqi";
 		$rs 		= $this->db->CacheExecute(180,$sql);
 		$rs_a 		= $rs->GetArray();
@@ -138,14 +138,14 @@ Class StudentFeeMiddleSchool
 		foreach($rs_a AS $ROW)		{
 			$学期名称ARRAY[]	= $ROW['学期名称'];
 		}
-		
+
 		$学生应缴费学期 	= $this->学生应缴费学期($stuinfo);
 		//print_R($得到所有学期的收费标准);print_R($学生应缴费学期);exit;
 		$学生缴费标准		= [];
 		if(is_array($学生应缴费学期))		{
 			foreach($学生应缴费学期 AS $学期名称 => $是否学部最后一个学期)			{
 				if(in_array($学期名称,$学期名称ARRAY)&&$得到所有学期的收费标准[$收费标准]['学费']!="")			{
-					
+
 					//更新自定义指定学期的学费折扣
 					if($学费折扣=="全校标准")				{
 						$学费折扣	= $得到所有学期的收费标准[$收费标准]['学费折扣'];
@@ -249,7 +249,7 @@ Class StudentFeeMiddleSchool
 				}
 			}
 		}
-		
+
 		//print_R($stuinfo);
 		//print_R("学费折扣:".$学费折扣);
 		//print_R($得到所有学期的收费标准);
@@ -257,7 +257,7 @@ Class StudentFeeMiddleSchool
 		//print_R($学生缴费标准);
 		return $学生缴费标准;
 	}
-	
+
 	public function 学生应缴费($stuinfo)
 	{
 		global $全局变量_班级表;
@@ -268,7 +268,7 @@ Class StudentFeeMiddleSchool
 		$年级 		= $stuinfo['年级'];
 		$收费标准	= $stuinfo['收费标准'];
 		$学生缴费标准 				= $this->学生缴费标准($stuinfo);
-				
+
 		$学生应缴费	= [];
 		if(is_array($学生缴费标准))		{
 			foreach($学生缴费标准 AS $学期名称 => $缴费标准)			{
@@ -296,10 +296,10 @@ Class StudentFeeMiddleSchool
 					$学生应缴费[$学期名称][$缴费项目]['计划缴费']		= $学生应缴费[$学期名称][$缴费项目]['欠费'];
 					$学生应缴费[$学期名称][$缴费项目]['已结清文本']		= "已结清";
 					$学生应缴费[$学期名称][$缴费项目]['只读']			= "是";
-					
+
 					$学生应缴费[$学期名称][$缴费项目]['是否启用']				= $得到所有学期的收费标准[$收费标准]["启用".$缴费项目];
 					$学生应缴费[$学期名称][$缴费项目]['未启用时文本描述']		= "未开始缴费";
-					
+
 					//显示缴费项目的折扣文本信息
 					$学生应缴费[$学期名称][$缴费项目][$缴费项目.'折扣'] = $缴费标准['折扣'][$缴费项目.'文本'];
 
@@ -331,8 +331,8 @@ Class StudentFeeMiddleSchool
 		//print_R($学生应缴费);
 		return $学生应缴费;
 	}
-	
-	
+
+
 	public function 学生学期已缴费信息($学期名称,$stuinfo)
 	{
 		$sql	= "select 缴费项目,sum(if(缴费金额>0,缴费金额,0)) as 缴费金额,sum(if(缴费金额<0,缴费金额,0)) as 退费金额 from data_middle_shoufeimingxi a where 身份证件号='".$stuinfo['身份证件号']."' and 学期='$学期名称' and 是否作废='否' and 缴费状态='缴费成功' group by 缴费项目 order by 缴费金额 desc";
@@ -346,32 +346,32 @@ Class StudentFeeMiddleSchool
 		$_SESSION['学生学期已缴费信息_SQL'] = $sql;
 		return $NEWARRAY;
 	}
-	
+
 	public function 某个学生所有缴费单($stuinfo)
 	{
 		$sql	= "select * from data_middle_shoufeidan where 身份证件号='".$stuinfo['身份证件号']."' and 是否作废='否' and 缴费状态='缴费成功' order by 缴费时间 desc";
 		$rs_c	= $this->db->CacheGetAll(180,$sql);
 		return $rs_c;
 	}
-	
+
 	public function 生成新的缴费单号()
 	{
 		$one			= 1;
 		$trade_no		= '';
 		while($one!='')
 		{
-			$trade_no	= "DDKJ-PC-".date("Ymd")."-".date("His")."-".rand(1000,9999);			
+			$trade_no	= "DDKJ-PC-".date("Ymd")."-".date("His")."-".rand(1000,9999);
 			$sql		= "select id from data_middle_shoufeidan where 订单编号=?";
 			$one		= $this->db->GetOne($sql,array($trade_no));
 		}
 		return $trade_no;
 	}
-	
+
 	public function 输出调试($debug)					{
 		global $全局变量_班级表;
 		$this->debug=$debug;
 	}
-	
+
 	public function 重新生成缴费总账()					{
 		global $全局变量_班级表;
 		$sql 		= "select distinct 下学期就读年级 from data_middle_newstudent where 学部=''";
@@ -385,7 +385,7 @@ Class StudentFeeMiddleSchool
 			$this->db->Execute($sql);
 		}
 		//exit;
-			
+
 		//老生缴费同步
 		$sql		= "select * from data_newstudent where 1=1";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
@@ -394,7 +394,7 @@ Class StudentFeeMiddleSchool
 		$count		= 0;
 		$数据库表字段	= [];
 		$insertSqlArray	= [];
-		foreach ($rs_a as $stuinfo)			{		
+		foreach ($rs_a as $stuinfo)			{
 			$学生应缴费 	= $this->学生应缴费($stuinfo);
 			$更新字段 				= [];
 			$退费合计				= 0;
@@ -410,11 +410,11 @@ Class StudentFeeMiddleSchool
 				//print_R($stuinfo);print_R($学生应缴费);print_R($学生应缴费KEYS);print_R($缴费学期);print_R($缴费项目信息);exit;
 			//}
 			$更新字段[]				= " 缴费学期 = '".$缴费学期."'";
-			foreach($缴费项目信息 AS $缴费项目 => $缴费项目值)				{				
+			foreach($缴费项目信息 AS $缴费项目 => $缴费项目值)				{
 				$fields				= [];
 				$fields['学期']		= $缴费学期;
 				$fields['收费标准']	= $stuinfo['收费标准'];
-	
+
 				$fields['缴费项目']	= $缴费项目;
 				$fields['应缴金额']	= $缴费项目值['应缴'];
 				$fields['实缴金额']	= $缴费项目值['实缴'];
@@ -427,9 +427,9 @@ Class StudentFeeMiddleSchool
 				$欠费合计			+= $缴费项目值['欠费'];
 				$实缴合计			+= $缴费项目值['实缴'];
 				$更新字段[]			= " $缴费项目 = '".$缴费项目值['实缴']."' , ".$缴费项目."欠费 = '".$缴费项目值['欠费']."' ";
-				
+
 			}
-			
+
 			$更新字段SQL  = join(',',$更新字段);
 			$更新字段SQL .= " , 缴费金额 = '$实缴合计' ";
 			$更新字段SQL .= " , 欠费金额 = '$欠费合计' ";
@@ -440,7 +440,7 @@ Class StudentFeeMiddleSchool
 			else	{
 				$更新字段SQL .= " , 缴费状态 = '' ";
 			}
-			$sql = "update data_newstudent set 
+			$sql = "update data_newstudent set
 					$更新字段SQL
 					where 编号='".$stuinfo['编号']."'
 					";
@@ -456,7 +456,7 @@ Class StudentFeeMiddleSchool
 		//	if($this->debug) print_R($insertSqlArray)."<BR>";
 		//}
 		//exit;
-		
+
 		//新生缴费同步
 		$sql		= "select * from data_middle where 录取状态='录取成功'";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
@@ -465,17 +465,17 @@ Class StudentFeeMiddleSchool
 		$count		= 0;
 		$数据库表字段	= [];
 		$insertSqlArray	= [];
-		foreach ($rs_a as $stuinfo)			{		
-		
+		foreach ($rs_a as $stuinfo)			{
+
 			$stuinfo['入学学期'] 		= $stuinfo['计划入学学期'];;
 			$stuinfo['学号'] 			= $stuinfo['身份证件号'];
-			$stuinfo['姓名'] 			= $stuinfo['学生姓名'];		
-			$stuinfo['学生状态']		= $stuinfo['录取状态'];		
+			$stuinfo['姓名'] 			= $stuinfo['学生姓名'];
+			$stuinfo['学生状态']		= $stuinfo['录取状态'];
 			$stuinfo['班级']			= "新生";
 			$下学期就读年级				= $stuinfo['下学期就读年级'];
 			$stuinfo['学部'] 			= returntablefield("data_middle_nianji","名称",$下学期就读年级,"学部");
-			$stuinfo['年级'] 			= $下学期就读年级;	
-			
+			$stuinfo['年级'] 			= $下学期就读年级;
+
 			$stuinfo['收费标准']		= $stuinfo['入学学期']."-".$stuinfo['学部'];
 			$学生应缴费 		= $this->学生应缴费($stuinfo);
 			$更新字段 				= [];
@@ -485,13 +485,13 @@ Class StudentFeeMiddleSchool
 			$学生应缴费KEYS 	= array_keys($学生应缴费);
 			$缴费学期					= array_pop($学生应缴费KEYS);
 			$缴费项目信息				= $学生应缴费[$缴费学期];
-			
+
 			$更新字段[]				= " 缴费学期 = '".$缴费学期."'";
-			foreach($缴费项目信息 AS $缴费项目 => $缴费项目值)				{				
+			foreach($缴费项目信息 AS $缴费项目 => $缴费项目值)				{
 				$fields				= [];
 				$fields['学期']		= $缴费学期;
 				$fields['收费标准']	= $stuinfo['收费标准'];
-	
+
 				$fields['缴费项目']	= $缴费项目;
 				$fields['应缴金额']	= $缴费项目值['应缴'];
 				$fields['实缴金额']	= $缴费项目值['实缴'];
@@ -504,9 +504,9 @@ Class StudentFeeMiddleSchool
 				$欠费合计			+= $缴费项目值['欠费'];
 				$实缴合计			+= $缴费项目值['实缴'];
 				$更新字段[]			= " $缴费项目 = '".$缴费项目值['实缴']."' , ".$缴费项目."欠费 = '".$缴费项目值['欠费']."' ";
-				
+
 			}
-			
+
 			$更新字段SQL  = join(',',$更新字段);
 			$更新字段SQL .= " , 缴费金额 = '$实缴合计' ";
 			$更新字段SQL .= " , 欠费金额 = '$欠费合计' ";
@@ -517,7 +517,7 @@ Class StudentFeeMiddleSchool
 			else	{
 				$更新字段SQL .= " , 缴费状态 = '' ";
 			}
-			$sql = "update data_middle set 
+			$sql = "update data_middle set
 					$更新字段SQL
 					where 编号='".$stuinfo['编号']."'
 					";
@@ -532,9 +532,9 @@ Class StudentFeeMiddleSchool
 		//	$count+=$Utility->批量插入数据表('data_middle_shoufei_zongzhang',$数据库表字段,$insertSqlArray,100);
 		//	if($this->debug) print_R($insertSqlArray)."<BR>";
 		//}
-		
+
 	}
-	
+
 	public function insertInToTableByArray($tablename,$fieldsarray,$db)
 	{
 		$keys=array_keys($fieldsarray);
@@ -542,9 +542,9 @@ Class StudentFeeMiddleSchool
 		$sql="insert into $tablename (".join(',',$keys).") values ('".join("','",$values)."')";
 		$db->Execute($sql);
 	}
-	
+
 	public function 学生信息($stucode)			{
-		global $db,$_POST,$全局变量_班级表;		
+		global $db,$_POST,$全局变量_班级表;
 		$sql					= "select * from data_student where 学号='$stucode' or 身份证件号='$stucode' ";
 		$stuinfo				= $db->GetRow($sql);
 		$stuinfo['显示信息']	= "身份证:".substr($stuinfo['身份证件号'],0,6)."***".substr($stuinfo['身份证件号'],-4)." ".$stuinfo['年级'];
@@ -553,9 +553,9 @@ Class StudentFeeMiddleSchool
 			$stuinfo				= $db->GetRow($sql);
 			$stuinfo['入学学期'] 	= $stuinfo['计划入学学期'];
 			$stuinfo['学号'] 		= $stuinfo['身份证件号'];
-			$stuinfo['姓名'] 		= $stuinfo['学生姓名'];		
-			$stuinfo['学生状态']	= $stuinfo['录取状态'];		
-			$stuinfo['班级']		= "新生";	
+			$stuinfo['姓名'] 		= $stuinfo['学生姓名'];
+			$stuinfo['学生状态']	= $stuinfo['录取状态'];
+			$stuinfo['班级']		= "新生";
 			$stuinfo['是否新生']	= "是";
 			$下学期就读年级			= $stuinfo['下学期就读年级'];
 			$stuinfo['学部'] 		= returntablefield("data_middle_nianji","年级",$下学期就读年级,"学部")['学部'];
@@ -569,10 +569,10 @@ Class StudentFeeMiddleSchool
 		}
 		return $stuinfo;
 	}
-	
+
 	public function 微信小程序学生应缴费接口输出($stucode)
 	{
-		global $db,$_POST,$全局变量_班级表;		
+		global $db,$_POST,$全局变量_班级表;
 		$stuinfo = $this->学生信息($stucode);
 
 		$RSA 							= [];
@@ -627,10 +627,10 @@ Class StudentFeeMiddleSchool
 
 		print json_encode($RSA);
 	}
-	
+
 	public function 微信小程序_校园商城_应缴费接口($stucode)
 	{
-		global $db,$_POST,$全局变量_班级表;		
+		global $db,$_POST,$全局变量_班级表;
 		$stuinfo = $this->学生信息($stucode);
 
 		$RSA 							= [];
@@ -646,7 +646,7 @@ Class StudentFeeMiddleSchool
 		$RSA['学生信息']['显示信息'] 	= $stuinfo['显示信息'];
 
 		$RSA['学生信息']['学号'] 		= $stuinfo['学号'];
-		
+
 		$学期列表				= array_keys($学生可选项目缴费信息);
 		$学期应缴费				= [];
 		$COUNTER				= 0;
@@ -654,7 +654,7 @@ Class StudentFeeMiddleSchool
 		$JiaoFeiTotalAmount  	= intval($_POST['JiaoFeiTotalAmount']);
 		$sql 		= "select * from data_middle_store where 编号='$JiaoFeiID'";
 		$rs 		= $db->Execute($sql);
-		$rs_a 		= $rs->GetArray();	
+		$rs_a 		= $rs->GetArray();
 		$编号 		= $rs_a[0]['编号'];
 		$名称 		= $rs_a[0]['名称'];
 		$一级分类 	= $rs_a[0]['一级分类'];
@@ -666,10 +666,10 @@ Class StudentFeeMiddleSchool
 		else	{
 			$价格 		= $rs_a[0]['价格'];
 		}
-		
+
 		$_REQUEST['支付金额'] 	= $价格;
 		$_REQUEST['支付描述'] 	= "于".date("Y-m-d H:i:s")."日支付费用:".$_REQUEST['支付金额']." 购买:$名称";
-		
+
 		$缴费项目	= $名称;
 		$缴费金额	= $价格;
 		$应缴费数组[$缴费项目]['编号']		= $COUNTER;
@@ -679,7 +679,7 @@ Class StudentFeeMiddleSchool
 		$应缴费数组[$缴费项目]['已缴']		= 0;
 		$应缴费数组[$缴费项目]['退费']		= 0;
 		$应缴费数组[$缴费项目]['欠费']		= $缴费金额;
-		
+
 		global $当前学期;
 		$Element 					= [];
 		$Element['编号']			= $COUNTER;
@@ -697,20 +697,20 @@ Class StudentFeeMiddleSchool
 
 		return $RSA;
 	}
-	
+
 	public function STUDENT_JIAOFEI_UTF8CODE_DRAFT($缴费状态='缴费成功',$数据来源='手工缴费')	{
 		return $this->学生缴费保存到数据库($缴费状态,$数据来源);
 	}
-	
+
 	public function 学生缴费保存到数据库($缴费状态='缴费成功',$数据来源='手工缴费')
 	{
-		global $_POST,$db;	
+		global $_POST,$db;
 		$xueqi		= $_POST['xueqi'];
 		$stucode	= $_POST['stucode'];
 		$trade_no	= $_POST['trade_no'];
-				
+
 		$stuinfo 	= $this->学生信息($stucode);
-	
+
 		try			{
 			if(empty($xueqi))			{
 				$this->输出错误信息($信息='学期信息为空');
@@ -725,18 +725,18 @@ Class StudentFeeMiddleSchool
 			if($db->GetOne($sql,$trade_no)!='')		{
 				$this->输出错误信息('缴费单号:'.$trade_no.' 已存在,不能重复缴费');
 			}
-			
+
 			if($_POST['JiaoFeiType']=="CampusStoreWuPin")				{
 				//校园商城-开始
 				$微信小程序_校园商城_应缴费接口	= $this->微信小程序_校园商城_应缴费接口($stucode);
 				$缴费学期				= $_POST['xueqi'];
 				$应缴费数组				= $微信小程序_校园商城_应缴费接口[$缴费学期];
-				//print_R($微信小程序_校园商城_应缴费接口);exit;			
+				//print_R($微信小程序_校园商城_应缴费接口);exit;
 				if($_POST['JiaoFeiID']=="" || $_POST['JiaoFeiItemName']=="" || $_POST['JiaoFeiItemAmount']=="")				{
 					$fields['stuinfo']	= $stuinfo;
 					$fields['_POST']	= $_POST;
 					$fields['msg'] 	= '没有正确获取到该学生所要购买的商品信息.';
-					return $fields; 
+					return $fields;
 				}
 				$fields				= [];
 				$fields['学期']		= $缴费学期;
@@ -776,7 +776,7 @@ Class StudentFeeMiddleSchool
 					$this->输出错误信息('错误:插入缴费单失败');
 				}
 				$fields['msg'] = "";
-				return $fields;	
+				return $fields;
 				//校园商城-结束
 			}
 			else			{
@@ -784,7 +784,7 @@ Class StudentFeeMiddleSchool
 				$学生应缴费			= $this->学生应缴费($stuinfo);
 				$缴费学期			= $_POST['xueqi'];
 				$应缴费数组			= $学生应缴费[$缴费学期];
-				//print_R($学生应缴费);exit;			
+				//print_R($学生应缴费);exit;
 				if(empty($应缴费数组))				{
 					$this->输出错误信息($信息='没有正确获取到该学生的应缴费信息');
 				}
@@ -807,7 +807,7 @@ Class StudentFeeMiddleSchool
 						$attach[]				= $newitem;
 					}
 				}
-				//print_R($应缴费数组);			
+				//print_R($应缴费数组);
 				$keys = array_keys($应缴费数组);
 				foreach($_POST as $key=>$value)							{
 					$tmparr=explode('_',$key);
@@ -824,8 +824,8 @@ Class StudentFeeMiddleSchool
 			if(sizeof($attach)==0)									{
 				$this->输出错误信息("缴费明细至少要有一个");
 			}
-			
-			$db->StartTrans(); 
+
+			$db->StartTrans();
 			$fields				= [];
 			$fields['学期']		= $缴费学期;
 			$fields['学号']		= $stuinfo['学号'];
@@ -888,14 +888,14 @@ Class StudentFeeMiddleSchool
 			}
 			$db->CompleteTrans();
 			$fields['msg'] = "";
-			return $fields;			
-		} 
+			return $fields;
+		}
 		catch(Exception $e)							{
 			$fields['msg'] = $e->getMessage();
-			return $fields; 
+			return $fields;
 		}
 	}
-	
+
 	public function STUDENT_JIAOFEI_UTF8CODE_PAYMONEY($订单编号,$tradeStatus="SUCCESS")			{
 		if($tradeStatus=="SUCCESS")		{
 			$缴费状态 = "缴费成功";
@@ -909,7 +909,7 @@ Class StudentFeeMiddleSchool
 		$rs		= $this->db->Execute($sql);
 		return 1;
 	}
-	
+
 	public function STUDENT_JIAOFEI_UTF8CODE_PAYMONEY_CAMPUSSHOP($订单编号,$tradeStatus="SUCCESS")			{
 		if($tradeStatus=="SUCCESS")		{
 			$支付状态 = "缴费成功";
@@ -927,65 +927,65 @@ Class StudentFeeMiddleSchool
 		$rs		= $this->db->Execute($sql);
 		return 1;
 	}
-	
+
 	public function 预缴费数据转换成已缴费($订单编号)			{
 		return $this->STUDENT_JIAOFEI_UTF8CODE_PAYMONEY($订单编号);
 	}
-	
+
 
 	public function 更新收费单面的手机号()			{
 		$sql		= "select * from data_middle where 录取状态='录取成功'";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
 		if($this->debug) print $sql."<BR>";
 		$count		= 0;
-		foreach ($rs_a as $stuinfo)			{	
-			$stuinfo['手机']		= $stuinfo['联系方式1']." ".$stuinfo['联系方式2']." ".$stuinfo['联系电话'];	
-			$sql = "update data_middle_shoufeidan set 手机='".$stuinfo['手机']."' where 身份证件号='".$stuinfo['身份证件号']."' and 手机=''"; 
+		foreach ($rs_a as $stuinfo)			{
+			$stuinfo['手机']		= $stuinfo['联系方式1']." ".$stuinfo['联系方式2']." ".$stuinfo['联系电话'];
+			$sql = "update data_middle_shoufeidan set 手机='".$stuinfo['手机']."' where 身份证件号='".$stuinfo['身份证件号']."' and 手机=''";
 			if($this->debug) print $sql."<BR>";
 			$this->db->Execute($sql);
 		}
 	}
-	
+
 	public function 更新收费单面的老生手机号()			{
 		$sql		= "select * from data_middle_shoufeidan where 手机='' and 班级!='新生'";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
 		if($this->debug) print $sql."<BR>";
 		$count		= 0;
-		foreach ($rs_a as $stuinfo)			{	
+		foreach ($rs_a as $stuinfo)			{
 			$家长电话	= returntablefield("data_newstudent","身份证件号",$stuinfo['身份证件号'],"家长电话");
-			$sql 		= "update data_middle_shoufeidan set 手机='".$家长电话."' where 身份证件号='".$stuinfo['身份证件号']."'"; 
+			$sql 		= "update data_middle_shoufeidan set 手机='".$家长电话."' where 身份证件号='".$stuinfo['身份证件号']."'";
 			if($this->debug) print $sql."<BR>";
 			$this->db->Execute($sql);
 		}
 	}
-	
+
 	public function 更新收费明细表的身份证件号()			{
 		$sql		= "select 订单编号 from data_middle_shoufeimingxi where 身份证件号=''";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
 		if($this->debug) print $sql."<BR>";
 		$count		= 0;
-		foreach ($rs_a as $Element)			{	
+		foreach ($rs_a as $Element)			{
 			$订单编号		= $Element['订单编号'];
 			$sql 			= "select * from data_middle_shoufeidan where 订单编号='$订单编号'";
 			$同步信息 		= $this->db->CacheGetAll(180,$sql);;
 			$同步信息		= $同步信息[0];
 			if($同步信息['身份证件号']!="")			{
-				$sql = "update data_middle_shoufeimingxi set 身份证件号='".$同步信息['身份证件号']."',班级='".$同步信息['班级']."',学部='".$同步信息['学部']."',年级='".$同步信息['年级']."' where 订单编号='".$订单编号."'"; 
+				$sql = "update data_middle_shoufeimingxi set 身份证件号='".$同步信息['身份证件号']."',班级='".$同步信息['班级']."',学部='".$同步信息['学部']."',年级='".$同步信息['年级']."' where 订单编号='".$订单编号."'";
 				if($this->debug) print $sql."<BR>";
 				$this->db->Execute($sql);
 			}
 		}
 	}
-	
+
 	public function 缴费数据同步到新生数据表的缴费字段()			{
 		return '';exit;
-		
+
 		$sql		= "select * from data_middle where 录取状态='录取成功'";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
 		if($this->debug) print $sql."<BR>";
 		$count		= 0;
-		foreach ($rs_a as $stuinfo)							{	
-			//print_R($stuinfo);		
+		foreach ($rs_a as $stuinfo)							{
+			//print_R($stuinfo);
 			$身份证件号	= $stuinfo['身份证件号'];
 			$入学学期	= $stuinfo['计划入学学期'];
 			$sql 		= "select * from data_middle_shoufei_zongzhang where 学期='$入学学期' and 班级='新生' and 身份证件号='$身份证件号'";
@@ -999,9 +999,9 @@ Class StudentFeeMiddleSchool
 			}
 			if($缴费金额>0)					{
 				//print_R($缴费记录MAP);
-				$sql = "update data_middle set 
-							缴费状态 = '已缴费' , 
-							缴费金额 = '$缴费金额' , 
+				$sql = "update data_middle set
+							缴费状态 = '已缴费' ,
+							缴费金额 = '$缴费金额' ,
 							学费 = '".$缴费记录MAP['学费']."' ,
 							住宿费 = '".$缴费记录MAP['住宿费']."' ,
 							伙食费 = '".$缴费记录MAP['伙食费']."' ,
@@ -1013,33 +1013,33 @@ Class StudentFeeMiddleSchool
 			}
 		}
 	}
-	
+
 	public function 缴费数据同步到老生数据表的缴费字段()			{
 		return '';exit;
-		
+
 		global $当前学期;
-		//得到最近一个学期		
+		//得到最近一个学期
 		$sql		= "select * from data_xueqi order by 流水号 desc";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
 		$指定学期 	= $rs_a[0]['学期名称'];
-		
+
 		//先缓存缴费数据
 		$先缓存缴费数据 = [];
 		$sql 		= "select * from data_middle_shoufei_zongzhang where 学期='$指定学期' and 班级!='新生'";
 		$rsX_a		= $this->db->CacheGetAll(180,$sql);
-		foreach ($rsX_a as $stuinfo)							{	
-			//print_R($stuinfo);		
+		foreach ($rsX_a as $stuinfo)							{
+			//print_R($stuinfo);
 			$身份证件号						= $stuinfo['身份证件号'];
 			$先缓存缴费数据[$身份证件号][]	= $stuinfo;
 		}
 		//print_R($先缓存缴费数据);	exit;
-		
+
 		$sql		= "select * from data_newstudent where 学生状态='正常状态'";
 		$rs_a		= $this->db->CacheGetAll(180,$sql);
 		if($this->debug) print $sql."<BR>";
 		$count		= 0;
-		foreach ($rs_a as $stuinfo)							{	
-			//print_R($stuinfo);		
+		foreach ($rs_a as $stuinfo)							{
+			//print_R($stuinfo);
 			$编号		= $stuinfo['编号'];
 			$身份证件号	= $stuinfo['身份证件号'];
 			//$sql 		= "select * from data_middle_shoufei_zongzhang where 学期='$指定学期' and 身份证件号='$身份证件号'";
@@ -1053,9 +1053,9 @@ Class StudentFeeMiddleSchool
 			}
 			if($缴费金额>0)					{
 				//print_R($缴费记录MAP);
-				$sql = "update data_newstudent set 
-							缴费状态 = '已缴费' , 
-							缴费金额 = '$缴费金额' , 
+				$sql = "update data_newstudent set
+							缴费状态 = '已缴费' ,
+							缴费金额 = '$缴费金额' ,
 							学费 = '".$缴费记录MAP['学费']."' ,
 							住宿费 = '".$缴费记录MAP['住宿费']."' ,
 							伙食费 = '".$缴费记录MAP['伙食费']."' ,
@@ -1077,12 +1077,12 @@ Class StudentFeeMiddleSchool
 		print json_encode($RSA);
 		exit;
 	}
-	
+
 	//校园商城_接口输出
 	public function 校园商城_接口输出($stucode)
 	{
-		global $db,$_POST,$全局变量_班级表;		
-		
+		global $db,$_POST,$全局变量_班级表;
+
 		$stuinfo = $this->学生信息($stucode);
 
 		if(empty($stuinfo))				{
@@ -1091,7 +1091,7 @@ Class StudentFeeMiddleSchool
 		if(empty($stuinfo['学号']))		{
 			$this->输出错误信息($信息='没有正确获取到学号或学生的身份证件号');
 		}
-		
+
 		require_once("../../Enginee/newai_icampus.php");
 		$sql 		 = "select * from data_middle_store where 是否启用='是' order by 排序号";
 		$rsX_a		 = $this->db->CacheGetAll(180,$sql);
@@ -1103,19 +1103,19 @@ Class StudentFeeMiddleSchool
 			$名称 		= $校园商城RECORD['名称'];
 			$校园商城RECORD['全部图片'] = 获取OA附件的JSON格式数组($校园商城RECORD['图片'],"图片");
 			$校园商城RECORD['缩略图片'] = $校园商城RECORD['全部图片'][0];
-			
-			
+
+
 			$校园商城['一级分类'][$一级分类] 			= $一级分类;
 			$校园商城['二级分类'][$一级分类][$二级分类] = $二级分类;
 			$校园商城['所有子项'][$一级分类][] 			= $校园商城RECORD;
 		}
 		$校园商城['一级分类'] 			= array_keys($校园商城['一级分类']);
 		$校园商城['学生信息'] 			= $stuinfo;
-		
+
 		print json_encode($校园商城);
 	}
-	
-	
+
+
 }
 
 

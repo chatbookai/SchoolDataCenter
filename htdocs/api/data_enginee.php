@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -10,13 +10,13 @@ CheckAuthUserLoginStatus();
 //Get Table Infor
 $externalId = intval($externalId);
 $sql        = "select * from form_formname where id='$externalId'";
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $FromInfo   = $rs->fields;
 $TableName  = $FromInfo['TableName'];
 
 //Get form_formfield_showtype
 $sql        = "select * from form_formfield_showtype";
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $AllShowTypes   = $rs->GetArray();
 $AllShowTypesArray = [];
 foreach($AllShowTypes as $Item)  {
@@ -122,7 +122,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType)  {
             case 'select':
             case 'autocomplete':
                 $sql = "select `FieldType` as value, `FieldType` as label from form_formfield_logictype order by SortNumber asc, id asc";
-                $rs = $db->CacheExecute(10, $sql);
+                $rs = $db->Execute($sql);
                 $FieldType = $rs->GetArray();
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'type'=>$CurrentFieldTypeArray[0], 'options'=>$FieldType, 'label' => $EnglishName, 'value' => $FieldType[2]['value'], 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth),'disabled' => false]];
                 break;
@@ -136,7 +136,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType)  {
                 $DefaultValue       = $CurrentFieldTypeArray[4];
                 $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                 $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);               
+                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                 if(sizeof($CurrentFieldTypeArray)==7)   {
                     $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' order by SortNumber asc, `".$MetaColumnNamesTemp[$ValueField]."` asc";
                 }
@@ -146,7 +146,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType)  {
                 else {
                     break;
                 }
-                $rs = $db->CacheExecute(10, $sql) or print($sql);
+                $rs = $db->Execute($sql) or print($sql);
                 $FieldType = $rs->GetArray();
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'type'=>$CurrentFieldTypeArray[0], 'options'=>$FieldType, 'label' => $EnglishName, 'value' => $DefaultValue, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth),'disabled' => false], 'sql'=>$sql, 'CurrentFieldTypeArray'=>$CurrentFieldTypeArray, 'MetaColumnNamesTemp'=>$MetaColumnNamesTemp];
                 break;
@@ -181,7 +181,7 @@ foreach($allFieldsEdit as $ModeName=>$allFieldItem) {
 
 //编辑页面时的启用字段列表
 if( ($_GET['action']=="add_default_data") && $TableName!="")  {
-    
+
     $MetaColumns    = $db->MetaColumns($TableName);
     $MetaColumns    = array_values($MetaColumns);
     $MetaColumnsInDb = [];
@@ -193,12 +193,12 @@ if( ($_GET['action']=="add_default_data") && $TableName!="")  {
     $FieldsArray        = [];
     $IsExecutionSQL     = 0;
     foreach($AllFieldsFromTable as $Item)  {
-        if($_POST[$Item['FieldName']]!="") {            
+        if($_POST[$Item['FieldName']]!="") {
             $IsExecutionSQL = 1;
         }
         // Give a default value for date and number
         $FieldType = $MetaColumnsInDb[$Item['FieldName']];
-        if($_POST[$Item['FieldName']]=="") {    
+        if($_POST[$Item['FieldName']]=="") {
             switch($FieldType)  {
                 case 'int':
                     $_POST[$Item['FieldName']] = 0;
@@ -242,7 +242,7 @@ if( ($_GET['action']=="add_default_data") && $TableName!="")  {
         }
         $FieldsArray[$Item['FieldName']]       = $_POST[$Item['FieldName']];
     }
-    if($IsExecutionSQL)   {        
+    if($IsExecutionSQL)   {
         $KEYS			= array_keys($FieldsArray);
         $VALUES			= array_values($FieldsArray);
         $sql	        = "insert into $TableName(`".join('`,`',$KEYS)."`) values('".join("','",$VALUES)."')";
@@ -251,7 +251,7 @@ if( ($_GET['action']=="add_default_data") && $TableName!="")  {
             $RS['status'] = "OK";
             $RS['msg'] = __("Submit Success");
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -284,7 +284,7 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="" && $TableName!="")
             $RS['status'] = "OK";
             $RS['msg'] = __("Submit Success");
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -323,7 +323,7 @@ if(($_GET['action']=="edit_default"||$_GET['action']=="view_default")&&$_GET['id
     }
     $RS['edit_default'] = $edit_default;
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if($_GET['action']=="updateone")  {
@@ -348,7 +348,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -401,7 +401,7 @@ foreach($AllFieldsFromTable as $Item)  {
         default:
             $init_default_columns[] = ['flex' => 0.1, 'type'=>'string', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $EnglishName, 'show'=>true, 'renderCell' => NULL];
             break;
-    } 
+    }
     if($IsSearch==1)   {
         $searchField[] = ['label' => $FieldName, 'value' => $FieldName];
     }
@@ -427,7 +427,7 @@ if(!in_array($pageSize,[10,20,30,40,50,100,200,500]))  {
 $fromRecord = $page * $pageSize;
 
 $sql    = "select count(*) AS NUM from $TableName " . $AddSql . "";
-$rs     = $db->CacheExecute(10, $sql);
+$rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 if($FromInfo['TableName']!="")   {
     $RS['init_default']['searchtitle']  = $FromInfo['FullName'];
@@ -479,14 +479,14 @@ foreach ($rs_a as $Line) {
                 $DefaultValue       = $CurrentFieldTypeArray[4];
                 $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                 $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
-                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);               
+                $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
                 if($WhereField!="" && $WhereValue!="") {
                     $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $WhereField = '".$WhereValue."' and `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($Line[$FieldName])."' ;";
                 }
                 else    {
                     $sql = "select `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where `".$MetaColumnNamesTemp[$KeyField]."`='".ForSqlInjection($Line[$FieldName])."' ;";
                 }
-                $rs = $db->CacheExecute(10, $sql) or print($sql);
+                $rs = $db->Execute($sql) or print($sql);
                 $Line[$FieldName] = $rs->fields['label'];
                 $FieldDataColorValue[$FieldName][$Line[$FieldName]] = "#";
                 break;
@@ -612,7 +612,7 @@ $RS['import_default'] = [];
 
 $RS['init_default']['rowHeight']        = 38;
 $RS['init_default']['dialogContentHeight']  = "90%";
-$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs 
+$RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs
 $RS['init_default']['timeline']         = time();
 $RS['init_default']['pageNumber']       = $pageSize;
 $RS['init_default']['pageCount']        = ceil($RS['init_default']['total']/$pageSize);

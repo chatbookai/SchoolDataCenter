@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -8,14 +8,14 @@ CheckAuthUserRoleHaveMenu(0, "/form/formname");
 
 $externalId = intval($_REQUEST['externalId']);
 $sql        = "select * from form_formname where id='$externalId'";
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $FromInfo   = $rs->fields;
 $TableName  = $FromInfo['TableName'];
 $FullName  = $FromInfo['FullName'];
 
 $columnNames = [];
 $sql = "show columns from form_formfield";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 foreach ($rs_a as $Line) {
     $columnNames[] = $Line['Field'];
@@ -32,12 +32,12 @@ $allFieldsAdd[] = ['name' => 'EnglishName', 'show'=>true, 'type'=>'input', 'labe
 $allFieldsAdd[] = ['name' => 'ChineseName', 'show'=>true, 'type'=>'input', 'label' => __('Chinese Name'), 'value' => '', 'placeholder' => __('Chinese Name. E.g. Chinese Description'), 'helptext' => __('Readable Name.'), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 
 $sql = "select `FieldType` as value, `FieldType` as label from form_formfield_logictype order by SortNumber asc, id asc";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $FieldType = $rs->GetArray();
 $allFieldsAdd[] = ['name' => 'FieldType', 'show'=>true, 'type'=>'select', 'options'=>$FieldType, 'label' => __('Field Type'), 'value' => $FieldType[2]['value'], 'placeholder' => __('Field Type in Database'), 'helptext' => __('Field Type in Database'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>3,'disabled' => false]];
 
 $sql            = "select `Name` as value, `Name` as label, EnableFields, DisableFields from form_formfield_showtype order by SortNumber asc, id asc";
-$rs             = $db->CacheExecute(10, $sql);
+$rs             = $db->Execute($sql);
 $ShowType       = $rs->GetArray();
 array_unshift($ShowType, ['value'=>'NewDict','label'=>__('NewDict'),'EnableFields'=>'NewDict','DisableFields'=>'']);
 $EnableFields   = [];
@@ -260,13 +260,13 @@ if( ($_GET['action']=="add_default_data") && $_POST['FieldName']!="" && $externa
                 $sql    = "ALTER TABLE `".$TableName."` ADD `".$FieldsArray['FieldName']."` ".$FieldsArray['FieldType']." CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default '' NOT NULL ;";
             }
             $rs     = $db->Execute($sql);
-            if(!$rs->EOF) {      
+            if(!$rs->EOF) {
                 $RS = [];
                 $RS['status'] = "ERROR";
                 $RS['sql'] = $sql;
                 $RS['msg'] = "Update Error!";
                 print json_encode($RS);
-                exit; 
+                exit;
             }
         }
         if(1)   {
@@ -279,7 +279,7 @@ if( ($_GET['action']=="add_default_data") && $_POST['FieldName']!="" && $externa
                 $RS['sql'] = $sql;
                 $RS['_POST'] = $_POST;
                 print json_encode($RS);
-                exit; 
+                exit;
             }
         }
     }
@@ -287,7 +287,7 @@ if( ($_GET['action']=="add_default_data") && $_POST['FieldName']!="" && $externa
         $RS['status'] = "OK";
         $RS['msg'] = __("Submit Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
 }
 
@@ -361,7 +361,7 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="" && $externalId!=""
         $db->Execute($sql);
     }
 
-    
+
 
     $sql = "select FieldName from form_formfield where id='".$_GET['id']."'";
     $rs = $db->Execute($sql);
@@ -392,16 +392,16 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="" && $externalId!=""
         }
         else {
             $sql    = "ALTER TABLE `".$TableName."` CHANGE `".$FieldNameOld."` `".$FieldsArray['FieldName']."` ".$FieldsArray['FieldType']." CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default '' NOT NULL;";
-        }        
+        }
         $alterSql = $sql;
         $rs     = $db->Execute($sql);
-        if(!$rs->EOF) {      
+        if(!$rs->EOF) {
             $RS = [];
             $RS['status'] = "ERROR";
             $RS['sql'] = $sql;
             $RS['msg'] = "Update Error!";
             print json_encode($RS);
-            exit; 
+            exit;
         }
     }
     if(!in_array($FieldNameOld, $MetaColumnNames)) {
@@ -430,19 +430,19 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="" && $externalId!=""
         }
         else {
             $sql    = "ALTER TABLE `".$TableName."` ADD `".$FieldsArray['FieldName']."` ".$FieldsArray['FieldType']." CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default '' NOT NULL COMMENT '".$FieldsArray['ChineseName']."';";
-        }        
+        }
         $alterSql = $sql;
         $rs     = $db->Execute($sql);
-        if(!$rs->EOF) {      
+        if(!$rs->EOF) {
             $RS = [];
             $RS['status'] = "ERROR";
             $RS['sql'] = $sql;
             $RS['msg'] = "Update Error!";
             print json_encode($RS);
-            exit; 
+            exit;
         }
     }
-    
+
     if(1)   {
         [$rs,$sql] = InsertOrUpdateTableByArray("form_formfield",$FieldsArray,"id",0,"Update");
         if($rs->EOF) {
@@ -451,7 +451,7 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="" && $externalId!=""
             $RS['alterSql'] = $alterSql;
             $RS['msg'] = __("Submit Success");
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -477,7 +477,7 @@ if(($_GET['action']=="edit_default")&&$_GET['id']!="")  {
             $EditValue[$FieldName] = $FieldValue;
         }
         $EditValue['Setting'] = '';
-    }    
+    }
     foreach($rsf->fields as $FieldName=>$FieldValue)  {
         $EditValue[$FieldName] = $FieldValue;
     }
@@ -489,7 +489,7 @@ if(($_GET['action']=="edit_default")&&$_GET['id']!="")  {
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
@@ -504,7 +504,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
             $EditValue[$FieldName] = $FieldValue;
         }
         $EditValue['Setting'] = '';
-    }    
+    }
     foreach($rsf->fields as $FieldName=>$FieldValue)  {
         $EditValue[$FieldName] = $FieldValue;
     }
@@ -515,7 +515,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['EnableFields'] = explode(",",$EnableFields['EnableFields']);
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
-    
+
     $FieldNameArray             = array_keys($EditValue);
     $ApprovalNodeFieldsHidden   = [];
     for($X=0;$X<sizeof($FieldNameArray);$X=$X+2)        {
@@ -539,7 +539,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['newTableRowData']          = $NewTableRowData;
 
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if($_GET['action']=="updateone")  {
@@ -564,7 +564,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -590,7 +590,7 @@ if($_GET['action']=="delete_array")  {
                     print json_encode($RS);
                     exit;
                 }
-            }        
+            }
             foreach($selectedRows as $id) {
                 $sql    = "delete from form_formfield where $primary_key = '$id'";
                 $db->Execute($sql);
@@ -618,7 +618,7 @@ if($_GET['action']=="delete_array")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 $AddSql = " where 1=1 and FormId='$externalId'";
@@ -659,11 +659,11 @@ if ($searchFieldName != "" && $searchFieldValue != "" && in_array($searchFieldNa
 }
 
 $sql        = "select count(*) as NUM from form_formfield $AddSql ";
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $ALL_NUM    = intval($rs->fields['NUM']);
 
 $sql = "select FieldType as name, FieldType as value, count(*) AS num from form_formfield $AddSql group by FieldType";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 array_unshift($rs_a,['name'=>__('All Data'), 'value'=>'All Data', 'num'=>$ALL_NUM]);
 $RS['init_default']['filter'][] = ['name' => 'FieldType', 'text' => __('FieldType'), 'list' => $rs_a, 'selected' => "All Data"];
@@ -684,7 +684,7 @@ if(!in_array($pageSize,[10,20,30,40,50,100,200,500]))  {
 $fromRecord = $page * $pageSize;
 
 $sql    = "select count(*) AS NUM from form_formfield " . $AddSql . "";
-$rs     = $db->CacheExecute(10, $sql);
+$rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 if($FromInfo['TableName']!="")   {
     $RS['init_default']['searchtitle']  = $FromInfo['FullName'];
@@ -721,7 +721,7 @@ foreach ($rs_a as $Line) {
     $SettingMap         = json_decode($Line['Setting'],true);
     $Line['RemoteRelativeField'] = $SettingMap['RemoteRelativeField'];
     $Line['LocalFieldExtraFilter'] = $SettingMap['LocalFieldExtraFilter'];
-    
+
     $NewRSA[] = $Line;
     if(in_array($Line['TableName'],['data_user','data_department','role','form_formfield'])) {
         $ForbiddenSelectRow[] = $Line['id'];
@@ -789,7 +789,7 @@ $RS['init_default']['returnButton']['status']  = true;
 $RS['init_default']['returnButton']['text']  = __("return");
 $RS['init_default']['rowHeight']  = 38;
 $RS['init_default']['dialogContentHeight']  = "850px";
-$RS['init_default']['dialogMaxWidth']  = "md";// xl lg md sm xs 
+$RS['init_default']['dialogMaxWidth']  = "md";// xl lg md sm xs
 $RS['init_default']['timeline']     = time();
 $RS['init_default']['pageNumber']   = $pageSize;
 $RS['init_default']['pageCount']    = ceil($RS['init_default']['total']/$pageSize);

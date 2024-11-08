@@ -51,7 +51,7 @@ function plugin_data_exam_paper_4_edit_default($id)  {
 
 
     $sql            = "SELECT * FROM `data_exam_paper` where id='$id'";
-    $rs             = $db->CacheExecute(180,$sql);
+    $rs             = $db->Execute($sql);
     $试卷信息       = $rs->fields;
     $试题抽取方式   = $试卷信息['试题抽取方式'];
     $题库分类       = $试卷信息['题库分类'];
@@ -59,11 +59,11 @@ function plugin_data_exam_paper_4_edit_default($id)  {
     $多选题目数量   = $试卷信息['多选题目数量'];
     $判断题目数量   = $试卷信息['判断题目数量'];
     $考试名称       = $试卷信息['考试名称'];
-    
+
     //判断是否已经有考试记录
     $用户名         = $GLOBAL_USER->USER_ID;
     $sql            = "select COUNT(*) AS NUM from data_exam_question_record where 用户名='$用户名' and 考试名称='$考试名称'";
-    $rs             = $db->CacheExecute(180,$sql);
+    $rs             = $db->Execute($sql);
     $NUM            = $rs->fields['NUM'];
     if($NUM>0)   {
         $RS['edit_default']['allFields']      = [];
@@ -195,7 +195,7 @@ function plugin_data_exam_paper_4_edit_default_data_before_submit($id)  {
     //Here is your write code
 
     $sql            = "SELECT * FROM `data_exam_paper` where id='$id'";
-    $rs             = $db->CacheExecute(180,$sql);
+    $rs             = $db->Execute($sql);
     $试卷信息       = $rs->fields;
     $试题抽取方式   = $试卷信息['试题抽取方式'];
     $题库分类       = $试卷信息['题库分类'];
@@ -215,7 +215,7 @@ function plugin_data_exam_paper_4_edit_default_data_before_submit($id)  {
             $用户所选 = $_POST["题目_".$Item];
             if($用户所选!="")  {
                 $sql            = "SELECT * FROM `data_exam_question` where id='$Item'";
-                $rs             = $db->CacheExecute(180,$sql);
+                $rs             = $db->Execute($sql);
                 $题目信息        = $rs->fields;
                 $Element = [];
                 $Element['考试名称']    = $考试名称;

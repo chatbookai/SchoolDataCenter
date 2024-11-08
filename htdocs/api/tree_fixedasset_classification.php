@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -10,7 +10,7 @@ $中类MAP = [];
 $所有数据 = [];
 
 $sql    = "select 分类代码,分类名称 from data_fixedasset_classification order by id asc";
-$rs     = $db->CacheExecute(3600,$sql);
+$rs     = $db->Execute($sql);
 $rs_a   = $rs->GetArray();
 foreach($rs_a AS $Item)  {
     //1010000020100000
@@ -47,7 +47,7 @@ if($textFieldValue!="")  {
     $中类MAP = [];
     $所有数据 = [];
     $sql    = "select 分类代码,分类名称 from data_fixedasset_classification where 分类名称 like '%$textFieldValue%' or 分类代码 like '%$textFieldValue%' order by id asc";
-    $rs     = $db->CacheExecute(3600,$sql);
+    $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     foreach($rs_a AS $Item)  {
         //1010000020100000
@@ -75,7 +75,7 @@ $返回数据 = [];
 ksort($所有数据);
 foreach($所有数据 as $门类ID=>$大类)                {
     $大类ALL    = [];
-    foreach($大类 as $大类ID=>$中类)            {   
+    foreach($大类 as $大类ID=>$中类)            {
         $中类ALL    = [];
         foreach($中类 as $中类ID=>$小类)    {
             //print_R($小类);exit;

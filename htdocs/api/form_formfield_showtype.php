@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -8,7 +8,7 @@ CheckAuthUserRoleHaveMenu(0, "/form/formfieldshowtype");
 
 $columnNames = [];
 $sql = "show columns from form_formfield_showtype";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 foreach ($rs_a as $Line) {
     $columnNames[] = $Line['Field'];
@@ -45,7 +45,7 @@ if( ($_GET['action']=="add_default_data"||$_GET['action']=="edit_default_1_data"
         $RS['status'] = "OK";
         $RS['msg'] = __("Submit Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
     else {
         $RS = [];
@@ -74,7 +74,7 @@ if( ($_GET['action']=="edit_default_data") && $_GET['id']!="")  {
         $RS['status'] = "OK";
         $RS['msg'] = __("Submit Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
     else {
         $RS = [];
@@ -98,7 +98,7 @@ if(($_GET['action']=="edit_default"||$_GET['action']=="edit_default_1")&&$_GET['
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
@@ -111,7 +111,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['data'] = $EditValue;
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
-    
+
     $FieldNameArray             = array_keys($EditValue);
     $ApprovalNodeFieldsHidden   = [];
     for($X=0;$X<sizeof($FieldNameArray);$X=$X+2)        {
@@ -135,7 +135,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['newTableRowData']          = $NewTableRowData;
 
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if($_GET['action']=="updateone")  {
@@ -160,7 +160,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -175,7 +175,7 @@ if($_GET['action']=="delete_array")  {
     $RS['sql'] = $sql;
     $RS['msg'] = "Drop Item Success!";
     print json_encode($RS);
-    exit; 
+    exit;
 }
 
 $AddSql = " where 1=1 ";
@@ -230,7 +230,7 @@ if(!in_array($pageSize,[10,20,30,40,50,100,200,500]))  {
 $fromRecord = $page * $pageSize;
 
 $sql    = "select count(*) AS NUM from form_formfield_showtype " . $AddSql . "";
-$rs     = $db->CacheExecute(10, $sql);
+$rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 $RS['init_default']['searchtitle']  = __("Field Show Type");
 $RS['init_default']['primarykey'] = $columnNames[0];

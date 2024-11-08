@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -9,7 +9,7 @@ CheckAuthUserRoleHaveMenu(0, "/form/formname");
 
 $columnNames = [];
 $sql = "show columns from form_formname";
-$rs = $db->CacheExecute(10, $sql);
+$rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 foreach ($rs_a as $Line) {
     $columnNames[] = $Line['Field'];
@@ -117,7 +117,7 @@ if($_GET['action']=="add_default_data"&&$_POST['TableName']!=""&&0)  {
             $RS['msg'] = "Add Data Success!";
             $RS['sql'] = $sql;
             print json_encode($RS);
-            exit;  
+            exit;
         }
         else {
             $RS = [];
@@ -143,14 +143,14 @@ if(($_GET['action']=="edit_default"||$_GET['action']=="edit_default_1")&&$_GET['
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $id     = ForSqlInjection($_GET['id']);
     $sql    = "select * from form_formname where ID = '$id'";
     $rsf     = $db->Execute($sql);
-    
+
     $FieldNameArray             = $allFieldsEdit;
     $ApprovalNodeFieldsHidden   = [];
     for($X=0;$X<sizeof($FieldNameArray);$X=$X+2)        {
@@ -185,7 +185,7 @@ if(($_GET['action']=="view_default")&&$_GET['id']!="")  {
     $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 
@@ -207,7 +207,7 @@ if($_GET['action']=="edit_default_data"&&$_GET['id']!="")  {
                 $RS['status'] = "ERROR";
                 $RS['msg'] = "【远程数据表】在远程数据库中不存在";
                 print json_encode($RS);
-                exit;  
+                exit;
             }
             //print_R($MetaColumnNamesTemp);
     	    $远程数据表结构      = array_values($MetaColumnNamesTemp);
@@ -220,14 +220,14 @@ if($_GET['action']=="edit_default_data"&&$_GET['id']!="")  {
                     $RS['远程数据表结构'] = $远程数据表结构;
                     $RS['msg'] = "您输入的【远程数据表主键】在【远程数据表】中不存在,请输入正确的【远程数据表主键】";
                     print json_encode($RS);
-                    exit;  
+                    exit;
                 }
                 if($数据同步方式=="增量同步" && $远程数据表主键=='')     {
                     $RS = [];
                     $RS['status'] = "ERROR";
                     $RS['msg'] = "增量同步时,要求必须设置【远程数据表主键】";
                     print json_encode($RS);
-                    exit;  
+                    exit;
                 }
             }
             else {
@@ -235,7 +235,7 @@ if($_GET['action']=="edit_default_data"&&$_GET['id']!="")  {
                 $RS['status'] = "ERROR";
                 $RS['msg'] = "您输入的数据表名称在指定数据源中不存在";
                 print json_encode($RS);
-                exit;  
+                exit;
             }
         }
         else {
@@ -272,16 +272,16 @@ if($_GET['action']=="edit_default_data"&&$_GET['id']!="")  {
         $Element['TableName']       = $rs->fields['TableName'];
         $Element['FullName']        = $rs->fields['FullName'];
         $Element['FormId']          = $rs->fields['id'];
-        InsertOrUpdateTableByArray("data_datasyncedrules",$Element,"FormId",0);        
-        exit;  
+        InsertOrUpdateTableByArray("data_datasyncedrules",$Element,"FormId",0);
+        exit;
     }
-    else {        
+    else {
         $RS = [];
         $RS['status'] = "ERROR";
         $RS['sql'] = $sql;
         $RS['msg'] = "Update Error!";
         print json_encode($RS);
-        exit; 
+        exit;
     }
 }
 
@@ -301,15 +301,15 @@ if($_GET['action']=="edit_default_1_data"&&$_GET['id']!="")  {
         $RS['sql'] = $sql;
         $RS['msg'] = __("Copy Form And Flow Success");
         print json_encode($RS);
-        exit;  
+        exit;
     }
-    else {        
+    else {
         $RS = [];
         $RS['status'] = "ERROR";
         $RS['sql'] = $sql;
         $RS['msg'] = __("Copy Form And Flow Failed");
         print json_encode($RS);
-        exit; 
+        exit;
     }
 }
 
@@ -335,7 +335,7 @@ if($_GET['action']=="updateone")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="delete_array")  {
@@ -368,7 +368,7 @@ if($_GET['action']=="delete_array")  {
             foreach($rs_a as $Element)  {
                 $sql    = "delete from data_menutwo where FlowId = '".$Element['id']."'";
                 $db->Execute($sql);
-            }            
+            }
             $sql    = "delete from form_formflow where FormId = '$id'";
             $db->Execute($sql);
         }
@@ -386,7 +386,7 @@ if($_GET['action']=="delete_array")  {
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 if($_GET['action']=="option_multi_approval"||$_GET['action']=="option_multi_refuse"||$_GET['action']=="option_multi_change_status")  {
@@ -414,7 +414,7 @@ if($_GET['action']=="option_multi_approval"||$_GET['action']=="option_multi_refu
         $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
-    }    
+    }
 }
 
 
@@ -481,7 +481,7 @@ if ($searchFieldName != "" && $searchFieldValue != "" && in_array($searchFieldNa
 }
 
 $sql        = "select count(*) as NUM from form_formname";
-$rs         = $db->CacheExecute(10, $sql);
+$rs         = $db->Execute($sql);
 $ALL_NUM    = intval($rs->fields['NUM']);
 
 $RS['init_default']['filter'] = [];
@@ -503,7 +503,7 @@ if(!in_array($pageSize,[10,20,30,40,50,100,200,500]))  {
 $fromRecord = $page * $pageSize;
 
 $sql    = "select count(*) AS NUM from form_formname " . $AddSql . "";
-$rs     = $db->CacheExecute(10, $sql);
+$rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 $RS['init_default']['searchtitle']  = "设计数据集";
 $RS['init_default']['primarykey'] = $columnNames[0];
