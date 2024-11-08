@@ -284,10 +284,10 @@ if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List
             $RS             = [];
             $RS['status']   = "ERROR";
             $RS['msg']      = __("Import Fields Is Too Less");
-            $RS['_GET']     = $_GET;
-            $RS['_POST']    = $_POST;
-            $RS['_FILES']   = $_FILES;
-            $RS['sql']      = $sqlList;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET']     = $_GET;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST']    = $_POST;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_FILES']   = $_FILES;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql']      = $sqlList;
             print json_encode($RS);
             exit;
         }
@@ -331,10 +331,10 @@ if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List
         $RS             = [];
         $RS['status']   = "OK";
         $RS['msg']      = __("Import Data Success");
-        $RS['_GET']     = $_GET;
-        $RS['_POST']    = $_POST;
-        $RS['_FILES']   = $_FILES;
-        $RS['sql']      = $sqlList;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET']     = $_GET;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST']    = $_POST;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_FILES']   = $_FILES;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql']      = $sqlList;
         $RS['counter']  = sizeof($data);
         print json_encode($RS);
         exit;
@@ -556,9 +556,9 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                     $RS = [];
                     $RS['status'] = "ERROR";
                     $RS['msg'] = $SettingMap['Unique_Fields_Repeat_Text']?$SettingMap['Unique_Fields_Repeat_Text']:__('Unique_Fields_Repeat_Text');
-                    $RS['sql'] = $sql;
-                    $RS['_GET'] = $_GET;
-                    $RS['_POST'] = $_POST;
+                    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
+                    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET'] = $_GET;
+                    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
                     print json_encode($RS);
                     exit;
                 }
@@ -660,9 +660,9 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
             $RS = [];
             $RS['status'] = "ERROR";
             $RS['msg'] = __("sql execution failed");
-            $RS['sql'] = $sql;
-            $RS['_GET'] = $_GET;
-            $RS['_POST'] = $_POST;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET'] = $_GET;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
             print json_encode($RS);
             exit;
         }
@@ -671,9 +671,9 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
         $RS = [];
         $RS['status'] = "ERROR";
         $RS['msg'] = __("No POST Infor");
-        $RS['sql'] = $sql;
-        $RS['_GET'] = $_GET;
-        $RS['_POST'] = $_POST;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET'] = $_GET;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
         print json_encode($RS);
         exit;
     }
@@ -871,9 +871,9 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
                 $RS['sql'] = $sql;
                 $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
             }
-            $RS['sql'] = $sql;
-            $RS['_POST'] = $_POST;
-            $RS['_FILES'] = $_FILES;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_FILES'] = $_FILES;
             //Batch_Approval
             $Batch_Approval_Status_Field    = $SettingMap['Batch_Approval_Status_Field'];
             $Batch_Approval_Status_Value    = $SettingMap['Batch_Approval_Status_Value'];
@@ -970,9 +970,9 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             $RS = [];
             $RS['status'] = "ERROR";
             $RS['msg'] = __("sql execution failed");
-            $RS['sql'] = $sql;
-            $RS['_GET'] = $_GET;
-            $RS['_POST'] = $_POST;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET'] = $_GET;
+            if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
             print_R(EncryptApiData($RS));
             exit;
         }
@@ -981,11 +981,11 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
         $RS = [];
         $RS['status'] = "ERROR";
         $RS['msg'] = __("No POST Infor");
-        $RS['sql'] = $sql;
-        $RS['_GET'] = $_GET;
-        $RS['_POST'] = $_POST;
-        $RS['IsExecutionSQL'] = $IsExecutionSQL;
-        $RS['IsExecutionSQLChildTable'] = $IsExecutionSQLChildTable;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET'] = $_GET;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['IsExecutionSQL'] = $IsExecutionSQL;
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['IsExecutionSQLChildTable'] = $IsExecutionSQLChildTable;
         print_R(EncryptApiData($RS));
         exit;
     }
@@ -1004,9 +1004,9 @@ if( $_GET['action']=="edit_default_configsetting_data" && $SettingMap['Init_Acti
     $RS = [];
     $RS['status'] = "OK";
     $RS['msg'] = $SettingMap['Tip_When_Edit_Success'];
-    $RS['sql'] = $sql;
-    $RS['_GET'] = $_GET;
-    $RS['_POST'] = $_POST;
+    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
+    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET'] = $_GET;
+    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
     print json_encode($RS);
     exit;
 }
@@ -1258,7 +1258,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     $RS = [];
     $RS['status'] = "OK";
     $RS['data'] = $data;
-    $RS['sql'] = $sql;
+    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     if($_GET['IsGetStructureFromEditDefault']==1)  {
         $edit_default['allFields']      = $allFieldsEdit;
@@ -1453,7 +1453,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
     $RS = [];
     $RS['status'] = "OK";
     $RS['data'] = $data;
-    $RS['sql'] = $sql;
+    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     $view_default = [];
     if($_GET['IsGetStructureFromEditDefault']==1)  {
@@ -1467,7 +1467,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
         $view_default['titlememo']      = "";
         $view_default['tablewidth']     = 650;
     }
-    $RS['_SERVER'] = $_SERVER;
+    //$RS['_SERVER'] = $_SERVER;
     $RS['view_default'] = $view_default;
 
     //Filter Data For View
@@ -1907,7 +1907,7 @@ if($_GET['action']=="Reset_Password_123654")  {
     }
     $RS = [];
     $RS['status'] = "OK";
-    $RS['sql'] = $sql;
+    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
     $RS['msg'] = __("Change Password Success");
     print json_encode($RS);
     exit;
@@ -1948,7 +1948,7 @@ if($_GET['action']=="Reset_Password_ID_Last6")  {
     }
     $RS = [];
     $RS['status'] = "OK";
-    $RS['sql'] = $sql;
+    if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
     $RS['msg'] = __("Change Password Success");
     print json_encode($RS);
     exit;

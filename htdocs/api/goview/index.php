@@ -46,8 +46,8 @@ else if($param1=="project" && $param2=="create")  {
         $RS['code'] = 200;
         $RS['data'] = $rsf->fields;
         $RS['data']['id'] = EncryptID($RS['data']['id']);
-        $RS['_SERVER']  = $_SERVER;
-        $RS['_POST']  = $_POST;
+        //$RS['_SERVER']  = $_SERVER;
+        //$RS['_POST']  = $_POST;
         print_R(json_encode($RS));
         exit;
     }
@@ -90,16 +90,16 @@ else if($param1=="project" && $param2=="delete")  {
     $RS['code'] = 200;
     $RS['id']   = $_GET['ids'];
     print_R(json_encode($RS));
-    
+
     global $FileStorageLocation;
     $FileStorageLocation = $FileStorageLocation."/GoView";
     $FilePath = $FileStorageLocation."/".$id."_index_preview.png";
     if (file_exists($FilePath))             {
-        unlink($FilePath);      
+        unlink($FilePath);
     }
     $FilePath = $FileStorageLocation."/".$id."_index_background.png";
     if (file_exists($FilePath))             {
-        unlink($FilePath);      
+        unlink($FilePath);
     }
     exit;
 }
@@ -288,7 +288,7 @@ else if($param1=="image" && $param2!="")  {
     $FileStorageLocation = $FileStorageLocation."/GoView";
     $FilePath = $FileStorageLocation."/".$ID."_index_preview.png";
     if (!file_exists($FilePath))             {
-        $FilePath = $FileStorageLocation."/0_index_preview.png";        
+        $FilePath = $FileStorageLocation."/0_index_preview.png";
     }
     $imageType = exif_imagetype($FilePath);
     switch ($imageType) {
@@ -330,8 +330,8 @@ else if($param1=="bucket" && $param2!="")  {
                 break;
         }
         readfile($FilePath);
-        exit;   
-    }    
+        exit;
+    }
     exit;
 }
 else if($param1=="project" && $param2=="upload")  {
