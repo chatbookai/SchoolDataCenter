@@ -23,21 +23,22 @@ const ServerSideNavItems = () => {
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
     axios.get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken } }).then(res => {
 
-      
+
       let dataJson: any = null
       const data = res.data
       if(data && data.isEncrypted == "1" && data.data)  {
+          const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
           const i = data.data.slice(0, 32);
           const t = data.data.slice(-32);
           const e = data.data.slice(32, -32);
-          const k = authConfig.k;
+          const k = AccessKey;
           const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
           try{
               dataJson = JSON.parse(DecryptDataAES256GCMData)
           }
           catch(Error: any) {
               console.log("DecryptDataAES256GCMData view_default Error", Error)
-  
+
               dataJson = data
           }
       }
@@ -45,7 +46,7 @@ const ServerSideNavItems = () => {
 
           dataJson = data
       }
-      
+
       const menuArray = dataJson
       if (menuArray && menuArray.status && menuArray.status == "ERROR" && router.pathname != '/login') {
         localStorage.removeItem('userData')

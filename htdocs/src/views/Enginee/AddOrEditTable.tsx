@@ -26,7 +26,7 @@ interface AddOrEditTableType {
   action: string
   addEditStructInfo: any
   open: boolean
-  toggleAddTableDrawer: () => void
+  toggleAddTableDrawer: (val: string) => void
   addUserHandleFilter: (mobileEditPageIdEnableValue: boolean) => void
   backEndApi: string
   editViewCounter: number
@@ -45,7 +45,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
   const { externalId, id, action, addEditStructInfo, open, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, addEditViewShowInWindow, CSRF_TOKEN, dataGridLanguageCode, dialogMaxWidth, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate } = props
 
   const handleClose = () => {
-    toggleAddTableDrawer()
+    toggleAddTableDrawer('HandleClose')
   }
 
   const addEditStructInfoNew = {...addEditStructInfo}
@@ -56,7 +56,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
   return (
     <Fragment>
     {addEditViewShowInWindow ?
-      <Grid sx={{ pb: 8, px: { xs: 15, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }} style={{ height: `${addEditStructInfo.dialogContentHeight}`, width: '100%'}}>
+      <Grid sx={{ pb: 2, px: 1, pt: 3, position: 'relative' }} style={{ width: '100%' }}>
         <AddOrEditTableCore externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfoNew} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={IsGetStructureFromEditDefault} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/>
       </Grid>
       :

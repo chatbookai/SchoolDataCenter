@@ -55,10 +55,11 @@ const AuthProvider = ({ children }: Props) => {
             let dataJson: any = null
             const data = response.data
             if(data && data.isEncrypted == "1" && data.data)  {
+                const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
                 const i = data.data.slice(0, 32);
                 const t = data.data.slice(-32);
                 const e = data.data.slice(32, -32);
-                const k = authConfig.k;
+                const k = AccessKey;
                 const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
                 try{
                     dataJson = JSON.parse(DecryptDataAES256GCMData)
@@ -111,10 +112,11 @@ const AuthProvider = ({ children }: Props) => {
         let dataJson: any = null
         const data = response.data
         if(data && data.isEncrypted == "1" && data.data)  {
+            const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
             const i = data.data.slice(0, 32);
             const t = data.data.slice(-32);
             const e = data.data.slice(32, -32);
-            const k = authConfig.k;
+            const k = AccessKey;
             const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
             try{
                 dataJson = JSON.parse(DecryptDataAES256GCMData)
@@ -135,9 +137,8 @@ const AuthProvider = ({ children }: Props) => {
         //console.log("dataJson.userData",dataJson.userData)
         //console.log("JSON.stringify(dataJson.userData)",JSON.stringify(dataJson.userData))
         if(dataJson.userData!=undefined && dataJson.accessToken!=undefined)  {
-          true
-            ? window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
-            : null
+          window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
+          window.localStorage.setItem(authConfig.storageAccessKeyName, dataJson.accessKey)
           const returnUrl = router.query.returnUrl
           setUser({ ...dataJson.userData })
           true ? window.localStorage.setItem('userData', JSON.stringify(dataJson.userData)) : null
@@ -168,10 +169,11 @@ const AuthProvider = ({ children }: Props) => {
           let dataJson: any = null
           const data = response.data
           if(data && data.isEncrypted == "1" && data.data)  {
+              const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
               const i = data.data.slice(0, 32);
               const t = data.data.slice(-32);
               const e = data.data.slice(32, -32);
-              const k = authConfig.k;
+              const k = AccessKey;
               const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
               try{
                   dataJson = JSON.parse(DecryptDataAES256GCMData)
@@ -189,6 +191,8 @@ const AuthProvider = ({ children }: Props) => {
 
           if(dataJson.status == 'ok' && dataJson.accessToken) {
             setUser({ ...dataJson.userData })
+            window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
+            window.localStorage.setItem(authConfig.storageAccessKeyName, dataJson.accessKey)
           }
           else {
             console.log("用户当前身份登录状态失效...");

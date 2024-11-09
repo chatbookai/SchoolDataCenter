@@ -93,8 +93,11 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 interface AddTableType{
-  backEndApi:string
-  externalId:string
+  backEndApi: string
+  externalId: string
+  handleActionInMobileApp: any
+  actionInMobileApp: string
+  handleSetRightButtonIconOriginal: any
 }
 
 const ImgStyled = styled('img')(() => ({
@@ -103,9 +106,10 @@ const ImgStyled = styled('img')(() => ({
   borderRadius: 4
 }))
 
-const UserList = ({ backEndApi, externalId }: AddTableType) => {
+const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMobileApp, handleSetRightButtonIconOriginal }: AddTableType) => {
   // ** Props
   const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+  const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
 
   // ** State
   const [isLoading, setIsLoading] = useState(false);
@@ -137,7 +141,6 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   const [forbiddenEditRow, setForbiddenEditRow] = useState<any[]>([])
   const [forbiddenDeleteRow, setForbiddenDeleteRow] = useState<any[]>([])
 
-
   const [allSubmitFields, setAllSubmitFields] = useState({ 'searchFieldName': '' });
 
   const [pageSize, setPageSize] = useState<number>(10)
@@ -151,7 +154,22 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   const isMobileData = isMobile()
   const windowWidthData = windowWidth()
 
-  //const [filter, setFilter] = useState<any[]>([])
+  //在移动端时,当处理在查看,编辑,新增,删除页面时, 返回到列表页面. 左上角的返回按钮事件是在这个页面的父页面, 需要在此进行获得这个状态的改变
+  useEffect(() => {
+    if(actionInMobileApp == 'add_default')  {
+      setAddEditActionName('add_default') //右上角点击新建按钮的时候,需要使用到
+    }
+    else if(actionInMobileApp == 'edit_default')  {
+      //setAddEditActionName('edit_default')
+    }
+    else if(actionInMobileApp == 'view_default')  {
+      //setAddEditActionName('view_default')
+    }
+    else if(actionInMobileApp)  {
+      setAddEditActionName('init_default')
+    }
+  }, [actionInMobileApp])
+  console.log("actionInMobileApp ++ 162", actionInMobileApp, forceUpdate)
 
   const handleIsLoadingTipChange = (status: boolean, showText: string) => {
     setIsLoadingTip(status)
@@ -207,9 +225,9 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     if (params['filterMultiColumns'] != undefined) {
       newAllFilters['filterMultiColumns'] = JSON.parse(JSON.stringify(params['filterMultiColumns']))
     }
-
+    console.log("params", params, params['page'] == 0 && params['searchFieldName'] == '' && Object.keys(params['allSubmitFields']).length == 1)
     if (storedToken) {
-      params['page'] == 0 && setIsFirstLoadingTip(true)
+      params['page'] == 0 && params['searchFieldName'] == '' && Object.keys(params['allSubmitFields']).length == 1 && setIsFirstLoadingTip(true)
       setIsLoading(true)
       const response = await axios.get(authConfig.backEndApiHost + backEndApi, {
         headers: {
@@ -217,17 +235,23 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         },
         params: newAllFilters
       }).then(res => {
-        params['page'] == 0 && setIsFirstLoadingTip(false)
+        params['page'] == 0 && params['searchFieldName'] == '' && Object.keys(params['allSubmitFields']).length == 1 && setIsFirstLoadingTip(false)
         const data = res.data
         if(data && data.isEncrypted == "1" && data.data)  {
           const i = data.data.slice(0, 32);
           const t = data.data.slice(-32);
           const e = data.data.slice(32, -32);
-          const k = authConfig.k;
+          const k = AccessKey;
+          console.log("kkkkkk1234", k)
           const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+          console.log("kkkkkk1234", DecryptDataAES256GCMData)
           try{
             const ResJson = JSON.parse(DecryptDataAES256GCMData)
             console.log("DecryptDataAES256GCMData ResJson", ResJson)
+
+            if(ResJson && ResJson.add_default && ResJson.add_default.allFields)   {
+              handleSetRightButtonIconOriginal('ic:sharp-add-circle-outline')
+            }
 
             return ResJson
           }
@@ -238,6 +262,9 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
           }
         }
         else {
+          if(data && data.add_default && data.add_default.allFields)   {
+            handleSetRightButtonIconOriginal('ic:sharp-add-circle-outline')
+          }
 
           return data
         }
@@ -261,6 +288,9 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
         setAddEditActionId(response.init_action.id)
         setAddEditActionOpen(!addEditActionOpen)
         setAddEditViewShowInWindow(true)
+      }
+      else if(response && response.init_action.action.indexOf("init_default") != -1) {
+        setAddEditActionName(response.init_action.action)
       }
 
       if(response && response.init_default && response.init_default.MobileEndData && response.init_default.MobileEndData.length > 0) {
@@ -313,7 +343,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
       //setFilter(response.init_default.filter)
       //setPageSize(response.init_default.pageNumber) //不能开启此项
-      params['page'] == 0 && setIsFirstLoadingTip(false)
+      params['page'] == 0 && params['searchFieldName'] == '' && Object.keys(params['allSubmitFields']).length == 1 && setIsFirstLoadingTip(false)
       setIsLoading(false);
       setIsLoadingTip(false);
       setPageCount(response.init_default.pageCount)
@@ -357,7 +387,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     }
     console.log("mobileEditPageId > -1 && mobileEditPageIdEnable ? mobileEditPageId : page", page)
     console.log("mobileEditPageId > -1 && mobileEditPageIdEnable ? mobileEditPageId : pageCount", pageCount)
-    console.log("111111", searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, pageCount, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId)
+    console.log("mobileEditPageId 111111", searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, pageCount, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId)
     setMobileEditPageIdEnable(false);
   }, [dispatch, searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId])
 
@@ -370,13 +400,16 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
 
     window.addEventListener('resize', handleResize);
 
+
     if (isMobileData === true) {
+        setAddEditViewShowInWindow(true)
         const handleScroll = () => {
+            console.log("addEditActionName 111111", addEditActionName)
             const scrollY = window.scrollY;
             const windowHeight = window.innerHeight;
             const documentHeight = document.body.scrollHeight;
 
-            if (scrollY + windowHeight >= documentHeight && isLoadingTipDisabled === false && paginationModel.page < (pageCount-1)) {
+            if (addEditActionName == 'init_default' && scrollY + windowHeight >= documentHeight && isLoadingTipDisabled === false && paginationModel.page < (pageCount-1)) {
                 setPaginationModel((paginationModel) => {
                     if (paginationModel.page < pageCount) {
                         const newPage = paginationModel.page + 1;
@@ -404,7 +437,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
             window.removeEventListener('resize', handleResize);
         };
     }
-  }, [isMobileData, isLoadingTipDisabled, pageCount]);
+  }, [isMobileData, isLoadingTipDisabled, pageCount, addEditActionName]);
 
 
   const [innerHeight, setInnerHeight] = useState<number | string>(window.innerHeight)
@@ -426,6 +459,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     setAllRows([])
     setPage(0)
     setIsLoadingTipDisabled(false)
+    setForceUpdate(Math.random())
   }, [])
 
   const multiReviewHandleFilter = useCallback((action: string, multiReviewInputValue: string, selectedRows: GridRowId[], CSRF_TOKEN:string) => {
@@ -541,15 +575,22 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
     });
   }
 
-
-  const toggleAddTableDrawer = () => {
+  const toggleAddTableDrawer = (TableAction = '') => {
     setAddEditActionName('add_default')
     setAddEditActionOpen(!addEditActionOpen)
+    console.log("TableActionAdd", TableAction)
+    if(TableAction == 'SubmitSuccess' && handleActionInMobileApp)  { //新建和编辑表单提交以后返回一个成功的操作
+      handleActionInMobileApp('', '', 'GoPageList')
+    }
   }
 
-  const toggleEditTableDrawer = () => {
+  const toggleEditTableDrawer = (TableAction: string) => {
     setAddEditActionName('edit_default')
     setAddEditActionOpen(!addEditActionOpen)
+    console.log("TableActionEdit", TableAction)
+    if(TableAction == 'SubmitSuccess' && handleActionInMobileApp)  {
+      handleActionInMobileApp('', '', 'GoPageList')
+    }
   }
 
   const toggleViewTableDrawer = () => {
@@ -568,20 +609,25 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   }
 
   const togglePageActionDrawer = (action: string, id: string, CSRF_TOKEN: string) => {
-    setAddEditActionName(action)
-    setCSRF_TOKEN(CSRF_TOKEN)
     switch (action) {
       case 'edit_default':
+        setAddEditActionName(action)
+        setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default.titletext)
         break;
       case 'view_default':
+        setAddEditActionName(action)
+        setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setViewActionOpen(!viewActionOpen)
         setEditViewCounter(0)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.view_default.titletext)
         break;
       case 'delete_array':
         setSelectedRows([id])
+        setCSRF_TOKEN(CSRF_TOKEN)
         handleMultiOpenDialog("delete_array")
         break;
     }
@@ -1033,8 +1079,8 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
   }
 
   return (
-    <Grid container spacing={6}>
-      {store && store.init_action.action == 'init_default' && isMobileData == false ?
+    <Grid container spacing={0}>
+      {addEditActionName == 'init_default' && isMobileData == false ?
       <Grid item xs={12}>
         <Card>
           {store.init_default.returnButton && store.init_default.returnButton.status ?
@@ -1145,17 +1191,17 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
           />
           }
         </Card>
-        { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default.ApprovalNodeFields.DebugSql) ?
+        { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default?.ApprovalNodeFields?.DebugSql) ?
           (
           <Grid item xs={12} sx={{mt: 2}}>
-            <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default.ApprovalNodeFields.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} />
+            <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default?.ApprovalNodeFields?.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} />
           </Grid>
           )
           : ''
         }
       </Grid>
       : '' }
-      {store && store.init_action.action == 'init_default' && isMobileData == true && isFirstLoadingTip==false ?
+      {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && (
         <Grid item xs={12}>
           <Card sx={{ mb: 3}}>
             {store.init_default.returnButton && store.init_default.returnButton.status ?
@@ -1169,7 +1215,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
               {store.init_default.filter && store.init_default.filter.length == 0 && store.add_default && store.add_default.allFields && isMobileData && store.init_default.button_add && store.init_default.MobileEndShowSearch == 'No' && (
                 <Grid sx={{ pr: 3, pb: 0, pt: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Grid sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <Button variant='outlined' size='small' onClick={toggleAddTableDrawer}>{store.init_default.button_add}</Button>
+                    <Button variant='outlined' size='small' onClick={()=>toggleAddTableDrawer('AddButton')}>{store.init_default.button_add}</Button>
                   </Grid>
                 </Grid>
               )}
@@ -1377,7 +1423,7 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
                   </Grid>
                 )
               })}
-              {isGetNextPageData == false && pageCount > 1 && (
+              {isMobileData == true && isGetNextPageData == false && pageCount > 1 && false && ( // 移动端暂时不需要单独的分页显示, 之前加上是因为在H5中,有些型号的手机无法实现下拉分页
                 <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
                   <Pagination count={pageCount} variant='outlined' color='primary' page={(paginationModel.page+1)} onChange={
                     (event: React.ChangeEvent<unknown>, page: number) => {
@@ -1416,18 +1462,26 @@ const UserList = ({ backEndApi, externalId }: AddTableType) => {
               :
               null
               }
+              {isMobileData == true && isLoading == true && (
+                <Backdrop
+                  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                  open={true}
+                >
+                  <CircularProgress color="inherit" size={45}/>
+                </Backdrop>
+              )}
             </Grid>
           </Fragment>
-          { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default.ApprovalNodeFields.DebugSql) ?
+          { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default?.ApprovalNodeFields?.DebugSql) ?
             (
             <Grid item xs={12} sx={{mt: 2}}>
-              <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default.ApprovalNodeFields.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} />
+              <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default?.ApprovalNodeFields?.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} />
             </Grid>
             )
             : ''
           }
-      </Grid>
-      : '' }
+        </Grid>
+      )}
 
       {isMobileData == true && isFirstLoadingTip && (
         <Backdrop

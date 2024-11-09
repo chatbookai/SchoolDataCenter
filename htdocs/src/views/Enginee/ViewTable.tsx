@@ -42,15 +42,15 @@ interface ViewTableType {
 const ViewTable = (props: ViewTableType) => {
   // ** Props
   const { externalId, id, action, pageJsonInfor, open, toggleViewTableDrawer, backEndApi, editViewCounter, addEditViewShowInWindow, CSRF_TOKEN, toggleImagesPreviewListDrawer, dialogMaxWidth } = props
-  
+
   const handleClose = () => {
     toggleViewTableDrawer()
   }
-  
+
   return (
     <Fragment>
-    {addEditViewShowInWindow ? 
-      <Grid sx={{ pb: 8, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }} style={{ width: '100%' }}>
+    {addEditViewShowInWindow ?
+      <Grid sx={{ pb: 2, px: 0, pt: 1, position: 'relative' }} style={{ width: '100%' }}>
         <ViewTableCore externalId={Number(externalId)} id={id} action={action} pageJsonInfor={pageJsonInfor} open={open} toggleViewTableDrawer={toggleViewTableDrawer} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} CSRF_TOKEN={CSRF_TOKEN} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} />
       </Grid>
       :
@@ -75,7 +75,7 @@ const ViewTable = (props: ViewTableType) => {
       </Dialog >
     }
   </Fragment>
-  )  
+  )
 }
 
 export default ViewTable

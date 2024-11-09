@@ -152,7 +152,7 @@ interface AddOrEditTableType {
     action: string
     addEditStructInfo: any
     open: boolean
-    toggleAddTableDrawer: () => void
+    toggleAddTableDrawer: (value: string) => void
     addUserHandleFilter: (mobileEditPageIdEnableValue: boolean) => void
     backEndApi: string
     editViewCounter: number
@@ -214,6 +214,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const [activeTab, setActiveTab] = useState<string>('detailsTab')
 
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+    const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
 
     ///console.log("AddtionalParams======================================",action)
 
@@ -238,7 +239,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         const i = data.data.slice(0, 32);
                         const t = data.data.slice(-32);
                         const e = data.data.slice(32, -32);
-                        const k = authConfig.k;
+                        const k = AccessKey;
                         const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
                         try{
                             dataJson = JSON.parse(DecryptDataAES256GCMData)
@@ -556,8 +557,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         setIsSubmitLoading(true)
         handleIsLoadingTipChange(true, addEditStructInfo2.ImportLoading)
         const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+        const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
         if (!storedToken) {
-            toggleAddTableDrawer()
+            toggleAddTableDrawer('TokenError')
             reset()
 
             return
@@ -675,7 +677,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     const i = data.data.slice(0, 32);
                     const t = data.data.slice(-32);
                     const e = data.data.slice(32, -32);
-                    const k = authConfig.k;
+                    const k = AccessKey;
                     const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
                     try{
                         dataJson = JSON.parse(DecryptDataAES256GCMData)
@@ -699,10 +701,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     setAllFiles({})
                     setAllDates({})
                     setForceUpdate(Math.random())
-                    console.log("Math.random()", Math.random())
 
                     //setDefaultValuesNew({})
-                    toggleAddTableDrawer()
+                    toggleAddTableDrawer('SubmitSuccess')
                     reset()
                     addUserHandleFilter(action == 'edit_default' ? true : false);
                 }
@@ -714,10 +715,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     setAllFiles({})
                     setAllDates({})
                     setForceUpdate(Math.random())
-                    console.log("Math.random()", Math.random())
 
                     //setDefaultValuesNew({})
-                    toggleAddTableDrawer()
+                    toggleAddTableDrawer('SubmitError')
                     reset()
                     addUserHandleFilter(action == 'edit_default' ? true : false);
                 }
@@ -740,7 +740,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 setAllDates({})
 
                 //setDefaultValuesNew({})
-                toggleAddTableDrawer()
+                toggleAddTableDrawer('NetworkError')
                 reset()
             });
 
@@ -762,7 +762,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         setAllDates({})
 
         //setDefaultValuesNew({})
-        toggleAddTableDrawer()
+        toggleAddTableDrawer('HandleClose')
         reset()
     }
 
@@ -1082,21 +1082,20 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
     return (
         <Fragment>
-            {titletext && titletext != "" && !isLoading ?
+            {isMobileData == false && titletext && titletext != "" && !isLoading && (
                 <Box sx={{ mb: 8, textAlign: 'center' }}>
                     <Typography variant='h5' sx={{ mb: 3 }}>
                         {titletext}
                     </Typography>
                     <Typography variant='body2'>{addEditStructInfo2.titlememo ? addEditStructInfo2.titlememo : ''}</Typography>
                 </Box>
-                : ''
-            }
+            )}
             <Fragment>
                 {isLoading ? (
                     <Grid item xs={12} sm={12} container justifyContent="space-around">
                         <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                             <CircularProgress />
-                            <Typography>{addEditStructInfo2.loading}</Typography>
+                            <Typography sx={{pt:5, pb:5}}>{addEditStructInfo2.loading}</Typography>
                         </Box>
                     </Grid>
                 ) : (
@@ -1127,7 +1126,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         }
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "input" || FieldArray.type == "email" || FieldArray.type == "number")) {
-                                                        if ((action.indexOf("add_default") != -1 || action.indexOf("edit_default") != -1) && defaultValuesNew[FieldArray.name] != undefined) {
+                                                        if ((action.indexOf("add_default") != -1 || action.indexOf("edit_default") != -1) && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] ) {
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }
 
@@ -4880,10 +4879,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                         {((addEditStructInfo2.submittext && addEditStructInfo2.submittext) || (addEditStructInfo2.canceltext && addEditStructInfo2.canceltext)) && ((singleModelCounter == (fieldIdValue+1) ) || FieldShowStatus == 2) ?
                             <Grid item xs={12} sm={12} container justifyContent="space-around" sx={{ pt: 4 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                                     {addEditStructInfo2.submittext && addEditStructInfo2.submittext != "" ?
                                         <Tooltip title="Alt+s">
-                                            <Button size={componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ mr: 3 }}>
+                                            <Button size={isMobileData == true ? 'medium' : componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ width: isMobileData == true ? '100%' : '' }}>
                                                 {isSubmitLoading ? (
                                                     <CircularProgress
                                                         sx={{

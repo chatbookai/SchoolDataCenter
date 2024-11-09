@@ -38,7 +38,7 @@ const IndexJumpDialogWindow = ({handleDialogWindowCloseWithParam, NewFieldName, 
         : null}
     </TreeItem>
   );
-  
+
   //console.log("view_default--------------------------------", id, action)
   const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
 
@@ -64,7 +64,7 @@ const IndexJumpDialogWindow = ({handleDialogWindowCloseWithParam, NewFieldName, 
   return (
     <Fragment>
         <TextField fullWidth sx={{ mb: 4 }} label={FieldArray.jumpWindowSearchFiledText} size='small' placeholder={FieldArray.jumpWindowSearchFiledPlaceholder} onChange={handleTextFieldChange}/>
-        <TreeView    
+        <TreeView
         sx={{ minHeight: 240 }}
         defaultExpandIcon={<span>+</span>}
         defaultCollapseIcon={<span>-</span>}

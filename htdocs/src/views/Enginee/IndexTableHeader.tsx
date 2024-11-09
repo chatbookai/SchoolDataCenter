@@ -31,7 +31,7 @@ interface TableHeaderProps {
   filter: any[]
   handleFilterChange: (field: any, value: string) => void
   handleFilter: (val: string) => void
-  toggleAddTableDrawer: () => void
+  toggleAddTableDrawer: (val: string) => void
   toggleImportTableDrawer: () => void
   toggleExportTableDrawer: () => void
   value: string
@@ -68,7 +68,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
   useEffect(() => {
 
     //Mousetrap.bind(['alt+f', 'command+f'], handleSubmit(onSubmit));
-    Mousetrap.bind(['alt+a', 'command+a'], toggleAddTableDrawer);
+    Mousetrap.bind(['alt+a', 'command+a'], ()=>toggleAddTableDrawer(''));
     Mousetrap.bind(['alt+i', 'command+i'], toggleImportTableDrawer);
     Mousetrap.bind(['alt+e', 'command+e'], toggleExportTableDrawer);
 
@@ -194,7 +194,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
               {isAddButton && (isMobileData==true && MobileEndShowSearch=='No') ?
               <Grid item sm={3} xs={6}>
                 <Tooltip title="Alt+a">
-                  <Button sx={{ ml: 0, mb: 0 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
+                  <Button sx={{ ml: 0, mb: 0 }} onClick={()=>toggleAddTableDrawer('')} variant='contained'>{button_add}</Button>
                 </Tooltip>
               </Grid>
               :
@@ -268,7 +268,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 <Grid item sm={4} xs={6}>
                   {isAddButton ?
                   <Tooltip title="Alt+a">
-                    <Button sx={{ ml: 3, mb: 2 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
+                    <Button sx={{ ml: 3, mb: 2 }} onClick={()=>toggleAddTableDrawer('')} variant='contained'>{button_add}</Button>
                   </Tooltip>
                   : ''}
                   {isMobileData == false && isImportButton ?

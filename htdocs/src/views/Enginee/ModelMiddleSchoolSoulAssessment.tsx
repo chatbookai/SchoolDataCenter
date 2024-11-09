@@ -351,7 +351,7 @@ const ModelMiddleSchoolSoulAssessment = ({ dataOriginal, modelOriginal, id, back
                               </TableRow>
                             )
                           })}
-                          
+
                         </TableBody>
                       </Table>
                     </TableContainer>

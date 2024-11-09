@@ -11,7 +11,6 @@ import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import CardContent from '@mui/material/CardContent'
-import Tooltip from "@mui/material/Tooltip"
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 import Dialog from '@mui/material/Dialog'
@@ -29,7 +28,7 @@ interface TableHeaderProps {
   filter: any[]
   handleFilterChange: (field: any, value: string) => void
   handleFilter: (val: string) => void
-  toggleAddTableDrawer: () => void
+  toggleAddTableDrawer: (val: string) => void
   toggleImportTableDrawer: () => void
   toggleExportTableDrawer: () => void
   value: string
@@ -53,7 +52,7 @@ interface TableHeaderProps {
 const IndexTableHeaderMobile = (props: TableHeaderProps) => {
 
   // ** Props
-  const { filter, handleFilterChange, handleFilter, toggleAddTableDrawer, toggleImportTableDrawer, toggleExportTableDrawer, searchFieldText, searchFieldArray, selectedRows, multireview, multiReviewHandleFilter, button_search, button_add, isAddButton, isImportButton, isExportButton, CSRF_TOKEN, MobileEndShowSearch, MobileEndShowGroupFilter } = props
+  const { filter, handleFilterChange, handleFilter, toggleAddTableDrawer, toggleImportTableDrawer, toggleExportTableDrawer, searchFieldText, searchFieldArray, selectedRows, multireview, multiReviewHandleFilter, button_search, CSRF_TOKEN, MobileEndShowSearch, MobileEndShowGroupFilter } = props
   const defaultValuesInitial = { "searchFieldName": searchFieldArray && searchFieldArray[0] && searchFieldArray[0].value ? searchFieldArray[0].value : undefined, "searchFieldValue": "", "multiReviewInputName": "" }
 
   //console.log("IndexTableHeaderMobile props", props)
@@ -64,7 +63,7 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
   useEffect(() => {
 
     //Mousetrap.bind(['alt+f', 'command+f'], handleSubmit(onSubmit));
-    Mousetrap.bind(['alt+a', 'command+a'], toggleAddTableDrawer);
+    Mousetrap.bind(['alt+a', 'command+a'], ()=>toggleAddTableDrawer(''));
     Mousetrap.bind(['alt+i', 'command+i'], toggleImportTableDrawer);
     Mousetrap.bind(['alt+e', 'command+e'], toggleExportTableDrawer);
 
@@ -138,7 +137,7 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
     <>
       <form onSubmit={handleSubmit(onSubmit)} id="searchOneField">
         {filter.length > 0 && MobileEndShowGroupFilter=='Yes' ?
-          <CardContent sx={{ pl: 3, pb: 1, pt: 1 }}>
+          <CardContent sx={{ pl: 3, pb: 0, pt: 4 }}>
             <Grid container spacing={6}>
               {filter.length > 0 && filter.map((Filter: any, Filter_index: number) => {
 
@@ -185,14 +184,7 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
                 )
 
               })}
-              {isAddButton && MobileEndShowSearch=='No' ?
-              <Grid item sm={3} xs={6}>
-                <Tooltip title="Alt+a">
-                  <Button sx={{ ml: 0, mb: 0 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
-                </Tooltip>
-              </Grid>
-              :
-              null}
+
             </Grid>
           </CardContent>
           : ''
@@ -230,7 +222,7 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
                 : ''}
               {searchFieldArray ?
                 <Grid item xs={12}>
-                  <FormControl fullWidth size="small" sx={{}}>
+                  <FormControl fullWidth size="small" sx={{mt: 1}}>
                     <Controller
                       name="searchFieldValue"
                       control={control}
@@ -251,19 +243,8 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
               {searchFieldArray ?
                 <Grid item sm={12} sx={{width: 'calc(100%)'}}>
                   <FormControl fullWidth>
-                    <Tooltip title="Alt+f">
-                      <Button variant='contained' type='submit'>{button_search}</Button>
-                    </Tooltip>
+                    <Button variant='contained' type='submit'>{button_search}</Button>
                   </FormControl>
-                </Grid>
-                : ''}
-              {isAddButton || isImportButton || isExportButton ?
-                <Grid item sm={4} xs={6}>
-                  {isAddButton ?
-                  <Tooltip title="Alt+a">
-                    <Button sx={{ ml: 3, mb: 2 }} onClick={toggleAddTableDrawer} variant='contained'>{button_add}</Button>
-                  </Tooltip>
-                  : ''}
                 </Grid>
                 : ''}
             </Grid>
