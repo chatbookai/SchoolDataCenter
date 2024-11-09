@@ -963,7 +963,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
                 $Record         = $db->Execute($sql);
                 SystemLogRecord("edit_default_data", json_encode($RecordOriginal->fields), json_encode($Record->fields));
             }
-            print_R(EncryptApiData($RS));
+            print_R(EncryptApiData($RS, $GLOBAL_USER));
             exit;
         }
         else {
@@ -973,7 +973,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['sql'] = $sql;
             if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_GET'] = $_GET;
             if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
-            print_R(EncryptApiData($RS));
+            print_R(EncryptApiData($RS, $GLOBAL_USER));
             exit;
         }
     }
@@ -986,7 +986,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
         if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['_POST'] = $_POST;
         if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['IsExecutionSQL'] = $IsExecutionSQL;
         if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  $RS['IsExecutionSQLChildTable'] = $IsExecutionSQLChildTable;
-        print_R(EncryptApiData($RS));
+        print_R(EncryptApiData($RS, $GLOBAL_USER));
         exit;
     }
 }
@@ -1396,7 +1396,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
         $RS['msg'] = __("Error Id Value");
         $RS['_GET'] = $_GET;
         $RS['_POST'] = $_POST;
-        print_R(EncryptApiData($RS));
+        print_R(EncryptApiData($RS, $GLOBAL_USER));
         exit;
     }
 
@@ -1759,7 +1759,7 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
         $RS['MobileEnd']['MobileEndActivityEnrollEndDateName']      = $SettingMap['MobileEndActivityEnrollEndDate'];
     }
 
-    print_R(EncryptApiData($RS));
+    print_R(EncryptApiData($RS, $GLOBAL_USER));
     exit;
 }
 
@@ -3023,7 +3023,7 @@ if(function_exists($functionNameIndividual))  {
     $RS = $functionNameIndividual($RS);
 }
 
-print_R(EncryptApiData($RS));
+print_R(EncryptApiData($RS, $GLOBAL_USER));
 exit;
 
 

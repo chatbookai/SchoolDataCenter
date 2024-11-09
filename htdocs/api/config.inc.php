@@ -28,21 +28,16 @@ $FileCacheDir           = "D:/MYEDU/Attach/FileCache";
 $NEXT_PUBLIC_JWT_EXPIRATION = 300;
 
 //Setting NEXT_PUBLIC_JWT_SECRET value, need to change other value once you online your site.
-$NEXT_PUBLIC_JWT_SECRET = 'a8B7c6D5e4F3g2H1i0J9k8L7m6N5o4P3q2R1s0T9u8V7w6X5';
+global $NEXT_PUBLIC_JWT_SECRET;
+$NEXT_PUBLIC_JWT_SECRET = substr(hash('sha512', $_SERVER['PATHEXT'].$_SERVER['PATH'], false), 64);
 
 //Setting EncryptAESKey value, need to change other value once you online your site.
 global $EncryptAESKey;
-$EncryptAESKey = "a4B7c2D9e6F1g8H3i5J0k7L2m9N6o1P8q3R4s7T0u5V8w2X9y4Z3b6C1d7E0f5G8";
-
-//Setting EncryptDataAESKey value, need to change other value once you online your site. 固定长度 32位
-global $EncryptApiDataAESKey;
-$EncryptApiDataAESKey = "fbae1da1c3f10b1ce0c75c8f5d3319d0";
+$EncryptAESKey = substr(hash('sha512', $_SERVER['PATH'].$_SERVER['PATHEXT'], false), 64);
 
 //是否启用API接口加密
 global $EncryptApiEnable;
-$EncryptApiEnable = false;
-
-// 14dadf80d224a1bad3a22a0bc30269022f5d6433a8cbe10ffddc83410de9e983
+$EncryptApiEnable = true;
 
 // #################################################################################
 // Not need to change

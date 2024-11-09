@@ -32,11 +32,11 @@ if($_GET['action']=="login")                {
         }
         $rs		= $db->Execute($sql);
         $UserInfo = $rs->fields;
-        if($UserInfo['USER_ID']==""&&$UserType!="校友")  {  
+        if($UserInfo['USER_ID']==""&&$UserType!="校友")  {
             $sql    = "select * from data_student where 学号='$USER_ID'";
             $rs		= $db->Execute($sql);
             $StudentInfo = $rs->fields;
-            if($StudentInfo['学号']=="")  {  
+            if($StudentInfo['学号']=="")  {
                 $RS = [];
                 $RS['status']   = "ERROR";
                 $RS['msg']      = $RS['email']    = __("USER NOT EXIST OR PASSWORD IS ERROR!");
@@ -59,12 +59,13 @@ if($_GET['action']=="login")                {
                 $userData['专业']       = $StudentInfo['专业'];
                 $userData['系部']       = $StudentInfo['系部'];
                 $userData['PRIV_NAME']  = "学生";
-                $userData['avatar']     = '/images/avatars/1.png';        
+                $userData['avatar']     = '/images/avatars/1.png';
                 $userData['username']   = $StudentInfo['学号'];
                 $userData['role']       = "学生";
                 $userData['type']       = "Student";
                 $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
                 $RS['accessToken']      = $accessToken;
+                $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
                 //形成个人信息展示页面的数据列表
                 $USER_PROFILE 	    = array();
@@ -88,11 +89,11 @@ if($_GET['action']=="login")                {
             print json_encode($RS);
             exit;
         }
-        if($UserInfo['USER_ID']==""&&$UserType=="校友")  {  
+        if($UserInfo['USER_ID']==""&&$UserType=="校友")  {
             $sql    = "select * from data_xiaoyou_member where 学生姓名='$USER_ID'";
             $rs		= $db->Execute($sql);
             $StudentInfo = $rs->fields;
-            if($StudentInfo['学生姓名']=="")  {  
+            if($StudentInfo['学生姓名']=="")  {
                 $RS = [];
                 $RS['status']   = "ERROR";
                 $RS['msg']      = $RS['email']    = __("USER NOT EXIST OR PASSWORD IS ERROR!");
@@ -115,12 +116,13 @@ if($_GET['action']=="login")                {
                 $userData['专业']       = $StudentInfo['专业'];
                 $userData['系部']       = $StudentInfo['院系'];
                 $userData['PRIV_NAME']  = "校友";
-                $userData['avatar']     = '/images/avatars/1.png';        
+                $userData['avatar']     = '/images/avatars/1.png';
                 $userData['username']   = $StudentInfo['学生学号'];
                 $userData['role']       = "校友";
                 $userData['type']       = "Schoolmate";
                 $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
                 $RS['accessToken']      = $accessToken;
+                $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
                 $RS['status']           = "OK";
                 $RS['msg']              = __("Success");
@@ -163,13 +165,14 @@ if($_GET['action']=="login")                {
             $userData['DEPT_NAME']  = returntablefield("data_department","id",$UserInfo['DEPT_ID'],"DEPT_NAME")['DEPT_NAME'];
             $userData['PRIV_NAME']  = returntablefield("data_role","id",$UserInfo['USER_PRIV'],"name")['name'];
             $userData['USER_PRIV']  = $UserInfo['USER_PRIV'];
-            $userData['avatar']     = '/images/avatars/1.png';        
+            $userData['avatar']     = '/images/avatars/1.png';
             $userData['username']   = $UserInfo['USER_ID'];
             $userData['email']      = $UserInfo['EMAIL'];
             $userData['role']       = $userData['PRIV_NAME'];
             $userData['type']       = "User";
             $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
             $RS['accessToken']      = $accessToken;
+            $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
             $RS['userData']         = $userData;
 
             $GO_SYSTEM                          = [];
@@ -223,6 +226,7 @@ if($_GET['action']=="refresh")                {
     $accessToken                = EncryptID(JWT::encode((array) $CheckAuthUserLoginStatus, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
     $RS['status']               = 'ok';
     $RS['accessToken']          = $accessToken;
+    $RS['accessKey']            = GetAccessKey($CheckAuthUserLoginStatus->USER_ID);
     $RS['userData']             = (array) $CheckAuthUserLoginStatus;
     print_r(json_encode($RS));
     exit;

@@ -69,15 +69,17 @@ function DecryptID($data) {
     return strval($decrypted);
 }
 
-function EncryptApiData($JSON) {
+function EncryptApiData($JSON, $GLOBAL_USER) {
   global $EncryptApiEnable;
-	if($_SERVER['HTTP_HOST'] == "localhost" && $_SERVER['HTTP_HOST'] == "127.0.0.1")  {
-		return json_encode($JSON);
-	}
-  else if($EncryptApiEnable) {
+  if($EncryptApiEnable) {
 		$cipher = "aes-256-gcm";
 		global $EncryptAESIV;
-		global $EncryptApiDataAESKey;
+    if($GLOBAL_USER->USER_ID!="")   {
+		  $EncryptApiDataAESKey = GetAccessKey($GLOBAL_USER->USER_ID);
+    }
+    else {
+		  $EncryptApiDataAESKey = GetAccessKey($GLOBAL_USER->学号);
+    }
 		$ciphertext = openssl_encrypt(json_encode($JSON), $cipher, $EncryptApiDataAESKey, OPENSSL_RAW_DATA, $EncryptAESIV, $tag);
 		return json_encode(['data'=> bin2hex($EncryptAESIV).bin2hex($ciphertext).bin2hex($tag) , 'isEncrypted'=>'1']);
   }
@@ -179,38 +181,45 @@ function base64_safe_decode($base64) {
 	return $base64;
 }
 
+function GetAccessKey($USER_ID = '') {
+  $AccessKey = hash('sha512', $USER_ID . date('Ymd'), false);
+  return substr($AccessKey, 0, 32);
+}
+
 function CheckAuthUserLoginStatus()  {
 	global $NEXT_PUBLIC_JWT_EXPIRATION;
 	global $NEXT_PUBLIC_JWT_SECRET;
 	global $GLOBAL_USER;
-	JWT::$leeway    	= $NEXT_PUBLIC_JWT_EXPIRATION;
-    $accessTokenArray   = explode('::::',$_SERVER['HTTP_AUTHORIZATION']);
-	$accessToken		= $accessTokenArray[0];
-    if($accessToken==""||$accessToken==null)   {
-        $RS['status'] = "ERROR";
-        $RS['error'] = "accessToken is null";
-        $RS['HTTP_AUTHORIZATION'] = $accessToken;
-        print_r(json_encode($RS));
-        exit;
-    }
-    try {
-        $GLOBAL_USER	= JWT::decode(DecryptID($accessToken), new Key($NEXT_PUBLIC_JWT_SECRET, 'HS256'));
-		return $GLOBAL_USER;
-    } catch (LogicException $e) {
-        // errors having to do with environmental setup or malformed JWT Keys
-		$RS['status'] = "ERROR";
-        $RS['error'] = $e;
-        $RS['errortext'] = "CheckAuthUserLoginStatus Failed";
-        print_r(json_encode($RS));
-        exit;
-    } catch (UnexpectedValueException $e) {
-        // errors having to do with JWT signature and claims
-		$RS['status'] = "ERROR";
-        $RS['error'] = $e;
-        $RS['errortext'] = "CheckAuthUserLoginStatus Failed";
-        print_r(json_encode($RS));
-        exit;
-    }
+	JWT::$leeway    	  = $NEXT_PUBLIC_JWT_EXPIRATION;
+  $accessTokenArray   = explode('::::',$_SERVER['HTTP_AUTHORIZATION']);
+  $accessToken		    = $accessTokenArray[0];
+  if($accessToken==""||$accessToken==null)   {
+      $RS['status'] = "ERROR";
+      $RS['error'] = "accessToken is null";
+      $RS['HTTP_AUTHORIZATION'] = $accessToken;
+      print_r(json_encode($RS));
+      exit;
+  }
+  try {
+      $GLOBAL_USER	= JWT::decode(DecryptID($accessToken), new Key($NEXT_PUBLIC_JWT_SECRET, 'HS256'));
+      return $GLOBAL_USER;
+  }
+  catch (LogicException $e) {
+      // errors having to do with environmental setup or malformed JWT Keys
+      $RS['status'] = "ERROR";
+      $RS['error'] = $e;
+      $RS['errortext'] = "CheckAuthUserLoginStatus Failed";
+      print_r(json_encode($RS));
+      exit;
+  }
+  catch (UnexpectedValueException $e) {
+      // errors having to do with JWT signature and claims
+      $RS['status'] = "ERROR";
+      $RS['error'] = $e;
+      $RS['errortext'] = "CheckAuthUserLoginStatus Failed";
+      print_r(json_encode($RS));
+      exit;
+  }
 }
 
 function CheckAuthUserRoleHaveMenu($FlowId, $MenuPath='')  {
