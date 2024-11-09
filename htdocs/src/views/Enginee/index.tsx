@@ -95,9 +95,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 interface AddTableType{
   backEndApi: string
   externalId: string
-  handleActionInMobileApp: any
-  actionInMobileApp: string
-  handleSetRightButtonIconOriginal: any
+  handleActionInMobileApp?: any
+  actionInMobileApp?: string
+  handleSetRightButtonIconOriginal?: any
 }
 
 const ImgStyled = styled('img')(() => ({
