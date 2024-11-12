@@ -1103,14 +1103,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         {allFieldsMode && allFieldsMode.map((allFieldsModeItem: any, allFieldsModeIndex: number) => {
 
                             return (
-                                        <Grid container spacing={5} key={allFieldsModeIndex}>
+                                        <Grid container spacing={5} key={allFieldsModeIndex} sx={{mt: 0}}>
                                             {allFields && allFields[allFieldsModeItem.value] && allFields[allFieldsModeItem.value].map((FieldArray: any, FieldArray_index: number) => {
 
                                                 //开始根据表单中每个字段的类型,进行不同的渲染,此部分比较复杂,注意代码改动.
                                                 //Start to render differently according to the type of each field in the form
                                                 //this part is more complicated, pay attention to the code changes.
                                                 //console.log("defaultValuesNew[FieldArray.name]-----", FieldArray)
-                                                <Fragment>2222</Fragment>
                                                 let FieldShowStatusItem = 0
                                                 if(addEditStructInfo2 && addEditStructInfo2.model && addEditStructInfo2.model == "Loop" && FieldArray_index == fieldIdValue) {
                                                     FieldShowStatusItem = 1
@@ -4099,7 +4098,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         name={FieldArray.name}
                                                                         control={control}
                                                                         render={({ field: { value, onChange } }) => (
-                                                                            <Box sx={{ width: 380 }}>
+                                                                            <Box sx={{ whiteSpace: 'nowrap' }}>
                                                                                 <Typography sx={{ fontWeight: 500 }}>{FieldArray.label}</Typography>
                                                                                 <Switch
                                                                                     size={componentsize}
