@@ -72,7 +72,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
           <IconButton
             size='small'
             onClick={handleClose}
-            sx={{ position: 'absolute', top: '1rem' }}
+            sx={{ position: 'absolute', top: '1rem', right: '1rem' }}
           >
             <Icon icon='mdi:close' />
           </IconButton>

@@ -4882,7 +4882,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                                     {addEditStructInfo2.submittext && addEditStructInfo2.submittext != "" ?
                                         <Tooltip title="Alt+s">
-                                            <Button size={isMobileData == true ? 'medium' : componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ width: isMobileData == true ? '100%' : '' }}>
+                                            <Button size={isMobileData == true ? 'medium' : componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ width: isMobileData == true ? '100%' : '', whiteSpace: 'nowrap' }}>
                                                 {isSubmitLoading ? (
                                                     <CircularProgress
                                                         sx={{
