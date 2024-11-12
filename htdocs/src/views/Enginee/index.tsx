@@ -39,7 +39,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { isMobile, windowWidth } from 'src/configs/functions'
 import Backdrop from '@mui/material/Backdrop'
 
-//import * as XLSX from 'xlsx'
+import * as XLSX from 'xlsx'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -516,7 +516,6 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
     .then(response => response.json())
     .then(jsonData => {
       if(jsonData && jsonData['data'] && jsonData['data'].length > 0)  {
-        /*
         const ws: any = XLSX.utils.json_to_sheet(jsonData['data']);
         ws['!cols'] = jsonData['header'];
         ws['!rows'] = [];
@@ -534,11 +533,8 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
         XLSX.writeFile(wb, store.export_default.titletext+'.xlsx');
-        */
       }
       else {
-
-        /*
         const ws: any = XLSX.utils.json_to_sheet(jsonData['data']);
         ws['!cols'] = jsonData['header'];
         ws['!rows'] = [];
@@ -554,7 +550,6 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
         XLSX.writeFile(wb, store.export_default.titletext+'.xlsx');
-        */
       }
 
       /*
@@ -1078,9 +1073,11 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
     }
   }
 
+  console.log("addEditActionName", addEditActionName, isMobileData)
+
   return (
     <Grid container spacing={0}>
-      {addEditActionName == 'init_default' && isMobileData == false ?
+      {isMobileData == false ?
       <Grid item xs={12}>
         <Card>
           {store.init_default.returnButton && store.init_default.returnButton.status ?

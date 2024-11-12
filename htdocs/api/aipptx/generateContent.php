@@ -25,10 +25,10 @@ header('Cache-Control: no-cache');
 
 
 $_POST = json_decode(file_get_contents("php://input"), true);
-print_R(json_encode($_POST));
+//print_R(json_encode($_POST));
 
 if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
-    
+
     $outlineMarkdown    = $_POST['outlineMarkdown'];
     $templateId         = $_POST['templateId'];
 
@@ -100,7 +100,7 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
         ### 3.3 未来市场预测与投资机会
         3.3.1 AI to PPTX市场的增长预测
         3.3.2 关键技术与市场驱动因素
-        3.3.3 投资机会与风险分析 
+        3.3.3 投资机会与风险分析
 
         根据例子,需要输出以下格式的内容:
         # AI to PPTX
@@ -171,7 +171,7 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
         ### 3.3 未来市场预测与投资机会
         3.3.1 AI to PPTX市场的增长预测
         3.3.2 关键技术与市场驱动因素
-        3.3.3 投资机会与风险分析 
+        3.3.3 投资机会与风险分析
         {counter:14, type: '内容'}
 
         请按上述要求进行输入内容.
@@ -205,42 +205,11 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
         CURLOPT_URL => $API_URL . '/chat/completions',
         CURLOPT_RETURNTRANSFER => false,
         CURLOPT_WRITEFUNCTION => function($curl, $data) {
-			if ($data != "[DONE]" && $data != "") {
-				// 记录原始数据
-				error_log("Raw data: " . $data);
-
-				// 去除可能的 "data: " 前缀
-				$data = str_replace('data: ', '', $data);
-
-				// 尝试解码 JSON
-				$data2 = json_decode($data, true);
-
-				// 检查解码是否成功
-				if (json_last_error() !== JSON_ERROR_NONE) {
-					error_log("JSON decode error: " . json_last_error_msg());
-					return strlen($data);
-				}
-
-				// 重新编码为 JSON
-				$data = json_encode($data2);
-
-				// 检查编码是否成功
-				if (json_last_error() !== JSON_ERROR_NONE) {
-					error_log("JSON encode error: " . json_last_error_msg());
-					return strlen($data);
-				}
-
-				// 输出数据
-				echo 'data: ' . $data;
-				ob_flush();
-				flush();
-
-				// 返回处理后的数据长度
-				return strlen('data: ' . $data);
-			}
-			return strlen($data);
-		},
-
+          echo $data;
+          ob_flush();
+          flush();
+          return strlen($data);
+        },
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
         CURLOPT_TIMEOUT => 0,

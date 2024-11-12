@@ -4900,7 +4900,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                     }
                                     {addEditStructInfo2.canceltext && addEditStructInfo2.canceltext != "" ?
                                         <Tooltip title="Alt+c">
-                                            <Button size='small' disabled={isSubmitLoading} variant='outlined' color='secondary' onClick={handleClose}>
+                                            <Button size='small' sx={{ml: 3}} disabled={isSubmitLoading} variant='outlined' color='secondary' onClick={handleClose}>
                                                 {addEditStructInfo2.canceltext}
                                             </Button>
                                         </Tooltip>

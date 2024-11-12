@@ -18,8 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $_POST = json_decode(file_get_contents("php://input"), true);
 
+$_POST['action'] = 'stream';
+$_POST['subject'] = 'stream';
+
 if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
-    
+
     $subject = $_POST['subject'];
 
     $promptText = "
@@ -76,7 +79,7 @@ if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
         CURLOPT_URL => $API_URL . '/chat/completions',
         CURLOPT_RETURNTRANSFER => false,
         CURLOPT_WRITEFUNCTION => function($curl, $data) {
-            echo $data; 
+            echo $data;
             ob_flush();
             flush();
             return strlen($data);
