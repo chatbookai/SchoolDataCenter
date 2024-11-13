@@ -1388,6 +1388,36 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     exit;
 }
 
+if( $_GET['action']=="edit_default_1" && $_GET['id']!="" )  {
+  $functionNameIndividual = "plugin_".$TableName."_".$Step."_edit_default_1";
+  if(function_exists($functionNameIndividual))  {
+      $RS = $functionNameIndividual($_GET['id']);
+  }
+  exit;
+}
+if( $_GET['action']=="edit_default_1_data" && $_GET['id']!="" )  {
+  $functionNameIndividual = "plugin_".$TableName."_".$Step."_edit_default_1_data";
+  if(function_exists($functionNameIndividual))  {
+      $RS = $functionNameIndividual($_GET['id']);
+  }
+  exit;
+}
+
+if( $_GET['action']=="edit_default_2" && $_GET['id']!="" )  {
+  $functionNameIndividual = "plugin_".$TableName."_".$Step."_edit_default_2";
+  if(function_exists($functionNameIndividual))  {
+      $RS = $functionNameIndividual($_GET['id']);
+  }
+  exit;
+}
+if( $_GET['action']=="edit_default_2_data" && $_GET['id']!="" )  {
+  $functionNameIndividual = "plugin_".$TableName."_".$Step."_edit_default_2_data";
+  if(function_exists($functionNameIndividual))  {
+      $RS = $functionNameIndividual($_GET['id']);
+  }
+  exit;
+}
+
 if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Array))  ) && $_GET['id']!="")  {
     $id     = intval(DecryptID($_GET['id']));
     if($id==0)   {
@@ -2055,6 +2085,24 @@ foreach($AllFieldsFromTable as $Item)  {
         case 'Disable':
         case '':
             break;
+        case 'api1':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:chart-donut','apicolor'=>'info.main', 'apiaction' => "edit_default_1"];
+            break;
+        case 'api2':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:cog-outline','apicolor'=>'info.main', 'apiaction' => "edit_default_2"];
+            break;
+        case 'api3':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:border-bottom','apicolor'=>'info.main', 'apiaction' => "edit_default_3"];
+            break;
+        case 'api4':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:cellphone','apicolor'=>'info.main', 'apiaction' => "edit_default_4"];
+            break;
+        case 'api5':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:message-bulleted','apicolor'=>'info.main', 'apiaction' => "edit_default_5"];
+            break;
+        case 'api6':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:chart-donut','apicolor'=>'info.main', 'apiaction' => "edit_default_6"];
+            break;
         case 'tablefilter':
         case 'tablefiltercolor':
         case 'autocomplete':
@@ -2714,8 +2762,10 @@ $RS['init_default']['ForbiddenDeleteRow']   = array_keys($ForbiddenDeleteRow);
 if($SettingMap['Init_Action_Value']=="") {
     $SettingMap['Init_Action_Value'] = "init_default";
 }
-$RS['init_action']['action']        = $SettingMap['Init_Action_Value'];
-$RS['init_action']['id']            = EncryptID($GetAllIDList[0]); //USE THIS VALUE IN EDIT_DEFAULT SINGLE RECORD
+
+$RS['init_action']['action']                        = $SettingMap['Init_Action_Value'];
+$RS['init_action']['id']                            = EncryptID($GetAllIDList[0]); //USE THIS VALUE IN EDIT_DEFAULT SINGLE RECORD
+$RS['init_action']['IsGetStructureFromEditDefault'] = 0;
 
 $CSRF_DATA                          = [];
 $CSRF_DATA['GetAllIDList']          = $GetAllIDList;

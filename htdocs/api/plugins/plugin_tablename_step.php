@@ -11,6 +11,17 @@ function plugin_tablename_step_init_default()  {
     //Here is your write code
 }
 
+function plugin_tablename_step_init_default_filter_RS($RS)  {
+    global $db;
+    global $SettingMap;
+    global $MetaColumnNames;
+    global $GLOBAL_USER;
+    global $TableName;
+    //Here is your write code
+
+    return $RS;
+}
+
 function plugin_tablename_step_add_default_data_before_submit()  {
     global $db;
     global $SettingMap;
