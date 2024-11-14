@@ -4093,7 +4093,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
-                                                                <FormControl fullWidth sx={{ mb: 0 }}>
+                                                                <FormControl fullWidth sx={{ mb: 0, mt: -1 }}>
                                                                     <Controller
                                                                         name={FieldArray.name}
                                                                         control={control}

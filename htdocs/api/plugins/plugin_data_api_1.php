@@ -84,12 +84,14 @@ function plugin_data_api_1_edit_default_1($id)  {
   $rs = $db->Execute($sql);
   $rs_a = $rs->GetArray();
   $FormId = $rs_a[0]['FormId'];
+  $Setting = $rs_a[0]['Setting'];
+  $SettingArray = explode(',', $Setting);
 
   $sql = "select * from form_formfield where FormId='$FormId' order by SortNumber asc, id asc";
   $rs = $db->Execute($sql);
   $rs_a = $rs->GetArray();
   foreach ($rs_a as $Line) {
-      $ShowTypeMap[$Line['FieldName']] = $Line['ShowType'];
+      $ShowTypeMap[$Line['FieldName']] = $Line;
   }
 
   $YesOrNotOptions = [];
@@ -100,14 +102,18 @@ function plugin_data_api_1_edit_default_1($id)  {
   foreach($ShowTypeMap as $FieldName=>$ShowTypeMapItem) {
       //$FieldName = $MetaColumnNamesTarget[$i];
       //$ShowTypeMapItem = $ShowTypeMap[$FieldName];
-      if($ShowTypeMapItem!="Disable")  {
+      if($ShowTypeMapItem['ShowType']!="Disable")  {
           //Check the default from the first column value
           //当第一次建立流程的时候,什么数据都是空的,这个时候需要默认为启用,如果是已经有数据,而新增加进入的字段,这个时候需要默认为禁用
 
-          $defaultValues_1["FieldEnable_".$FieldName] = false;
-          $defaultValues_1["FieldName_".$FieldName]   = $FieldName;
-          $edit_default_1['Default'][] = ['name' => "FieldName_".$FieldName, 'show'=>true, 'type'=>'Readonly', 'label' => __("Field Name"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => true, 'xs'=>6, 'sm'=>4]];
-          $edit_default_1['Default'][] = ['name' => "FieldEnable_".$FieldName, 'show'=>true, 'type'=>'Switch', 'label' => __("Field Enable"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>6, 'sm'=>4]];
+          $defaultValues_1["FieldName_".$FieldName] = $FieldName;
+          $edit_default_1['Default'][] = ['name' => "FieldName_".$FieldName, 'show'=>true, 'type'=>'readonly', 'label' => __("字段名称"), 'value' => $FieldName, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => true, 'xs'=>4, 'sm'=>4]];
+
+          $defaultValues_1["ShowName_".$FieldName] = $ShowTypeMapItem['ChineseName'];
+          $edit_default_1['Default'][] = ['name' => "ShowName_".$FieldName, 'show'=>true, 'type'=>'readonly', 'label' => __("显示名称"), 'value' => $ShowTypeMapItem['ChineseName'], 'placeholder' => $ShowTypeMapItem['ChineseName'], 'helptext' => "", 'rules' => ['required' => true, 'disabled' => true, 'xs'=>4, 'sm'=>4]];
+
+          $defaultValues_1["FieldEnable_".$FieldName] = in_array($FieldName, $SettingArray) ? true : false;
+          $edit_default_1['Default'][] = ['name' => "FieldEnable_".$FieldName, 'show'=>true, 'type'=>'Switch', 'label' => __("是否启用"), 'value' => false, 'placeholder' => $FieldName, 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>6, 'sm'=>4]];
 
       }
   }
@@ -132,6 +138,52 @@ function plugin_data_api_1_edit_default_1($id)  {
 
   print json_encode($RS);
   exit;
+}
+
+function plugin_data_api_1_edit_default_1_data($id)  {
+  global $db;
+  global $SettingMap;
+  global $MetaColumnNames;
+  global $GLOBAL_USER;
+  global $TableName;
+  //Here is your write code
+
+  $id     = intval(DecryptID($_GET['id']));
+  $ShowTypeMap = [];
+  $sql = "select * from data_api where id='$id'";
+  $rs = $db->Execute($sql);
+  $rs_a = $rs->GetArray();
+  $FormId = $rs_a[0]['FormId'];
+
+  $FormName = "";
+  $sql = "select * from form_formfield where FormId='$FormId' order by SortNumber asc, id asc";
+  $rs = $db->Execute($sql);
+  $rs_a = $rs->GetArray();
+  foreach ($rs_a as $Line) {
+      $ShowTypeMap[$Line['FieldName']] = $Line['FormName'];
+      $FormName = $Line['FormName'];
+  }
+
+  $需要返回的字段列表 = [];
+  $字段列表 = array_keys($ShowTypeMap);
+  foreach($字段列表 as $字段名称) {
+    if($_POST['FieldEnable_'.$字段名称] == 1) {
+      $需要返回的字段列表[] = $字段名称;
+    }
+  }
+
+  //print_R($需要返回的字段列表);
+  $sql = "update data_api set Setting='".join(',',$需要返回的字段列表)."' where id='$id'";
+  $rs = $db->Execute($sql);
+
+  $RS = [];
+  $RS['status'] = "OK";
+  $RS['msg'] = __("保存成功");
+  $RS['_GET'] = $_GET;
+  $RS['_POST'] = $_POST;
+  print json_encode($RS);
+  exit;
+
 }
 
 function plugin_data_api_1_add_default_data_before_submit()  {

@@ -19,7 +19,7 @@ if(hostname == 'localhost' || hostname == '127.0.0.1')   {
 }
 
 if(hostname == '110.90.174.66' || 1)   {
-  themeNameTemp = "福鼎职校"
+  themeNameTemp = "福鼎职业中专"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"
   indexImageUrl = '/images/school/fdzz/index.jpg'
