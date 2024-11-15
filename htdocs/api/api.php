@@ -17,7 +17,7 @@ $HTTP_AUTHORIZATION = $_SERVER['HTTP_AUTHORIZATION'];
 if($HTTP_AUTHORIZATION == "") {
   $RS         = [];
   $RS['status']   = "Error";
-  $RS['message']  = "AUTHORIZATION值设置错误";
+  $RS['message']  = "Authorization值未设置";
   $RS['time']   = date('Y-m-d H:i:s');
   print_R(json_encode($RS));
   exit;
@@ -32,6 +32,7 @@ if($Model > 0)  {
   $ExpireTime = $ApiInfo['ExpireTime'];
   $Token      = $ApiInfo['Token'];
   $AddSql     = $ApiInfo['AddSql'];
+  $ApiName     = $ApiInfo['ApiName'];
   $PageCount  = intval($ApiInfo['PageCount']);
 
   if($Setting == '' || $Token == '') {
@@ -40,6 +41,7 @@ if($Model > 0)  {
     $RS['message']  = "Setting or Token 没有设置";
     $RS['time']     = date('Y-m-d H:i:s');
     print_R(json_encode($RS));
+    ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql='');
     exit;
   }
 
@@ -49,6 +51,7 @@ if($Model > 0)  {
     $RS['message']  = "Authorization值无效,请联系管理员";
     $RS['time']   = date('Y-m-d H:i:s');
     print_R(json_encode($RS));
+    ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql='');
     exit;
   }
 
@@ -58,6 +61,7 @@ if($Model > 0)  {
     $RS['message']  = "Token值过期,请联系管理员进行重新设置";
     $RS['time']   = date('Y-m-d H:i:s');
     print_R(json_encode($RS));
+    ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql='');
     exit;
   }
 
@@ -83,7 +87,8 @@ if($Model > 0)  {
   $RS['total']  = $total;
   $RS['time']   = date('Y-m-d H:i:s');
   print_R(json_encode($RS));
-
+  ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql);
+  exit;
 }
 else {
   $RS         = [];
@@ -92,6 +97,27 @@ else {
   $RS['time']   = date('Y-m-d H:i:s');
   print_R(json_encode($RS));
   exit;
+}
+
+
+function ApiLogRecord($ApiId, $ApiName='', $AccessAction='', $Status='', $Token='', $sql='') {
+	global $db,$GLOBAL_USER;
+	global $FormId,$FormName,$FlowId,$FlowName;
+	$Element 					        = [];
+	$Element['id'] 				    = NULL;
+	$Element['ApiId'] 				= addslashes($ApiId);
+	$Element['ApiName'] 			= addslashes($ApiName);
+	$Element['AccessAction'] 	= addslashes($AccessAction);
+	$Element['AccessTime'] 		= date("Y-m-d H:i:s");
+	$Element['REMOTE_ADDR'] 	= addslashes($_SERVER['REMOTE_ADDR']);
+	$Element['HTTP_USER_AGENT'] = base64_encode($_SERVER['HTTP_USER_AGENT']);
+	$Element['QUERY_STRING'] 	= addslashes($_SERVER['QUERY_STRING']);
+	$Element['SCRIPT_NAME'] 	= addslashes($_SERVER['SCRIPT_NAME']);
+	$Element['Token'] 				= addslashes(Substr($Token, 0 , 10)."...");
+	$Element['SqlText'] 			= addslashes($sql);
+	$Element['Status'] 			  = addslashes($Status);
+	$sql = "insert into data_api_log(".join(",",array_keys($Element)).") values('".join("','",array_values($Element))."');";
+	$db->Execute($sql);
 }
 
 ?>
