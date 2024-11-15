@@ -277,6 +277,17 @@ const ViewTableCore = (props: ViewTableType) => {
                                 </Fragment>
                               )
                             }
+                            else if (FieldArray.type == "code") {
+
+                              return (
+                                <Fragment key={FieldArray_index}>
+                                    <MUITableCell sx={{ width: '50%', whiteSpace: 'pre-line' }} colSpan={Number(colSpan) + 1}>
+                                      {FieldArray.label}:
+                                      <div dangerouslySetInnerHTML={{ __html: CellData.Value }} />
+                                    </MUITableCell>
+                                </Fragment>
+                              )
+                            }
                             else if (FieldArray.type == "avatar" && CellData.Value != undefined) {
 
                               return (
@@ -370,7 +381,8 @@ const ViewTableCore = (props: ViewTableType) => {
                                   <Fragment key={FieldArray_index}>
                                     <MUITableCell sx={{ width: '50%' }} colSpan={Number(colSpan) + 1}>
                                       {FieldArray.label}
-                                      <div dangerouslySetInnerHTML={{ __html: CellData.Value }} /></MUITableCell>
+                                      <div dangerouslySetInnerHTML={{ __html: CellData.Value }} />
+                                    </MUITableCell>
                                   </Fragment>
                               )
                             }

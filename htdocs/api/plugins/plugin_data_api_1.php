@@ -117,6 +117,8 @@ function plugin_data_api_1_edit_default_1($id)  {
 
       }
   }
+  $defaultValues_1["Refresh_Token"] = false;
+  $edit_default_1['Default'][] = ['name' => "Refresh_Token", 'show'=>true, 'type'=>'Switch', 'label' => __("刷新访问Token"), 'value' => false, 'placeholder' => __("刷新访问Token"), 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>12]];
 
   $edit_default_1_mode = [['value'=>"Default", 'label'=>__("")]];
 
@@ -175,6 +177,11 @@ function plugin_data_api_1_edit_default_1_data($id)  {
   //print_R($需要返回的字段列表);
   $sql = "update data_api set Setting='".join(',',$需要返回的字段列表)."' where id='$id'";
   $rs = $db->Execute($sql);
+
+  if($_POST['Refresh_Token'] == 1)  {
+    $sql = "update data_api set Token='".strtoupper(md5(date('Y-m-d H:i:s')."Dandian.net"))."' where id='$id'";
+    $rs = $db->Execute($sql);
+  }
 
   $RS = [];
   $RS['status'] = "OK";
@@ -263,6 +270,65 @@ function plugin_data_api_1_view_default($id)  {
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
+
+    //$id     = intval(DecryptID($_GET['id']));
+    $ShowTypeMap = [];
+    $sql = "select * from data_api where id='$id'";
+    $rs = $db->Execute($sql);
+    $rs_a = $rs->GetArray();
+    $FormId = $rs_a[0]['FormId'];
+    $Setting = $rs_a[0]['Setting'];
+    $SettingArray = explode(',', $Setting);
+    $EditValue = $rs_a[0];
+
+    $RS = [];
+    $RS['status'] = "OK";
+    $RS['data']   = $EditValue;
+    $RS['sql']    = $sql;
+    $RS['msg']    = __("Get Data Success");
+
+    $FieldNameArray             = array_keys($EditValue);
+    $ApprovalNodeFieldsHidden   = ['id','FormId','ErrorAccess','TotalAccess',];
+    for($X=0;$X<sizeof($FieldNameArray);$X=$X+1)        {
+        $FieldName1 = $FieldNameArray[$X];
+        $RowData = [];
+        if(!in_array($FieldName1,$ApprovalNodeFieldsHidden) && $FieldName1!="") {
+            $RowData[0]['Name']         = $FieldName1;
+            $RowData[0]['Value']        = $EditValue[$FieldName1];
+            $RowData[0]['FieldArray']   = ['name'=>$FieldName1,'label'=>__($FieldName1),'value'=>$EditValue[$FieldName1],'type'=>'input'];
+        }
+        if(sizeof($RowData)>0) {
+            $NewTableRowData[] = $RowData;
+        }
+    }
+
+    $NewTableRowData    = [];
+    $NewTableRowData[][0]  = ['Name'=>'API接口名称', 'Value'=>$EditValue['ApiName'], 'FieldArray'=>['name'=>'ApiName','label'=>'API接口名称','value'=>$EditValue['ApiName'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'API接口URL', 'Value'=>"https://".$_SERVER['HTTP_HOST']."/api/auth/api.php", 'FieldArray'=>['name'=>'API接口URL','label'=>'API接口URL','value'=>$_SERVER['HTTP_HOST'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'Header', 'Value'=>"Http Header 中增加 Token的变量,来做为API授权", 'FieldArray'=>['name'=>'Token','label'=>'Header','value'=>"Http Header 中增加 Token的变量,来做为API授权",'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'Token', 'Value'=>$EditValue['Token'], 'FieldArray'=>['name'=>'Token','label'=>'Token','value'=>$EditValue['Token'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'ExpireTime', 'Value'=>$EditValue['ExpireTime'], 'FieldArray'=>['name'=>'ExpireTime','label'=>'Token过期时间','value'=>$EditValue['ExpireTime'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'PageCount', 'Value'=>$EditValue['PageCount'], 'FieldArray'=>['name'=>'PageCount','label'=>'每页显示数量','value'=>$EditValue['PageCount'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'IP白名单', 'Value'=>$EditValue['IpWhiteList'], 'FieldArray'=>['name'=>'IP白名单','label'=>'IP白名单','value'=>$EditValue['IpWhiteList'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'IP黑名单', 'Value'=>$EditValue['IpBlackList'], 'FieldArray'=>['name'=>'IP黑名单','label'=>'IP黑名单','value'=>$EditValue['IpBlackList'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'示例代码', 'Value'=>'
+    curl https://api.deepseek.com/chat/completions \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <DeepSeek API Key>" \
+    -d \'{
+          "model": "deepseek-chat",
+          "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Hello!"}
+          ],
+          "stream": false
+        }\'
+      ', 'FieldArray'=>['name'=>'示例代码','label'=>'示例代码','value'=>'','type'=>'code']];
+
+    $RS['newTableRowData']          = $NewTableRowData;
+
+    print json_encode($RS);
+    exit;
 }
 
 function plugin_data_api_1_delete_array($id)  {

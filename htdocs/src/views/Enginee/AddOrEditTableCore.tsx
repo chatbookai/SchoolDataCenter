@@ -1083,7 +1083,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     return (
         <Fragment>
             {isMobileData == false && titletext && titletext != "" && !isLoading && (
-                <Box sx={{ mb: 8, textAlign: 'center' }}>
+                <Box sx={{ mb: 2, textAlign: 'center' }}>
                     <Typography variant='h5' sx={{ mb: 3 }}>
                         {titletext}
                     </Typography>
@@ -4877,7 +4877,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         )}
 
                         {((addEditStructInfo2.submittext && addEditStructInfo2.submittext) || (addEditStructInfo2.canceltext && addEditStructInfo2.canceltext)) && ((singleModelCounter == (fieldIdValue+1) ) || FieldShowStatus == 2) ?
-                            <Grid item xs={12} sm={12} container justifyContent="space-around" sx={{ pt: 4 }}>
+                            <Grid item xs={12} sm={12} container justifyContent="space-around" sx={{ pt: 2 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                                     {addEditStructInfo2.submittext && addEditStructInfo2.submittext != "" ?
                                         <Tooltip title="Alt+s">
