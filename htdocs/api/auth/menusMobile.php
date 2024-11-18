@@ -49,7 +49,7 @@ if($USER_TYPE=="User")    {
     $MenuOneRSA  = $rsf->GetArray();
 
     //$sql    = "select * from data_menutwo where FaceTo='AnonymousUser' order by MenuOneName asc,SortNumber asc";
-    $sql    = "select * from data_menutwo where FaceTo='AuthUser' and id in ('".join("','",$RoleArray)."') order by MenuOneName asc,SortNumber asc";
+    $sql    = "select * from data_menutwo where FaceTo='AuthUser' and id in ('".join("','",$RoleArray)."') and IsMobile !='否' order by MenuOneName asc,SortNumber asc";
     $rsf    = $db->Execute($sql);
     $MenuTwoRSA  = $rsf->GetArray();
     $MenuTwoArray = [];
@@ -87,7 +87,7 @@ if($USER_TYPE=="User")    {
                         $allpath[] = '/tab/apps_'.$TempItem['id'];
                         $children[] = ['id'=>$TempItem['id'], 'title'=>$TempItem['MenuThreeName'], 'icon'=>$TempItem['Menu_Three_Icon'], 'type'=>'submenu'];
                     }
-                    $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'], 'allpath' => $allpath, 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
+                    $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'], 'allpath' => $allpath, 'children' => $children, 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
                 }
                 else if(strpos($Name,"SystemMenuTwo_")===0)  {
                     //Menu Two

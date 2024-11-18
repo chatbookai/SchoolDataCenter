@@ -1176,9 +1176,13 @@ if($_GET['action']=="edit_default_5"&&$id!='')         {
         if($defaultValues_5['MobileEndSecondLineLeftColorField']==""&&isset($SettingMapPrevious['MobileEndSecondLineLeftColorField']))         $defaultValues_5['MobileEndSecondLineLeftColorField'] = $SettingMapPrevious['MobileEndSecondLineLeftColorField'];
         if($defaultValues_5['MobileEndSecondLineLeftColorRule']==""&&isset($SettingMapPrevious['MobileEndSecondLineLeftColorRule']))         $defaultValues_5['MobileEndSecondLineLeftColorRule'] = $SettingMapPrevious['MobileEndSecondLineLeftColorRule'];
 
+        if($defaultValues_5['MobileEndSecondLineLeftColorRule']=="undefined")         $defaultValues_5['MobileEndSecondLineLeftColorRule'] = "";
+
         if($defaultValues_5['MobileEndSecondLineRight']==""&&isset($SettingMapPrevious['MobileEndSecondLineRight']))         $defaultValues_5['MobileEndSecondLineRight'] = $SettingMapPrevious['MobileEndSecondLineRight'];
         if($defaultValues_5['MobileEndSecondLineRightColorField']==""&&isset($SettingMapPrevious['MobileEndSecondLineRightColorField']))         $defaultValues_5['MobileEndSecondLineRightColorField'] = $SettingMapPrevious['MobileEndSecondLineRightColorField'];
         if($defaultValues_5['MobileEndSecondLineRightColorRule']==""&&isset($SettingMapPrevious['MobileEndSecondLineRightColorRule']))         $defaultValues_5['MobileEndSecondLineRightColorRule'] = $SettingMapPrevious['MobileEndSecondLineRightColorRule'];
+
+        if($defaultValues_5['MobileEndSecondLineRightColorRule']=="undefined")         $defaultValues_5['MobileEndSecondLineRightColorRule'] = "";
     }
 
     $edit_default['allFields']      = $edit_default_5;
@@ -1248,6 +1252,7 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $FieldsArray['SortNumber']     = $id;
         $FieldsArray['Creator']        = "admin";
         $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
+        print_R($FieldsArray);exit;
         [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
         //Write Interface File In Apps Dir
         $sql        = "select id from data_menutwo where FlowId = '$id'";
@@ -1278,6 +1283,15 @@ require_once("../data_enginee_flow.php");
                 exit;
             }
         }
+    }
+
+    if($_POST['MobileEnd']!=""&&$id!="")   {
+      $FieldsArray = [];
+      $FieldsArray['FlowId']         = $id;
+      $FieldsArray['IsMobile']       = $_POST['MobileEnd'] == "No" ? "否" : "是";
+      $FieldsArray['Creator']        = "admin";
+      $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
+      [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
     }
 
     //Make Plugin File

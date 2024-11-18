@@ -216,7 +216,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
     const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
 
-    ///console.log("AddtionalParams======================================",action)
+    console.log("AddtionalParams======================================",action)
 
     const [fieldIdValue, setFieldIdValue] = useState<number>(0)
     const [singleModelCounter, setSingleModelCounter] = useState<number>(0)
@@ -4877,11 +4877,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         )}
 
                         {((addEditStructInfo2.submittext && addEditStructInfo2.submittext) || (addEditStructInfo2.canceltext && addEditStructInfo2.canceltext)) && ((singleModelCounter == (fieldIdValue+1) ) || FieldShowStatus == 2) ?
-                            <Grid item xs={12} sm={12} container justifyContent="space-around" sx={{ pt: 2 }}>
+                            <Grid item xs={12} sm={12} container justifyContent="space-around" sx={{ pt: 5 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                                     {addEditStructInfo2.submittext && addEditStructInfo2.submittext != "" ?
                                         <Tooltip title="Alt+s">
-                                            <Button size={isMobileData == true ? 'medium' : componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ width: isMobileData == true ? '100%' : '', whiteSpace: 'nowrap' }}>
+                                            <Button size={isMobileData == true ? 'medium' : componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ width: isMobileData == true ? '100%' : '', whiteSpace: 'nowrap', px: 15 }}>
                                                 {isSubmitLoading ? (
                                                     <CircularProgress
                                                         sx={{
