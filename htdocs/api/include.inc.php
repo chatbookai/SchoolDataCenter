@@ -777,6 +777,14 @@ function idname_array_get_idlist($rsa)					{
 	return $NewArray;
 }
 
+function getCurrentXueQi() {
+	$selected = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
+	if($selected=='') {
+		$selected = returntablefield("data_xueqi","当前学期","是","学期名称")['学期名称'];
+	}
+	return $selected;
+}
+
 if(is_file("function.xmjs.php")) {
 	require_once('function.xmjs.php');
 }
