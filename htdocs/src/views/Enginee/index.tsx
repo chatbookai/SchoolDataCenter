@@ -1402,34 +1402,40 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
                               const FieldValue = `MobileEndField${FieldCount}Value`
                               const FieldColspan = `MobileEndField${FieldCount}Colspan`
 
+                              const FieldColspanValue = item[FieldColspan] ?? '2'
+
                               return (
                                     <Fragment key={FieldCountIndex}>
-                                      {item[FieldColspan] == '1' && (
-                                      <Fragment>
-                                        <Grid item xs={12}>
-                                          <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                                          {item[FieldName]}:
-                                          </Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                          <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'left' }}>
-                                            {item[FieldValue]}
-                                          </Typography>
-                                        </Grid>
-                                      </Fragment>
-                                      )}
-                                      {item[FieldColspan] == '2' && (
-                                      <Fragment>
-                                        <Grid item xs={4}>
-                                          <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                                          {item[FieldName]}:
-                                          </Typography>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                          <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'left' }}>
-                                            {item[FieldValue]}
-                                          </Typography>
-                                        </Grid>
+                                      {item && item[FieldName] && (
+                                        <Fragment>
+                                        {FieldColspanValue == '1' && (
+                                        <Fragment>
+                                          <Grid item xs={12} onClick={() => togglePageActionDrawer('view_default', item['Id'], CSRF_TOKEN_MAP[item['Id']])}>
+                                            <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center' }}>
+                                            {item[FieldName]}:
+                                            </Typography>
+                                          </Grid>
+                                          <Grid item xs={12} onClick={() => togglePageActionDrawer('view_default', item['Id'], CSRF_TOKEN_MAP[item['Id']])}>
+                                            <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'left' }}>
+                                              {item[FieldValue]}
+                                            </Typography>
+                                          </Grid>
+                                        </Fragment>
+                                        )}
+                                        {FieldColspanValue == '2' && (
+                                        <Fragment>
+                                          <Grid item xs={4} onClick={() => togglePageActionDrawer('view_default', item['Id'], CSRF_TOKEN_MAP[item['Id']])}>
+                                            <Typography variant='body2' sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center' }}>
+                                            {item[FieldName]}:
+                                            </Typography>
+                                          </Grid>
+                                          <Grid item xs={8} onClick={() => togglePageActionDrawer('view_default', item['Id'], CSRF_TOKEN_MAP[item['Id']])}>
+                                            <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'left' }}>
+                                              {item[FieldValue]}
+                                            </Typography>
+                                          </Grid>
+                                        </Fragment>
+                                        )}
                                       </Fragment>
                                       )}
                                     </Fragment>
