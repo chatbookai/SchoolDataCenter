@@ -168,7 +168,7 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
       //setAddEditActionName('view_default')
     }
     else if(actionInMobileApp)  {
-      //setAddEditActionName('init_default')
+      setAddEditActionName('init_default') //当在APP的查看编辑或是新建页面,点击左上角的返回按钮时,返回到列表页面
     }
   }, [actionInMobileApp])
   console.log("actionInMobileApp ++ 162", actionInMobileApp, forceUpdate)
@@ -393,7 +393,7 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
     console.log("mobileEditPageId > -1 && mobileEditPageIdEnable ? mobileEditPageId : pageCount", pageCount)
     console.log("mobileEditPageId 111111", searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, pageCount, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId)
     setMobileEditPageIdEnable(false);
-  }, [dispatch, searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId])
+  }, [dispatch, backEndApi, searchFieldName, searchFieldValue, allSubmitFields, page, pageSize, sortMethod, sortColumn, forceUpdate, filterMultiColumns, externalId])
 
   const [isGetNextPageData, setIsGetNextPageData] = useState<boolean>(false)
 
@@ -1521,14 +1521,6 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
               )}
             </Grid>
           </Fragment>
-          { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default?.ApprovalNodeFields?.DebugSql) ?
-            (
-            <Grid item xs={12} sx={{mt: 2}}>
-              <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default?.ApprovalNodeFields?.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} />
-            </Grid>
-            )
-            : ''
-          }
         </Grid>
       )}
 
