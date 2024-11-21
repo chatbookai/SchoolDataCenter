@@ -872,11 +872,11 @@ function plugin_data_xinlijiankang_ceping_edit_default($id)  {
 
     $sql            = "SELECT * FROM `data_xinlijiankang_ceping` where id='$id'";
     $rs             = $db->CacheExecute(60,$sql);
-    $测评信息       = $rs->fields;
-    $测评名称       = $测评信息['测评名称'];
+    $测评信息       	= $rs->fields;
+    $测评名称       	= $测评信息['测评名称'];
 
-    $用户名     = $GLOBAL_USER->USER_ID;
-    $学号       = $GLOBAL_USER->学号;
+    $用户名     		= $GLOBAL_USER->USER_ID;
+    $学号       		= $GLOBAL_USER->学号;
     if($GLOBAL_USER->type == "User") {
         $sql            = "SELECT * FROM `data_xinlijiankang_cepingjilu` where 测评名称='$测评名称' and 用户名='".$用户名."'";
     }
@@ -887,18 +887,18 @@ function plugin_data_xinlijiankang_ceping_edit_default($id)  {
         return ;
     }
     $rs             = $db->Execute($sql);
-    $测评记录        = (array)$rs->GetArray();
-    $测评记录MAP     = [];
+    $测评记录        	= (array)$rs->GetArray();
+    $测评记录MAP     	= [];
     foreach($测评记录 as $Item) {
         $测评记录MAP[$Item['测评项目']] = $Item['测评选项'];
     }
 
     $sql            = "SELECT * FROM `data_xinlijiankang_cepingxuanxiang` where 测评名称='$测评名称' limit 0, 200";
     $rs             = $db->CacheExecute(60,$sql);
-    $题库信息        = $rs->GetArray();
-    $题目序号列表    = [];
-    $序号           = 1;
-    $题目类型       = "单选";
+    $题库信息        	= $rs->GetArray();
+    $题目序号列表    	= [];
+    $序号           	= 1;
+    $题目类型       	= "单选";
     $edit_default_mode[] = ['value'=>$题目类型, 'label'=>$题目类型];
     foreach($题库信息 AS $单个题目) {
         $题目选项 = [];
@@ -927,23 +927,26 @@ function plugin_data_xinlijiankang_ceping_edit_default($id)  {
         }
         $序号 ++;
     }
-    $edit_default[$题目类型][] = ['name' => "题目序号列表", 'show'=>true, 'type'=>'hidden', 'label' => "题目序号列表", 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>12]];
-    $defaultValues['题目序号列表'] = EncryptID(join(',',$题目序号列表));
+    $edit_default[$题目类型][] 				= ['name' => "题目序号列表", 'show'=>true, 'type'=>'hidden', 'label' => "题目序号列表", 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>12]];
+    $defaultValues['题目序号列表'] 			= EncryptID(join(',',$题目序号列表));
 
-    $RS['edit_default']['allFields']      = $edit_default;
-    $RS['edit_default']['allFieldsMode']  = $edit_default_mode;
-    $RS['edit_default']['defaultValues']  = $defaultValues;
+    $RS['edit_default']['allFields']      	= $edit_default;
+    $RS['edit_default']['allFieldsMode']  	= $edit_default_mode;
+    $RS['edit_default']['defaultValues']  	= $defaultValues;
     $RS['edit_default']['dialogContentHeight']  = "850px";
-    $RS['edit_default']['submitaction']  = "edit_default_data";
-    $RS['edit_default']['componentsize'] = "small";
-    $RS['edit_default']['submittext']    = __("Submit");
-    $RS['edit_default']['canceltext']    = __("Cancel");
-    $RS['edit_default']['titletext']     = $测评名称;
-    $RS['edit_default']['titlememo']     = "限时20分钟,每天只能测评一次";
-    $RS['edit_default']['tablewidth']    = 650;
+    $RS['edit_default']['submitaction']  	= "edit_default_data";
+    $RS['edit_default']['componentsize'] 	= "small";
+    $RS['edit_default']['submittext']    	= __("Submit");
+    $RS['edit_default']['canceltext']    	= __("Cancel");
+    $RS['edit_default']['titletext']     	= $测评名称;
+    $RS['edit_default']['titlememo']     	= "限时20分钟,每天只能测评一次.";
+    $RS['edit_default']['titlememo1']     	= "测评完成五分钟内会帮您生成完整的测评报告.";
+    $RS['edit_default']['titlememo2']     	= "";
+    $RS['edit_default']['tablewidth']    	= 650;
     $RS['edit_default']['submitloading']    = __("SubmitLoading");
     $RS['edit_default']['loading']          = __("Loading");
     $RS['edit_default']['model']            = "Loop";
+	$RS['edit_default']['processtext']      = "测评进度";
 
     $RS['status']   = "OK";
     $RS['msg']      = "获得数据成功";
@@ -1021,30 +1024,29 @@ function plugin_data_xinlijiankang_ceping_edit_default_data_before_submit($id)  
     switch($测评名称) {
         case '中学生心理健康量表(MSSMHS)':
             中学生心理健康量表_根据测评明细分析测评结果($测评名称);
-            中学生心理健康量表_心理健康AiDeepSeek测评($测评名称, $用户名, $学号);
+            //中学生心理健康量表_心理健康AiDeepSeek测评($测评名称, $用户名, $学号);
             break;
         case '症状自评量表(SCL-90)':
             症状自评量表SCL90($测评名称);
-            中学生心理健康量表_症状自评量表SCL90AiDeepSeek测评($测评名称, $用户名, $学号);
+            //中学生心理健康量表_症状自评量表SCL90AiDeepSeek测评($测评名称, $用户名, $学号);
             break;
         case '中学生学科兴趣测评':
             中学生学科兴趣测评($测评名称);
-            中学生心理健康量表_中学生学科兴趣测评AiDeepSeek测评($测评名称, $用户名, $学号);
+            //中学生心理健康量表_中学生学科兴趣测评AiDeepSeek测评($测评名称, $用户名, $学号);
             break;
         case '中小学生心理健康量表(MHT)':
             中小学生心理健康量表MHT($测评名称);
-            中学生心理健康量表_中小学生心理健康量表MHTAiDeepSeek测评($测评名称, $用户名, $学号);
+            //中学生心理健康量表_中小学生心理健康量表MHTAiDeepSeek测评($测评名称, $用户名, $学号);
             break;
         case '儿童焦虑性情绪障碍筛查表(SCARED)':
             儿童焦虑性情绪障碍筛查表SCARED($测评名称);
-            中学生心理健康量表_儿童焦虑性情绪障碍筛查表SCAREDAiDeepSeek测评($测评名称, $用户名, $学号);
+            //中学生心理健康量表_儿童焦虑性情绪障碍筛查表SCAREDAiDeepSeek测评($测评名称, $用户名, $学号);
             break;
     }
 
-    
     $RS = [];
     $RS['status']   = "OK";
-    $RS['msg']      = "您已经完成心理测评";
+    $RS['msg']      = "成功提交心理测评,完整的心理测评报告会在5分钟内帮您生成.";
     $RS['_GET']     = $_GET;
     $RS['_POST']    = $_POST;
     print json_encode($RS);

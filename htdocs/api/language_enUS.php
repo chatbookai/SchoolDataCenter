@@ -8,6 +8,7 @@ $MAP['List'] = "List";
 $MAP['Import'] = "Import";
 $MAP['Export'] = "Export";
 $MAP['Submit'] = "Submit";
+$MAP['Save']   = "Save";
 $MAP['Search'] = "Search";
 $MAP['Cancel'] = "Cancel";
 $MAP['Redo'] = "Redo";
@@ -224,7 +225,7 @@ $MAP['DesignFlow'] 			= 'Design flow';
 $MAP['Design Form'] 		= 'Design form';
 $MAP['Design Flow'] 		= 'Design flow';
 $MAP['Actions'] 			= 'Actions';
-$MAP['Search Item'] 		= 'Search item';	
+$MAP['Search Item'] 		= 'Search item';
 $MAP['All Data'] 			= 'All data';
 
 $MAP['Name'] 		                = 'Name';
