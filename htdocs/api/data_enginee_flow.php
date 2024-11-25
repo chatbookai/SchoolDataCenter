@@ -2724,6 +2724,10 @@ foreach ($rs_a as $Line) {
     $MobileEndItem['Id']        = $Line['id'];
     $MobileEndItem['Id2']       = md5("Dandian_".$Line['id2']);
     $MobileEndItem['Template']  = "List";
+    $functionNameIndividual = "plugin_".$TableName."_".$Step."_init_default_mobile_line_control";
+    if(function_exists($functionNameIndividual))  {
+      $MobileEndItem = $functionNameIndividual($MobileEndItem);
+    }
     $MobileEndData[] = $MobileEndItem;
 
 }

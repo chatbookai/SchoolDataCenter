@@ -106,9 +106,10 @@ function plugin_data_xinlijiankang_cepingresult_2_view_default($id)  {
     $测评分析['单位名称'] = $单位名称;
     $测评分析['测评名称'] = $测评信息['测评名称'];
 
-    $RS['status']   = "OK";
-    $RS['model']    = '测评模式';
-    $RS['data']     = $测评分析;
+    $测评分析['sharedModel']  = ['title'=>'分享图片', 'actions'=>['Save', 'Wechat', 'More']];
+    $RS['status']             = "OK";
+    $RS['model']              = '测评模式';
+    $RS['data']               = $测评分析;
     print_R(json_encode($RS, true));
 
     exit;

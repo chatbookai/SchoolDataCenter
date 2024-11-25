@@ -11,6 +11,28 @@ function plugin_data_xinlijiankang_ceping_1_init_default()  {
     //Here is your write code
 }
 
+function plugin_data_xinlijiankang_ceping_1_init_default_filter_RS($RS)  {
+  global $db;
+  global $SettingMap;
+  global $MetaColumnNames;
+  global $GLOBAL_USER;
+  global $TableName;
+  //Here is your write code
+
+  return plugin_data_xinlijiankang_ceping_init_default_filter_RS($RS);
+}
+
+function plugin_data_xinlijiankang_ceping_1_init_default_mobile_line_control($RS)  {
+  global $db;
+  global $SettingMap;
+  global $MetaColumnNames;
+  global $GLOBAL_USER;
+  global $TableName;
+  //Here is your write code
+
+  return plugin_data_xinlijiankang_ceping_init_default_mobile_line_control($RS);
+}
+
 function plugin_data_xinlijiankang_ceping_1_add_default_data_before_submit()  {
     global $db;
     global $SettingMap;
