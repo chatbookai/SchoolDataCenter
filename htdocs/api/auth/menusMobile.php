@@ -16,13 +16,9 @@ CheckAuthUserLoginStatus();
 $Menu = [];
 $Menu['icon'] = 'mdi:home-outline';
 $Menu['title'] = '快捷面板';
-$Menu['children'][] = ['title' => '德育量化', 'icon' => 'mdi:chart-donut', 'path' => '/dashboards/analyticsstudent'];
-$Menu['children'][] = ['title' => '班级评价', 'icon' => 'mdi:chart-donut', 'path' => '/dashboards/analyticsclass'];
+$Menu['children'][] = ['title' => '德育量化', 'icon' => 'mdi:chart-donut', 'path' => '/dashboards/analyticsstudent', 'MobileEndIconImage' => "/images/wechatIcon/student_reward05.png"];
+$Menu['children'][] = ['title' => '班级评价', 'icon' => 'mdi:chart-donut', 'path' => '/dashboards/analyticsclass', 'MobileEndIconImage' => "/images/wechatIcon/statistic_.png"];
 
-$Menus[] = $Menu;
-
-$Menu = [];
-$Menu['sectionTitle'] = "应用程序";
 $Menus[] = $Menu;
 
 //Get User Role
@@ -87,16 +83,16 @@ if($USER_TYPE=="User")    {
                         $allpath[] = '/tab/apps_'.$TempItem['id'];
                         $children[] = ['id'=>$TempItem['id'], 'title'=>$TempItem['MenuThreeName'], 'icon'=>$TempItem['Menu_Three_Icon'], 'type'=>'submenu'];
                     }
-                    $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'], 'allpath' => $allpath, 'children' => $children, 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
+                    $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'], 'allpath' => $allpath, 'children' => $children, 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'MobileEndIconImage' => "/images/wechatIcon/".$Line[0]['MobileEndIconImage'].".png" ];
                 }
                 else if(strpos($Name,"SystemMenuTwo_")===0)  {
                     //Menu Two
                     foreach($Line as $ItemTwo) {
                         if($ItemTwo['FlowId']>0) {
-                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => '/apps/'.$ItemTwo['id'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
+                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => '/apps/'.$ItemTwo['id'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'MobileEndIconImage' => "/images/wechatIcon/".$Line[0]['MobileEndIconImage'].".png" ];
                         }
                         if($ItemTwo['FlowId']==0&&$ItemTwo['MenuPath']!="") {
-                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => $ItemTwo['MenuPath'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
+                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => $ItemTwo['MenuPath'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'MobileEndIconImage' => "/images/wechatIcon/".$Line[0]['MobileEndIconImage'].".png" ];
                         }
                     }
                 }

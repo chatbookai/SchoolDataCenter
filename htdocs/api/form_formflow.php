@@ -1285,11 +1285,12 @@ require_once("../data_enginee_flow.php");
     }
 
     if($_POST['MobileEnd']!=""&&$id!="")   {
-      $FieldsArray = [];
-      $FieldsArray['FlowId']         = $id;
-      $FieldsArray['IsMobile']       = $_POST['MobileEnd'] == "No" ? "否" : "是";
-      $FieldsArray['Creator']        = "admin";
-      $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
+      $FieldsArray                        = [];
+      $FieldsArray['FlowId']              = $id;
+      $FieldsArray['IsMobile']            = $_POST['MobileEnd'] == "No" ? "否" : "是";
+      $FieldsArray['MobileEndIconImage']  = $_POST['MobileEndIconImage'];
+      $FieldsArray['Creator']             = "admin";
+      $FieldsArray['CreateTime']          = date("Y-m-d H:i:s");
       [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
     }
 

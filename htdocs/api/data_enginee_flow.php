@@ -34,9 +34,6 @@ global $ExceptCsrf;
 $ExceptCsrf[] = "/api/apps/apps_19.php";
 $ExceptCsrf[] = "/api/apps/apps_19.php";
 
-global $ExceptCheckDiffTime;
-$ExceptCheckDiffTime[] = "/api/apps/apps_9.php";
-
 if($FaceTo=="AuthUser")         {
     //Check User Login or Not
     CheckAuthUserLoginStatus();

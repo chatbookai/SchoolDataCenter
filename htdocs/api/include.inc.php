@@ -278,19 +278,9 @@ function CheckCsrsToken() {
 	if(in_array($_SERVER['PHP_SELF'],$ExceptCsrf)) {
 		return;
 	}
-  global $ExceptCheckDiffTime;
 	switch($_GET['action'])  {
 		case 'view_default':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			//After 4 hours will exprired
-			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
-				$RS = [];
-				$RS['status'] 	= "ERROR";
-				$RS['code'] 	= "TimeOut";
-				$RS['msg'] 		= __("Timeout for operation");
-				print json_encode($RS);
-				exit;
-			}
 			if(!is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('View',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])) {
 				$RS = [];
 				$RS['status'] = "ERROR";
@@ -312,21 +302,9 @@ function CheckCsrsToken() {
 		case 'edit_default':
 		case 'edit_default_data':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			//After 4 hours will exprired
-			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
-				$RS = [];
-				$RS['post'] 	  = $_POST;
-				$RS['status'] 	= "ERROR";
-				$RS['code'] 	  = "TimeOut";
-				$RS['DiffTime']	= $DiffTime;
-				$RS['msg'] 		  = __("Timeout for operation");
-				print json_encode($RS);
-				exit;
-			}
 			if( (
           !is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('Edit',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])
           )
-          && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime)
           ) {
 				$RS = [];
 				$RS['status'] = "ERROR";
@@ -338,7 +316,6 @@ function CheckCsrsToken() {
 			if(
           $id>0
           && (!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList']))
-          && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime)
           ) {
 				$RS = [];
 				$RS['status'] 			= "ERROR";
@@ -351,15 +328,6 @@ function CheckCsrsToken() {
 			break;
 		case 'delete_array':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			//After 4 hours will exprired
-			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
-				$RS = [];
-				$RS['status'] 	= "ERROR";
-				$RS['code'] 	= "TimeOut";
-				$RS['msg'] 		= __("Timeout for operation");
-				print json_encode($RS);
-				exit;
-			}
 			if(!is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('Delete',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])) {
 				$RS = [];
 				$RS['status'] = "ERROR";
@@ -383,15 +351,6 @@ function CheckCsrsToken() {
 			break;
 		case 'updateone':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			//After 4 hours will exprired
-			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
-				$RS = [];
-				$RS['status'] 	= "ERROR";
-				$RS['code'] 	= "TimeOut";
-				$RS['msg'] 		= __("Timeout for operation");
-				print json_encode($RS);
-				exit;
-			}
 			if(!is_array($HTTP_CSRF_TOKEN_DATA['UpdateFields']) || !in_array($_POST['field'],$HTTP_CSRF_TOKEN_DATA['UpdateFields'])) {
 				$RS = [];
 				$RS['status'] = "ERROR";
@@ -410,15 +369,6 @@ function CheckCsrsToken() {
 			break;
 		case 'option_multi_approval':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			//After 4 hours will exprired
-			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
-				$RS = [];
-				$RS['status'] 	= "ERROR";
-				$RS['code'] 	= "TimeOut";
-				$RS['msg'] 		= __("Timeout for operation");
-				print json_encode($RS);
-				exit;
-			}
 			if(!is_array($HTTP_CSRF_TOKEN_DATA['Bottom_Button_Actions_Array']) || !in_array("Batch_Approval",$HTTP_CSRF_TOKEN_DATA['Bottom_Button_Actions_Array'])) {
 				$RS = [];
 				$RS['status'] = "ERROR";
@@ -441,15 +391,6 @@ function CheckCsrsToken() {
 			break;
 		case 'option_multi_refuse':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			//After 4 hours will exprired
-			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
-				$RS = [];
-				$RS['status'] 	= "ERROR";
-				$RS['code'] 	= "TimeOut";
-				$RS['msg'] 		= __("Timeout for operation");
-				print json_encode($RS);
-				exit;
-			}
 			if(!is_array($HTTP_CSRF_TOKEN_DATA['Bottom_Button_Actions_Array']) || !in_array("Batch_Reject",$HTTP_CSRF_TOKEN_DATA['Bottom_Button_Actions_Array'])) {
 				$RS = [];
 				$RS['status'] = "ERROR";
@@ -472,15 +413,6 @@ function CheckCsrsToken() {
 			break;
 		case 'option_multi_cancel':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			//After 4 hours will exprired
-			if($DiffTime>14400 && !in_array($_SERVER['PHP_SELF'],$ExceptCheckDiffTime))  {
-				$RS = [];
-				$RS['status'] 	= "ERROR";
-				$RS['code'] 	= "TimeOut";
-				$RS['msg'] 		= __("Timeout for operation");
-				print json_encode($RS);
-				exit;
-			}
 			if(!is_array($HTTP_CSRF_TOKEN_DATA['Bottom_Button_Actions_Array']) || !in_array("Batch_Cancel",$HTTP_CSRF_TOKEN_DATA['Bottom_Button_Actions_Array'])) {
 				$RS = [];
 				$RS['status'] = "ERROR";

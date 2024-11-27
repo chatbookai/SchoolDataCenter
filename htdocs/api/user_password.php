@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
@@ -24,7 +24,7 @@ if($_GET['action']=="edit_default")  {
     $RS['data'] = [];
     $RS['msg'] = __("Get Data Success");
     print json_encode($RS);
-    exit;  
+    exit;
 }
 
 $USER_ID = $GLOBAL_USER->USER_ID;
@@ -39,19 +39,19 @@ if($_GET['action']=="edit_default_data"&&$_GET['id']!=""&&$GLOBAL_USER->type=="U
         $RS['status']   = "ERROR";
         $RS['msg']      = __("The two new passwords you entered do not match");
         print json_encode($RS);
-        exit; 
+        exit;
     }
     if($New_Password==$Old_Password)  {
         $RS = [];
         $RS['status']   = "ERROR";
         $RS['msg']      = __("The new password cannot be the same as the old password");
         print json_encode($RS);
-        exit; 
+        exit;
     }
     $sql    = "select * from data_user where USER_ID='".$USER_ID."'";
     $rs		= $db->Execute($sql);
     $UserInfo = $rs->fields;
-    if($UserInfo['USER_ID']=="")  {  
+    if($UserInfo['USER_ID']=="")  {
         $RS = [];
         $RS['status']   = "ERROR";
         $RS['msg']      = __("USER NOT EXIST OR PASSWORD IS ERROR!");
@@ -99,19 +99,19 @@ if($_GET['action']=="edit_default_data"&&$_GET['id']!=""&&$GLOBAL_USER->type=="S
         $RS['status']   = "ERROR";
         $RS['msg']      = __("The two new passwords you entered do not match");
         print json_encode($RS);
-        exit; 
+        exit;
     }
     if($New_Password==$Old_Password)  {
         $RS = [];
         $RS['status']   = "ERROR";
         $RS['msg']      = __("The new password cannot be the same as the old password");
         print json_encode($RS);
-        exit; 
+        exit;
     }
     $sql    = "select * from data_student where 学号='".$USER_ID."'";
     $rs		= $db->Execute($sql);
     $UserInfo = $rs->fields;
-    if($UserInfo['学号']=="")  {  
+    if($UserInfo['学号']=="")  {
         $RS = [];
         $RS['status']   = "ERROR";
         $RS['msg']      = __("USER NOT EXIST OR PASSWORD IS ERROR!");
@@ -174,6 +174,7 @@ $RS['edit_default']['titlememo']    = __("Minimum 6 characters long - the more, 
 $RS['edit_default']['tablewidth']   = 550;
 $RS['edit_default']['submitloading']    = __("SubmitLoading");
 $RS['edit_default']['loading']          = __("Loading");
+$RS['edit_default']['componentsize']    = "small";
 
 $RS['export_default'] = [];
 $RS['import_default'] = [];
