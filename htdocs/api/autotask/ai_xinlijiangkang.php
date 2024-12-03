@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json");
-require_once('cors.php');
-require_once('include.inc.php');
+require_once('../cors.php');
+require_once('../include.inc.php');
 
 
 $sql            = "SELECT * FROM `data_xinlijiankang_cepingresult` where 测评状态='' order by id asc limit 1";
