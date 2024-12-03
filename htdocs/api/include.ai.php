@@ -313,7 +313,7 @@ function 中学生心理健康量表_中学生学科兴趣测评AiDeepSeek测评
 
 
 function DeepSeekAiChat2($系统模板, $用户输入) {
-	$URL 			= "https://faucet.chivesweave.org/ai_deepseek.php?action=deepseek";
+	$URL 			= "https://ai.dandian.net/ai_deepseek.php?action=deepseek";
 	$Authorization 	= "DeepSeekAiChat";
 	$Data = [];
 	$Data['系统模板'] = $系统模板;
