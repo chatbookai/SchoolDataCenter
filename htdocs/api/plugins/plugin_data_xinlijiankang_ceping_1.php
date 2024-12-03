@@ -1,5 +1,7 @@
 <?php
 
+require_once('plugin_data_xinlijiankang_ceping_functions.php');
+
 //FlowName: 心理测评明细
 
 function plugin_data_xinlijiankang_ceping_1_init_default()  {

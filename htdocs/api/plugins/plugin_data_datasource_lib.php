@@ -12,7 +12,7 @@ require_once('../include.inc.php');
 
 page_css("数据同步过程");
 
-$sql    = "select count(*) AS NUM from data_datasyncedrules where 数据同步周期='每天' and 计划时间='".date('Y-m-d')."'";
+$sql    = "select count(*) AS NUM from data_datasyncedrules where 是否启用='是' and 数据同步周期='每天' and 计划时间='".date('Y-m-d')."'";
 $rs     = $db->Execute($sql);
 if($rs->fields['NUM']==0) {
     $sql = "update data_datasyncedrules set 执行状态='未执行', 计划时间='".date('Y-m-d')."' where 数据同步周期='每天'";
@@ -22,16 +22,16 @@ if($rs->fields['NUM']==0) {
 //$sql = "update data_datasyncedrules set 执行状态='未执行', 计划时间='".date('Y-m-d')."' where 数据同步周期='每天'";$db->Execute($sql);
 $id     = DecryptID($_GET['id']);
 if($_GET['action']=="all") {
-    $sql    = "select * from data_datasyncedrules where 数据同步周期='每天' and 执行状态='未执行' and 数据源!='' and 远程数据表!='' ";
+    $sql    = "select * from data_datasyncedrules where 是否启用='是' and 数据同步周期='每天' and 执行状态='未执行' and 数据源!='' and 远程数据表!='' ";
 }
 else if($id>0) {
-    $sql    = "select * from data_datasyncedrules where id='$id'";
+    $sql    = "select * from data_datasyncedrules where 是否启用='是' and id='$id'";
 }
 else {
     print "数据同步没有开始,请检查URL参数是否正确";
 }
 $rs     = $db->Execute($sql);
-$rs_a   = $rs->GetArray();
+$rs_a   = (array)$rs->GetArray();
 foreach($rs_a as $LineX) {
     $FormId             = $LineX['FormId'];
     $TableName          = $LineX['TableName'];
