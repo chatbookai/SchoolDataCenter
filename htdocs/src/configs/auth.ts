@@ -28,7 +28,7 @@ if(hostname == '110.90.174.66' || hostname == 'fdzz.dandian.net')   {
 }
 
 if(hostname == '172.18.1.37' || hostname == 'dsj.fjsmlyxx.com' || 1)       {
-  APP_URL = "https://dsj.fjsmlyxx.com/api/"
+  APP_URL = "https://dsj.fjsmlyxx.com:1443/api/"
   themeNameTemp = "三明林业学校"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"
