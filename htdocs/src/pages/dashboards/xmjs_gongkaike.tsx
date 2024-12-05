@@ -45,7 +45,7 @@ const AnalyticsDashboard = () => {
   const toggleSetClassName = (classNameTemp: string) => {
     setClassName(classNameTemp)
   }
-  
+
   const handleOptionsMenuItemClick = (Item: string) => {
     setOptionsMenuItem(Item)
   }
@@ -76,12 +76,12 @@ const AnalyticsDashboard = () => {
             router.push(res.data[0]['data'][0]['url'])
           }
       })
-    }    
+    }
   }, [className, auth, optionsMenuItem])
 
   const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
 
-  console.log("dashboardData",dashboardData)
+  //console.log("dashboardData",dashboardData)
 
   return (
     <ApexChartWrapper>
@@ -170,10 +170,10 @@ const AnalyticsDashboard = () => {
                       }
 
                     })}
-                    
+
                   </Grid>
                 )}
-      
+
     </ApexChartWrapper>
   )
 }
