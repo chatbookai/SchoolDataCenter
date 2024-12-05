@@ -9,7 +9,7 @@ let indexMenuspath = "auth/menus.php"
 let indexImageUrl = '/images/pages/auth-v2-login-illustration-light.png'
 let logoUrl = '/images/pages/auth-v2-login-illustration-light.png'
 
-if(hostname == 'localhost' || hostname == '127.0.0.1')   {
+if(hostname == 'localhost' || hostname == '127.0.0.1')              {
   APP_URL = "http://localhost:80/api/"
   themeNameTemp = "单点职校数据中心"
   indexDashboardPath = "/dashboards/analytics"
@@ -18,7 +18,8 @@ if(hostname == 'localhost' || hostname == '127.0.0.1')   {
   logoUrl = '/images/pages/auth-v2-login-illustration-light.png'
 }
 
-if(hostname == '110.90.174.66' || 1)   {
+if(hostname == '110.90.174.66' || hostname == 'fdzz.dandian.net')   {
+  APP_URL = "https://fdzz.dandian.net/api/"
   themeNameTemp = "福鼎职业中专"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"
@@ -26,7 +27,15 @@ if(hostname == '110.90.174.66' || 1)   {
   logoUrl = '/images/school/fdzz/logo.png'
 }
 
-APP_URL = "https://fdzz.dandian.net/api/"
+if(hostname == 'dc.fjsmlyxx.com' || 1)       {
+  APP_URL = "/api/"
+  themeNameTemp = "三明林业学校"
+  indexDashboardPath = "/dashboards/analytics"
+  indexMenuspath = "auth/menus.php"
+  indexImageUrl = '/images/school/fjsmlyxx/index.jpg'
+  logoUrl = '/images/school/fjsmlyxx/logo.png'
+}
+
 
 export default {
   meEndpoint: APP_URL+'jwt.php?action=refresh',

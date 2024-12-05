@@ -31,3 +31,4 @@ xampp-control.log
 # git commit -m "Remove ignored files from index"
 
 xampp-control.ini
+htdocs/webroot.zip
