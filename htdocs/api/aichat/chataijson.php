@@ -24,11 +24,34 @@ $_POST          = json_decode($payload,true);
 $temperature    = intval($_POST['temperature']*10)/10;
 $历史消息        = (array)$_POST['history'];
 $用户输入        = (string)$_POST['question'];
-$系统模板        = (string)$_POST['template'];
+//$系统模板        = (string)$_POST['template'];
+$appId          = (string)$_POST['appId'];
 
-if($系统模板 != "" && $用户输入 != "")  {
-  //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
-  DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature);
+if($用户输入 != "" && $appId != "")  {
+  //保存到数据
+  $appIdArray = explode('-', $appId);
+  if($appIdArray[0] == 'ChatApp' && $appIdArray[1] != '')  {
+    $AppIdValue = intval($appIdArray[1]);
+    $sql  = "select * from data_ai_app where id = '$AppIdValue' ";
+    $rs   = $db->Execute($sql);
+    $rs_a = $rs->GetArray();
+    $AppModel         = $rs_a[0]['AppModel']; //值默认是: DeepSeekChat
+    $MaxTokens        = $rs_a[0]['MaxTokens'];
+    $TopP             = $rs_a[0]['TopP'];
+    $HistoryRecords   = $rs_a[0]['HistoryRecords'];
+    $PresencePenalty  = $rs_a[0]['PresencePenalty'];
+    $SystemPrompt     = $rs_a[0]['SystemPrompt'];
+
+    switch($AppModel) {
+      case 'DeepSeekChat':
+        //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
+        DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature);
+        break;
+    }
+
+  }
+
+  exit;
 }
 
 function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature)     {
