@@ -27,8 +27,8 @@ if(hostname == '110.90.174.66' || hostname == 'fdzz.dandian.net')   {
   logoUrl = '/images/school/fdzz/logo.png'
 }
 
-if(hostname == 'dc.fjsmlyxx.com' || 1)       {
-  APP_URL = "/api/"
+if(hostname == '172.18.1.37' || hostname == 'dsj.fjsmlyxx.com' || 1)       {
+  APP_URL = "https://dsj.fjsmlyxx.com/api/"
   themeNameTemp = "三明林业学校"
   indexDashboardPath = "/dashboards/analytics"
   indexMenuspath = "auth/menus.php"
