@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once('../include.inc.php');
 
-//CheckAuthUserLoginStatus();
+CheckAuthUserLoginStatus();
 
 $APIKEY         = "sk-af19f867c995411e82414d0f74ff74c5";
 

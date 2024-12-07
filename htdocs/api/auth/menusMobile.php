@@ -160,37 +160,38 @@ if($USER_TYPE=="Student")    {
         $MenuTwoName    = $Item['MenuTwoName'];
         $MenuTwoItemArray = $MenuTwoArray[$Item['MenuOneName']];
         if(is_array($MenuTwoItemArray))    {
-            foreach($MenuTwoItemArray as $Name=>$Line)    {
-                $allpath = $TabMapCounter[$MenuOneName][$MenuTwoName];
-                if($TabMap[$MenuOneName][$Name]=="Tab")  {
-                    $allpathItems = $TabMapCounter[$MenuOneName][$Line[0]['MenuTwoName']];
-                    $allpath = [];
-                    foreach($allpathItems as $TempItem) {
-                        $allpath[] = '/tab/apps_'.$TempItem['id'];
-                    }
-                    $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'] ,'allpath' =>$allpath ];
+          foreach($MenuTwoItemArray as $Name=>$Line)    {
+            if($TabMap[$MenuOneName][$Name]=="Tab")  {
+                $allpathItems = $TabMapCounter[$MenuOneName][$Line[0]['MenuTwoName']];
+                $allpath = [];
+                $children = [];
+                foreach($allpathItems as $TempItem) {
+                    $allpath[] = '/tab/apps_'.$TempItem['id'];
+                    $children[] = ['id'=>$TempItem['id'], 'title'=>$TempItem['MenuThreeName'], 'icon'=>$TempItem['Menu_Three_Icon'], 'type'=>'submenu'];
                 }
-                else if(strpos($Name,"SystemMenuTwo_")===0)  {
-                    //Menu Two
-                    foreach($Line as $ItemTwo) {
-                        if($ItemTwo['FlowId']>0) {
-                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => '/apps/'.$ItemTwo['id'] ,'allpath' =>$allpath ];
-                        }
-                        if($ItemTwo['FlowId']==0&&$ItemTwo['MenuPath']!="") {
-                            $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => $ItemTwo['MenuPath'] ,'allpath' =>$allpath ];
-                        }
+                $Menu['children'][] = ['title' => $Name, 'path' => '/tab/apps_'.$Line[0]['id'], 'allpath' => $allpath, 'children' => $children, 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'MobileEndIconImage' => "/images/wechatIcon/".$Line[0]['MobileEndIconImage'].".png" ];
+            }
+            else if(strpos($Name,"SystemMenuTwo_")===0)  {
+                //Menu Two
+                foreach($Line as $ItemTwo) {
+                    if($ItemTwo['FlowId']>0) {
+                        $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => '/apps/'.$ItemTwo['id'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'MobileEndIconImage' => "/images/wechatIcon/".$Line[0]['MobileEndIconImage'].".png" ];
                     }
-                }
-                else {
-                    //Menu Three
-                    $subChildren = [];
-                    foreach($Line as $Name3=>$Line3)    {
-                        $subChildren[] = ['title' => $Line3['MenuThreeName'], 'path' => '/apps/'.$Line3['id'] ];
+                    if($ItemTwo['FlowId']==0&&$ItemTwo['MenuPath']!="") {
+                        $Menu['children'][] = ['title' => $ItemTwo['MenuTwoName'], 'path' => $ItemTwo['MenuPath'] ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'MobileEndIconImage' => "/images/wechatIcon/".$Line[0]['MobileEndIconImage'].".png" ];
                     }
-                    $Menu['children'][] = ['title' => $Name, 'children' => $subChildren ,'allpath' =>$allpath];
                 }
             }
-            $Menus[] = $Menu;
+            else {
+                //Menu Three
+                $subChildren = [];
+                foreach($Line as $Name3=>$Line3)    {
+                    $subChildren[] = ['title' => $Line3['MenuThreeName'], 'path' => '/apps/'.$Line3['id'], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
+                }
+                $Menu['children'][] = ['title' => $Name, 'children' => $subChildren ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
+            }
+          }
+          $Menus[] = $Menu;
         }
     }
 }

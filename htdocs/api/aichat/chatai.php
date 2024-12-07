@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once('../include.inc.php');
 
-//CheckAuthUserLoginStatus();
+CheckAuthUserLoginStatus();
 
 $APIKEY         = "sk-af19f867c995411e82414d0f74ff74c5";
 
@@ -36,6 +36,7 @@ if($用户输入 != "" && $appId != "")  {
     $sql  = "select * from data_ai_app where id = '$AppIdValue' ";
     $rs   = $db->Execute($sql);
     $rs_a = $rs->GetArray();
+    $AppName          = $rs_a[0]['AppName'];
     $AppModel         = $rs_a[0]['AppModel']; //值默认是: DeepSeekChat
     $MaxTokens        = $rs_a[0]['MaxTokens'];
     $TopP             = $rs_a[0]['TopP'];
@@ -46,7 +47,7 @@ if($用户输入 != "" && $appId != "")  {
     switch($AppModel) {
       case 'DeepSeekChat':
         //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
-        DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature);
+        DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature, $AppName);
         break;
     }
 
@@ -55,7 +56,7 @@ if($用户输入 != "" && $appId != "")  {
   exit;
 }
 
-function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature)     {
+function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature, $AppName)     {
   global $APIKEY;
   $curl 		  = curl_init();
   $messages 	= [];
@@ -95,10 +96,21 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
       ),
   ));
 
-  curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($ch, $line) {
+  $输出TEXT = "";
+  curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($ch, $line) use (&$AppName, &$用户输入, &$输出TEXT) {
+    $输出Array[] = $line;
     print $line;
     ob_flush();
     flush();
+    $LineArray = explode('"content":"', $line);
+    $LineArray = explode('"},"logprobs"', $LineArray[1]);
+    if($line != "data: [DONE]" && $LineArray[0] != "")  {
+      $输出TEXT .= $LineArray[0];
+    }
+    if(trim($line) == "data: [DONE]")  {
+      print_R($输出TEXT);
+      保存到数据库($AppName, $用户输入, $输出TEXT);
+    }
     return strlen($line);
   });
 
@@ -112,4 +124,24 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
 
 }
 
+function 保存到数据库($AppName, $用户输入, $输出TEXT)  {
+  global $db;
+  global $GLOBAL_USER;
+  $Element            = [];
+  $Element['AI应用']  = $AppName;
+  $Element['用户名']  = $GLOBAL_USER->USER_ID;
+  $Element['姓名']    = $GLOBAL_USER->USER_NAME;
+  $Element['学号']    = $GLOBAL_USER->学号;
+  $Element['班级']    = $GLOBAL_USER->班级;
+  $Element['花费Token']   = '';
+  $Element['输入']        = $用户输入;
+  $Element['输出']        = $输出TEXT;
+  $Element['时间']        = date('Y-m-d H:i:s');
+  $Element['数据']        = "";
+  $Element['备注']        = "";
+  $KEYS			  = array_keys($Element);
+	$VALUES			= array_values($Element);
+  $sql	      = "insert into data_ai_chatlog(`".join('`,`',$KEYS)."`) values('".join("','",$VALUES)."')";
+	$rs         = $db->Execute($sql);
+}
 ?>

@@ -38,7 +38,7 @@ if($_POST['ddsso']!="")			{
 	$sql 		= "select * from data_user where USER_ID='".$_SESSION['LOGIN_USER_EDUID']."'";
 	$rs			= $db->Execute($sql);
 	$UserInfo 	= $rs->fields;
-	if($UserInfo['USER_ID']=="")  { 
+	if($UserInfo['USER_ID']=="")  {
 		$sql 	= "INSERT INTO data_user (USER_ID,USER_NAME,NICKNAME,USEING_KEY,PASSWORD,USER_PRIV,DEPT_ID,GENDER,BIRTHDAY,TEL_NO_DEPT,MOBILE_NO,EMAIL,AVATAR,LAST_VISIT_TIME,LAST_PASS_TIME,THEME,USER_PRIV_OTHER,USER_NO,NOT_LOGIN,NOT_SEARCH,BIND_IP,LAST_VISIT_IP,WEATHER_CITY,MENU_EXPAND,LIMIT_LOGIN,NOT_MOBILE_LOGIN,SKIN,MODE,PRIMARYCOLOR,CONTENTWIDTH,APPBARBLUR,FOOTERTYPE,MENUTOGGLE,MENUCOLLAPSED,MENUHIDDEN,STATUS,`LANGUAGE`) VALUES ('".$ddsso_id_array[0]."','".$ddsso_id_array[1]."','".$ddsso_id_array[1]."','','','5','3','','','','','','','1971-01-01 00:00:00','1971-01-01 00:00:00','','',0,1,0,'','','',1,1,1,'Default','Light','Primary','Full','Full','Static','1','1','1','1','Chinese');";
 		$db->Execute($sql);
 	}
@@ -48,18 +48,18 @@ if($_POST['ddsso']!="")			{
 	//print $json_encode;
 	//print ");";
 }
-	
-if($_SESSION['LOGIN_USER_EDUID']!="")  { 
+
+if($_SESSION['LOGIN_USER_EDUID']!="")  {
     JWT::$leeway    = $NEXT_PUBLIC_JWT_EXPIRATION;
     if(1)   {
         $sql 	= "select * from data_user where USER_ID='".$_SESSION['LOGIN_USER_EDUID']."'";
         $rs		= $db->Execute($sql);
         $UserInfo = $rs->fields;
-        if($UserInfo['USER_ID']=="")  {  
+        if($UserInfo['USER_ID']=="")  {
             $sql    = "select * from data_student where 学号='".$_SESSION['LOGIN_USER_EDUID']."'";
             $rs		= $db->Execute($sql);
             $StudentInfo = $rs->fields;
-            if($StudentInfo['学号']=="")  {  
+            if($StudentInfo['学号']=="")  {
                 $RS = [];
                 $RS['status']   = "ERROR";
                 $RS['msg']      = $RS['email']    = __("USER NOT EXIST OR PASSWORD IS ERROR!");
@@ -82,7 +82,7 @@ if($_SESSION['LOGIN_USER_EDUID']!="")  {
                 $userData['专业']       = $StudentInfo['专业'];
                 $userData['系部']       = $StudentInfo['系部'];
                 $userData['PRIV_NAME']  = "学生";
-                $userData['avatar']     = '/images/avatars/1.png';        
+                $userData['avatar']     = '/images/avatars/1.png';
                 $userData['username']   = $StudentInfo['学号'];
                 $userData['role']       = "学生";
                 $userData['type']       = "Student";
@@ -105,7 +105,7 @@ if($_SESSION['LOGIN_USER_EDUID']!="")  {
             $userData['DEPT_NAME']  = returntablefield("data_department","id",$UserInfo['DEPT_ID'],"DEPT_NAME")['DEPT_NAME'];
             $userData['PRIV_NAME']  = returntablefield("data_role","id",$UserInfo['USER_PRIV'],"name")['name'];
             $userData['USER_PRIV']  = $UserInfo['USER_PRIV'];
-            $userData['avatar']     = '/images/avatars/1.png';        
+            $userData['avatar']     = '/images/avatars/1.png';
             $userData['username']   = $UserInfo['USER_ID'];
             $userData['email']      = $UserInfo['EMAIL'];
             $userData['role']       = $userData['PRIV_NAME'];
@@ -130,7 +130,7 @@ if($_SESSION['LOGIN_USER_EDUID']!="")  {
             localStorage.setItem('i18nextLng', 'zh');
             setTimeout(function() {
                 window.location.href = '/';
-            }, 1000);            
+            }, 1000);
             </script>";
         }
     }

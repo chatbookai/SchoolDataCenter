@@ -14,9 +14,19 @@ $_POST          = json_decode($payload,true);
 if($_GET['action'] == 'getAppList')  {
   $sql          = "select * from data_ai_app order by OrderId asc";
   $rs           = $db->Execute($sql);
-  $rs_a         = $rs->GetArray();
+  $rs_a         = (array)$rs->GetArray();
+  $Data         = [];
+  foreach($rs_a as $Item)  {
+    $GroupOne           = $Item['GroupOne'];
+    $Data[$GroupOne][]  = $Item;
+  }
+  $AppList              = [];
+  foreach($Data as $Key=>$Value) {
+    $AppList[] = ['title'=>$Key, 'children'=>$Value];
+  }
+
   $RS           = [];
-  $RS['data']   = [['title'=>'通用对话', 'children'=>$rs_a]];
+  $RS['data']   = $AppList;
   $RS['status'] = "OK";
   $RS['msg']    = __("Success");
   print json_encode($RS);
