@@ -1176,14 +1176,20 @@ if($_GET['action']=="edit_default_5"&&$id!='')         {
         if($defaultValues_5['MobileEndSecondLineLeftColorField']==""&&isset($SettingMapPrevious['MobileEndSecondLineLeftColorField']))         $defaultValues_5['MobileEndSecondLineLeftColorField'] = $SettingMapPrevious['MobileEndSecondLineLeftColorField'];
         if($defaultValues_5['MobileEndSecondLineLeftColorRule']==""&&isset($SettingMapPrevious['MobileEndSecondLineLeftColorRule']))         $defaultValues_5['MobileEndSecondLineLeftColorRule'] = $SettingMapPrevious['MobileEndSecondLineLeftColorRule'];
 
-        if($defaultValues_5['MobileEndSecondLineLeftColorRule']=="undefined")         $defaultValues_5['MobileEndSecondLineLeftColorRule'] = "";
 
         if($defaultValues_5['MobileEndSecondLineRight']==""&&isset($SettingMapPrevious['MobileEndSecondLineRight']))         $defaultValues_5['MobileEndSecondLineRight'] = $SettingMapPrevious['MobileEndSecondLineRight'];
         if($defaultValues_5['MobileEndSecondLineRightColorField']==""&&isset($SettingMapPrevious['MobileEndSecondLineRightColorField']))         $defaultValues_5['MobileEndSecondLineRightColorField'] = $SettingMapPrevious['MobileEndSecondLineRightColorField'];
         if($defaultValues_5['MobileEndSecondLineRightColorRule']==""&&isset($SettingMapPrevious['MobileEndSecondLineRightColorRule']))         $defaultValues_5['MobileEndSecondLineRightColorRule'] = $SettingMapPrevious['MobileEndSecondLineRightColorRule'];
 
-        if($defaultValues_5['MobileEndSecondLineRightColorRule']=="undefined")         $defaultValues_5['MobileEndSecondLineRightColorRule'] = "";
     }
+    if($defaultValues_5['MobileEndFirstLine']=="undefined")                           $defaultValues_5['MobileEndFirstLine'] = "";
+    if($defaultValues_5['MobileEndSecondLineLeft']=="undefined")                      $defaultValues_5['MobileEndSecondLineLeft'] = "";
+    if($defaultValues_5['MobileEndSecondLineLeftColorField']=="undefined")            $defaultValues_5['MobileEndSecondLineLeftColorField'] = "";
+    if($defaultValues_5['MobileEndSecondLineLeftColorRule']=="undefined")             $defaultValues_5['MobileEndSecondLineLeftColorRule'] = "";
+    if($defaultValues_5['MobileEndSecondLineRight']=="undefined")                     $defaultValues_5['MobileEndSecondLineRight'] = "";
+    if($defaultValues_5['MobileEndSecondLineRightColorField']=="undefined")           $defaultValues_5['MobileEndSecondLineRightColorField'] = "";
+    if($defaultValues_5['MobileEndSecondLineRightColorRule']=="undefined")            $defaultValues_5['MobileEndSecondLineRightColorRule'] = "";
+    if($defaultValues_5['MobileEndSecondLineRightColorRule']=="undefined")            $defaultValues_5['MobileEndSecondLineRightColorRule'] = "";
 
     $edit_default['allFields']      = $edit_default_5;
     $edit_default['allFieldsMode']  = $edit_default_5_mode;

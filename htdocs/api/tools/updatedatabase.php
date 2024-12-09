@@ -43,12 +43,12 @@ if($_GET['action'] == '' && $_SERVER['SERVER_NAME'] != 'fdzz.dandian.net') {
   $GetFormList = json_decode($GetFormList, true);
   foreach($GetFormList as $Item)  {
     if($已有表单[$Item['id']]) {
-      $EVENT = "<input type=button class='layui-btn layui-btn-xs layui-btn-danger' value='更新表单' Onclick=\"location='?".strval("asdfa&action=UpdateFormInfor&id=".$Item['id']."")."'\">";
+      $EVENT = "<a type=button class='layui-btn layui-btn-xs layui-btn-danger' href=\"?".strval("asdfa&action=UpdateFormInfor&id=".$Item['id']."")."\">更新表单,流程,菜单;补充字段</a>";
     }
     else {
-      $EVENT = "<input type=button class='layui-btn layui-btn-xs layui-btn' value='下载安装' Onclick=\"location='?".strval("asdfa&action=UpdateFormInfor&id=".$Item['id']."")."'\">";
+      $EVENT = "<a type=button class='layui-btn layui-btn-xs layui-btn' href=\"?".strval("asdfa&action=UpdateFormInfor&id=".$Item['id']."")."\">下载安装</a>";
     }
-    $EVENT .= "&nbsp;<input type=button class='layui-btn layui-btn-xs layui-btn' value='下载数据' Onclick=\"location='?".strval("asdfa&action=UpdateFormRecords&id=".$Item['id']."")."'\">";
+    $EVENT .= "&nbsp;<a type=button class='layui-btn layui-btn-xs layui-btn' href=\"?".strval("asdfa&action=UpdateFormRecords&id=".$Item['id']."")."\">下载并新增记录数据</a>";
 
     print " <TR>
               <TD class=TableData noWrap >&nbsp;".$Item['id']."</TD>
@@ -70,14 +70,14 @@ if($_GET['action'] == 'UpdateFormDict') {
   $FORM_DICT_DATA = json_decode($FORM_DICT_DATA, true);
   $form_formfield_showtype  = $FORM_DICT_DATA['form_formfield_showtype'];
   foreach($form_formfield_showtype as $Item)  {
-    $Item['id'] = null;
+    unset($Item['id']);
     [$rs,$sql] = InsertOrUpdateTableByArray("form_formfield_showtype",$Item,"Name",0,'Insert');
     if(!$rs->EOF&&!$rs) {
         print "<font color=red>".$Item['Name']." ".$sql."</font><BR>";
         exit;
     }
     else {
-        print "$i <font color=green>插入成功</font>:".$Item['Name']." ".$sql."<BR>";
+        print "$i <font color=green>成功</font>:".$Item['Name']." ".$sql."<BR>";
     }
   }
 
@@ -85,14 +85,14 @@ if($_GET['action'] == 'UpdateFormDict') {
 
   $form_formdict            = $FORM_DICT_DATA['form_formdict'];
   foreach($form_formdict as $Item)  {
-    $Item['id'] = null;
+    unset($Item['id']);
     [$rs,$sql] = InsertOrUpdateTableByArray("form_formdict",$Item,"DictMark,ChineseName",0,'Insert');
     if(!$rs->EOF&&!$rs) {
         print "<font color=red>".$Item['ChineseName']." ".$sql."</font><BR>";
         exit;
     }
     else {
-        print "$i <font color=green>插入成功</font>:".$Item['ChineseName']." ".$sql."<BR>";
+        print "$i <font color=green>成功</font>:".$Item['ChineseName']." ".$sql."<BR>";
     }
   }
   print "<META HTTP-EQUIV=REFRESH CONTENT='20;URL=?'>\n";
@@ -113,37 +113,52 @@ if($_GET['action'] == 'UpdateFormInfor'&&$_GET['id']!='') {
     exit;
   }
   else {
-      print "$i <font color=green>插入成功</font>:".$Item['TableName']." ".$sql."<BR>";
+      print "$i <font color=green>成功</font>:".$Item['TableName']." ".$sql."<BR>";
   }
   print "<BR>";
 
   $form_formfield = $GetFormInfor['form_formfield'];
   foreach($form_formfield as $Item)  {
-    $Item['id'] = null;
-    [$rs,$sql] = InsertOrUpdateTableByArray("form_formfield",$Item,"FormId,FieldName",0,'Insert');
+    unset($Item['id']);
+    [$rs,$sql] = InsertOrUpdateTableByArray("form_formfield",$Item,"FormId,FieldName",0);
     if(!$rs->EOF&&!$rs) {
         print "<font color=red>".$Item['FieldName']." ".$sql."</font><BR>";
         exit;
     }
     else {
-        print "$i <font color=green>插入成功</font>:".$Item['FieldName']." ".$sql."<BR>";
+        print "$i <font color=green>成功</font>:".$Item['FieldName']." ".$sql."<BR>";
     }
   }
   print "<BR>";
 
   $form_formflow  = $GetFormInfor['form_formflow'];
   foreach($form_formflow as $Item)  {
-    $Item['id'] = null;
-    [$rs,$sql] = InsertOrUpdateTableByArray("form_formflow",$Item,"FormId,FlowName",0,'Insert');
+    unset($Item['id']);
+    [$rs,$sql] = InsertOrUpdateTableByArray("form_formflow",$Item,"FormId,Step",0);
     if(!$rs->EOF&&!$rs) {
         print "<font color=red>".$Item['FlowName']." ".$sql."</font><BR>";
         exit;
     }
     else {
-        print "$i <font color=green>插入成功</font>:".$Item['FlowName']." ".$sql."<BR>";
+        print "$i <font color=green>成功</font>:".$Item['FlowName']." ".$sql."<BR>";
     }
   }
   print "<BR>";
+
+  $data_menutwo  = $GetFormInfor['data_menutwo'];
+  foreach($data_menutwo as $Item)  {
+    unset($Item['id']);
+    [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$Item,"FlowId",0);
+    if(!$rs->EOF&&!$rs) {
+        print "<font color=red>".$Item['MenuTwoName']." ".$sql."</font><BR>";
+        exit;
+    }
+    else {
+        print "$i <font color=green>成功</font>:".$Item['MenuTwoName']." ".$sql."<BR>";
+    }
+  }
+  print "<BR>";
+
 
   $CREATETABLE    = $GetFormInfor['CREATETABLE'];
   if($CREATETABLE!="") {
@@ -170,7 +185,7 @@ if($_GET['action'] == 'UpdateFormRecords'&&$_GET['id']!='') {
         exit;
     }
     else {
-        print "$i <font color=green>插入成功</font>:".$Item['id']." ".$sql."<BR>";
+        print "$i <font color=green>成功</font>:".$Item['id']." ".$sql."<BR>";
     }
   }
 
@@ -211,6 +226,15 @@ if($_GET['action'] == 'GetFormInfor'&&$_GET['id']!='') {
     $rs = $db->Execute($sql);
     $rs_a = $rs->GetArray();
     $RS['form_formflow'] = $rs_a;
+    $FlowIdList = [];
+    foreach($rs_a as $Item)  {
+      $FlowIdList[] = $Item['id'];
+    }
+
+    $sql = "select * from data_menutwo where FlowId in ('".join("','", $FlowIdList)."') order by id asc";
+    $rs = $db->Execute($sql);
+    $rs_a = $rs->GetArray();
+    $RS['data_menutwo'] = $rs_a;
 
     $sql = "SHOW CREATE TABLE $TableName";
     $rs = $db->Execute($sql);
