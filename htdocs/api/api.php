@@ -13,6 +13,7 @@ $Data           = $_POST['Data'];
 
 $Model      = intval(base64_decode(base64_decode($_POST['Model'])));
 $Page       = intval($_POST['Page']);
+$Datetime   = intval($_POST['Datetime']);
 $HTTP_AUTHORIZATION = $_SERVER['HTTP_AUTHORIZATION'];
 if($HTTP_AUTHORIZATION == "") {
   $RS         = [];
@@ -24,16 +25,17 @@ if($HTTP_AUTHORIZATION == "") {
 }
 
 if($Model > 0)  {
-  $sql        = "select * from data_api where id = '$Model'";
-  $rs         = $db->Execute($sql);
-  $ApiInfo    = $rs->fields;
-  $Setting    = $ApiInfo['Setting'];
-  $FormId     = intval($ApiInfo['FormId']);
-  $ExpireTime = $ApiInfo['ExpireTime'];
-  $Token      = $ApiInfo['Token'];
-  $AddSql     = $ApiInfo['AddSql'];
-  $ApiName     = $ApiInfo['ApiName'];
-  $PageCount  = intval($ApiInfo['PageCount']);
+  $sql          = "select * from data_api where id = '$Model'";
+  $rs           = $db->Execute($sql);
+  $ApiInfo      = $rs->fields;
+  $Setting      = $ApiInfo['Setting'];
+  $FormId       = intval($ApiInfo['FormId']);
+  $ExpireTime   = $ApiInfo['ExpireTime'];
+  $Token        = $ApiInfo['Token'];
+  $AddSql       = $ApiInfo['AddSql'];
+  $ApiName      = $ApiInfo['ApiName'];
+  $PageCount    = intval($ApiInfo['PageCount']);
+  $签名         = md5($Datetime."|".$Token."|".$_POST['Model']."|".$Page);
 
   if($Setting == '' || $Token == '') {
     $RS             = [];
@@ -45,10 +47,17 @@ if($Model > 0)  {
     exit;
   }
 
-  if($Token != $HTTP_AUTHORIZATION) {
+  if($签名 != $HTTP_AUTHORIZATION) {
     $RS         = [];
     $RS['status']   = "Error";
-    $RS['message']  = "Authorization值无效,请联系管理员";
+    $RS['message']  = "签名无效";
+    $RS['message']  = "签名无效";
+    $RS['签名']                 = $签名;
+    $RS['Datetime']   = $Datetime;
+    $RS['Token']   = $Token;
+    $RS['Model']   = $_POST['Model'];
+    $RS['Page']   = $Page;
+    $RS['HTTP_AUTHORIZATION']   = $HTTP_AUTHORIZATION;
     $RS['time']   = date('Y-m-d H:i:s');
     print_R(json_encode($RS));
     ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql='');
@@ -86,7 +95,7 @@ if($Model > 0)  {
   $RS['data']   = $rs_a;
   $RS['total']  = $total;
   $RS['time']   = date('Y-m-d H:i:s');
-  print_R(json_encode($RS));
+  print_R(base64_encode(gzcompress(gzcompress(json_encode($RS)))));
   ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql);
   exit;
 }
