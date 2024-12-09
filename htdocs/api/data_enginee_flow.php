@@ -2725,6 +2725,11 @@ foreach ($rs_a as $Line) {
     if(function_exists($functionNameIndividual))  {
       $MobileEndItem = $functionNameIndividual($MobileEndItem);
     }
+    foreach($MobileEndItem as $MobileEndItemKey=>$MobileEndItemValue)  {
+      if($MobileEndItemValue == "undefined")  {
+        $MobileEndItem[$MobileEndItemKey] = "";
+      }
+    }
     $MobileEndData[] = $MobileEndItem;
 
 }
