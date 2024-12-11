@@ -33,7 +33,7 @@ import Icon from 'src/@core/components/icon'
 import themeConfig from 'src/configs/themeConfig'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { authConfig } from 'src/configs/auth'
 
 type AppBarSearchType = {
   id: number

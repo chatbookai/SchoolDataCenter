@@ -49,7 +49,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { defaultConfig } from 'src/configs/auth'
 
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
@@ -94,11 +94,14 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 interface AddTableType{
+  authConfig: any
   backEndApi: string
   externalId: string
-  handleActionInMobileApp?: any
+  handleActionInMobileApp?(action: string, title: string, formAction: string) : void
   actionInMobileApp?: string
   handleSetRightButtonIconOriginal?: any
+  viewPageShareStatus?: boolean
+  handSetViewPageShareStatus?: any
 }
 
 const ImgStyled = styled('img')(() => ({
@@ -107,10 +110,10 @@ const ImgStyled = styled('img')(() => ({
   borderRadius: 4
 }))
 
-const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMobileApp, handleSetRightButtonIconOriginal }: AddTableType) => {
+const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp, actionInMobileApp, handleSetRightButtonIconOriginal, viewPageShareStatus, handSetViewPageShareStatus }: AddTableType) => {
   // ** Props
-  const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-  const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
+  const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+  const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
 
   // ** State
   const [isLoading, setIsLoading] = useState(false);
@@ -248,7 +251,7 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
           console.log("kkkkkk1234", k)
           const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
           console.log("kkkkkk1234", DecryptDataAES256GCMData)
-          try{
+          try {
             const ResJson = JSON.parse(DecryptDataAES256GCMData)
             console.log("DecryptDataAES256GCMData ResJson", ResJson)
 
@@ -617,49 +620,49 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default.titletext, '')
         break;
       case 'edit_default_1':
         setAddEditActionName(action)
         setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_1.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_1.titletext, '')
         break;
       case 'edit_default_2':
         setAddEditActionName(action)
         setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_2.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_2.titletext, '')
         break;
       case 'edit_default_3':
         setAddEditActionName(action)
         setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_3.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_3.titletext, '')
         break;
       case 'edit_default_4':
         setAddEditActionName(action)
         setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_4.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_4.titletext, '')
         break;
       case 'edit_default_5':
         setAddEditActionName(action)
         setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_5.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_5.titletext, '')
         break;
       case 'edit_default_6':
         setAddEditActionName(action)
         setCSRF_TOKEN(CSRF_TOKEN)
         setAddEditActionId(id)
         setAddEditActionOpen(!addEditActionOpen)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_6.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_6.titletext, '')
         break;
       case 'view_default':
         setAddEditActionName(action)
@@ -667,7 +670,7 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         setAddEditActionId(id)
         setViewActionOpen(!viewActionOpen)
         setEditViewCounter(0)
-        handleActionInMobileApp && handleActionInMobileApp(action, store.view_default.titletext)
+        handleActionInMobileApp && handleActionInMobileApp(action, store.view_default.titletext, '')
         break;
       case 'delete_array':
         setSelectedRows([id])
@@ -1124,9 +1127,6 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
 
   const [show, setShow] = useState<boolean>(false)
 
-  console.log("store.init_action.actionValue", store.init_action.actionValue)
-  console.log("addEditActionName111", addEditActionName)
-
   return (
     <Grid container spacing={0}>
       {store.init_action.action == 'init_default' && isMobileData == false && store.init_action.actionValue == "" ?
@@ -1250,8 +1250,7 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         }
       </Grid>
       : '' }
-
-      {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "" && (
+      {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "" &&  (
         <Grid item xs={12}>
           <Card sx={{ mb: 3}}>
             {store.init_default.returnButton && store.init_default.returnButton.status ?
@@ -1531,10 +1530,7 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         </Grid>
       )}
 
-      {store.init_action.action == 'init_default' && isMobileData == false && store.init_action.actionValue == "SoulChatList" && (
-        <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData}/>
-      )}
-      {addEditActionName == 'init_default' && isMobileData == true && store.init_action.actionValue == "SoulChatList" && (
+      {addEditActionName == 'init_default' && isFirstLoadingTip==false && store.init_action.actionValue == "SoulChatList" && (
         <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData}/>
       )}
 
@@ -1547,13 +1543,13 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         </Backdrop>
       )}
 
-      {store && store.import_default && store.import_default.defaultValues && addEditActionName.indexOf("import_default") != -1 ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.import_default} open={addEditActionOpen} toggleAddTableDrawer={toggleImportTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
+      {store && store.import_default && store.import_default.defaultValues && addEditActionName.indexOf("import_default") != -1 ? <AddOrEditTable authConfig={authConfig} externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.import_default} open={addEditActionOpen} toggleAddTableDrawer={toggleImportTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
 
-      {store && store.add_default && store.add_default.defaultValues && addEditActionName.indexOf("add_default") != -1 ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.add_default} open={addEditActionOpen} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
+      {store && store.add_default && store.add_default.defaultValues && addEditActionName.indexOf("add_default") != -1 ? <AddOrEditTable authConfig={authConfig} externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store.add_default} open={addEditActionOpen} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
 
-      {store && store[addEditActionName] && store[addEditActionName]['defaultValues'] && addEditActionName.indexOf("edit_default") != -1 && addEditActionId!='' ? <AddOrEditTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store[addEditActionName]} open={addEditActionOpen} toggleAddTableDrawer={toggleEditTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
+      {store && store[addEditActionName] && store[addEditActionName]['defaultValues'] && addEditActionName.indexOf("edit_default") != -1 && addEditActionId!='' ? <AddOrEditTable authConfig={authConfig} externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} addEditStructInfo={store[addEditActionName]} open={addEditActionOpen} toggleAddTableDrawer={toggleEditTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={addEditViewShowInWindow}  CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/> : ''}
 
-      {store && store.view_default && store.view_default.defaultValues && addEditActionName.indexOf("view_default") != -1 && addEditActionId!='' ? <ViewTable externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} pageJsonInfor={store[addEditActionName]} open={viewActionOpen} toggleViewTableDrawer={toggleViewTableDrawer} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} addEditViewShowInWindow={addEditViewShowInWindow} CSRF_TOKEN={CSRF_TOKEN} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} dialogMaxWidth={store.init_default.dialogMaxWidth} /> : ''}
+      {store && store.view_default && store.view_default.defaultValues && addEditActionName.indexOf("view_default") != -1 && addEditActionId!='' ? <ViewTable authConfig={authConfig} externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} pageJsonInfor={store[addEditActionName]} open={viewActionOpen} toggleViewTableDrawer={toggleViewTableDrawer} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} addEditViewShowInWindow={addEditViewShowInWindow} CSRF_TOKEN={CSRF_TOKEN} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} dialogMaxWidth={store.init_default.dialogMaxWidth} handleSetRightButtonIconOriginal={handleSetRightButtonIconOriginal} viewPageShareStatus={viewPageShareStatus} handSetViewPageShareStatus={handSetViewPageShareStatus}/> : ''}
       <ImagesPreview open={imagesPreviewOpen} toggleImagesPreviewDrawer={toggleImagesPreviewDrawer} imagesList={imagesPreviewList} imagesType={imagesType} />
     </Grid >
   )

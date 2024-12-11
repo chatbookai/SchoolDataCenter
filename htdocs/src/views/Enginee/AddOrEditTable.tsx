@@ -21,6 +21,7 @@ const Transition = forwardRef(function Transition(
 })
 
 interface AddOrEditTableType {
+  authConfig: any
   externalId: number
   id: string
   action: string
@@ -42,7 +43,7 @@ interface AddOrEditTableType {
 
 const AddOrEditTable = (props: AddOrEditTableType) => {
   // ** Props
-  const { externalId, id, action, addEditStructInfo, open, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, addEditViewShowInWindow, CSRF_TOKEN, dataGridLanguageCode, dialogMaxWidth, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate } = props
+  const { authConfig, externalId, id, action, addEditStructInfo, open, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, addEditViewShowInWindow, CSRF_TOKEN, dataGridLanguageCode, dialogMaxWidth, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate } = props
 
   const handleClose = () => {
     toggleAddTableDrawer('HandleClose')
@@ -57,7 +58,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
     <Fragment>
     {addEditViewShowInWindow ?
       <Grid sx={{ pb: 2, px: 1, mt: -2, position: 'relative' }} style={{ width: '100%' }}>
-        <AddOrEditTableCore externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfoNew} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={IsGetStructureFromEditDefault} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/>
+        <AddOrEditTableCore authConfig={authConfig} externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfoNew} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={IsGetStructureFromEditDefault} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/>
       </Grid>
       :
       <Dialog
@@ -76,7 +77,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
           >
             <Icon icon='mdi:close' />
           </IconButton>
-          <AddOrEditTableCore externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfo} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/>
+          <AddOrEditTableCore authConfig={authConfig} externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfo} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate}/>
         </DialogContent>
       </Dialog>
     }

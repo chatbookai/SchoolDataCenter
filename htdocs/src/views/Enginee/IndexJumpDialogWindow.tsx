@@ -4,7 +4,7 @@ import { TreeView, TreeItem } from '@mui/lab';
 import TextField from '@mui/material/TextField'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { defaultConfig } from 'src/configs/auth'
 import axios from 'axios'
 
 interface Node {
@@ -14,13 +14,14 @@ interface Node {
 }
 
 interface IndexJumpDialogWindowType {
+    authConfig: any
     handleDialogWindowCloseWithParam: (field: string, value: string, fieldCode: string, valueCode: string) => void
     NewFieldName: string
     NewFieldCode: string
     FieldArray: any
   }
 
-const IndexJumpDialogWindow = ({handleDialogWindowCloseWithParam, NewFieldName, NewFieldCode, FieldArray}: IndexJumpDialogWindowType) => {
+const IndexJumpDialogWindow = ({authConfig, handleDialogWindowCloseWithParam, NewFieldName, NewFieldCode, FieldArray}: IndexJumpDialogWindowType) => {
   const [textFieldValue, setTextFieldValue] = useState('');
   const [data, setData] = useState([]);
 
@@ -40,7 +41,7 @@ const IndexJumpDialogWindow = ({handleDialogWindowCloseWithParam, NewFieldName, 
   );
 
   //console.log("view_default--------------------------------", id, action)
-  const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+  const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
 
   useEffect(() => {
     const backEndApi = "tree_fixedasset_classification.php"

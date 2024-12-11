@@ -1,12 +1,6 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-// ** Axios Imports
-import axios from 'axios'
-
-// ** Config
-import authConfig from 'src/configs/auth'
-
 // ** Fetch Users
 export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: any) => {
   const newAllFilters = JSON.parse(JSON.stringify(params['allSubmitFields']))
@@ -21,13 +15,9 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: a
     newAllFilters['filterMultiColumns'] = JSON.parse(JSON.stringify(params['filterMultiColumns']))
   }
 
-  const backEndApi = "test_store.php";
-  const response = await axios.get(authConfig.backEndApiHost + backEndApi, {
-    params: newAllFilters
-  })
+  const result: any  = {}
 
-  return response.data
-
+  return result
 })
 
 export const appUsersSlice = createSlice({

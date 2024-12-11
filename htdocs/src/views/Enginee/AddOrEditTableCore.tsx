@@ -56,7 +56,7 @@ import { DecryptDataAES256GCM } from 'src/configs/functions'
 import Repeater from 'src/@core/components/repeater'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { defaultConfig } from 'src/configs/auth'
 
 // ** Third Party Imports
 import * as yup from 'yup'
@@ -147,6 +147,7 @@ const Transition = forwardRef(function Transition(
   })
 
 interface AddOrEditTableType {
+    authConfig: any
     externalId: number
     id: number | string
     action: string
@@ -167,7 +168,7 @@ interface AddOrEditTableType {
 
 const AddOrEditTableCore = (props: AddOrEditTableType) => {
     // ** Props
-    const { externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate } = props
+    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate } = props
 
     const i18n: any = {language: 'zh'}
 
@@ -213,10 +214,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
     const [activeTab, setActiveTab] = useState<string>('detailsTab')
 
-    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-    const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
-
-    console.log("AddtionalParams======================================",action)
+    const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+    const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
 
     const [fieldIdValue, setFieldIdValue] = useState<number>(0)
     const [singleModelCounter, setSingleModelCounter] = useState<number>(0)
@@ -241,7 +240,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         const e = data.data.slice(32, -32);
                         const k = AccessKey;
                         const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
-                        try{
+                        try {
                             dataJson = JSON.parse(DecryptDataAES256GCMData)
                         }
                         catch(Error: any) {
@@ -556,8 +555,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         const toastId = toast.loading(addEditStructInfo2.submitloading)
         setIsSubmitLoading(true)
         handleIsLoadingTipChange(true, addEditStructInfo2.ImportLoading)
-        const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-        const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
+        const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+        const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
         if (!storedToken) {
             toggleAddTableDrawer('TokenError')
             reset()
@@ -679,7 +678,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     const e = data.data.slice(32, -32);
                     const k = AccessKey;
                     const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
-                    try{
+                    try {
                         dataJson = JSON.parse(DecryptDataAES256GCMData)
                     }
                     catch(Error: any) {
@@ -2397,7 +2396,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                     <Box sx={{ display: 'flex', flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
                                                                                         <TabContext value={activeTab}>
                                                                                         <TabPanel value='detailsTab' sx={{ flexGrow: 1 }}>
-                                                                                            <IndexJumpDialogWindow handleDialogWindowCloseWithParam={handleDialogWindowCloseWithParam} NewFieldName={NewFieldName} NewFieldCode={NewFieldCode} FieldArray={FieldArray} />
+                                                                                            <IndexJumpDialogWindow authConfig={authConfig} handleDialogWindowCloseWithParam={handleDialogWindowCloseWithParam} NewFieldName={NewFieldName} NewFieldCode={NewFieldCode} FieldArray={FieldArray} />
                                                                                         </TabPanel>
                                                                                         </TabContext>
                                                                                     </Box>
@@ -2440,7 +2439,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         return (
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
-                                                                    <FormLabel>{FieldArray.label}</FormLabel>
+                                                                    <FormLabel sx={{ color: 'text.primary' }}>{FieldArray.label}</FormLabel>
                                                                     <Controller
                                                                         name={FieldArray.name}
                                                                         control={control}
@@ -2456,27 +2455,27 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                     setDefaultValuesNew(defaultValuesNewTemp)
                                                                                     console.log("loopModelDataStorageTemp0", e.target.value)
                                                                                     if((fieldIdValue + 1) < singleModelCounter) {
-                                                                                      const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
-                                                                                      loopModelDataStorageTemp[FieldArray.name] = e.target.value
-                                                                                      setLoopModelDataStorage(loopModelDataStorageTemp)
-                                                                                      setTimeout(function() {
-                                                                                        setFieldIdValue(fieldIdValue + 1);
-                                                                                      }, 200);
-                                                                                      console.log("loopModelDataStorageTemp1", loopModelDataStorageTemp)
+                                                                                        const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
+                                                                                        loopModelDataStorageTemp[FieldArray.name] = e.target.value
+                                                                                        setLoopModelDataStorage(loopModelDataStorageTemp)
+                                                                                        setTimeout(function() {
+                                                                                          setFieldIdValue(fieldIdValue + 1);
+                                                                                        }, 200);
+                                                                                        console.log("loopModelDataStorageTemp1", loopModelDataStorageTemp)
                                                                                     }
                                                                                 }}
                                                                                 onClick={(e: any) => {
 
-                                                                                  //当点击事件不在文字本身,而是同一行右侧的空白区域点击时,会触发此事件.
-                                                                                  if((fieldIdValue + 1) < singleModelCounter && e.target && e.target.innerText) {
-                                                                                      const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
-                                                                                      loopModelDataStorageTemp[FieldArray.name] = e.target.innerText
-                                                                                      setLoopModelDataStorage(loopModelDataStorageTemp)
-                                                                                      setTimeout(function() {
-                                                                                        setFieldIdValue(fieldIdValue + 1);
-                                                                                      }, 200);
-                                                                                      console.log("loopModelDataStorageTemp2", loopModelDataStorageTemp)
-                                                                                  }
+                                                                                    //当点击事件不在文字本身,而是同一行右侧的空白区域点击时,会触发此事件.
+                                                                                    if((fieldIdValue + 1) < singleModelCounter && e.target && e.target.innerText) {
+                                                                                        const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
+                                                                                        loopModelDataStorageTemp[FieldArray.name] = e.target.innerText
+                                                                                        setLoopModelDataStorage(loopModelDataStorageTemp)
+                                                                                        setTimeout(function() {
+                                                                                          setFieldIdValue(fieldIdValue + 1);
+                                                                                        }, 200);
+                                                                                        console.log("loopModelDataStorageTemp2", loopModelDataStorageTemp)
+                                                                                    }
                                                                                 }}
                                                                             >
                                                                                 {FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
@@ -4788,7 +4787,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                         <Box sx={{ display: 'flex', flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
                                                                                             <TabContext value={activeTab}>
                                                                                             <TabPanel value='detailsTab' sx={{ flexGrow: 1 }}>
-                                                                                                <IndexJumpDialogWindow handleDialogWindowCloseWithParam={handleDialogWindowCloseWithParam} NewFieldName={NewFieldName} NewFieldCode={NewFieldCode} FieldArray={FieldArray} />
+                                                                                                <IndexJumpDialogWindow authConfig={authConfig} handleDialogWindowCloseWithParam={handleDialogWindowCloseWithParam} NewFieldName={NewFieldName} NewFieldCode={NewFieldCode} FieldArray={FieldArray} />
                                                                                             </TabPanel>
                                                                                             </TabContext>
                                                                                         </Box>
@@ -4918,7 +4917,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                         </Tooltip>
                                         : ''
                                     }
-                                    {addEditStructInfo2.canceltext && addEditStructInfo2.canceltext != "" ?
+                                    {isMobileData == false && addEditStructInfo2.canceltext && addEditStructInfo2.canceltext != "" ?
                                         <Tooltip title="Alt+c">
                                             <Button size='small' sx={{ml: 3}} disabled={isSubmitLoading} variant='outlined' color='secondary' onClick={handleClose}>
                                                 {addEditStructInfo2.canceltext}

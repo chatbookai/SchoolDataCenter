@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { authConfig, defaultConfig } from 'src/configs/auth'
 
 import axios from 'axios'
 
@@ -22,7 +22,7 @@ const FooterContent = () => {
   const [footerContent, SetFooterContent] = useState({"FOOTER_CONTENT":"","FOOTER_URL1_TEXT":"","FOOTER_URL1_LINK":"","FOOTER_URL2_TEXT":"","FOOTER_URL2_LINK":"","FOOTER_URL3_TEXT":"","FOOTER_URL3_LINK":"","FOOTER_URL4_TEXT":"","FOOTER_URL4_LINK":"","FOOTER_URL5_TEXT":"","FOOTER_URL5_LINK":""})
 
   useEffect(() => {
-    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+    const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
     axios
       .get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: {} })
       .then(res => {

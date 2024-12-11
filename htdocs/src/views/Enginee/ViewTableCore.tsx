@@ -22,7 +22,7 @@ import Icon from 'src/@core/components/icon'
 import {isMobile} from 'src/configs/functions'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { defaultConfig } from 'src/configs/auth'
 import axios from 'axios'
 import Mousetrap from 'mousetrap';
 
@@ -56,10 +56,14 @@ interface ViewTableType {
   toggleViewTableDrawer: () => void
   backEndApi: string
   editViewCounter: number
+  authConfig: any
   externalId: number
   pageJsonInfor: {}
   CSRF_TOKEN: string
   toggleImagesPreviewListDrawer: (imagesPreviewList: string[], imagetype: string[]) => void
+  handleSetRightButtonIconOriginal?: any
+  viewPageShareStatus?: boolean
+  handSetViewPageShareStatus?: any
 }
 
 const ImgStyled = styled('img')(({ theme }) => ({
@@ -81,7 +85,7 @@ const CustomLink = styled(Link)({
 
 const ViewTableCore = (props: ViewTableType) => {
   // ** Props
-  const { externalId, id, action, toggleViewTableDrawer, backEndApi, editViewCounter, CSRF_TOKEN, toggleImagesPreviewListDrawer } = props
+  const { authConfig, externalId, id, action, toggleViewTableDrawer, backEndApi, editViewCounter, CSRF_TOKEN, toggleImagesPreviewListDrawer, handleSetRightButtonIconOriginal, viewPageShareStatus, handSetViewPageShareStatus } = props
   console.log("externalId props", externalId)
 
   const isMobileData = isMobile()
@@ -111,8 +115,8 @@ const ViewTableCore = (props: ViewTableType) => {
 
   //console.log("newTableRowData--------------------------------", newTableRowData)
 
-  const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-  const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
+  const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+  const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
 
   useEffect(() => {
     if (action == "view_default" && editViewCounter > 0) {
@@ -124,6 +128,12 @@ const ViewTableCore = (props: ViewTableType) => {
           const data = res.data
           if(data && data.model) {
             setModel(data.model)
+            if(data.model == "测评模式")  {
+              handleSetRightButtonIconOriginal('material-symbols:ios-share')
+            }
+            else {
+              handleSetRightButtonIconOriginal('')
+            }
           }
           if(data && data.isEncrypted == "1" && data.data)  {
               const i = data.data.slice(0, 32);
@@ -131,7 +141,7 @@ const ViewTableCore = (props: ViewTableType) => {
               const e = data.data.slice(32, -32);
               const k = AccessKey;
               const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
-              try{
+              try {
                   dataJson = JSON.parse(DecryptDataAES256GCMData)
               }
               catch(Error: any) {
@@ -178,7 +188,7 @@ const ViewTableCore = (props: ViewTableType) => {
     <Fragment>
       {isLoading == false && model && model == "测评模式" && (
         <Fragment>
-          <ModelMiddleSchoolSoulAssessment modelOriginal={model} dataOriginal={defaultValuesView} id={id} backEndApi={backEndApi}/>
+          <ModelMiddleSchoolSoulAssessment authConfig={authConfig} modelOriginal={model} dataOriginal={defaultValuesView} id={id} backEndApi={backEndApi} viewPageShareStatus={viewPageShareStatus} handSetViewPageShareStatus={handSetViewPageShareStatus}/>
         </Fragment>
       )}
       {isLoading == false && model == "" && (

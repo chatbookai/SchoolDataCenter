@@ -21,7 +21,7 @@ import Icon from 'src/@core/components/icon'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import {authConfig, defaultConfig} from 'src/configs/auth'
 import axios from 'axios'
 
 // ** Type Imports
@@ -115,12 +115,12 @@ const UserDropdown = (props: Props) => {
 
   useEffect(() => {
     if(isLogout) {
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+      const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       axios
       .get(authConfig.logoutEndpoint, { headers: { Authorization: storedToken} })
       .then(async (response: any) => {
         console.log("logoutEndpoint response", response)
-        window.localStorage.removeItem(authConfig.storageTokenKeyName)
+        window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
         window.localStorage.removeItem('GO_SYSTEM')
         window.localStorage.removeItem('userData')
         window.localStorage.removeItem('refreshToken')
@@ -147,7 +147,7 @@ const UserDropdown = (props: Props) => {
           src={authConfig.backEndApiHost + user.avatar}
         />
       </Badge>
-      {authConfig.themeName=="厦门技师"?
+      {authConfig.AppName=="厦门技师"?
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}

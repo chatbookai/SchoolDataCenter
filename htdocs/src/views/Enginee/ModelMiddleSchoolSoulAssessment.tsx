@@ -24,7 +24,7 @@ import ReactMarkdown from 'react-markdown'
 import {isMobile} from 'src/configs/functions'
 
 import Link from 'next/link'
-import authConfig from 'src/configs/auth'
+import { defaultConfig } from 'src/configs/auth'
 import axios from 'axios'
 
 import html2canvas from 'html2canvas'
@@ -61,7 +61,7 @@ const MUITableCell = styled(TableCell)<TableCellBaseProps>(({ theme }) => ({
 }))
 
 
-const ModelMiddleSchoolSoulAssessment = ({ dataOriginal, modelOriginal, id, backEndApi, viewPageShareStatus, handSetViewPageShareStatus }: Props) => {
+const ModelMiddleSchoolSoulAssessment = ({ authConfig, dataOriginal, modelOriginal, id, backEndApi, viewPageShareStatus, handSetViewPageShareStatus }: Props) => {
   // ** Hook
   const theme = useTheme()
 
@@ -173,7 +173,7 @@ const ModelMiddleSchoolSoulAssessment = ({ dataOriginal, modelOriginal, id, back
     //打印页面时,需要单独再获取一次API的内容
     //const backEndApi = 'apps/apps_378.php'
     const action = 'view_default'
-    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+    const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
     if (id && id.length > 32 && data == null) {
       axios
         .get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken+"::::" }, params: { action, id, isMobileData: false } })

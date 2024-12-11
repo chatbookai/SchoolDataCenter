@@ -1,55 +1,39 @@
-import os from 'os'
 
-const hostname = os.hostname()
+export const AppSchoolConfigMap: any    = {}
+AppSchoolConfigMap['dandian']    = ["https://fdzz.dandian.net/api/", '单点数据中心', "auth/menus.php", "https://fdzz.dandian.net/api/"]
+AppSchoolConfigMap['fdzyzz.com'] = ["https://fdzz.dandian.net/api/", '福鼎职业中专', "auth/menus.php", "https://fdzz.dandian.net/api/"]
+AppSchoolConfigMap['fjsmnx.com'] = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业学校', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
 
-let APP_URL = '/api/'
-let themeNameTemp = "数据中心"
-let indexDashboardPath = "/dashboards/analytics"
-let indexMenuspath = "auth/menus.php"
-let indexImageUrl = '/images/pages/auth-v2-login-illustration-light.png'
-let logoUrl = '/images/pages/auth-v2-login-illustration-light.png'
+const AppMarkId = "fjsmnx.com"; //需要针对每个学校的情况进行修改
 
-if(hostname == 'localhost' || hostname == '127.0.0.1')              {
-  APP_URL = "http://localhost:80/api/"
-  themeNameTemp = "单点职校数据中心"
-  indexDashboardPath = "/dashboards/analytics"
-  indexMenuspath = "auth/menus.php"
-  indexImageUrl = '/images/pages/auth-v2-login-illustration-light.png'
-  logoUrl = '/images/pages/auth-v2-login-illustration-light.png'
+const APP_URL = AppSchoolConfigMap[AppMarkId][0]
+const AppName = AppSchoolConfigMap[AppMarkId][1]
+const indexMenuspath = AppSchoolConfigMap[AppMarkId][2]
+const backEndApiAiBaseUrl = AppSchoolConfigMap[AppMarkId][3]
+
+export const authConfig = {
+    AppName: AppName,
+    AppLogo: '/icons/' + AppMarkId + '/icon256.png',
+    AppMarkId: AppMarkId,
+    AppSchoolConfigMap: AppSchoolConfigMap,
+    indexMenuspath: indexMenuspath,
+    meEndpoint: APP_URL + 'jwt.php?action=refresh',
+    loginEndpoint: APP_URL + 'jwt.php?action=login',
+    logoutEndpoint: APP_URL + 'jwt.php?action=logout',
+    refreshEndpoint: APP_URL + 'jwt.php?action=refresh',
+    registerEndpoint: APP_URL + 'jwt/register',
+    backEndApiHost: APP_URL,
+    backEndApiAiBaseUrl: backEndApiAiBaseUrl
 }
 
-if(hostname == '110.90.174.66' || hostname == 'fdzz.dandian.net')   {
-  APP_URL = "https://fdzz.dandian.net/api/"
-  themeNameTemp = "福鼎职业中专"
-  indexDashboardPath = "/dashboards/analytics"
-  indexMenuspath = "auth/menus.php"
-  indexImageUrl = '/images/school/fdzz/index.jpg'
-  logoUrl = '/images/school/fdzz/logo.png'
-}
-
-if(hostname == '172.18.1.37' || hostname == 'dsj.fjsmlyxx.com' || 1)       {
-  APP_URL = "https://dsj.fjsmlyxx.com:1443/api/"
-  themeNameTemp = "三明林业学校"
-  indexDashboardPath = "/dashboards/analytics"
-  indexMenuspath = "auth/menus.php"
-  indexImageUrl = '/images/school/fjsmlyxx/index.jpg'
-  logoUrl = '/images/school/fjsmlyxx/logo.png'
-}
-
-
-export default {
-  meEndpoint: APP_URL+'jwt.php?action=refresh',
-  loginEndpoint: APP_URL+'jwt.php?action=login',
-  logoutEndpoint: APP_URL+'jwt.php?action=logout',
-  refreshEndpoint: APP_URL+'jwt.php?action=refresh',
-  registerEndpoint: APP_URL+'jwt/register',
+export const defaultConfig = {
+  Github: 'https://github.com/chatbookai/SchoolDataCenterMobile',
+  AppVersion: '20241125',
+  AppVersionType: '试用版本',
+  defaultLanguage: 'zh-CN',
   storageTokenKeyName: 'accessToken',
   storageAccessKeyName: 'accessKey',
-  onTokenExpiration: 'refreshToken', // logout | refreshToken
-  backEndApiHost: APP_URL,
-  themeName: themeNameTemp,
-  indexDashboardPath: indexDashboardPath,
-  indexMenuspath: indexMenuspath,
-  indexImageUrl: indexImageUrl,
-  logoUrl: logoUrl
+  storageMainMenus: 'storageMainMenus',
+  storageChatApp: 'storageChatApp',
+  storageMyCoursesList: 'storageMyCoursesList',
 }

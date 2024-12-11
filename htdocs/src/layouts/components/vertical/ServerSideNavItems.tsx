@@ -6,7 +6,7 @@ import axios from 'axios'
 
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { authConfig, defaultConfig } from 'src/configs/auth'
 import { useRouter } from 'next/router'
 
 // ** Type Import
@@ -16,18 +16,17 @@ import { DecryptDataAES256GCM } from 'src/configs/functions'
 const ServerSideNavItems = () => {
   // ** State
   const [menuItems, setMenuItems] = useState<VerticalNavItemsType>([])
-  const backEndApi = authConfig.indexMenuspath
+  const backEndApi = authConfig['indexMenuspath']
   const router = useRouter()
 
   useEffect(() => {
-    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+    const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
     axios.get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken } }).then(res => {
-
 
       let dataJson: any = null
       const data = res.data
       if(data && data.isEncrypted == "1" && data.data)  {
-          const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
+          const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
           const i = data.data.slice(0, 32);
           const t = data.data.slice(-32);
           const e = data.data.slice(32, -32);
@@ -51,7 +50,7 @@ const ServerSideNavItems = () => {
       if (menuArray && menuArray.status && menuArray.status == "ERROR" && router.pathname != '/login') {
         localStorage.removeItem('userData')
         localStorage.removeItem('refreshToken')
-        localStorage.removeItem(authConfig.storageTokenKeyName)
+        localStorage.removeItem(defaultConfig.storageTokenKeyName)
         localStorage.removeItem('GO_SYSTEM')
         console.log("menuArray ERROR", menuArray, router)
         router.push('/login')

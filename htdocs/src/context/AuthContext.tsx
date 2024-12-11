@@ -1,18 +1,15 @@
 // ** React Imports
 import { createContext, useEffect, useState, ReactNode } from 'react'
 
-// ** Next Import
-import { useRouter } from 'next/router'
-
 // ** Axios
 import axios from 'axios'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { authConfig, defaultConfig } from 'src/configs/auth'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { AuthValuesType, RegisterParams, ErrCallbackType, UserDataType } from './types'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -37,13 +34,17 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
 
-  // ** Hooks
-  const router = useRouter()
-
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-      if (storedToken && storedToken!=undefined && storedToken != '') {
+
+      const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
+      const userData = window.localStorage.getItem('userData')!
+      if(userData) {
+        setUser(JSON.parse(userData))
+      }
+
+      if (authConfig && storedToken && storedToken!=undefined) {
         setLoading(true)
         await axios
           .get(authConfig.meEndpoint, {
@@ -55,13 +56,12 @@ const AuthProvider = ({ children }: Props) => {
             let dataJson: any = null
             const data = response.data
             if(data && data.isEncrypted == "1" && data.data)  {
-                const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
                 const i = data.data.slice(0, 32);
                 const t = data.data.slice(-32);
                 const e = data.data.slice(32, -32);
                 const k = AccessKey;
                 const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
-                try{
+                try {
                     dataJson = JSON.parse(DecryptDataAES256GCMData)
                 }
                 catch(Error: any) {
@@ -78,22 +78,13 @@ const AuthProvider = ({ children }: Props) => {
             setUser({ ...dataJson.userData })
           })
           .catch(() => {
-            window.localStorage.removeItem('userData')
-            window.localStorage.removeItem('refreshToken')
-            window.localStorage.removeItem(authConfig.storageTokenKeyName)
-            window.localStorage.removeItem('GO_SYSTEM')
+            localStorage.removeItem('userData')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem(defaultConfig.storageTokenKeyName)
+            localStorage.removeItem('GO_SYSTEM')
             setUser(null)
             setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
           })
-      }
-      else if (storedToken && storedToken!=undefined && storedToken == '') {
-          window.localStorage.removeItem('userData')
-          window.localStorage.removeItem('refreshToken')
-          window.localStorage.removeItem(authConfig.storageTokenKeyName)
-          window.localStorage.removeItem('GO_SYSTEM')
       }
       else {
         setLoading(false)
@@ -104,21 +95,23 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
+  const handleLogin = (params: any, errorCallback?: ErrCallbackType) => {
+    const { Data, handleGoIndex } = params
+
     axios
-      .post(authConfig.loginEndpoint, params)
+      .post(authConfig.loginEndpoint, { Data })
       .then(async response => {
 
         let dataJson: any = null
         const data = response.data
         if(data && data.isEncrypted == "1" && data.data)  {
-            const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
+            const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
             const i = data.data.slice(0, 32);
             const t = data.data.slice(-32);
             const e = data.data.slice(32, -32);
             const k = AccessKey;
             const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
-            try{
+            try {
                 dataJson = JSON.parse(DecryptDataAES256GCMData)
             }
             catch(Error: any) {
@@ -132,25 +125,27 @@ const AuthProvider = ({ children }: Props) => {
             dataJson = data
         }
 
-        //console.log("authConfig.storageTokenKeyName",authConfig.storageTokenKeyName)
+        //console.log("defaultConfig.storageTokenKeyName",defaultConfig.storageTokenKeyName)
         //console.log("dataJson.accessToken",dataJson.accessToken)
         //console.log("dataJson.userData",dataJson.userData)
         //console.log("JSON.stringify(dataJson.userData)",JSON.stringify(dataJson.userData))
         if(dataJson.userData!=undefined && dataJson.accessToken!=undefined)  {
-          window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
-          window.localStorage.setItem(authConfig.storageAccessKeyName, dataJson.accessKey)
-          const returnUrl = router.query.returnUrl
+          window.localStorage.setItem(defaultConfig.storageTokenKeyName, dataJson.accessToken)
+          window.localStorage.setItem(defaultConfig.storageAccessKeyName, dataJson.accessKey)
           setUser({ ...dataJson.userData })
           true ? window.localStorage.setItem('userData', JSON.stringify(dataJson.userData)) : null
           true ? window.localStorage.setItem('GO_SYSTEM', JSON.stringify(dataJson.GO_SYSTEM)) : null
-          const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-          router.replace(redirectURL as string)
+          handleGoIndex()
+
+          //const returnUrl = router.query.returnUrl
+          //const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+          //router.replace(redirectURL as string)
         }
         else {
           setUser(null)
           window.localStorage.removeItem('userData')
           window.localStorage.removeItem('GO_SYSTEM')
-          window.localStorage.removeItem(authConfig.storageTokenKeyName)
+          window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
           if (errorCallback) errorCallback({})
         }
       })
@@ -160,8 +155,8 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   const handleRefreshToken = () => {
-    const token = window.localStorage.getItem(authConfig.storageTokenKeyName)
-    if(window && token)  {
+    const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
+    if(window && token && authConfig)  {
       axios
         .post(authConfig.refreshEndpoint, {}, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
         .then(async (response: any) => {
@@ -169,13 +164,13 @@ const AuthProvider = ({ children }: Props) => {
           let dataJson: any = null
           const data = response.data
           if(data && data.isEncrypted == "1" && data.data)  {
-              const AccessKey = window.localStorage.getItem(authConfig.storageAccessKeyName)!
+              const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
               const i = data.data.slice(0, 32);
               const t = data.data.slice(-32);
               const e = data.data.slice(32, -32);
               const k = AccessKey;
               const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
-              try{
+              try {
                   dataJson = JSON.parse(DecryptDataAES256GCMData)
               }
               catch(Error: any) {
@@ -190,16 +185,15 @@ const AuthProvider = ({ children }: Props) => {
           }
 
           if(dataJson.status == 'ok' && dataJson.accessToken) {
+            window.localStorage.setItem(defaultConfig.storageTokenKeyName, dataJson.accessToken)
             setUser({ ...dataJson.userData })
-            window.localStorage.setItem(authConfig.storageTokenKeyName, dataJson.accessToken)
-            window.localStorage.setItem(authConfig.storageAccessKeyName, dataJson.accessKey)
           }
-          else {
-            console.log("用户当前身份登录状态失效...");
-            window.localStorage.removeItem(authConfig.storageTokenKeyName)
-            window.localStorage.removeItem('GO_SYSTEM')
-            window.localStorage.removeItem('userData')
+
+          if(dataJson.status == 'ok' && dataJson.accessKey) {
+            window.localStorage.setItem(defaultConfig.storageAccessKeyName, dataJson.accessKey)
+            setUser({ ...dataJson.userData })
           }
+
         })
     }
   }
@@ -208,8 +202,7 @@ const AuthProvider = ({ children }: Props) => {
     setUser(null)
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem('GO_SYSTEM')
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    router.push('/login')
+    window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
   }
 
   const handleRegister = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
