@@ -325,7 +325,7 @@ function CheckCsrsToken() {
 			break;
 		case 'edit_default':
 		case 'edit_default_data':
-      if(!in_array($SettingMap['Except_CSRF_Actions'], ['edit_view','add_edit_view','add_edit_view_delete']))   {
+      if(!in_array($SettingMap['Except_CSRF_Actions'], ['edit_default','edit_view','add_edit_view','add_edit_view_delete']))   {
         $DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
         if( (
             !is_array($Actions_In_List_Row_Array) || !in_array('Edit',$Actions_In_List_Row_Array)
