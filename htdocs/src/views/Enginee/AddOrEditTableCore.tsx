@@ -2456,23 +2456,27 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                     setDefaultValuesNew(defaultValuesNewTemp)
                                                                                     console.log("loopModelDataStorageTemp0", e.target.value)
                                                                                     if((fieldIdValue + 1) < singleModelCounter) {
-                                                                                        const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
-                                                                                        loopModelDataStorageTemp[FieldArray.name] = e.target.value
-                                                                                        setLoopModelDataStorage(loopModelDataStorageTemp)
-                                                                                        setFieldIdValue(fieldIdValue + 1)
-
-                                                                                        //console.log("loopModelDataStorageTemp1", loopModelDataStorageTemp)
+                                                                                      const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
+                                                                                      loopModelDataStorageTemp[FieldArray.name] = e.target.value
+                                                                                      setLoopModelDataStorage(loopModelDataStorageTemp)
+                                                                                      setTimeout(function() {
+                                                                                        setFieldIdValue(fieldIdValue + 1);
+                                                                                      }, 200);
+                                                                                      console.log("loopModelDataStorageTemp1", loopModelDataStorageTemp)
                                                                                     }
                                                                                 }}
                                                                                 onClick={(e: any) => {
-                                                                                    if((fieldIdValue + 1) < singleModelCounter && e.target && e.target.innerText) {
-                                                                                        const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
-                                                                                        loopModelDataStorageTemp[FieldArray.name] = e.target.innerText
-                                                                                        setLoopModelDataStorage(loopModelDataStorageTemp)
-                                                                                        setFieldIdValue(fieldIdValue + 1)
 
-                                                                                        //console.log("loopModelDataStorageTemp2", loopModelDataStorageTemp)
-                                                                                    }
+                                                                                  //当点击事件不在文字本身,而是同一行右侧的空白区域点击时,会触发此事件.
+                                                                                  if((fieldIdValue + 1) < singleModelCounter && e.target && e.target.innerText) {
+                                                                                      const loopModelDataStorageTemp:{[key:string]:any} = { ...loopModelDataStorage }
+                                                                                      loopModelDataStorageTemp[FieldArray.name] = e.target.innerText
+                                                                                      setLoopModelDataStorage(loopModelDataStorageTemp)
+                                                                                      setTimeout(function() {
+                                                                                        setFieldIdValue(fieldIdValue + 1);
+                                                                                      }, 200);
+                                                                                      console.log("loopModelDataStorageTemp2", loopModelDataStorageTemp)
+                                                                                  }
                                                                                 }}
                                                                             >
                                                                                 {FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
@@ -4868,11 +4872,28 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                         {singleModelCounter > 0 && FieldShowStatus == 1 && (
                             <Grid item xs={12} sm={12} container sx={{ pt: 4, ml: 1 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <Typography variant='body2' sx={{ mb: 0 }}>
-                                        Total: {fieldIdValue+1} / {singleModelCounter}
-                                    </Typography>
-                                </Box>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                  <Typography variant='body2' sx={{ mb: 0 }}>
+                                    {addEditStructInfo2.processtext ? addEditStructInfo2.processtext : 'Total'}: {fieldIdValue+1} / {singleModelCounter}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant='body2' sx={{ mb: 0 }}>
+                                    {addEditStructInfo2.titlememo ? addEditStructInfo2.titlememo : ''}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant='body2' sx={{ mb: 0 }}>
+                                    {addEditStructInfo2.titlememo1 ? addEditStructInfo2.titlememo1 : ''}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant='body2' sx={{ mb: 0 }}>
+                                    {addEditStructInfo2.titlememo2 ? addEditStructInfo2.titlememo2 : ''}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
                             </Grid>
                         )}
 

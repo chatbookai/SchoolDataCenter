@@ -2776,11 +2776,22 @@ $RS['init_default']['ForbiddenViewRow']     = array_keys($ForbiddenViewRow);
 $RS['init_default']['ForbiddenEditRow']     = array_keys($ForbiddenEditRow);
 $RS['init_default']['ForbiddenDeleteRow']   = array_keys($ForbiddenDeleteRow);
 
-if($SettingMap['Init_Action_Value']=="") {
-    $SettingMap['Init_Action_Value'] = "init_default";
+if($SettingMap['Init_Action_Value'] == "") {
+    $RS['init_action']['action']      = "init_default";
+    $RS['init_action']['actionValue'] = "";
 }
-
-$RS['init_action']['action']                        = $SettingMap['Init_Action_Value'];
+else if($SettingMap['Init_Action_Value'] == "SoulChatList")  {
+  $RS['init_action']['action']        = "init_default";
+  $RS['init_action']['actionValue']   = "SoulChatList";
+}
+else if($SettingMap['Init_Action_Value'] == "AiChatList")  {
+  $RS['init_action']['action']        = "init_default";
+  $RS['init_action']['actionValue']   = "AiChatList";
+}
+else {
+  $RS['init_action']['actionValue']   = "";
+  $RS['init_action']['action']        = $SettingMap['Init_Action_Value'];
+}
 $RS['init_action']['id']                            = EncryptID($GetAllIDList[0]); //USE THIS VALUE IN EDIT_DEFAULT SINGLE RECORD
 $RS['init_action']['IsGetStructureFromEditDefault'] = 0;
 

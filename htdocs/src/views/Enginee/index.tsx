@@ -65,6 +65,7 @@ import AddOrEditTable from './AddOrEditTable'
 import ViewTable from './ViewTable'
 import ImagesPreview from './ImagesPreview'
 import IndexBottomFlowNode from './IndexBottomFlowNode'
+import AppSoulChatList from './AppSoulChatList'
 import { RootState, AppDispatch } from 'src/store/index'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
@@ -1121,9 +1122,14 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
     }
   }
 
+  const [show, setShow] = useState<boolean>(false)
+
+  console.log("store.init_action.actionValue", store.init_action.actionValue)
+  console.log("addEditActionName111", addEditActionName)
+
   return (
     <Grid container spacing={0}>
-      {store.init_action.action == 'init_default' && isMobileData == false ?
+      {store.init_action.action == 'init_default' && isMobileData == false && store.init_action.actionValue == "" ?
       <Grid item xs={12}>
         <Card>
           {store.init_default.returnButton && store.init_default.returnButton.status ?
@@ -1244,7 +1250,8 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
         }
       </Grid>
       : '' }
-      {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && (
+
+      {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "" && (
         <Grid item xs={12}>
           <Card sx={{ mb: 3}}>
             {store.init_default.returnButton && store.init_default.returnButton.status ?
@@ -1522,6 +1529,13 @@ const UserList = ({ backEndApi, externalId, handleActionInMobileApp, actionInMob
             </Grid>
           </Fragment>
         </Grid>
+      )}
+
+      {store.init_action.action == 'init_default' && isMobileData == false && store.init_action.actionValue == "SoulChatList" && (
+        <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData}/>
+      )}
+      {addEditActionName == 'init_default' && isMobileData == true && store.init_action.actionValue == "SoulChatList" && (
+        <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData}/>
       )}
 
       {isMobileData == true && isFirstLoadingTip && (
