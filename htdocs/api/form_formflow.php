@@ -515,6 +515,9 @@ $Except_CSRF_Actions[] = ['value'=>"None", 'label'=>__("None")];
 $Except_CSRF_Actions[] = ['value'=>"add_default", 'label'=>__("add_default")];
 $Except_CSRF_Actions[] = ['value'=>"edit_default", 'label'=>__("edit_default")];
 $Except_CSRF_Actions[] = ['value'=>"view_default", 'label'=>__("view_default")];
+$Except_CSRF_Actions[] = ['value'=>"edit_view", 'label'=>__("edit_view")];
+$Except_CSRF_Actions[] = ['value'=>"add_edit_view", 'label'=>__("add_edit_view")];
+$Except_CSRF_Actions[] = ['value'=>"add_edit_view_delete", 'label'=>__("add_edit_view_delete")];
 $Except_CSRF_Actions[] = ['value'=>"edit_default_configsetting", 'label'=>__("edit_default_configsetting")];
 $edit_default_2['Page_Sort'][] = ['name' => "Except_CSRF_Actions", 'show'=>true, 'type'=>'select', 'options'=>$Except_CSRF_Actions, 'label' => __("Except_CSRF_Actions"), 'value' => 'None', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 
@@ -1453,6 +1456,7 @@ $RS['init_default']['columnsactions']   = $columnsactions;
 $columnName = "FlowName";        $searchField[] = ['label' => __($columnName), 'value' => $columnName];
 
 $RS['init_action']['action']            = "init_default";
+$RS['init_action']['actionValue']       = "";
 $RS['init_action']['id']                = 999; //NOT USE THIS VALUE IN FRONT END
 
 $RS['init_default']['searchFieldArray'] = $searchField;

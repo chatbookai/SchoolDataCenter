@@ -22,32 +22,13 @@ else {
 }
 $rs         = $db->Execute($sql);
 $FromInfo   = $rs->fields;
-$FormId  	= $FromInfo['FormId'];
-$FlowId  	= $FromInfo['id'];
+$FormId  	  = $FromInfo['FormId'];
+$FlowId  	  = $FromInfo['id'];
 $FlowName  	= $FromInfo['FlowName'];
-$Step  		= $FromInfo['Step'];
+$Step  		  = $FromInfo['Step'];
 $Setting  	= $FromInfo['Setting'];
-$FaceTo  	= $FromInfo['FaceTo'];
+$FaceTo  	  = $FromInfo['FaceTo'];
 
-//Except CSRS
-global $ExceptCsrf;
-$ExceptCsrf[] = "/api/apps/apps_19.php";
-$ExceptCsrf[] = "/api/apps/apps_373.php";
-$ExceptCsrf[] = "/api/apps/apps_377.php";
-$ExceptCsrf[] = "/api/apps/apps_378.php";
-
-if($FaceTo=="AuthUser")         {
-    //Check User Login or Not
-    CheckAuthUserLoginStatus();
-    CheckAuthUserRoleHaveMenu($FlowId);
-    CheckCsrsToken();
-}
-if($FaceTo=="Student")         {
-    //Check User Login or Not
-    CheckAuthUserLoginStatus();
-    //CheckAuthUserRoleHaveMenu($FlowId);
-    CheckCsrsToken();
-}
 //print "TIME EXCEUTE 1:".(time()-$TIME_BEGIN)."<BR>\n";
 $rowHeight = 38;
 $sqlList = [];
@@ -58,6 +39,20 @@ $Actions_In_List_Row_Array = explode(',',$SettingMap['Actions_In_List_Row']);
 $Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header']);
 //print_R($SettingMap);exit;
 //print "TIME EXCEUTE 2:".(time()-$TIME_BEGIN)."<BR>\n";
+
+
+if($FaceTo=="AuthUser")         {
+  //Check User Login or Not
+  CheckAuthUserLoginStatus();
+  CheckAuthUserRoleHaveMenu($FlowId);
+  CheckCsrsToken();
+}
+if($FaceTo=="Student")         {
+  //Check User Login or Not
+  CheckAuthUserLoginStatus();
+  //CheckAuthUserRoleHaveMenu($FlowId);
+  CheckCsrsToken();
+}
 
 //Get Table Infor
 $sql        = "select * from form_formname where id='$FormId'";
@@ -2794,6 +2789,11 @@ else {
 }
 $RS['init_action']['id']                            = EncryptID($GetAllIDList[0]); //USE THIS VALUE IN EDIT_DEFAULT SINGLE RECORD
 $RS['init_action']['IsGetStructureFromEditDefault'] = 0;
+
+$currentUrlAccessFileName                           = basename($_SERVER['PHP_SELF']);
+$currentUrlAccessFileName                           = str_replace("apps_", "", $currentUrlAccessFileName);
+$currentUrlAccessFileName                           = str_replace(".php", "", $currentUrlAccessFileName);
+$RS['init_action']['AppId']                         = EncryptID(intval($currentUrlAccessFileName));
 
 $CSRF_DATA                          = [];
 $CSRF_DATA['GetAllIDList']          = $GetAllIDList;

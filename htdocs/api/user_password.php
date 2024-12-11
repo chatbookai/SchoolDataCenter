@@ -156,6 +156,7 @@ $RS['init_default']['columns']          = [];
 $RS['init_default']['columnsactions']   = [];
 
 $RS['init_action']['action']        = "edit_default";
+$RS['init_action']['actionValue']   = "";
 $RS['init_action']['id']            = 'USER_ID'; //NOT USE THIS VALUE IN FRONT END
 
 $RS['init_default']['data'] = [];

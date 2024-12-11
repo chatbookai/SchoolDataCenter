@@ -38,7 +38,8 @@ const AppSoulChatList = (props: any) => {
     setEditViewCounter,
     setAddEditActionName,
     setAddEditActionOpen,
-    isMobileData
+    isMobileData,
+    setCSRF_TOKEN
   } = props
 
   const renderContent = () => {
@@ -98,6 +99,7 @@ const AppSoulChatList = (props: any) => {
                               setAddEditActionId(item.id)
                               setViewActionOpen(true)
                               setEditViewCounter(0)
+                              setCSRF_TOKEN(store.init_default.CSRF_TOKEN)
                               setAddEditActionName('view_default')
                             }}
                           >
@@ -110,6 +112,7 @@ const AppSoulChatList = (props: any) => {
                               setAddEditActionId(item.id)
                               setAddEditActionOpen(true)
                               setEditViewCounter(0)
+                              setCSRF_TOKEN(store.init_default.CSRF_TOKEN)
                               setAddEditActionName('edit_default')
                             }}
                             >

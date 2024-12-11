@@ -14,7 +14,7 @@ const ModelMiddleSchoolSoulAssessmentApp = () => {
 
   const router = useRouter()
   const { id } = router.query
-  const idList = String(id).split('____')
+  const idList = String(atob(String(id))).split('____')
   if(idList[1] == '378' || idList[1] == '380' || idList[1] == '384' || idList[1] == '385') {
     const backEndApi = 'apps/apps_' + idList[1] + '.php'
 

@@ -647,6 +647,7 @@ $RS['init_default']['columns']          = $init_default_columns;
 $RS['init_default']['columnsactions']   = $columnsactions;
 
 $RS['init_action']['action']        = "init_default";
+$RS['init_action']['actionValue']   = "";
 $RS['init_action']['id']            = 999; //NOT USE THIS VALUE IN FRONT END
 
 $RS['init_default']['searchFieldArray'] = $searchField;

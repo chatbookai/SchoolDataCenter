@@ -60,7 +60,6 @@ const MUITableCell = styled(TableCell)<TableCellBaseProps>(({ theme }) => ({
   paddingBottom: `${theme.spacing(1)} !important`
 }))
 
-
 const ModelMiddleSchoolSoulAssessment = ({ authConfig, dataOriginal, modelOriginal, id, backEndApi, viewPageShareStatus, handSetViewPageShareStatus }: Props) => {
   // ** Hook
   const theme = useTheme()
@@ -359,7 +358,7 @@ const ModelMiddleSchoolSoulAssessment = ({ authConfig, dataOriginal, modelOrigin
 
   console.log("viewPageShareStatus", viewPageShareStatus)
 
-  if (data) {
+  if (data && data['单位名称']) {
     return (
       <Fragment>
         {viewPageShareStatus == true && (
@@ -686,7 +685,7 @@ const ModelMiddleSchoolSoulAssessment = ({ authConfig, dataOriginal, modelOrigin
                     color='primary'
                     size="small"
                     variant='outlined'
-                    href={`/print/middleschool/${id}____${backEndApi.replace('.php', '').replace('apps/apps_', '')}`}
+                    href={`/print/middleschool/${btoa(`${id}____${backEndApi.replace('.php', '').replace('apps/apps_', '')}`)}`}
                   >
                     {'打印'}
                   </Button>

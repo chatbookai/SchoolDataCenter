@@ -126,15 +126,6 @@ const ViewTableCore = (props: ViewTableType) => {
         .then(res => {
           let dataJson: any = null
           const data = res.data
-          if(data && data.model) {
-            setModel(data.model)
-            if(data.model == "测评模式")  {
-              handleSetRightButtonIconOriginal('material-symbols:ios-share')
-            }
-            else {
-              handleSetRightButtonIconOriginal('')
-            }
-          }
           if(data && data.isEncrypted == "1" && data.data)  {
               const i = data.data.slice(0, 32);
               const t = data.data.slice(-32);
@@ -167,6 +158,15 @@ const ViewTableCore = (props: ViewTableType) => {
             }
             if(dataJson.print && isMobileData==false) {
               setPrint(dataJson.print)
+            }
+          }
+          if(data && data.model) {
+            setModel(data.model)
+            if(data.model == "测评模式")  {
+              handleSetRightButtonIconOriginal('material-symbols:ios-share')
+            }
+            else {
+              handleSetRightButtonIconOriginal('')
             }
           }
           setIsLoading(false)

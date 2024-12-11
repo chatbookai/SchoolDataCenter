@@ -279,12 +279,12 @@ function CheckAuthUserRoleHaveMenu($FlowId, $MenuPath='')  {
 	global $SystemMark;
 	if($HavePermisstion==0 && $SystemMark=="Individual")    {
 		$RS['status'] 		= "ERROR";
-        $RS['error'] 		= "Not Have Permisstion";
+    $RS['error'] 		= "Not Have Permisstion";
 		$RS['status'] 		= "ERROR";
 		$RS['RoleArray'] 	= $RoleArray;
 		$RS['MenuTwoId'] 	= $MenuTwoId;
 		$RS['FlowId'] 		= $FlowId;
-        print_r(json_encode($RS));
+    print_r(json_encode($RS));
 		exit;
 	}
 }
@@ -295,81 +295,87 @@ function CheckCsrsToken() {
 	$HTTP_CSRF_TOKEN    = $accessTokenArray[1];
 	$HTTP_CSRF_TOKEN_DATA = DecryptID($HTTP_CSRF_TOKEN);
 	$HTTP_CSRF_TOKEN_DATA = unserialize($HTTP_CSRF_TOKEN_DATA);
-	//print_R($HTTP_CSRF_TOKEN_DATA);
-	global $ExceptCsrf;
-	if(in_array($_SERVER['PHP_SELF'],$ExceptCsrf)) {
-		return;
-	}
+
+  global $SettingMap;
+  $Actions_In_List_Row_Array    = explode(',',$SettingMap['Actions_In_List_Row']);
+  $Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header']);
+
 	switch($_GET['action'])  {
 		case 'view_default':
-			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			if(!is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('View',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])) {
-				$RS = [];
-				$RS['status'] = "ERROR";
-				$RS['msg'] = __("View not permisstion");
-				print json_encode($RS);
-				exit;
-			}
-			$id = DecryptID($_GET['id']);
-			if(!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList'])) {
-				$RS = [];
-				$RS['status'] = "ERROR";
-				$RS['id'] = $id;
-				$RS['msg'] = __("ID is invalid");
-				$RS['GetAllIDList'] 	= $HTTP_CSRF_TOKEN_DATA['GetAllIDList'];
-				print json_encode($RS);
-				exit;
-			}
+      if(!in_array($SettingMap['Except_CSRF_Actions'], ['view_default','edit_view','add_edit_view','add_edit_view_delete']))   {
+        $DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
+        if(!is_array($Actions_In_List_Row_Array) || !in_array('View',$Actions_In_List_Row_Array)) {
+          $RS           = [];
+          $RS['status'] = "ERROR";
+          $RS['msg']    = __("View not permisstion");
+          print json_encode($RS);
+          exit;
+        }
+        $id = DecryptID($_GET['id']);
+        if(!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList'])) {
+          $RS           = [];
+          $RS['status'] = "ERROR";
+          $RS['id']     = $id;
+          $RS['msg']    = __("ID is invalid");
+          $RS['GetAllIDList'] 	= $HTTP_CSRF_TOKEN_DATA['GetAllIDList'];
+          print json_encode($RS);
+          exit;
+        }
+      }
 			break;
 		case 'edit_default':
 		case 'edit_default_data':
-			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			if( (
-          !is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('Edit',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])
-          )
-          ) {
-				$RS = [];
-				$RS['status'] = "ERROR";
-				$RS['msg'] = __("Edit not permisstion");
-				print json_encode($RS);
-				exit;
-			}
-			$id = DecryptID($_GET['id']);
-			if(
-          $id>0
-          && (!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList']))
-          ) {
-				$RS = [];
-				$RS['status'] 			= "ERROR";
-				$RS['msg'] 				= __("ID is invalid");
-				$RS['id'] 				= $id;
-				$RS['GetAllIDList'] 	= $HTTP_CSRF_TOKEN_DATA['GetAllIDList'];
-				print json_encode($RS);
-				exit;
-			}
+      if(!in_array($SettingMap['Except_CSRF_Actions'], ['edit_view','add_edit_view','add_edit_view_delete']))   {
+        $DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
+        if( (
+            !is_array($Actions_In_List_Row_Array) || !in_array('Edit',$Actions_In_List_Row_Array)
+            )
+            ) {
+          $RS = [];
+          $RS['status'] = "ERROR";
+          $RS['msg'] = __("Edit not permisstion");
+          print json_encode($RS);
+          exit;
+        }
+        $id = DecryptID($_GET['id']);
+        if(
+            $id>0
+            && (!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList']))
+            ) {
+          $RS = [];
+          $RS['status'] 			= "ERROR";
+          $RS['msg'] 				= __("ID is invalid");
+          $RS['id'] 				= $id;
+          $RS['GetAllIDList'] 	= $HTTP_CSRF_TOKEN_DATA['GetAllIDList'];
+          print json_encode($RS);
+          exit;
+        }
+      }
 			break;
 		case 'delete_array':
-			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-			if(!is_array($HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array']) || !in_array('Delete',$HTTP_CSRF_TOKEN_DATA['Actions_In_List_Row_Array'])) {
-				$RS = [];
-				$RS['status'] = "ERROR";
-				$RS['msg'] = __("Delete not permisstion");
-				print json_encode($RS);
-				exit;
-			}
-			$selectedRowsArray = explode(',',$_POST['selectedRows']);
-			foreach($selectedRowsArray as $Item)  {
-				$id = DecryptID($Item);
-				if(!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList'])) {
-					$RS = [];
-					$RS['status'] = "ERROR";
-					$RS['msg'] = __("ID is invalid");
-					print json_encode($RS);
-					exit;
-				}
-				//print_R($id);
-			}
-			//print_R($_POST);
+      if(!in_array($SettingMap['Except_CSRF_Actions'], ['add_edit_view_delete']))   {
+        $DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
+        if(!is_array($Actions_In_List_Row_Array) || !in_array('Delete',$Actions_In_List_Row_Array)) {
+          $RS = [];
+          $RS['status'] = "ERROR";
+          $RS['msg'] = __("Delete not permisstion");
+          print json_encode($RS);
+          exit;
+        }
+        $selectedRowsArray = explode(',',$_POST['selectedRows']);
+        foreach($selectedRowsArray as $Item)  {
+          $id = DecryptID($Item);
+          if(!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList'])) {
+            $RS = [];
+            $RS['status'] = "ERROR";
+            $RS['msg'] = __("ID is invalid");
+            print json_encode($RS);
+            exit;
+          }
+          //print_R($id);
+        }
+        //print_R($_POST);
+      }
 			break;
 		case 'updateone':
 			$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];

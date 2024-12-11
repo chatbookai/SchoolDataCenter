@@ -209,6 +209,7 @@ $columnName = "ADD";        $searchField[] = ['label' => __($columnName), 'value
 $columnName = "EDIT";       $searchField[] = ['label' => __($columnName), 'value' => $columnName];
 
 $RS['init_action']['action']        = "init_default";
+$RS['init_action']['actionValue']   = "";
 $RS['init_action']['id']            = 999; //NOT USE THIS VALUE IN FRONT END
 
 $RS['init_default']['searchFieldArray'] = $searchField;

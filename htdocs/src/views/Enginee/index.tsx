@@ -1530,8 +1530,12 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
         </Grid>
       )}
 
-      {addEditActionName == 'init_default' && isFirstLoadingTip==false && store.init_action.actionValue == "SoulChatList" && (
-        <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData}/>
+      {store.init_action.action == 'init_default' && isMobileData == false && isFirstLoadingTip==false && store.init_action.actionValue == "SoulChatList" && (
+        <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData} setCSRF_TOKEN={setCSRF_TOKEN}/>
+      )}
+
+      {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "SoulChatList" && (
+        <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData} setCSRF_TOKEN={setCSRF_TOKEN}/>
       )}
 
       {isMobileData == true && isFirstLoadingTip && (
@@ -1554,6 +1558,5 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
     </Grid >
   )
 }
-
 
 export default UserList

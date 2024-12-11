@@ -409,6 +409,7 @@ foreach($AllFieldsFromTable as $Item)  {
 }
 
 $RS['init_action']['action']        = "init_default";
+$RS['init_action']['actionValue']   = "";
 $RS['init_action']['id']            = 999; //NOT USE THIS VALUE IN FRONT END
 
 $searchFieldName = ForSqlInjection($_REQUEST['searchFieldName']);
