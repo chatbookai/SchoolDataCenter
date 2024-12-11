@@ -13,13 +13,14 @@ import { ReactNode } from 'react'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 import UserList from "src/views/Enginee/index"
+import { authConfig } from 'src/configs/auth'
 
 const AppChat = () => {
     // ** States
     const backEndApi = "apps/apps_342.php"
-    
+
   return (
-    <UserList backEndApi={backEndApi} externalId=''/>
+    <UserList authConfig={authConfig} backEndApi={backEndApi} externalId=''/>
     )
 }
 

@@ -7,13 +7,14 @@
 * License: GPL V3 or Commercial license
 */
 import UserList from "src/views/Enginee/index"
+import { authConfig } from 'src/configs/auth'
 
 const AppChat = () => {
     // ** States
     const backEndApi = "apps/apps_259.php"
-    
+
   return (
-    <UserList backEndApi={backEndApi} externalId=''/>
+    <UserList authConfig={authConfig} backEndApi={backEndApi} externalId=''/>
     )
 }
 

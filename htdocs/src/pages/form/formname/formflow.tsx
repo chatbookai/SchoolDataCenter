@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { authConfig } from 'src/configs/auth'
 
 // ** Hooks
 import UserList from 'src/views/Enginee/index'
@@ -11,12 +12,12 @@ const AppChat = () => {
     const FormId = String(_GET['FormId'])
     if (FormId != undefined) {
         return (
-            <UserList backEndApi={backEndApi} externalId={FormId}/>
+            <UserList authConfig={authConfig} backEndApi={backEndApi} externalId={FormId}/>
         )
     }
     else {
         return (
-            <UserList backEndApi={backEndApi} externalId='0'/>
+            <UserList authConfig={authConfig} backEndApi={backEndApi} externalId='0'/>
         )
     }
 }

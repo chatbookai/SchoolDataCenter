@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 
 // ** Hooks
 import UserList from 'src/views/Enginee/index'
+import { authConfig } from 'src/configs/auth'
 
 const AppChat = () => {
   // ** States
@@ -12,12 +13,12 @@ const AppChat = () => {
   const FlowId = String(_GET['FlowId'])
   if (FlowId != undefined) {
     return (
-      <UserList backEndApi={backEndApi} externalId={FlowId}/>
+      <UserList authConfig={authConfig} backEndApi={backEndApi} externalId={FlowId}/>
     )
   }
   else {
     return (
-      <UserList backEndApi={backEndApi} externalId='0'/>
+      <UserList authConfig={authConfig} backEndApi={backEndApi} externalId='0'/>
     )
   }
 

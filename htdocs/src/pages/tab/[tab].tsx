@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import TabHeader from './TabHeader'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { authConfig, defaultConfig } from 'src/configs/auth'
 import axios from 'axios'
 
 const TabHeaderTab = () => {
@@ -16,7 +16,7 @@ const TabHeaderTab = () => {
   const [tabData, setTabData] = useState<{[key:string]:any}>({})
 
   useEffect(() => {
-    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+    const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
     const backEndApi = 'tab_all_data.php';
     axios.get(authConfig.backEndApiHost + backEndApi, {
       headers: { Authorization: storedToken },
@@ -26,9 +26,9 @@ const TabHeaderTab = () => {
         setTabData(res.data)
       }
     })
-    
-  }, []) 
-  
+
+  }, [])
+
   return (
     <Fragment>
       { tabData && Object.keys(tabData).length>0 && tab && tab!="undefined" ? <TabHeader tab={tab} allTabs={tabData} /> : ''}

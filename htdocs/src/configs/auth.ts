@@ -23,7 +23,9 @@ export const authConfig = {
     refreshEndpoint: APP_URL + 'jwt.php?action=refresh',
     registerEndpoint: APP_URL + 'jwt/register',
     backEndApiHost: APP_URL,
-    backEndApiAiBaseUrl: backEndApiAiBaseUrl
+    backEndApiAiBaseUrl: backEndApiAiBaseUrl,
+    indexImageUrl: '/images/school/' + AppMarkId + '/index.jpg',
+    logoUrl: '/images/school/' + AppMarkId + '/logo.png'
 }
 
 export const defaultConfig = {

@@ -9,14 +9,15 @@ import Spinner from 'src/@core/components/spinner'
 
 // ** Hook Imports
 import { useAuth } from 'src/hooks/useAuth'
-import authConfig from 'src/configs/auth'
+
+const indexDashboardPath = "/dashboards/analytics"
 
 /**
  *  Set Home URL based on User Roles
  */
 export const getHomeRoute = (role: string) => {
   if (role === 'client') return '/acl'
-  else return authConfig.indexDashboardPath
+  else return indexDashboardPath
 }
 
 const Home = () => {

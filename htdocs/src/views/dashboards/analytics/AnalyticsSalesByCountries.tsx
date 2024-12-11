@@ -9,7 +9,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { authConfig } from 'src/configs/auth'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
@@ -33,7 +33,7 @@ interface DataType {
 }
 
 const AnalyticsSalesByCountries = (props: DataType) => {
-  
+
   const { data, handleOptionsMenuItemClick } = props
   const [selectedItem, setSelectedItem] = useState<string>("")
 

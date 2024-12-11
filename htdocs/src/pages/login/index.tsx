@@ -44,7 +44,7 @@ import themeConfig from 'src/configs/themeConfig'
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
-import authConfig from 'src/configs/auth'
+import { authConfig } from 'src/configs/auth'
 
 const LinkStyled = styled(Link)(({ theme }) => ({
   fontSize: '0.875rem',

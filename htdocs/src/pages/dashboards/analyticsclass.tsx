@@ -28,7 +28,7 @@ import AnalyticsPerformance from 'src/views/dashboards/analytics/AnalyticsPerfor
 import axios from 'axios'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import { authConfig, defaultConfig } from 'src/configs/auth'
 import { useAuth } from 'src/hooks/useAuth'
 
 
@@ -72,7 +72,7 @@ const AnalyticsDashboard = () => {
     }
   }, [className, auth, optionsMenuItem])
 
-  const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+  const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
 
   //console.log("dashboardData",dashboardData)
 
