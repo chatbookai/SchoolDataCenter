@@ -510,12 +510,23 @@ $edit_default_2['Page_Sort'][] = ['name' => "Default_Order_Method_By_Desc_Three"
 
 $edit_default_2['Page_Sort'][] = ['name' => "Debug_Sql_Show_On_Api", 'show'=>true, 'type'=>'select', 'options'=>$YesOrNotOptions, 'label' => __("Debug_Sql_Show_On_Api"), 'value' => 'No', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 
+$Except_CSRF_Actions = [];
+$Except_CSRF_Actions[] = ['value'=>"None", 'label'=>__("None")];
+$Except_CSRF_Actions[] = ['value'=>"add_default", 'label'=>__("add_default")];
+$Except_CSRF_Actions[] = ['value'=>"edit_default", 'label'=>__("edit_default")];
+$Except_CSRF_Actions[] = ['value'=>"view_default", 'label'=>__("view_default")];
+$Except_CSRF_Actions[] = ['value'=>"edit_default_configsetting", 'label'=>__("edit_default_configsetting")];
+$edit_default_2['Page_Sort'][] = ['name' => "Except_CSRF_Actions", 'show'=>true, 'type'=>'select', 'options'=>$Except_CSRF_Actions, 'label' => __("Except_CSRF_Actions"), 'value' => 'None', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+
 $Init_Action_Value = [];
 $Init_Action_Value[] = ['value'=>"init_default", 'label'=>__("init_default")];
 $Init_Action_Value[] = ['value'=>"add_default", 'label'=>__("add_default")];
 $Init_Action_Value[] = ['value'=>"edit_default", 'label'=>__("edit_default")];
 $Init_Action_Value[] = ['value'=>"view_default", 'label'=>__("view_default")];
 $Init_Action_Value[] = ['value'=>"edit_default_configsetting", 'label'=>__("edit_default_configsetting")];
+$Init_Action_Value[] = ['value'=>"AiChatList", 'label'=>__("AiChatList")];
+$Init_Action_Value[] = ['value'=>"SoulChatList", 'label'=>__("SoulChatList")];
+
 $edit_default_2['Init_Action'][] = ['name' => "Init_Action_Value", 'show'=>true, 'type'=>'select', 'options'=>$Init_Action_Value, 'label' => __("Init_Action_Value"), 'value' => 'init_default', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_2['Init_Action'][] = ['name' => "Init_Action_Field", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Init_Action_Field"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_2['Init_Action'][] = ['name' => "Init_Action_FilterValue", 'show'=>true, 'type'=>"input", 'label' => __("Init_Action_FilterValue"), 'value' => __(""), 'placeholder' => "", 'helptext' => __("Advanced operation, please do not operate if you do not understand"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];

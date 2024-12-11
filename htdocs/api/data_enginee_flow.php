@@ -32,7 +32,9 @@ $FaceTo  	= $FromInfo['FaceTo'];
 //Except CSRS
 global $ExceptCsrf;
 $ExceptCsrf[] = "/api/apps/apps_19.php";
-$ExceptCsrf[] = "/api/apps/apps_19.php";
+$ExceptCsrf[] = "/api/apps/apps_373.php";
+$ExceptCsrf[] = "/api/apps/apps_377.php";
+$ExceptCsrf[] = "/api/apps/apps_378.php";
 
 if($FaceTo=="AuthUser")         {
     //Check User Login or Not

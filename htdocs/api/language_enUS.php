@@ -725,4 +725,11 @@ $MAP['MobileEndSecondLineLeftColorRule'] 	= 'MobileEndSecondLineLeftColorRule';
 $MAP['MobileEndSecondLineRightColorField'] 	= 'MobileEndSecondLineRightColorField';
 $MAP['MobileEndSecondLineRightColorRule'] 	= 'MobileEndSecondLineRightColorRule';
 
+$MAP['宿舍房间'] 	        = '宿舍房间';
+$MAP['宿舍楼'] 	          = '宿舍楼';
+$MAP['AiChatList'] 	      = 'AiChatList';
+$MAP['SoulChatList'] 	    = 'SoulChatList';
+$MAP['Except_CSRF_Actions'] = 'Except CSRF Actions';
+
+
 ?>

@@ -726,8 +726,13 @@ $MAP['MobileEndSecondLineLeftColorRule'] 	= '左侧颜色规则';
 $MAP['MobileEndSecondLineRightColorField'] 	= '右侧颜色字段';
 $MAP['MobileEndSecondLineRightColorRule'] 	= '右侧颜色规则';
 
-$MAP['宿舍房间'] 	= '宿舍房间';
-$MAP['宿舍楼'] 	    = '宿舍楼';
+$MAP['宿舍房间'] 	        = '宿舍房间';
+$MAP['宿舍楼'] 	          = '宿舍楼';
+$MAP['AiChatList'] 	      = 'AI对话列表';
+$MAP['SoulChatList'] 	    = '心理健康列表';
+$MAP['Except_CSRF_Actions'] = '排除CSRF的页面动作';
+
+
 
 
 ?>
