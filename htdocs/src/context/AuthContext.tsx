@@ -1,6 +1,9 @@
 // ** React Imports
 import { createContext, useEffect, useState, ReactNode } from 'react'
 
+// ** Next Import
+import { useRouter } from 'next/router'
+
 // ** Axios
 import axios from 'axios'
 
@@ -33,6 +36,8 @@ const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+
+  const router = useRouter()
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
@@ -84,10 +89,18 @@ const AuthProvider = ({ children }: Props) => {
             localStorage.removeItem('GO_SYSTEM')
             setUser(null)
             setLoading(false)
+            if (!router.pathname.includes('login')) {
+              router.replace('/login')
+            }
           })
       }
       else {
         setLoading(false)
+        if(storedToken == undefined)  {
+          setTimeout(function() {
+            router.replace('/login')
+          }, 5000);
+        }
       }
     }
 
@@ -96,7 +109,7 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: any, errorCallback?: ErrCallbackType) => {
-    const { Data, handleGoIndex } = params
+    const { Data } = params
 
     axios
       .post(authConfig.loginEndpoint, { Data })
@@ -132,14 +145,12 @@ const AuthProvider = ({ children }: Props) => {
         if(dataJson.userData!=undefined && dataJson.accessToken!=undefined)  {
           window.localStorage.setItem(defaultConfig.storageTokenKeyName, dataJson.accessToken)
           window.localStorage.setItem(defaultConfig.storageAccessKeyName, dataJson.accessKey)
+          const returnUrl = router.query.returnUrl
           setUser({ ...dataJson.userData })
           true ? window.localStorage.setItem('userData', JSON.stringify(dataJson.userData)) : null
           true ? window.localStorage.setItem('GO_SYSTEM', JSON.stringify(dataJson.GO_SYSTEM)) : null
-          handleGoIndex()
-
-          //const returnUrl = router.query.returnUrl
-          //const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-          //router.replace(redirectURL as string)
+          const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+          router.replace(redirectURL as string)
         }
         else {
           setUser(null)
@@ -203,6 +214,7 @@ const AuthProvider = ({ children }: Props) => {
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem('GO_SYSTEM')
     window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
+    router.push('/login')
   }
 
   const handleRegister = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
