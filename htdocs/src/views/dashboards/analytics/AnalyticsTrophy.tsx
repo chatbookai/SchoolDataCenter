@@ -38,7 +38,7 @@ const AnalyticsTrophy = (props: DataType) => {
         <Typography variant='h5' sx={{ my: 3.5, color: 'primary.main' }}>
           {data.TotalScore}
         </Typography>
-        {data.TopRightOptions ? 
+        {data.TopRightOptions ?
           <Autocomplete
             autoSelect
             size="small"

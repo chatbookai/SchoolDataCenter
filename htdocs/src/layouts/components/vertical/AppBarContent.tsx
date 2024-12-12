@@ -11,6 +11,7 @@ import { Settings } from 'src/@core/context/settingsContext'
 // ** Components
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
+import AppDownloadDropdown from 'src/@core/layouts/components/shared-components/AppDownloadDropdown'
 
 interface Props {
   hidden: boolean
@@ -18,6 +19,23 @@ interface Props {
   toggleNavVisibility: () => void
   saveSettings: (values: Settings) => void
 }
+
+const shortcuts: any[] = [
+  {
+    title: 'App Store',
+    url: '/apps/calendar',
+    subtitle: '打开应用链接',
+    image: '/images/qrcode/ios.png',
+    openUrl: 'https://apps.apple.com/cn/app/%E5%8D%95%E7%82%B9%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83/id6737711443'
+  },
+  {
+    title: 'Android Apk',
+    url: '/apps/invoice/list',
+    subtitle: '下载安卓安装包',
+    image: '/images/qrcode/android.png',
+    openUrl: 'https://fdzz.dandian.net/api/download/DandianDataCenter.apk'
+  }
+]
 
 const AppBarContent = (props: Props) => {
   // ** Props
@@ -34,6 +52,7 @@ const AppBarContent = (props: Props) => {
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <ModeToggler settings={settings} saveSettings={saveSettings} />
+        <AppDownloadDropdown settings={settings} shortcuts={shortcuts} />
         <UserDropdown settings={settings} />
       </Box>
     </Box>
