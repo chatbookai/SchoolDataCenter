@@ -23,13 +23,14 @@ const ChatIndex = (props: any) => {
   // ** Hook
   const { t } = useTranslation()
   const auth = useAuth()
-  const { app, authConfig, setHistoryCounter, clearButtonClickEvent } = props
+  const { app, authConfig, setHistoryCounter, setPageModel } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [chatId, setChatId] = useState<number | string>(-1)
   const [chatName, setChatName] = useState<string>("")
   const [stopMsg, setStopMsg] = useState<boolean>(false)
   const [temperature, setTemperature] = useState<number>(Number(app.Temperature) / 10)
+  const [clearButtonClickEvent, setClearButtonClickEvent] = useState<boolean>(false)
 
   const getChatLogList = async function (appId: string, appTemplate: string) {
     const userId = auth?.user?.username
@@ -277,8 +278,8 @@ const ChatIndex = (props: any) => {
 
   return (
     <Box sx={{ width: '100%', height: innerHeight, overflow: 'hidden', display: 'flex' }}>
-      <ChatLog authConfig={authConfig} data={{ ...store?.selectedChat, userContact: store?.userProfile }} chatId={chatId} chatName={chatName} app={app} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} questionGuide={questionGuide} GetTTSFromAppValue={GetTTSFromAppValue}/>
-      <SendMsgForm authConfig={authConfig} store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows} setStopMsg={setStopMsg}/>
+      <ChatLog authConfig={authConfig} data={{ ...store?.selectedChat, userContact: store?.userProfile }} chatId={chatId} chatName={chatName} app={app} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} questionGuide={questionGuide} GetTTSFromAppValue={GetTTSFromAppValue} clearButtonClickEvent={clearButtonClickEvent} setClearButtonClickEvent={setClearButtonClickEvent} setPageModel={setPageModel} />
+      <SendMsgForm authConfig={authConfig} store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows} setStopMsg={setStopMsg} />
     </Box>
   )
 }

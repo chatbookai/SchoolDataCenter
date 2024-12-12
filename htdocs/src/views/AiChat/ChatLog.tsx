@@ -89,7 +89,7 @@ const SystemPromptTemplate = ({text, handleSendMsg}: any) => {
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { authConfig, data, chatName, app, sendButtonDisable, handleDeleteOneChatLogById, sendMsg, store, questionGuide } = props
+  const { authConfig, data, chatName, app, sendButtonDisable, handleDeleteOneChatLogById, sendMsg, store, questionGuide, clearButtonClickEvent, setClearButtonClickEvent, setPageModel } = props
 
   const handleSendMsg = (msg: string) => {
     if (store && store.selectedChat && msg.trim().length) {
@@ -276,7 +276,7 @@ const ChatLog = (props: any) => {
                 color: 'text.primary',
               }}
               >
-                {t('AI Assistant')}
+                {chatName}
             </Typography>
             {sendButtonDisable == true && index == ChatItemMsgList.length - 1  ?
             <Fragment>
@@ -314,6 +314,21 @@ const ChatLog = (props: any) => {
             :
             null
             }
+
+            {index == 0 && (
+              <Box sx={{ marginLeft: 'auto' }}>
+                <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                  setClearButtonClickEvent(true)
+                }}>
+                  <Icon icon='lineicons:trash-3' fontSize='inherit' />
+                </IconButton>
+                <IconButton aria-label='capture screenshot' color='secondary' onClick={()=>{
+                  setPageModel("Main")
+                }}>
+                  <Icon icon='ic:twotone-keyboard-arrow-left' fontSize='inherit' />
+                </IconButton>
+              </Box>
+            )}
 
           </Box>
           }

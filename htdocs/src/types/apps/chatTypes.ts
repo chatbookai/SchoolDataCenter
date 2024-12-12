@@ -1,5 +1,4 @@
 // ** Types
-import { Dispatch } from 'redux'
 import { ThemeColor } from 'src/@core/layouts/types'
 
 export type StatusType = 'busy' | 'away' | 'online' | 'offline'
@@ -42,7 +41,7 @@ export type ChatsObj = {
   userId: number
   chat: ChatType[]
   unseenMsgs: number
-  lastMessage?: ChatType
+  processingMessage?: ChatType
 }
 
 export type ContactType = {
@@ -82,6 +81,7 @@ export type SendMsgParamsType = {
   chat?: ChatsObj
   message: string
   contact?: ChatsArrType
+  template?: string
 }
 
 export type ChatContentType = {
@@ -89,13 +89,16 @@ export type ChatContentType = {
   mdAbove: boolean
   store: ChatStoreType
   sidebarWidth: number
-  dispatch: Dispatch<any>
   statusObj: StatusObjType
   userProfileRightOpen: boolean
   handleLeftSidebarToggle: () => void
   getInitials: (val: string) => string
   sendMsg: (params: SendMsgParamsType) => void
   handleUserProfileRightSidebarToggle: () => void
+  refreshChatCounter: number,
+  sendButtonDisable: boolean,
+  sendButtonText: string,
+  sendInputText: string
 }
 
 export type ChatSidebarLeftType = {
@@ -104,7 +107,6 @@ export type ChatSidebarLeftType = {
   store: ChatStoreType
   sidebarWidth: number
   userStatus: StatusType
-  dispatch: Dispatch<any>
   leftSidebarOpen: boolean
   statusObj: StatusObjType
   userProfileLeftOpen: boolean
@@ -140,8 +142,15 @@ export type UserProfileRightType = {
 
 export type SendMsgComponentType = {
   store: ChatStoreType
-  dispatch: Dispatch<any>
   sendMsg: (params: SendMsgParamsType) => void
+  sendButtonDisable: boolean
+  sendButtonLoading: boolean
+  sendButtonText: string
+  sendInputText: string
+  rowInMsg: number
+  handleSetRowInMsg: (params: number) => void
+  maxRows: number
+  setStopMsg: (params: boolean) => void
 }
 
 export type ChatLogType = {
@@ -157,13 +166,21 @@ export type MessageType = {
   time: string | Date
   message: string
   senderId: number
+  responseTime: string
+  chatlogId: string
+  history: any[]
   feedback: MsgFeedbackType
+  question: string
 }
 
 export type ChatLogChatType = {
   msg: string
   time: string | Date
+  responseTime: string
+  chatlogId: string
+  history: any[]
   feedback: MsgFeedbackType
+  question: string
 }
 
 export type FormattedChatsType = {
@@ -175,3 +192,4 @@ export type MessageGroupType = {
   senderId: number
   messages: ChatLogChatType[]
 }
+
