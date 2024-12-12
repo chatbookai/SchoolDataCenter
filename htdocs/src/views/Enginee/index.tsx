@@ -66,6 +66,8 @@ import ViewTable from './ViewTable'
 import ImagesPreview from './ImagesPreview'
 import IndexBottomFlowNode from './IndexBottomFlowNode'
 import AppSoulChatList from './AppSoulChatList'
+import AllAiApp from '../AiChat/AllAiApp'
+
 import { RootState, AppDispatch } from 'src/store/index'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
@@ -1536,6 +1538,14 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
 
       {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "SoulChatList" && (
         <AppSoulChatList store={store} authConfig={authConfig} loading={isLoading} loadingText={isLoadingTipText} show={show} setShow={setShow} setAddEditActionId={setAddEditActionId} setViewActionOpen={setViewActionOpen} setEditViewCounter={setEditViewCounter} viewActionOpen={viewActionOpen} setAddEditActionName={setAddEditActionName} setAddEditActionOpen={setAddEditActionOpen} isMobileData={isMobileData} setCSRF_TOKEN={setCSRF_TOKEN}/>
+      )}
+
+      {store.init_action.action == 'init_default' && isMobileData == false && isFirstLoadingTip==false && store.init_action.actionValue == "AiChatList" && (
+        <AllAiApp store={store} authConfig={authConfig} />
+      )}
+
+      {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "AiChatList" && (
+        <AllAiApp store={store} authConfig={authConfig} />
       )}
 
       {isMobileData == true && isFirstLoadingTip && (
