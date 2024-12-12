@@ -38,12 +38,10 @@ const AppSoulChatList = (props: any) => {
     setViewActionOpen,
     setEditViewCounter,
     setAddEditActionName,
-    setAddEditActionOpen,
     isMobileData,
     setCSRF_TOKEN
   } = props
 
-  const [chatApp, setChatApp] = useState<any[]>([])
   const [pageModel, setPageModel] = useState<string>('Main')
   const [app, setApp] = useState<any>(null)
 

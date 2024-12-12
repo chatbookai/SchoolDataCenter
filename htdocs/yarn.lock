@@ -7347,6 +7347,11 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
+secrets.js@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.npmjs.org/secrets.js/-/secrets.js-0.1.8.tgz"
+  integrity sha512-ZID3VTwPtjJT9ClzS8DqlZIgxYMfTuwBZaXWbk9UYcgSD3Y+jCNrjWVvPNOtqpAL1Yin/GIhMIO6OhXsyBAkFA==
+
 selenium-webdriver@4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/selenium-webdriver/-/selenium-webdriver-4.5.0.tgz"
