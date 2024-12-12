@@ -1,9 +1,6 @@
 // ** React Imports
 import { useState, SyntheticEvent, Fragment, ReactNode } from 'react'
 
-// ** Next Imports
-import Link from 'next/link'
-
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -14,7 +11,6 @@ import { styled, Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
-import CardMedia from '@mui/material/CardMedia'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -24,9 +20,6 @@ import PerfectScrollbarComponent from 'react-perfect-scrollbar'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
-
-// ** Custom Components Imports
-import CustomAvatar from 'src/@core/components/mui/avatar'
 
 const TrophyImg = styled('img')({
   height: 110
