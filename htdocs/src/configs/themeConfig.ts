@@ -5,6 +5,8 @@
  * ! To clear local storage, you may refer https://www.leadshook.com/help/how-to-clear-local-storage-in-google-chrome-browser/.
  */
 
+import { authConfig } from 'src/configs/auth'
+
 // ** MUI Imports
 import { Direction } from '@mui/material'
 
@@ -49,7 +51,7 @@ type ThemeConfig = {
 
 const themeConfig: ThemeConfig = {
   // ** Layout Configs
-  templateName: '单点科技' /* App Name */,
+  templateName: authConfig.AppName /* App Name */,
   layout: 'vertical' /* vertical | horizontal */,
   mode: 'light' as Mode /* light | dark | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
   direction: 'ltr' /* ltr | rtl */,
