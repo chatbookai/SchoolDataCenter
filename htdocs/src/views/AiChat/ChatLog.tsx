@@ -206,6 +206,7 @@ const ChatLog = (props: any) => {
         <Box
           key={index}
           sx={{
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
             mb: index !== ChatItemMsgList.length - 1 ? 4 : undefined

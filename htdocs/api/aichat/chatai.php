@@ -33,6 +33,10 @@ if($用户输入 != "" && $appId != "")  {
   $appIdArray = explode('-', $appId);
   if($appIdArray[0] == 'ChatApp' && $appIdArray[1] != '')  {
     $AppIdValue = intval($appIdArray[1]);
+    if($AppIdValue == 0)  {
+      print "appId: ".$appId." is invalid";
+      exit;
+    }
     $sql  = "select * from data_ai_app where id = '$AppIdValue' ";
     $rs   = $db->Execute($sql);
     $rs_a = $rs->GetArray();

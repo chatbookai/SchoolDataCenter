@@ -12,6 +12,8 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 
+import { authConfig  } from 'src/configs/auth'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -152,6 +154,16 @@ const AppDownloadDropdown = (props: Props) => {
             ))}
           </Grid>
         </ScrollWrapper>
+        <Divider sx={{ my: '0 !important' }} />
+        <MenuItem
+          disableRipple
+          disableTouchRipple
+          sx={{ cursor: 'default', userSelect: 'auto', backgroundColor: 'transparent !important' }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 600 }}>手机端用户名: 您的用户名@{authConfig.AppMarkId}</Typography>
+          </Box>
+        </MenuItem>
       </Menu>
     </Fragment>
   )

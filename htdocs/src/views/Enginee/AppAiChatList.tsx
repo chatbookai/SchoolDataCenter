@@ -54,6 +54,8 @@ const AppSoulChatList = (props: any) => {
     setApp({...item, id: "ChatApp-" + item.id, AppName2: item.AppModel, avatar: '1.png', Model: {}, QuestionGuideTemplate })
   }
 
+  const AppList = store.init_default.data.map( (Item: any) => ({...Item, id: Item.id2}) )
+
   const renderContent = () => {
       return (
         <Grid container>
@@ -70,13 +72,13 @@ const AppSoulChatList = (props: any) => {
                   </Grid>
                 )}
                 <Grid container spacing={2} sx={{ my: 0}}>
-                  {store.init_default.data && store.init_default.data.map((item: any, index: number) => (
+                  {AppList && AppList.map((item: any, index: number) => (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
                       <Box position="relative">
-                        <CardMedia image={`/images/cardmedia/cardmedia-${theme.palette.mode}.png`} sx={{ height: '14rem', objectFit: 'contain', borderRadius: 1 }}/>
+                        <CardMedia image={`/images/cardmedia/cardmedia-${theme.palette.mode}.png`} sx={{ height: '12rem', objectFit: 'contain', borderRadius: 1 }}/>
                         <Box position="absolute" top={10} left={3} m={1} px={0.8} borderRadius={1} >
                           <Box display="flex" alignItems="center">
-                          <Avatar src={item.avatar ? authConfig.backEndApiHost + "/" + item.avatar : '/images/avatars/'+(item.id2 % 8 + 1)+'.png'} sx={{ mr: 3, width: 35, height: 35 }} />
+                            <Icon icon={item.AppAvatar} color={theme.palette.primary.main} fontSize={35} />
                             <Typography
                                 sx={{
                                     fontWeight: 500,
@@ -87,6 +89,7 @@ const AppSoulChatList = (props: any) => {
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
                                     flexGrow: 1,
+                                    ml: 2
                                 }}
                             >
                                 {item.AppName}
