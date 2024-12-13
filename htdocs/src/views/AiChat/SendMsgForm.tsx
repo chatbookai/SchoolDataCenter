@@ -27,7 +27,7 @@ const Form = styled('form')(({ theme }) => ({
 
 const SendMsgForm = (props: any) => {
   // ** Props
-  const { store, sendMsg, sendButtonDisable, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows } = props
+  const { store, sendMsg, sendButtonDisable, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows, innerWidth } = props
 
   // ** State
   const [msg, setMsg] = useState<string>('')
@@ -75,18 +75,18 @@ const SendMsgForm = (props: any) => {
     <Box
         sx={{
           width: `calc(100% - 30)`,
+          maxWidth: `calc(100% - 30)`,
           zIndex: 10,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          bottom: 60,
-          left: 15,
-          right: 15,
+          bottom: 10,
+          right: 20,
           position: 'fixed',
           overflow: 'visible',
         }}
       >
-      <Form onSubmit={handleSendMsg} sx={{width: '100%', mb: 0, pb: 0, mx: 0, px: 0}}>
+      <Form onSubmit={handleSendMsg} sx={{width: innerWidth, mb: 0, pb: 0, mx: 0, px: 0}}>
         <ChatFormWrapper>
           <Box sx={{ display: 'flex',position: 'relative', flexGrow: 1, width: '100%' }}>
             <TextareaAutosize
@@ -112,7 +112,7 @@ const SendMsgForm = (props: any) => {
               }}
             />
             {sendButtonDisable ?
-            <Box sx={{ bottom: 6, right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
+            <Box sx={{ right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
               <CircularProgress size={20} color="inherit"/>
             </Box>
             :

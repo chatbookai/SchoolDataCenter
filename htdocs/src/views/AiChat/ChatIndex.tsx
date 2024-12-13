@@ -258,12 +258,13 @@ const ChatIndex = (props: any) => {
     }
   }
 
-  const [innerHeight, setInnerHeight] = useState<number | string>(window.innerHeight - 48 - 56 - 78)
-  console.log("innerHeight innerHeight",innerHeight)
+  const [innerHeight, setInnerHeight] = useState<number | string>(window.innerHeight - 50 - 100)
+  console.log("innerHeight innerHeight", innerHeight)
+  console.log("innerHeight innerWidth", window.innerWidth)
 
   useEffect(() => {
     const handleResize = () => {
-        setInnerHeight(window.innerHeight - 48 - 56 - 78);
+        setInnerHeight(window.innerHeight - 50 - 100);
     };
     handleResize();
   }, []);
@@ -277,9 +278,9 @@ const ChatIndex = (props: any) => {
   }
 
   return (
-    <Box sx={{ width: '100%', height: innerHeight, overflow: 'hidden', display: 'flex' }}>
+    <Box sx={{ width: '100%', height: innerHeight, flexDirection: 'column', overflow: 'hidden', display: 'flex' }}>
       <ChatLog authConfig={authConfig} data={{ ...store?.selectedChat, userContact: store?.userProfile }} chatId={chatId} chatName={chatName} app={app} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} questionGuide={questionGuide} GetTTSFromAppValue={GetTTSFromAppValue} clearButtonClickEvent={clearButtonClickEvent} setClearButtonClickEvent={setClearButtonClickEvent} setPageModel={setPageModel} />
-      <SendMsgForm authConfig={authConfig} store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows} setStopMsg={setStopMsg} />
+      <SendMsgForm authConfig={authConfig} store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows} setStopMsg={setStopMsg} innerWidth={window.innerWidth - 260 - 42}/>
     </Box>
   )
 }

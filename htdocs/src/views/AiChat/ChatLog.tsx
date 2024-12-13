@@ -107,7 +107,7 @@ const ChatLog = (props: any) => {
   // ** Scroll to chat bottom
   const scrollToBottom = () => {
 
-    if (chatArea.current) {
+    if (chatArea.current && sendButtonDisable) {
       // @ts-ignore
       chatArea.current.scrollTop = Number.MAX_SAFE_INTEGER;
     }
@@ -180,7 +180,7 @@ const ChatLog = (props: any) => {
 
     // 使用 requestAnimationFrame 延迟执行滚动操作
     const scroll = () => {
-      if (chatArea.current) {
+      if (chatArea.current && sendButtonDisable) {
 
         // @ts-ignore
         chatArea.current.scrollTop = chatArea.current.scrollHeight;
@@ -190,12 +190,11 @@ const ChatLog = (props: any) => {
   }, [formattedChatData()]);
 
   useEffect(() => {
-    if (data) {
+    if (data && sendButtonDisable) {
       scrollToBottom()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
-
 
   // ** Renders user chat
   const renderChats = () => {
@@ -515,7 +514,7 @@ const ChatLog = (props: any) => {
           backgroundColor: 'background.paper'
         }}
       >
-      <Box ref={chatArea} sx={{ p: 3, pb: 6, overflowY: 'auto', overflowX: 'hidden' }}>
+      <Box ref={chatArea} sx={{ width: '100%', p: 3, pb: 6, overflowY: 'auto', overflowX: 'hidden' }}>
         {renderChats()}
       </Box>
       <ChatContextPreview contextPreviewOpen={contextPreviewOpen} setContextPreviewOpen={setContextPreviewOpen} contextPreviewData={contextPreviewData} app={app}/>
