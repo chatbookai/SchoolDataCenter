@@ -112,11 +112,11 @@ const SendMsgForm = (props: any) => {
               }}
             />
             {sendButtonDisable ?
-            <Box sx={{ right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
+            <Box sx={{ bottom: 3, right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
               <CircularProgress size={20} color="inherit"/>
             </Box>
             :
-            <Button type='submit' variant='contained' disabled={sendButtonDisable}  sx={{ right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
+            <Button type='submit' variant='contained' disabled={sendButtonDisable}  sx={{ bottom: -1.5, right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
               {sendButtonText}
             </Button>
             }
