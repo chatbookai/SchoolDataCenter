@@ -176,6 +176,7 @@ const ChatIndex = (props: any) => {
   }
 
   useEffect(() => {
+    console.log("innerHeight userId", auth)
     const userId = auth?.user?.username
     if(userId) {
       const ChatChatListValue = ChatChatList(app.id, app.WelcomeText)
@@ -209,7 +210,7 @@ const ChatIndex = (props: any) => {
   }, [refreshChatCounter, processingMessage, auth])
 
   useEffect(() => {
-    if(t && app)   {
+    if(app)   {
       const ChatChatNameListData: string[] = ChatChatNameList()
       if(ChatChatNameListData.length == 0) {
         setRefreshChatCounter(refreshChatCounter + 1)
@@ -225,7 +226,7 @@ const ChatIndex = (props: any) => {
       setChatId(app['id'])
 
     }
-  }, [t, app])
+  }, [app])
 
   const GetTTSFromApp = () => {
 
@@ -278,8 +279,8 @@ const ChatIndex = (props: any) => {
   }
 
   return (
-    <Box sx={{ width: '100%', height: innerHeight, flexDirection: 'column', overflow: 'hidden', display: 'flex' }}>
-      <ChatLog authConfig={authConfig} data={{ ...store?.selectedChat, userContact: store?.userProfile }} chatId={chatId} chatName={chatName} app={app} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} questionGuide={questionGuide} GetTTSFromAppValue={GetTTSFromAppValue} clearButtonClickEvent={clearButtonClickEvent} setClearButtonClickEvent={setClearButtonClickEvent} setPageModel={setPageModel} />
+    <Box sx={{ width: '100%', height: innerHeight, flexDirection: 'column', overflow: 'hidden', display: 'flex', backgroundColor: 'background.paper' }}>
+      <ChatLog authConfig={authConfig} data={{ ...store?.selectedChat, userContact: store?.userProfile }} chatId={chatId} chatName={chatName} app={app} sendButtonDisable={sendButtonDisable} handleDeleteOneChatLogById={handleDeleteOneChatLogById} sendMsg={sendMsg} store={store} questionGuide={questionGuide} GetTTSFromAppValue={GetTTSFromAppValue} clearButtonClickEvent={clearButtonClickEvent} setClearButtonClickEvent={setClearButtonClickEvent} setPageModel={setPageModel} height={innerHeight}/>
       <SendMsgForm authConfig={authConfig} store={store} sendMsg={sendMsg} sendButtonDisable={sendButtonDisable} sendButtonLoading={sendButtonLoading} sendButtonText={sendButtonText} sendInputText={sendInputText} rowInMsg={rowInMsg} handleSetRowInMsg={handleSetRowInMsg} maxRows={maxRows} setStopMsg={setStopMsg} innerWidth={window.innerWidth - 260 - 42}/>
     </Box>
   )

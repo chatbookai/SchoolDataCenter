@@ -32,7 +32,7 @@ export const defaultConfig = {
   Github: 'https://github.com/chatbookai/SchoolDataCenterMobile',
   AppVersion: '20241125',
   AppVersionType: '试用版本',
-  defaultLanguage: 'zh-CN',
+  defaultLanguage: 'zh',
   storageTokenKeyName: 'accessToken',
   storageAccessKeyName: 'accessKey',
   storageMainMenus: 'storageMainMenus',

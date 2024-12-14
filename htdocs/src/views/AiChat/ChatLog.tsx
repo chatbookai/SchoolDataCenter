@@ -89,7 +89,7 @@ const SystemPromptTemplate = ({text, handleSendMsg}: any) => {
 const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
-  const { authConfig, data, chatName, app, sendButtonDisable, handleDeleteOneChatLogById, sendMsg, store, questionGuide, setClearButtonClickEvent, setPageModel } = props
+  const { authConfig, data, chatName, app, sendButtonDisable, handleDeleteOneChatLogById, sendMsg, store, questionGuide, setClearButtonClickEvent, setPageModel, height } = props
 
   const handleSendMsg = (msg: string) => {
     if (store && store.selectedChat && msg.trim().length) {
@@ -510,8 +510,7 @@ const ChatLog = (props: any) => {
           borderRadius: 1,
           overflowX: 'hidden',
           overflowY: 'auto',
-          position: 'relative',
-          backgroundColor: 'background.paper'
+          position: 'relative'
         }}
       >
       <Box ref={chatArea} sx={{ width: '100%', p: 3, pb: 6, overflowY: 'auto', overflowX: 'hidden' }}>
