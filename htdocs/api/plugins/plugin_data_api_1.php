@@ -302,29 +302,20 @@ function plugin_data_api_1_view_default($id)  {
         }
     }
 
+    $Datetime = time();
+
     $NewTableRowData    = [];
     $NewTableRowData[][0]  = ['Name'=>'API接口名称', 'Value'=>$EditValue['ApiName'], 'FieldArray'=>['name'=>'ApiName','label'=>'API接口名称','value'=>$EditValue['ApiName'],'type'=>'input']];
     $NewTableRowData[][0]  = ['Name'=>'API接口URL', 'Value'=>"https://".$_SERVER['HTTP_HOST']."/api/api.php", 'FieldArray'=>['name'=>'API接口URL','label'=>'API接口URL','value'=>$_SERVER['HTTP_HOST'],'type'=>'input']];
-    $NewTableRowData[][0]  = ['Name'=>'Authorization', 'Value'=>"Http Header 中增加 Authorization的变量,来做为API授权.", 'FieldArray'=>['name'=>'Authorization','label'=>'Header Authorization','value'=>"Http Header 中增加 Authorization的变量,来做为API授权.",'type'=>'input']];
-    $NewTableRowData[][0]  = ['Name'=>'Authorization', 'Value'=>$EditValue['Token'], 'FieldArray'=>['name'=>'Token','label'=>'Authorization值','value'=>$EditValue['Token'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'Token', 'Value'=>$EditValue['Token'], 'FieldArray'=>['name'=>'Token','label'=>'Token','value'=>$EditValue['Token'],'type'=>'input']];
     $NewTableRowData[][0]  = ['Name'=>'Post提交字段1', 'Value'=>"字段: Model 固定值: ".base64_encode(base64_encode($EditValue['id'])), 'FieldArray'=>['name'=>'Token','label'=>'Post提交字段1','value'=>"",'type'=>'input']];
     $NewTableRowData[][0]  = ['Name'=>'Post提交字段2', 'Value'=>"字段: Page 默认值: 0, 获取下一页数据把这个值加1", 'FieldArray'=>['name'=>'Page','label'=>'Post提交字段2','value'=>"字段: Page 默认值: 0, 获取下一页数据把这个值加1",'type'=>'input']];
-    $NewTableRowData[][0]  = ['Name'=>'Authorization', 'Value'=>$EditValue['ExpireTime'], 'FieldArray'=>['name'=>'ExpireTime','label'=>'Authorization过期时间','value'=>$EditValue['ExpireTime'],'type'=>'input']];
-    $NewTableRowData[][0]  = ['Name'=>'IP白名单', 'Value'=>$EditValue['IpWhiteList'], 'FieldArray'=>['name'=>'IP白名单','label'=>'IP白名单','value'=>$EditValue['IpWhiteList'],'type'=>'input']];
-    $NewTableRowData[][0]  = ['Name'=>'IP黑名单', 'Value'=>$EditValue['IpBlackList'], 'FieldArray'=>['name'=>'IP黑名单','label'=>'IP黑名单','value'=>$EditValue['IpBlackList'],'type'=>'input']];
-    $NewTableRowData[][0]  = ['Name'=>'示例代码', 'Value'=>'
-    curl https://api.deepseek.com/chat/completions \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer <DeepSeek API Key>" \
-    -d \'{
-          "model": "deepseek-chat",
-          "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Hello!"}
-          ],
-          "stream": false
-        }\'
-      ', 'FieldArray'=>['name'=>'示例代码','label'=>'示例代码','value'=>'','type'=>'code']];
+    $NewTableRowData[][0]  = ['Name'=>'Authorization', 'Value'=>"Http Header 中增加 Authorization的变量,来做为API授权. 这个值就是签名, 具体计算方法如下: md5(\$Datetime.\"|\".\$Token.\"|\".\$Model.\"|\".\$Page) \$Datetime: 为当前时间戳,精确到秒, \$Page: 指定页码, 从0开始.", 'FieldArray'=>['name'=>'Authorization','label'=>'Header Authorization','value'=>"Http Header 中增加 Authorization的变量,来做为API授权.",'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'签名计算过程DEMO', 'Value'=>"\$Datetime: ".$Datetime."\n \$Token: ".$EditValue['Token']."\n \$Model: ".base64_encode(base64_encode($EditValue['id']))."\n \$Page: 0\n 签名计算算法: md5('".$Datetime."|".$EditValue['Token']."|".base64_encode(base64_encode($EditValue['id']))."|0')\n 签名计算结果: ".md5($Datetime."|".$EditValue['Token']."|".base64_encode(base64_encode($EditValue['id']))."|0"), 'FieldArray'=>['name'=>'签名计算过程DEMO','label'=>'签名计算过程DEMO','value'=>"Http Header 中增加 Authorization的变量,来做为API授权.",'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'ExpireTime', 'Value'=>$EditValue['ExpireTime'], 'FieldArray'=>['name'=>'ExpireTime','label'=>'Authorization过期时间','value'=>$EditValue['ExpireTime'],'type'=>'input']];
+    //$NewTableRowData[][0]  = ['Name'=>'IP白名单', 'Value'=>$EditValue['IpWhiteList'], 'FieldArray'=>['name'=>'IP白名单','label'=>'IP白名单','value'=>$EditValue['IpWhiteList'],'type'=>'input']];
+    //$NewTableRowData[][0]  = ['Name'=>'IP黑名单', 'Value'=>$EditValue['IpBlackList'], 'FieldArray'=>['name'=>'IP黑名单','label'=>'IP黑名单','value'=>$EditValue['IpBlackList'],'type'=>'input']];
+    $NewTableRowData[][0]  = ['Name'=>'示例代码', 'Value'=>"https://".$_SERVER['HTTP_HOST']."/api/api_demo.php", 'FieldArray'=>['name'=>'示例代码','label'=>'示例代码','value'=>'','type'=>'input']];
 
     $RS['newTableRowData']          = $NewTableRowData;
 

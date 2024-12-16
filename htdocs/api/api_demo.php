@@ -1,14 +1,21 @@
 <?php
+# 单点数据中心
+# API接口示例程序
+# 此文档为公开文档,不需要任何用户授权即可访问
+# 版本号: 20241215
+
+highlight_file(__FILE__); //当你复制当前页面代码进行执行的时候,需要把本行代码注释掉
+
 header("Content-Type: application/json");
 
 //根据接口不同,需要修改为不同的值
-$Token                 = "";
-$Model                 = "";
+$Token                 = ""; //从管理员处获取此值
+$Model                 = ""; //从管理员处获取此值
 
 if($Model =="" || $Token == "")   exit;
 
 //其它信息
-$TargetUrl             = "https://fdzz.dandian.net/api/api.php";
+$TargetUrl             = "https://".$_SERVER['SERVER_NAME']."/api/api.php";
 $Page                  = 0;       //从0开始
 $Datetime              = time();  //精确到秒,不是毫秒
 

@@ -48,17 +48,14 @@ if($Model > 0)  {
   }
 
   if($签名 != $HTTP_AUTHORIZATION) {
-    $RS         = [];
+    $RS             = [];
     $RS['status']   = "Error";
     $RS['message']  = "签名无效";
-    $RS['message']  = "签名无效";
-    $RS['签名']                 = $签名;
-    $RS['Datetime']   = $Datetime;
-    $RS['Token']   = $Token;
-    $RS['Model']   = $_POST['Model'];
-    $RS['Page']   = $Page;
+    $RS['Datetime'] = $Datetime;
+    $RS['Model']    = $_POST['Model'];
+    $RS['Page']     = $_POST['Page'];
     $RS['HTTP_AUTHORIZATION']   = $HTTP_AUTHORIZATION;
-    $RS['time']   = date('Y-m-d H:i:s');
+    $RS['time']     = date('Y-m-d H:i:s');
     print_R(json_encode($RS));
     ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql='');
     exit;
@@ -92,18 +89,18 @@ if($Model > 0)  {
   $RS             = [];
   $RS['status']   = "OK";
   $RS['message']  = "成功";
-  $RS['data']   = $rs_a;
-  $RS['total']  = $total;
-  $RS['time']   = date('Y-m-d H:i:s');
+  $RS['data']     = $rs_a;
+  $RS['total']    = $total;
+  $RS['time']     = date('Y-m-d H:i:s');
   print_R(base64_encode(gzcompress(gzcompress(json_encode($RS)))));
   ApiLogRecord($Model, $ApiName, $RS['message'], $RS['status'], $HTTP_AUTHORIZATION, $sql);
   exit;
 }
 else {
-  $RS         = [];
+  $RS             = [];
   $RS['status']   = "Error";
   $RS['message']  = "Model值错误";
-  $RS['time']   = date('Y-m-d H:i:s');
+  $RS['time']     = date('Y-m-d H:i:s');
   print_R(json_encode($RS));
   exit;
 }
