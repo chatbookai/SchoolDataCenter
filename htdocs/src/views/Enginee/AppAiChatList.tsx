@@ -11,7 +11,6 @@ import DialogContent from '@mui/material/DialogContent'
 import Typography from '@mui/material/Typography'
 import ChatIndex from 'src/views/AiChat/ChatIndex'
 
-import Avatar from '@mui/material/Avatar'
 import Container from '@mui/material/Container'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '@mui/material/styles'

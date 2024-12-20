@@ -27,6 +27,7 @@ $历史消息        = (array)$_POST['history'];
 $用户输入        = (string)$_POST['question'];
 //$系统模板        = (string)$_POST['template'];
 $appId          = (string)$_POST['appId'];
+$备注           = (string)$_POST['MarkId'];
 
 if($用户输入 != "" && $appId != "")  {
   //保存到数据
@@ -51,7 +52,7 @@ if($用户输入 != "" && $appId != "")  {
     switch($AppModel) {
       case 'DeepSeekChat':
         //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
-        DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature, $AppName);
+        DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature, $AppName, $备注);
         break;
     }
 
@@ -60,7 +61,7 @@ if($用户输入 != "" && $appId != "")  {
   exit;
 }
 
-function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature, $AppName)     {
+function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature, $AppName, $备注)     {
   global $APIKEY;
   $curl 		  = curl_init();
   $messages 	= [];
@@ -101,21 +102,27 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
   ));
 
   $输出TEXT = "";
-  curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($ch, $line) use (&$AppName, &$用户输入, &$输出TEXT) {
-    $输出Array[] = $line;
-    print $line;
+  curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$AppName, &$用户输入, &$输出TEXT) {
+    print $data;
     ob_flush();
     flush();
-    $LineArray = explode('"content":"', $line);
-    $LineArray = explode('"},"logprobs"', $LineArray[1]);
-    if($line != "data: [DONE]" && $LineArray[0] != "")  {
-      $输出TEXT .= $LineArray[0];
+
+    static $buffer = ''; // 用于存储不完整的数据块
+    $buffer .= $data; // 将当前数据块追加到缓冲区
+    while (preg_match('/"content":"([^"]*)"/', $buffer, $matches)) {
+        $outputData = $matches[1];
+        $输出TEXT .= $outputData;
+        //echo $outputData;
+        //ob_flush();
+        //flush();
+        // 从缓冲区中移除已处理的部分
+        $buffer = substr($buffer, strpos($buffer, $matches[0]) + strlen($matches[0]));
     }
-    if(trim($line) == "data: [DONE]")  {
+    if(trim($data) == "data: [DONE]")  {
       print_R($输出TEXT);
-      保存到数据库($AppName, $用户输入, $输出TEXT);
+      保存到数据库($AppName, $用户输入, $输出TEXT, $备注);
     }
-    return strlen($line);
+    return strlen($data);
   });
 
   curl_exec($curl);
@@ -128,7 +135,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
 
 }
 
-function 保存到数据库($AppName, $用户输入, $输出TEXT)  {
+function 保存到数据库($AppName, $用户输入, $输出TEXT, $备注)  {
   global $db;
   global $GLOBAL_USER;
   $Element            = [];
@@ -137,12 +144,12 @@ function 保存到数据库($AppName, $用户输入, $输出TEXT)  {
   $Element['姓名']    = $GLOBAL_USER->USER_NAME;
   $Element['学号']    = $GLOBAL_USER->学号;
   $Element['班级']    = $GLOBAL_USER->班级;
-  $Element['花费Token']   = '';
-  $Element['输入']        = $用户输入;
-  $Element['输出']        = $输出TEXT;
+  $Element['花费Token']   = '1';
+  $Element['输入']        = addslashes($用户输入);
+  $Element['输出']        = addslashes($输出TEXT);
   $Element['时间']        = date('Y-m-d H:i:s');
   $Element['数据']        = "";
-  $Element['备注']        = "";
+  $Element['备注']        = $备注;
   $KEYS			  = array_keys($Element);
 	$VALUES			= array_values($Element);
   $sql	      = "insert into data_ai_chatlog(`".join('`,`',$KEYS)."`) values('".join("','",$VALUES)."')";

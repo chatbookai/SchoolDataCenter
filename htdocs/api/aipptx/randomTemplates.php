@@ -1,6 +1,10 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken, Token");
 header("Content-Type: application/json");
-require_once('../cors.php');
+header('Cache-Control: no-cache');
+
 require_once('../include.inc.php');
 ini_set('max_execution_time', 7200);
 

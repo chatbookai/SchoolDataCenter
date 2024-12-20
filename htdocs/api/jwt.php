@@ -63,7 +63,8 @@ if($_GET['action']=="login")                {
                 $userData['username']   = $StudentInfo['学号'];
                 $userData['role']       = "学生";
                 $userData['type']       = "Student";
-                $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
+                $userData['ExpireTime'] = time() + (3 * 60);
+                $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
@@ -120,7 +121,8 @@ if($_GET['action']=="login")                {
                 $userData['username']   = $StudentInfo['学生学号'];
                 $userData['role']       = "校友";
                 $userData['type']       = "Schoolmate";
-                $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
+                $userData['ExpireTime'] = time() + (3 * 60);
+                $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
@@ -170,7 +172,8 @@ if($_GET['action']=="login")                {
             $userData['email']      = $UserInfo['EMAIL'];
             $userData['role']       = $userData['PRIV_NAME'];
             $userData['type']       = "User";
-            $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
+            $userData['ExpireTime'] = time() + (3 * 60);
+            $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
             $RS['accessToken']      = $accessToken;
             $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
             $RS['userData']         = $userData;
@@ -222,8 +225,9 @@ if($_GET['action']=="login")                {
 }
 
 if($_GET['action']=="refresh")                {
-    $CheckAuthUserLoginStatus   = CheckAuthUserLoginStatus();
-    $accessToken                = EncryptID(JWT::encode((array) $CheckAuthUserLoginStatus, $NEXT_PUBLIC_JWT_SECRET, 'HS256', null, array('exp' => time() + (3 * 60))));
+    $CheckAuthUserLoginStatus               = CheckAuthUserLoginStatus();
+    $CheckAuthUserLoginStatus->ExpireTime   = time() + (3 * 60);
+    $accessToken                = EncryptID(JWT::encode((array) $CheckAuthUserLoginStatus, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
     $RS['status']               = 'ok';
     $RS['accessToken']          = $accessToken;
     $RS['accessKey']            = GetAccessKey($CheckAuthUserLoginStatus->USER_ID);

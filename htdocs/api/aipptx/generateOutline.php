@@ -1,12 +1,9 @@
 <?php
 require_once('config.inc.php');
 
-$HTTP_ORIGIN    = $_SERVER['HTTP_ORIGIN'];
-if (in_array($HTTP_ORIGIN, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin:" . $HTTP_ORIGIN);
-}
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken");
+header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken, Token");
 header("Content-type: text/html; charset=utf-8");
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
@@ -18,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $_POST = json_decode(file_get_contents("php://input"), true);
 
-$_POST['action'] = 'stream';
-$_POST['subject'] = 'stream';
+$_POST['action']  = 'stream';
+$_POST['subject'] = '如何使用AI来生成PPTX';
 
 if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
 
@@ -47,7 +44,9 @@ if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
 
         只需要精确到1.1.1就可以,不需要扩充到1.1.1.1这样的四级结构.
 
-        只输出必要的数据，不需要输出过多的内容，输出的结果以Markdown的格式输出。
+        只输出必要的数据，不需要输出跟大纲无关的内容，输出的结果以Markdown的格式输出。
+
+        不需要输出总结性的文本。
 
     ";
 
@@ -104,5 +103,23 @@ if($_POST['action'] == 'stream' && $_POST['subject'] != '')   {
     flush();
 
 }
+
+/*
+CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$FullResponeText) {
+    // 使用正则表达式提取 "content":"..." 部分的内容
+    if (preg_match('/"content":"([^"]*)"/', $data, $matches)) {
+      $outputData = $matches[1];
+      $FullResponeText .= $outputData;
+      echo 'data: {"status":3,"text":"'.$outputData.'"}'."\n\r";
+      ob_flush();
+      flush();
+      return strlen($data);
+    }
+    else {
+      echo $FullResponeText;
+    }
+    return strlen($data);
+},
+*/
 
 ?>

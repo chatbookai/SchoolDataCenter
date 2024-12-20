@@ -224,6 +224,13 @@ function CheckAuthUserLoginStatus()  {
   }
   try {
       $GLOBAL_USER	= JWT::decode(DecryptID($accessToken), new Key($NEXT_PUBLIC_JWT_SECRET, 'HS256'));
+      $ExpireTime   = $GLOBAL_USER->ExpireTime;
+      if($ExpireTime < time())  {
+        $RS['status'] = "ERROR";
+        $RS['error']  = "Token Expired";
+        print_r(json_encode($RS));
+        exit;
+      }
       return $GLOBAL_USER;
   }
   catch (LogicException $e) {
