@@ -4,26 +4,20 @@ require_once('config.inc.php');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken, Token");
-header("Content-type: text/html; charset=utf-8");
-header('Content-Type: text/event-stream');
+header('Content-Type: text/event-stream; charset=utf-8');
 header('Cache-Control: no-cache');
+header('Pragma: no-cache');
 
 // 处理 OPTIONS 请求
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
 }
 
-// 设置 Content-Type 为 text/event-stream
-header("Content-type: text/event-stream; charset=utf-8");
-header('Cache-Control: no-cache');
-
-
-
 $_POST = json_decode(file_get_contents("php://input"), true);
 //print_R(json_encode($_POST));
 
 $_POST['asyncGenPptx']  = true;
-$_POST['templateId']    = 1;
+$_POST['templateId']    = "1869467528347127808";
 
 if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
 
@@ -120,10 +114,31 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
         $outlineMarkdown
     ";
 
-    $curl = curl_init();
+    //对原始数据进行分页后统计,得到总有多少页
+    //输出的时候,第一页和第二页不需要做扩充,所以可以直接输出
+    //依赖于AI的部分是从第三页开始
+    $TotalPages = [];
+    $outlineMarkdownArray = explode("\n", $outlineMarkdown);
+    foreach($outlineMarkdownArray as $Item)  {
+      if(substr(trim($Item), 0, 2) == "# ") {
+        $TotalPages[] = ['type'=>'Cover', 'content'=>substr(trim($Item), 2, strlen($Item))];
+      }
+      if(substr(trim($Item), 0, 3) == "## ") {
+        $TotalPages[] = ['type'=>'Chapter', 'content'=>substr(trim($Item), 3, strlen($Item))];
+      }
+      if(substr(trim($Item), 0, 4) == "### ") {
+        $TotalPages[] = ['type'=>'Page', 'content'=>substr(trim($Item), 4, strlen($Item))];
+      }
+    }
+    $TotalPages[]     = ['type'=>'Thank', 'content'=>'Thank'];
+    $TotalPagesNumber = sizeof($TotalPages);
+
+    $curl       = curl_init();
 
     $messages 	= [];
     $messages[] = ['content'=> $promptText, 'role'=>'user'];
+
+    print 'data: {"current":1, "pptId":"'.$templateId.'", "status":3, "text":"", "total":'.$TotalPagesNumber.'}'."\n\n";
 
     $CURLOPT_POSTFIELDS = [
         "model" => $API_MODE,
@@ -146,31 +161,58 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
     curl_setopt_array($curl, array(
         CURLOPT_URL => $API_URL . '/chat/completions',
         CURLOPT_RETURNTRANSFER => false,
-        CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$FullResponeText, &$分段结构输出情况) {
-          static $buffer = ''; // 用于存储不完整的数据块
-          $buffer .= $data; // 将当前数据块追加到缓冲区
+        CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$FullResponeText, &$分段结构输出情况, &$templateId, &$TotalPagesNumber) {
+          static $buffer = '';  // 用于存储不完整的数据块
+          $buffer .= $data;     // 将当前数据块追加到缓冲区
+
+          // 检查是否包含结束标记 [DONE]
+          if (strpos($buffer, '[DONE]') !== false) {
+            // 输出最终的 FullResponeText
+            //print "Final FullResponeText: $FullResponeText\n";
+            $Result           = [];
+            $Result['result'] = parseTextToJson($FullResponeText);
+            print "data: ".json_encode($Result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n\n";
+
+            return strlen($data);
+          }
+
           while (preg_match('/"content":"([^"]*)"/', $buffer, $matches)) {
               $outputData = $matches[1];
               $FullResponeText .= $outputData;
-              echo $outputData;
+              //echo $outputData;
+              echo 'data: {"status":3,"text":"'.$outputData.'"}'."\n\n";
               $FullResponeTextArray = explode("\\n", $FullResponeText);
               $FullResponeTextArrayNotNullLine = [];
               foreach($FullResponeTextArray as $Item) {
-                if($Item!="") {
-                  $FullResponeTextArrayNotNullLine[] = $Item;
+                if(trim($Item)!="") {
+                  $FullResponeTextArrayNotNullLine[] = trim($Item);
                 }
               }
-              $LastElement = array_pop($FullResponeTextArrayNotNullLine);
-              if(substr($LastElement, 0, 3) == '## ') {
+              $LastElement1 = array_pop($FullResponeTextArrayNotNullLine);
+              if(substr($LastElement1, 0, 3) == '## ') {
+                //print_R($LastElement1);
                 //print_R($FullResponeTextArrayNotNullLine);
-              }
-              if(substr($LastElement, 0, 4) == '### ') {
+                //分段结构只需要输出一次即可, 为实现这个目标, 需要加一个输出标记
                 $LastElement2 = array_pop($FullResponeTextArrayNotNullLine);
-                if(substr($LastElement2, 0, 2) == '# ') {
-                  //print_R("上一个元素是一个二级标题");
+                $分段结构标记 = md5($LastElement2);
+                if(!in_array($分段结构标记, $分段结构输出情况))  {
+                  $CurrentPage      = sizeof($分段结构输出情况) + 2;
+                  print 'data: {"current":'.$CurrentPage.', "pptId":"'.$templateId.'", "status":3, "text":"## ", "total":'.$TotalPagesNumber.'}'."\n\n";
+                  $分段结构输出情况[] = $分段结构标记;
                 }
-                else if(substr($LastElement2, 0, 3) == '## ') {
-                  //print_R("上一个元素是一个二级标题");
+              }
+              if(substr($LastElement1, 0, 4) == '### ') {
+                //print_R($LastElement1);
+                $LastElement2 = array_pop($FullResponeTextArrayNotNullLine);
+                if(substr($LastElement2, 0, 3) == '## ') {
+                  //上一个元素是一个二级标题 当前是一个大的章节的第一个页面时
+                  //分段结构只需要输出一次即可, 为实现这个目标, 需要加一个输出标记
+                  $分段结构标记 = md5($LastElement2);
+                  if(!in_array($分段结构标记, $分段结构输出情况))  {
+                    $CurrentPage      = sizeof($分段结构输出情况) + 2;
+                    print 'data: {"current":'.$CurrentPage.', "pptId":"'.$templateId.'", "status":3, "text":"### ", "total":'.$TotalPagesNumber.'}'."\n\n";
+                    $分段结构输出情况[] = $分段结构标记;
+                  }
                 }
                 else {
                   //需要得到上一个结构是什么
@@ -191,8 +233,10 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
                     //分段结构只需要输出一次即可, 为实现这个目标, 需要加一个输出标记
                     $分段结构标记 = md5(serialize($上一个结构信息));
                     if(!in_array($分段结构标记, $分段结构输出情况))  {
-                      print "上一个结构信息:";
-                      print_R($上一个结构信息);
+                      //print "上一个结构信息:";
+                      //print_R($上一个结构信息);
+                      $CurrentPage      = sizeof($分段结构输出情况) + 2;
+                      print 'data: {"current":'.$CurrentPage.', "pptId":"'.$templateId.'", "status":3, "text":"", "total":'.$TotalPagesNumber.'}'."\n\n";
                       $分段结构输出情况[] = $分段结构标记;
                     }
                   }
@@ -222,7 +266,6 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
             'Authorization: Bearer ' . $API_KEY
         ),
     ));
-    print $FullResponeText;
     curl_exec($curl);
     curl_close($curl);
     ob_flush();
@@ -230,6 +273,83 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
 
 }
 
+
+function parseTextToJson($FullResponeText) {
+
+  //非空处理
+  $FullResponeTextArray = explode("\n", $FullResponeText);
+  $FullResponeTextArrayNotNullLine = [];
+  foreach($FullResponeTextArray as $Item) {
+    if(trim($Item)!="") {
+      $FullResponeTextArrayNotNullLine[] = trim($Item);
+    }
+  }
+
+  //转为MAP
+  $Map    = [];
+  $PPTX标题 = "";
+  $章节标题 = "";
+  $小节标题 = "";
+  $小节内容 = "";
+  foreach($FullResponeTextArrayNotNullLine as $Item) {
+    if(substr($Item, 0, 2) == '# ') {
+      $PPTX标题     = $Item;
+      //$Map['标题']  = $PPTX标题;
+    }
+    else if(substr($Item, 0, 3) == '## ') {
+      $章节标题 = $Item;
+      //$Map['章节'][$章节标题] = $章节标题;
+    }
+    else if(substr($Item, 0, 4) == '### ') {
+      $小节标题 = $Item;
+      //$Map['小节'][$章节标题][] = $小节标题;
+    }
+    else {
+      $Map[$PPTX标题][$章节标题][$小节标题][] = $Item;
+    }
+  }
+  //print_R($Map);exit;
+
+  //输出为JSON
+  $页面JSON列表 = [];
+  foreach($Map[$PPTX标题] as $章节名称 => $章节信息) {
+    $章节JSON列表 = [];
+    foreach($章节信息 as $小节名称 => $小节列表) {
+      //print_R($章节名称);
+      //print_R($小节列表);
+      $小节JSON列表 = [];
+      for($i=0;$i<sizeof($小节列表);$i=$i+2) {
+        $小节标题 = $小节列表[$i];
+        $小节内容 = $小节列表[$i+1];
+        //print_R($小节标题);
+        //print_R($小节内容);
+        $小节JSON = [];
+        $小节JSON['level']      = 4;
+        $小节JSON['name']       = $小节标题;
+        $小节JSON['children']   = [['children'=>[], 'level'=>0, 'type'=>'-', 'name'=>$小节内容]];
+        $小节JSON列表[]        = $小节JSON;
+      }
+      $章节JSON               = [];
+      $章节JSON['level']      = 3;
+      $章节JSON['name']       = $小节名称;
+      $章节JSON['children']   = $小节JSON列表;
+      $章节JSON列表[]         = $章节JSON;
+    }
+    $二级标题JSON               = [];
+    $二级标题JSON['level']      = 2;
+    $二级标题JSON['name']       = $章节名称;
+    $二级标题JSON['children']   = $章节JSON列表;
+    $页面JSON列表[]             = $二级标题JSON;
+    //print_R($二级标题JSON);
+  }
+
+  $最终结构 = [];
+  $最终结构['level']      = 1;
+  $最终结构['name']       = $PPTX标题;
+  $最终结构['children']   = $页面JSON列表;
+
+  return $最终结构;
+}
 
 /*
 
