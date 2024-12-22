@@ -20,6 +20,7 @@ require_once(__DIR__.'/lib/AiToPptx_MakeSingleSlide.php');
 require_once(__DIR__.'/lib/AiToPptx_MakeSlideLayout.php');
 require_once(__DIR__.'/lib/AiToPptx_MakeThemeXml.php');
 
+//把JSON数据转换为PPTX文件
 function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 
 	// 确保子文件夹都存在
@@ -89,11 +90,46 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 
 }
 
+//把Markdown转为JSON Data
 function Markdown_To_JsonData($MarkdownData, $JsonData) {
+  //非空处理
+  $FullResponeTextArray = explode("\n", $MarkdownData);
+  $FullResponeTextArrayNotNullLine = [];
+  foreach($FullResponeTextArray as $Item) {
+    if(trim($Item)!="") {
+      $FullResponeTextArrayNotNullLine[] = trim($Item);
+    }
+  }
+
+  //转为MAP
+  $Map    = [];
+  $PPTX标题 = "";
+  $章节标题 = "";
+  $小节标题 = "";
+  $小节内容 = "";
+  foreach($FullResponeTextArrayNotNullLine as $Item) {
+    if(substr($Item, 0, 2) == '# ') {
+      $PPTX标题     = $Item;
+      //$Map['标题']  = $PPTX标题;
+    }
+    else if(substr($Item, 0, 3) == '## ') {
+      $章节标题 = $Item;
+      //$Map['章节'][$章节标题] = $章节标题;
+    }
+    else if(substr($Item, 0, 4) == '### ') {
+      $小节标题 = $Item;
+      //$Map['小节'][$章节标题][] = $小节标题;
+    }
+    else {
+      $Map[$PPTX标题][$章节标题][$小节标题][] = $Item;
+    }
+  }
+  print_R($Map);exit;
+
 
 }
 
-
+//把Markdown转换为GenerateContent.php接口中最后一步的JSON Data
 function Markdown_To_Generate_Content_Json($FullResponeText) {
 
   //非空处理
