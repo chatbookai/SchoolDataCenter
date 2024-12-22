@@ -31,15 +31,16 @@ function 得到单个页面的所有文本($Page) {
 	ksort($Page数据信息);
 	return array_values($Page数据信息);
 }
+
 function 解析首页和目录页面和尾页($Array)  {
 	$首页             	= $Array['pages'][0];
 	$首页数据信息 		= 得到单个页面的所有文本($首页);
-	
+
 	$尾页             	= array_pop($Array['pages']);
 	$尾页数据信息 		= 得到单个页面的所有文本($尾页);
 	//print_R($首页数据信息);
-	
-	
+
+
 	$目录				= $Array['pages'][1];
 	$目录数据信息 		= 得到单个页面的所有文本($目录);
 	$目录数据信息MAP 		= [];

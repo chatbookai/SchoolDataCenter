@@ -38,7 +38,6 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 	if(!is_dir($TargetCacheDir."/ppt/slides/_rels")) 		mkdir($TargetCacheDir."/ppt/slides/_rels");
 	if(!is_dir($TargetCacheDir."/ppt/theme/_rels")) 		mkdir($TargetCacheDir."/ppt/theme/_rels");
 
-
 	// 生成每个Slide页面
 	$pages = $JsonData['pages'];
 	for($i=0;$i<sizeof($pages);$i++) {
@@ -65,7 +64,6 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 	// 生成 /ppt/presentation.xml
 	AiToPptx_MakePresentationXml($JsonData, $TargetCacheDir);
 
-
 	// 生成 /ppt/_rels/presentation.xml.rels
 	AiToPptx_MakePresentationXmlRelations($JsonData, $TargetCacheDir);
 
@@ -89,6 +87,88 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 	// 压缩所有文件,并且生成PPTX
 	AiToPptx_CreateZip($TargetCacheDir, $TargetPptxFilePath);
 
+}
+
+function Markdown_To_JsonData($MarkdownData, $JsonData) {
+
+}
+
+
+function Markdown_To_Generate_Content_Json($FullResponeText) {
+
+  //非空处理
+  $FullResponeTextArray = explode("\n", $FullResponeText);
+  $FullResponeTextArrayNotNullLine = [];
+  foreach($FullResponeTextArray as $Item) {
+    if(trim($Item)!="") {
+      $FullResponeTextArrayNotNullLine[] = trim($Item);
+    }
+  }
+
+  //转为MAP
+  $Map    = [];
+  $PPTX标题 = "";
+  $章节标题 = "";
+  $小节标题 = "";
+  $小节内容 = "";
+  foreach($FullResponeTextArrayNotNullLine as $Item) {
+    if(substr($Item, 0, 2) == '# ') {
+      $PPTX标题     = $Item;
+      //$Map['标题']  = $PPTX标题;
+    }
+    else if(substr($Item, 0, 3) == '## ') {
+      $章节标题 = $Item;
+      //$Map['章节'][$章节标题] = $章节标题;
+    }
+    else if(substr($Item, 0, 4) == '### ') {
+      $小节标题 = $Item;
+      //$Map['小节'][$章节标题][] = $小节标题;
+    }
+    else {
+      $Map[$PPTX标题][$章节标题][$小节标题][] = $Item;
+    }
+  }
+  //print_R($Map);exit;
+
+  //输出为JSON
+  $页面JSON列表 = [];
+  foreach($Map[$PPTX标题] as $章节名称 => $章节信息) {
+    $章节JSON列表 = [];
+    foreach($章节信息 as $小节名称 => $小节列表) {
+      //print_R($章节名称);
+      //print_R($小节列表);
+      $小节JSON列表 = [];
+      for($i=0;$i<sizeof($小节列表);$i=$i+2) {
+        $小节标题 = $小节列表[$i];
+        $小节内容 = $小节列表[$i+1];
+        //print_R($小节标题);
+        //print_R($小节内容);
+        $小节JSON = [];
+        $小节JSON['level']      = 4;
+        $小节JSON['name']       = $小节标题;
+        $小节JSON['children']   = [['children'=>[], 'level'=>0, 'type'=>'-', 'name'=>$小节内容]];
+        $小节JSON列表[]        = $小节JSON;
+      }
+      $章节JSON               = [];
+      $章节JSON['level']      = 3;
+      $章节JSON['name']       = $小节名称;
+      $章节JSON['children']   = $小节JSON列表;
+      $章节JSON列表[]         = $章节JSON;
+    }
+    $二级标题JSON               = [];
+    $二级标题JSON['level']      = 2;
+    $二级标题JSON['name']       = $章节名称;
+    $二级标题JSON['children']   = $章节JSON列表;
+    $页面JSON列表[]             = $二级标题JSON;
+    //print_R($二级标题JSON);
+  }
+
+  $最终结构 = [];
+  $最终结构['level']      = 1;
+  $最终结构['name']       = $PPTX标题;
+  $最终结构['children']   = $页面JSON列表;
+
+  return $最终结构;
 }
 
 ?>
