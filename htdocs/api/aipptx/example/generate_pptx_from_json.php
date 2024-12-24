@@ -12,12 +12,12 @@ require_once("../../vendor/autoload.php");
 require_once('./../AiToPPTX/include.inc.php');
 
 // 导入原始数据
-$JsonContent      	= file_get_contents("./../json/0001.json");
+$JsonContent      	= file_get_contents("./../json/10001.json");
 $JsonData          	= json_decode($JsonContent, true);
 //print_R($JsonData);exit;
 
 $TargetCacheDir 		= realpath("./../cache");
-$TargetPptxFilePath = './../output/0001.pptx';
+$TargetPptxFilePath = './../output/10001.pptx';
 
 AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath)
 
