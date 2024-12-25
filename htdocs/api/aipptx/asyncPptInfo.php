@@ -29,6 +29,10 @@ $Markdown_To_JsonData_Data = Markdown_To_JsonData($MarkdownDataJson['data'], $Js
 //Json Data转Zip格式
 $pptxProperty = base64_encode(gzencode(json_encode($Markdown_To_JsonData_Data)));
 
+if($MarkdownDataJson['current'] == $MarkdownDataJson['total']) {
+  $redis->hSet("PPTX_DOWNLOAD", $pptId, $pptxProperty);
+}
+
 $RS             = [];
 $RS['code']     = 0;
 $RS['message']  = 'ok';

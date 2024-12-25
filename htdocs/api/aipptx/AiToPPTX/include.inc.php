@@ -453,7 +453,7 @@ function Markdown_To_JsonData($MarkdownData, $JsonData) {
   $目录页     = $pages[1];
   $章节标题页 = $pages[2];
   $尾页       = $pages[sizeof($pages)-1];
-  //print_R($Map);exit;
+  //print_R($PPTX标题);exit;
   //$替换后首页 = 替换首页或尾页($首页, $PPTX标题, "AiToPPTX", 1, $PPTX标题);
   //print_R($替换后首页);
 
@@ -473,10 +473,8 @@ function Markdown_To_JsonData($MarkdownData, $JsonData) {
   $最终输出页面数据     = [];
   $最终输出页面数据[0]  = 替换首页或尾页($首页, $PPTX标题, "AiToPPTX", 1, $PPTX标题);
 
-  if($Map[$PPTX标题] == '')  {
-    return;
-  }
-  $目录LIST            = array_keys($Map[$PPTX标题]);
+  //print_R($FullResponeTextArrayNotNullLine);
+  $目录LIST            = array_keys((array)$Map[$PPTX标题]);
   $最终输出页面数据[1]  = 替换目录页($目录页, $目录LIST, 2, $PPTX标题);
 
   $StartPage = 2;
