@@ -47,3 +47,8 @@ $EncryptAESIV = random_bytes(16);
 //System Mark
 global $SystemMark;
 $SystemMark = "Individual";
+
+
+// #################################################################################
+$redis = new Redis();
+$redis->connect('127.0.0.1', 16379);
