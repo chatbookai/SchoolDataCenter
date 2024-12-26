@@ -13,6 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
 }
 
+$个性化信息 = [];
+$个性化信息['Author']       = "Ai-To-PPTX";
+$个性化信息['LastPageText'] = "非常感谢大家聆听";
+
 // 导入原始数据
 $JsonContent      	= file_get_contents("./json/10001.json");
 $JsonData          	= json_decode($JsonContent, true);
@@ -23,8 +27,15 @@ $pptId              = $_GET['pptId'];
 $MarkdownData       = $redis->hGet("PPTX_CONTENT_".date('Ymd'), $pptId);
 $MarkdownDataJson   = json_decode($MarkdownData, true);
 
+$outlineMarkdown    = $redis->hGet("PPTX_OUTLINE_".date('Ymd'), $pptId);
+if($MarkdownDataJson['data']=="")   {
+  $MarkdownDataJson['current'] = 1;
+  $TotalPagesNumber = 根据大纲得到PPTX页码($outlineMarkdown);
+  $MarkdownDataJson['total'] = $TotalPagesNumber;
+}
+
 //Markdown转Json Data
-$Markdown_To_JsonData_Data = Markdown_To_JsonData($MarkdownDataJson['data'], $JsonData);
+$Markdown_To_JsonData_Data = Markdown_To_JsonData($outlineMarkdown, $MarkdownDataJson['data'], $JsonData, $MarkdownDataJson['current']==$MarkdownDataJson['total']?true:false, $个性化信息);
 
 //Json Data转Zip格式
 $pptxProperty = base64_encode(gzencode(json_encode($Markdown_To_JsonData_Data)));

@@ -78,6 +78,8 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
     3.3.2 分析隐私保护在AI工具中的重要性。
     3.3.3 提供数据安全与隐私保护的实践指南。';
 
+    $result = $redis->hSet("PPTX_OUTLINE_".date('Ymd'), $templateId, $outlineMarkdown);
+
     $promptText = "
         你是一位PPTX大纲的编写人员, 需要根据以下要求对PPTX大纲结构进行解释和扩充.
 
@@ -118,28 +120,17 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
     //对原始数据进行分页后统计,得到总有多少页
     //输出的时候,第一页和第二页不需要做扩充,所以可以直接输出
     //依赖于AI的部分是从第三页开始
-    $TotalPages = [];
-    $outlineMarkdownArray = explode("\n", $outlineMarkdown);
-    foreach($outlineMarkdownArray as $Item)  {
-      if(substr(trim($Item), 0, 2) == "# ") {
-        $TotalPages[] = ['type'=>'Cover', 'content'=>substr(trim($Item), 2, strlen($Item))];
-      }
-      if(substr(trim($Item), 0, 3) == "## ") {
-        $TotalPages[] = ['type'=>'Chapter', 'content'=>substr(trim($Item), 3, strlen($Item))];
-      }
-      if(substr(trim($Item), 0, 4) == "### ") {
-        $TotalPages[] = ['type'=>'Page', 'content'=>substr(trim($Item), 4, strlen($Item))];
-      }
-    }
-    $TotalPages[]     = ['type'=>'Thank', 'content'=>'Thank'];
-    $TotalPagesNumber = sizeof($TotalPages);
+    $TotalPagesNumber = 根据大纲得到PPTX页码($outlineMarkdown);
 
     $curl       = curl_init();
 
     $messages 	= [];
     $messages[] = ['content'=> $promptText, 'role'=>'user'];
 
-    $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>'', 'total'=>0, 'current'=>0]));
+    //删除昨天的记录数据
+    $result = $redis->del("PPTX_CONTENT_".date('Ymd', strtotime('-1 day')));
+
+    $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>'', 'total'=>0, 'current'=>0, 'finished'=>false]));
     print 'data: {"current":1, "pptId":"'.$templateId.'", "status":3, "text":"", "total":'.$TotalPagesNumber.'}'."\n\n";
 
     $CURLOPT_POSTFIELDS = [
@@ -173,8 +164,9 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
             //print "Final FullResponeText: $FullResponeText\n";
             $Result           = [];
             $Result['result'] = Markdown_To_Generate_Content_Json($FullResponeText);
+            print 'data: {"current":'.$TotalPagesNumber.', "pptId":"'.$templateId.'", "status":3, "text":"## ", "total":'.$TotalPagesNumber.'}'."\n\n";
             print "data: ".json_encode($Result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n\n";
-            $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$TotalPagesNumber]));
+            $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$TotalPagesNumber, 'finished'=>true]));
 
             return strlen($data);
           }
@@ -202,7 +194,7 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
                   $CurrentPage      = sizeof($分段结构输出情况) + 2;
                   print 'data: {"current":'.$CurrentPage.', "pptId":"'.$templateId.'", "status":3, "text":"## ", "total":'.$TotalPagesNumber.'}'."\n\n";
                   $分段结构输出情况[] = $分段结构标记;
-                  $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$CurrentPage]));
+                  $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$CurrentPage, 'finished'=>false]));
                 }
               }
               if(substr($LastElement1, 0, 4) == '### ') {
@@ -216,7 +208,7 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
                     $CurrentPage      = sizeof($分段结构输出情况) + 2;
                     print 'data: {"current":'.$CurrentPage.', "pptId":"'.$templateId.'", "status":3, "text":"### ", "total":'.$TotalPagesNumber.'}'."\n\n";
                     $分段结构输出情况[] = $分段结构标记;
-                    $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$CurrentPage]));
+                    $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$CurrentPage, 'finished'=>false]));
                   }
                 }
                 else {
@@ -243,7 +235,7 @@ if($_POST['templateId'] != '' && $_POST['asyncGenPptx'] == true)   {
                       $CurrentPage      = sizeof($分段结构输出情况) + 2;
                       print 'data: {"current":'.$CurrentPage.', "pptId":"'.$templateId.'", "status":3, "text":"", "total":'.$TotalPagesNumber.'}'."\n\n";
                       $分段结构输出情况[] = $分段结构标记;
-                      $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$CurrentPage]));
+                      $redis->hSet("PPTX_CONTENT_".date('Ymd'), $templateId, json_encode(['data'=>$FullResponeText, 'total'=>$TotalPagesNumber, 'current'=>$CurrentPage, 'finished'=>false]));
                     }
                   }
                 }
