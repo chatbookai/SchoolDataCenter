@@ -5,6 +5,7 @@ header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization
 header("Content-Type: application/json");
 header('Cache-Control: no-cache');
 
+require_once('../config.inc.php');
 require_once('../include.inc.php');
 ini_set('max_execution_time', 7200);
 

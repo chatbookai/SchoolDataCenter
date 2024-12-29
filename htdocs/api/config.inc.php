@@ -5,7 +5,7 @@
 $DB_TYPE        = 'mysqli';
 $DB_HOST        = 'localhost:3386';
 $DB_USERNAME    = 'root';
-$DB_PASSWORD    = '6jF0^#12x6^S2zQ#t';
+$DB_PASSWORD    = '6jF0';
 $DB_DATABASE    = 'myedu';
 
 // To allow other domains to access your back end api:
