@@ -96,7 +96,10 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 function Markdown_To_Generate_Content_Json($FullResponeText) {
 
   //非空处理
-  $FullResponeTextArray = explode("\n", $FullResponeText);
+  $FullResponeTextArray = explode("\\n", $FullResponeText);
+  if(sizeof($FullResponeTextArray)==1)  {
+    $FullResponeTextArray = explode("\n", $FullResponeText);
+  }
   $FullResponeTextArrayNotNullLine = [];
   foreach($FullResponeTextArray as $Item) {
     if(trim($Item)!="") {
@@ -420,6 +423,9 @@ function Markdown_To_JsonData($OUTLINE, $MarkdownData, $JsonData, $Finished, $�
 
   //非空处理
   $FullResponeTextArray = explode("\\n", $MarkdownData);
+  if(sizeof($FullResponeTextArray) == 1) {
+    $FullResponeTextArray = explode("\n", $MarkdownData);
+  }
   $FullResponeTextArrayNotNullLine = [];
   foreach($FullResponeTextArray as $Item) {
     if(trim($Item)!="") {
@@ -495,8 +501,10 @@ function Markdown_To_JsonData($OUTLINE, $MarkdownData, $JsonData, $Finished, $�
   }
 
   $StartPage = 2;
+  $章节序号 = 0;
   foreach((array)$Map[$PPTX标题] as $章节名称 => $章节小节列表)  {
-    $最终输出页面数据[$StartPage]       = 替换首页或尾页($章节标题页, $章节名称, "0".($StartPage-1), $StartPage+1, $章节名称);
+    $章节序号 += 1;
+    $最终输出页面数据[$StartPage]       = 替换首页或尾页($章节标题页, $章节名称, $章节序号<10 ? "0".$章节序号 : $章节序号, $StartPage+1, $章节名称);
     $StartPage += 1;
     foreach($章节小节列表 as $章节小节名称 => $章节小节内容)  {
       if(sizeof($章节小节内容) == 6)  {
@@ -525,7 +533,10 @@ function Markdown_To_JsonData($OUTLINE, $MarkdownData, $JsonData, $Finished, $�
 function 根据大纲得到PPTX页码($outlineMarkdown) {
   $TotalPages       = [];
   $TotalPages[]     = ['type'=>'Content', 'content'=>'Content'];
-  $outlineMarkdownArray = explode("\n", $outlineMarkdown);
+  $outlineMarkdownArray = explode("\\n", $outlineMarkdown);
+  if(sizeof($outlineMarkdownArray)==1)  {
+    $outlineMarkdownArray = explode("\n", $outlineMarkdown);
+  }
   foreach($outlineMarkdownArray as $Item)  {
     if(substr(trim($Item), 0, 2) == "# ") {
       $TotalPages[] = ['type'=>'Cover', 'content'=>substr(trim($Item), 2, strlen($Item))];
