@@ -17,7 +17,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	$shapeType 		= $childrenItem['extInfo']['property']['shapeType'];
 	$fillStyle 		= $childrenItem['extInfo']['property']['fillStyle'];
 	$strokeStyle 	= $childrenItem['extInfo']['property']['strokeStyle'];
-	$geometry 		= $childrenItem['extInfo']['property']['geometry'];
+	$effectLst 		= $childrenItem['extInfo']['property']['effectLst'];
+  $geometry 		= $childrenItem['extInfo']['property']['geometry'];
 	$placeholder	= $childrenItem['extInfo']['property']['placeholder'];
 	$prstTxWarp 	= $childrenItem['extInfo']['property']['prstTxWarp'];
 	$flipVertical 	= $childrenItem['extInfo']['property']['flipVertical'];
@@ -228,7 +229,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	$xfrm->appendChild($off);
 
   if(strval(intval($anchor[0] * 12700)) == "3187240")  {
-    //print $anchor[0];print_R($childrenItem); //exit;
+    //print $anchor;print_R($childrenItem); //exit;
   }
 
 	$ext = $dom->createElement('a:ext');
@@ -236,7 +237,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	$ext->setAttribute('cy', strval(intval($anchor[3] * 12700)));
 	$xfrm->appendChild($ext);
   // ellipse roundRect
-	if($childrenItem['extInfo']['property']['shapeType'] != "ellipse")  {
+	if($childrenItem['extInfo']['property']['shapeType'] != "")  {
 		$prstGeom = $dom->createElement('a:prstGeom');
 		$prstGeom->setAttribute('prst', $childrenItem['extInfo']['property']['geometry']['name']);
 		$spPr->appendChild($prstGeom);
@@ -259,7 +260,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		$spPr->appendChild($noFill);
 	}
 
-
 	//绘制任意几何图形
   //print "TYPE:".$Type." ".$geometry['name']."<BR>";
 	if (     ($Type == "text" && $geometry['name'] == "custom")
@@ -268,7 +268,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		//print_R($childrenItem);
 		$a_custGeom = $dom->createElement('a:custGeom');
 		$spPr->appendChild($a_custGeom);
-
+    //print_R($geometry);
 		// 添加节点
     $geometryKeys = array_keys($geometry);
 		if(in_array('avLst', $geometryKeys)) {
@@ -486,24 +486,24 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		}
 		$spPr->appendChild($a_ln);
     //exit;
+    if(strval(intval($strokeStyle['lineWidth'] * 12700)) == 38100)  {
+      //print_R($childrenItem);exit;
+    }
 
 		if($strokeStyle['paint']['color']['color'] != '')  {
 			$solidFill = $dom->createElement('a:solidFill');
 			$a_ln->appendChild($solidFill);
-			$srgbClr = $dom->createElement('a:srgbClr');
-			if($strokeStyle['paint']['color']['color'] == '-1')  {
+			if($strokeStyle['paint']['color']['color'] != '' && false)  {
+        $srgbClr = $dom->createElement('a:srgbClr');
 				$srgbClr->setAttribute('val', 'FFFFFF');
-			}
-			else {
 				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($strokeStyle['paint']['color']['color']));
+        if($strokeStyle['paint']['color']['lumMod'] != '')  {
+          $lumMod = $dom->createElement('a:lumMod');
+          $lumMod->setAttribute('val', $strokeStyle['paint']['color']['lumMod']);
+          $srgbClr->appendChild($lumMod);
+        }
+        $solidFill->appendChild($srgbClr);
 			}
-			if($strokeStyle['paint']['color']['lumMod'] != '')  {
-				$lumMod = $dom->createElement('a:lumMod');
-				$lumMod->setAttribute('val', $strokeStyle['paint']['color']['lumMod']);
-				$srgbClr->appendChild($lumMod);
-			}
-			$solidFill->appendChild($srgbClr);
-
       if($strokeStyle['paint']['color']['scheme']!="")   {
         $schemeClr = $dom->createElement('a:schemeClr');
         $schemeClr->setAttribute('val', $strokeStyle['paint']['color']['scheme']);
@@ -598,6 +598,11 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
 	}
 
+  if(is_array($effectLst))  {
+    $a_effectLst = $dom->createElement('a:effectLst');
+		$spPr->appendChild($a_effectLst);
+  }
+
 	// 5. 添加 <p:txBody> 及其子元素
 	if($realType != "Picture")  {
 		$txBody = $dom->createElement('p:txBody');
@@ -628,6 +633,9 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 			case 'VERTICAL':
 				$bodyPr->setAttribute('vert', 'vert');
 				break;
+		}
+    if(isset($childrenItem['extInfo']['property']['textRotation'])) {
+			$bodyPr->setAttribute('rot', $childrenItem['extInfo']['property']['textRotation']);
 		}
 		switch($childrenItem['extInfo']['property']['textVerticalAlignment']) {
 			case 'TOP':
@@ -716,9 +724,11 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 						$pPr->setAttribute('algn', 'b');
 						break;
 				}
+
 				if(isset($文本属性['property']['leftMargin'])) {
 					$pPr->setAttribute('marL', intval($文本属性['property']['leftMargin'] * 12700));
 				}
+
 				if(isset($文本属性['property']['bulletStyle']['bulletFont'])) {
 					$buFont = $dom->createElement('a:buFont');
 					$buFont->setAttribute('typeface', $文本属性['property']['bulletStyle']['bulletFont']);
@@ -729,6 +739,11 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 					$buChar = $dom->createElement('a:buChar');
 					$buChar->setAttribute('char', $文本属性['property']['bulletStyle']['bulletCharacter']);
 					$pPr->appendChild($buChar);
+				}
+
+				if(isset($文本属性['property']['bulletStyle']['buNone'])) {
+					$buNone = $dom->createElement('a:buNone');
+					$pPr->appendChild($buNone);
 				}
 
 				if(isset($文本属性['property']['lineSpacing'])) {
@@ -747,6 +762,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 					$pPr->appendChild($spcBef);
 				}
 
+        //print_R($文本属性);
 				$defRPr = $dom->createElement('a:defRPr');
 				$pPr->appendChild($defRPr);
 

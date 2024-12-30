@@ -13,14 +13,23 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	// 创建DOM对象并设置XML版本和编码
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true;
-
+  //print_R($Layout);
 	// 创建根元素 <p:sldLayout>
 	$sldLayout = $dom->createElementNS(
 		'http://schemas.openxmlformats.org/presentationml/2006/main',
 		'p:sldLayout'
 	);
-	$sldLayout->setAttribute('type', 'blank');
-	$sldLayout->setAttribute('preserve', '1');
+  if($Layout['type'] == "BLANK")    {
+    $sldLayout->setAttribute('type', 'blank');
+    $sldLayout->setAttribute('preserve', '1');
+  }
+  if($Layout['type'] == "CUST") {
+    $sldLayout->setAttribute('preserve', '1');
+    $sldLayout->setAttribute('userDrawn', '1');
+  }
+  if($Layout['noMaster'] == "1") {
+    $sldLayout->setAttribute('showMasterSp', 'false');
+  }
 
 	// 注册命名空间前缀
 	$sldLayout->setAttributeNS(
