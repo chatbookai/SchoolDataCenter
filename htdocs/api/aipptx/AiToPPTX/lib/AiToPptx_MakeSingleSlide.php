@@ -11,6 +11,7 @@
 function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 	global $SharpCounter;
 	$childrenList	= $PageData['children'];
+	$extInfo	    = $PageData['extInfo'];
 
 	// 开始处理 Slide 页面
 	// 创建 DOMDocument 实例
@@ -36,11 +37,24 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 	$pBg = $dom->createElement('p:bg');
 	$pBgPr = $dom->createElement('p:bgPr');
 	$solidFill = $dom->createElement('a:solidFill');
-	$srgbClr = $dom->createElement('a:srgbClr');
-	$srgbClr->setAttribute('val', 'FFFFFF');
+
+  if($extInfo['background']['realType']=="Background" && $extInfo['background']['fillStyle']['type']=="color")  {
+    if($extInfo['background']['fillStyle']['color']['scheme']!="") {
+      $schemeClr = $dom->createElement('a:schemeClr');
+      $schemeClr->setAttribute('val', $extInfo['background']['fillStyle']['color']['scheme']);
+      $alpha = $dom->createElement('a:alpha');
+      $alpha->setAttribute('val', $extInfo['background']['fillStyle']['color']['alpha']);
+      $schemeClr->appendChild($alpha);
+      $solidFill->appendChild($schemeClr);
+    }
+    if($extInfo['background']['fillStyle']['color']['color']=="-1") {
+      $srgbClr = $dom->createElement('a:srgbClr');
+      $srgbClr->setAttribute('val', 'FFFFFF');
+      $solidFill->appendChild($srgbClr);
+    }
+  }
 
 	// 构建背景元素层级关系
-	$solidFill->appendChild($srgbClr);
 	$pBgPr->appendChild($solidFill);
 	$pBg->appendChild($pBgPr);
 
@@ -101,22 +115,23 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 	$SharpCounter = 0;
 	foreach ($childrenList as $childrenItem) {
 
-		$Type 				= $childrenItem['type'];
+		$Type 				  = $childrenItem['type'];
 		$realType 			= $childrenItem['extInfo']['property']['realType'];
 		$rotation 			= $childrenItem['extInfo']['property']['rotation'];
 		$groupFillStyle 	= $childrenItem['extInfo']['property']['groupFillStyle'];
 
+    //得到图片路径信息
+    $得到图片路径信息 = explode('/', $FilePath);
+    array_pop($得到图片路径信息);
+    array_pop($得到图片路径信息);
+    $得到图片路径信息[] = 'media';
+    $DirPath = join('/', $得到图片路径信息);
+
 		if($realType == "Group") {
 			//print_R($childrenItem);
-			$绘制元素RESULT 	= AiToPptx_DrawGroupObject($childrenItem);
+			$绘制元素RESULT 	= AiToPptx_DrawGroupObject($childrenItem, $DirPath);
 		}
 		else {
-      //得到图片路径信息
-      $得到图片路径信息 = explode('/', $FilePath);
-      array_pop($得到图片路径信息);
-      array_pop($得到图片路径信息);
-      $得到图片路径信息[] = 'media';
-      $DirPath = join('/', $得到图片路径信息);
 			$绘制元素RESULT 	= AiToPptx_DrawSingleObject($childrenItem, $DirPath);
 		}
 		$importedNode = $dom->importNode($绘制元素RESULT, true); // 深度导入整个节点及其子节点
@@ -144,6 +159,7 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 </Relationships>';
 	file_put_contents($RelationPath, $RelationContent);
 
+  //print $dom->saveXML();//exit;
 	return $dom->saveXML();
 }
 

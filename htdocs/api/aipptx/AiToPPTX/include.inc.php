@@ -28,7 +28,7 @@ function AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath) {
 	// 确保子文件夹都存在
 	if(!is_dir($TargetCacheDir."/_rels")) 		mkdir($TargetCacheDir."/_rels");
 	if(!is_dir($TargetCacheDir."/docProps")) 	mkdir($TargetCacheDir."/docProps");
-	if(!is_dir($TargetCacheDir."/ppt")) 		mkdir($TargetCacheDir."/ppt");
+	if(!is_dir($TargetCacheDir."/ppt")) 		  mkdir($TargetCacheDir."/ppt");
 	if(!is_dir($TargetCacheDir."/ppt/_rels")) 	mkdir($TargetCacheDir."/ppt/_rels");
 	if(!is_dir($TargetCacheDir."/ppt/media")) 	mkdir($TargetCacheDir."/ppt/media");
 	if(!is_dir($TargetCacheDir."/ppt/theme")) 	mkdir($TargetCacheDir."/ppt/theme");

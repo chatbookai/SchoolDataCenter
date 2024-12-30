@@ -44,11 +44,24 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	$bg = $dom->createElement('p:bg');
 	$bgPr = $dom->createElement('p:bgPr');
 	$solidFill = $dom->createElement('a:solidFill');
-	$srgbClr = $dom->createElement('a:srgbClr');
-	$srgbClr->setAttribute('val', 'FFFFFF');
+
+  if($Layout['background']['realType']=="Background" && $Layout['background']['fillStyle']['type']=="color")  {
+    if($Layout['background']['fillStyle']['color']['scheme']!="") {
+      $schemeClr = $dom->createElement('a:schemeClr');
+      $schemeClr->setAttribute('val', $Layout['background']['fillStyle']['color']['scheme']);
+      $alpha = $dom->createElement('a:alpha');
+      $alpha->setAttribute('val', $Layout['background']['fillStyle']['color']['alpha']);
+      $schemeClr->appendChild($alpha);
+      $solidFill->appendChild($schemeClr);
+    }
+    if($Layout['background']['fillStyle']['color']['color']=="-1") {
+      $srgbClr = $dom->createElement('a:srgbClr');
+      $srgbClr->setAttribute('val', 'FFFFFF');
+      $solidFill->appendChild($srgbClr);
+    }
+  }
 
 	// 组装 <p:bg> 树
-	$solidFill->appendChild($srgbClr);
 	$bgPr->appendChild($solidFill);
 	$bg->appendChild($bgPr);
 	$cSld->appendChild($bg);
@@ -103,12 +116,25 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
   array_pop($得到图片路径信息);
   $得到图片路径信息[] = 'media';
   $DirPath = join('/', $得到图片路径信息);
-	foreach($Layout['children'] as $ChildrenItem) 		{
-		$绘制单个元素对像RESULT 	= AiToPptx_DrawSingleObject($ChildrenItem, $DirPath); //在这个函数中会更新 $关系引用ID值列表SlideLayout
-		//print $绘制元素RESULT;//exit;
-		$importedpSp = $dom->importNode($绘制单个元素对像RESULT, true); // 深度导入整个节点及其子节点
-		$spTree->appendChild($importedpSp);
+
+  foreach ($Layout['children'] as $childrenItem) {
+		$Type 				  = $childrenItem['type'];
+		$realType 			= $childrenItem['extInfo']['property']['realType'];
+		$rotation 			= $childrenItem['extInfo']['property']['rotation'];
+		$groupFillStyle 	= $childrenItem['extInfo']['property']['groupFillStyle'];
+		if($realType == "Group") {
+			//print_R($childrenItem);
+			$绘制元素RESULT 	= AiToPptx_DrawGroupObject($childrenItem, $DirPath);
+      $importedNode = $dom->importNode($绘制元素RESULT, true); // 深度导入整个节点及其子节点
+      $spTree->appendChild($importedNode);
+		}
+		else {
+			$绘制元素RESULT 	= AiToPptx_DrawSingleObject($childrenItem, $DirPath);
+      $importedNode = $dom->importNode($绘制元素RESULT, true); // 深度导入整个节点及其子节点
+      $spTree->appendChild($importedNode);
+		}
 	}
+
 	//print_R($关系引用ID值列表SlideLayout);
 	//写入Relation文件
 	$RelationContent 	= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -122,8 +148,27 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 
 	// 创建 <p:clrMapOvr> 及其子元素
 	$clrMapOvr = $dom->createElement('p:clrMapOvr');
-	$masterClrMapping = $dom->createElement('a:masterClrMapping');
-	$clrMapOvr->appendChild($masterClrMapping);
+  $clrMap = $Layout['clrMap'];
+  if($clrMap)  {
+    $overrideClrMapping = $dom->createElement('a:overrideClrMapping');
+    $overrideClrMapping->setAttribute('accent1', $clrMap['accent1']);
+    $overrideClrMapping->setAttribute('accent2', $clrMap['accent2']);
+    $overrideClrMapping->setAttribute('accent3', $clrMap['accent3']);
+    $overrideClrMapping->setAttribute('accent4', $clrMap['accent4']);
+    $overrideClrMapping->setAttribute('accent5', $clrMap['accent5']);
+    $overrideClrMapping->setAttribute('accent6', $clrMap['accent6']);
+    $overrideClrMapping->setAttribute('bg1', $clrMap['bg1']);
+    $overrideClrMapping->setAttribute('bg2', $clrMap['bg2']);
+    $overrideClrMapping->setAttribute('tx1', $clrMap['tx1']);
+    $overrideClrMapping->setAttribute('tx2', $clrMap['tx2']);
+    $overrideClrMapping->setAttribute('hlink', $clrMap['hlink']);
+    $overrideClrMapping->setAttribute('folHlink', $clrMap['folHlink']);
+    $clrMapOvr->appendChild($overrideClrMapping);
+  }
+  else {
+	  $masterClrMapping = $dom->createElement('a:masterClrMapping');
+    $clrMapOvr->appendChild($masterClrMapping);
+  }
 
 	// 将所有子元素附加到根元素
 	$sldLayout->appendChild($cSld);
@@ -134,6 +179,8 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 
 	//写入文件
 	$dom->save($FilePath);
+
+  //print $dom->saveXML();exit;
 
 	return $dom->saveXML();
 

@@ -34,6 +34,10 @@ function AiToPptx_CreateZip($source, $destination) {
         return false;
     }
 
+    if(is_file($destination))  {
+      unlink($destination);
+    }
+
     $zip = new ZipArchive();
     if (!$zip->open($destination, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
         return false;

@@ -8,14 +8,14 @@
 * Version: 0.0.1
 */
 
-function AiToPptx_DrawGroupObject($childrenItem)  {
+function AiToPptx_DrawGroupObject($childrenItem, $DirPath)  {
 	global $SharpCounter;
 	$anchor 			= $childrenItem['extInfo']['property']['anchor'];
 	$interiorAnchor 	= $childrenItem['extInfo']['property']['interiorAnchor'];
 	// 初始化 DOMDocument
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true;
-
+  //print_R($childrenItem);//exit;
 	// 创建 <p:grpSp> 节点
 	$grpSp = $dom->createElement('p:grpSp');
 
@@ -195,19 +195,30 @@ function AiToPptx_DrawGroupObject($childrenItem)  {
 
 	$childrenList = $childrenItem['children'];
 	foreach($childrenList as $children) {
-		//print_R($children);
-		$绘制元素RESULT 	= AiToPptx_DrawSingleObject($children, $DirPath='');
-		$importedNode = $dom->importNode($绘制元素RESULT, true);
-		$grpSp->appendChild($importedNode);
+    $Type 				  = $children['type'];
+		$realType 			= $children['extInfo']['property']['realType'];
+		$rotation 			= $children['extInfo']['property']['rotation'];
+		$groupFillStyle = $children['extInfo']['property']['groupFillStyle'];
+    if($realType == "Group") {
+			//print_R($childrenItem);
+			$绘制元素RESULT 	= AiToPptx_DrawGroupObject($children, $DirPath);
+      $importedNode = $dom->importNode($绘制元素RESULT, true); // 深度导入整个节点及其子节点
+      $grpSp->appendChild($importedNode);
+		}
+    else {
+      $绘制元素RESULT  = AiToPptx_DrawSingleObject($children, $DirPath);
+      $importedNode   = $dom->importNode($绘制元素RESULT, true);
+      $grpSp->appendChild($importedNode);
+    }
 	}
 
 	// 将 <p:grpSp> 添加到 DOM 的根节点
-	//$dom->appendChild($grpSp);
+	//$dom->appendChild($grpSp); print_R($dom->saveXML());//exit;
 
 	// 输出生成的 XML 结构
 	//$绘制元素RESULT = $dom->saveXML();
 
-	if(strval(intval($anchor[0] * 12700)) == '9002135')  {
+	if(strval(intval($anchor[0] * 12700)) == '549425')  {
 		//print_R($childrenItem);
 		//print_R($绘制元素RESULT->saveXML());
 	}

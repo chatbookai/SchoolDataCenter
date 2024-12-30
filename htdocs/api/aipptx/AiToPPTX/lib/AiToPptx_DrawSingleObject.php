@@ -8,12 +8,11 @@
 * Version: 0.0.1
 */
 
-function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
+function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	global $SharpCounter;
 	$Type 			= $childrenItem['type'];
   $Point 			= $childrenItem['point'];
 	$anchor 		= $childrenItem['extInfo']['property']['anchor'];
-	$realType 		= $childrenItem['extInfo']['property']['realType'];
 	$realType 		= $childrenItem['extInfo']['property']['realType'];
 	$shapeType 		= $childrenItem['extInfo']['property']['shapeType'];
 	$fillStyle 		= $childrenItem['extInfo']['property']['fillStyle'];
@@ -24,6 +23,9 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 	$flipVertical 	= $childrenItem['extInfo']['property']['flipVertical'];
 	$rotation 		= $childrenItem['extInfo']['property']['rotation'];
 	$fileName 		= $childrenItem['extInfo']['property']['fileName'];
+	$imageData 		= $childrenItem['extInfo']['property']['image'];
+	$extension 		= $childrenItem['extInfo']['property']['extension'];
+	$contentType	= $childrenItem['extInfo']['property']['contentType'];
 	$clipping 		= $childrenItem['extInfo']['property']['clipping'];
 	//print_R($childrenItem);
 
@@ -81,13 +83,21 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 		}
 		$nvSpPr->appendChild($cNvSpPr);
 	}
+
+  // 存储图片 - 没有文件名,应该是纹路填充类
+  if($fillStyle['texture']['imageData'] != "" && $fillStyle['texture']['contentType'] =="image/jpeg")  {  // $Type 的值此时有可能为 text
+    //print_R($DirPath."/".$fileName);print "\n";
+    global $GlobalImageCounter;
+    $GlobalImageCounter += 1;
+    $fileName = "image".$GlobalImageCounter.".jpeg";
+    AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
+  }
+
 	if($Type == "image" && $fileName != "")  {
-		// 存储图片
-		if($fillStyle['texture']['imageData'] != "")  {
-			$alpha 		= $fillStyle['texture']['alpha'];
-			$stretch 	= $fillStyle['texture']['stretch'];
-			AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/". $fileName);
-		}
+    // 存储图片 - 存在文件类型和文件名
+    if($imageData != "")  {
+      AiToPptx_SaveBase64ImageToFile($imageData, $DirPath."/".$fileName);
+    }
 		//print_R($fillStyle);
 		// 3. 添加 <p:nvPicPr> 子元素及其子元素
 		$nvSpPr = $dom->createElement('p:nvPicPr');
@@ -107,7 +117,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 
 		// 生成rId的值
 		global $关系引用ID值列表SlideLayout;
-		$关系引用ID = sizeof($关系引用ID值列表SlideLayout) + 1;
+		$关系引用ID = sizeof((array)$关系引用ID值列表SlideLayout) + 1;
 		$关系引用ID值列表SlideLayout[] = '<Relationship Id="rId'.$关系引用ID.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
 		// 创建 <p:blipFill> 元素
 		$p_blipFill = $dom->createElement('p:blipFill');
@@ -217,12 +227,16 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 	$off->setAttribute('y', strval(intval($anchor[1] * 12700)));
 	$xfrm->appendChild($off);
 
+  if(strval(intval($anchor[0] * 12700)) == "3187240")  {
+    //print $anchor[0];print_R($childrenItem); //exit;
+  }
+
 	$ext = $dom->createElement('a:ext');
 	$ext->setAttribute('cx', strval(intval($anchor[2] * 12700)));
 	$ext->setAttribute('cy', strval(intval($anchor[3] * 12700)));
 	$xfrm->appendChild($ext);
-
-	if($childrenItem['extInfo']['property']['shapeType'] != "")  {
+  // ellipse roundRect
+	if($childrenItem['extInfo']['property']['shapeType'] != "ellipse")  {
 		$prstGeom = $dom->createElement('a:prstGeom');
 		$prstGeom->setAttribute('prst', $childrenItem['extInfo']['property']['geometry']['name']);
 		$spPr->appendChild($prstGeom);
@@ -247,23 +261,30 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 
 
 	//绘制任意几何图形
-	if ($Type == "text" && $geometry['name'] == "custom" && 1) {
+  //print "TYPE:".$Type." ".$geometry['name']."<BR>";
+	if (     ($Type == "text" && $geometry['name'] == "custom")
+        || ($realType == "Picture" && $geometry['name'] == "custom")
+      ) {
 		//print_R($childrenItem);
 		$a_custGeom = $dom->createElement('a:custGeom');
 		$spPr->appendChild($a_custGeom);
 
 		// 添加节点
-		$a_custGeom->appendChild($dom->createElement('a:avLst'));
-		$a_custGeom->appendChild($dom->createElement('a:gdLst'));
-		$a_custGeom->appendChild($dom->createElement('a:ahLst'));
-		$a_custGeom->appendChild($dom->createElement('a:cxnLst'));
+    $geometryKeys = array_keys($geometry);
+		if(in_array('avLst', $geometryKeys)) {
+      $a_custGeom->appendChild($dom->createElement('a:avLst'));
+		  $a_custGeom->appendChild($dom->createElement('a:gdLst'));
+		  $a_custGeom->appendChild($dom->createElement('a:ahLst'));
+		  $a_custGeom->appendChild($dom->createElement('a:cxnLst'));
 
-		$a_rect = $dom->createElement('a:rect');
-		$a_rect->setAttribute('r', 'r');
-		$a_rect->setAttribute('b', 'b');
-		$a_rect->setAttribute('t', 't');
-		$a_rect->setAttribute('l', 'l');
-		$a_custGeom->appendChild($a_rect);
+      $a_rect = $dom->createElement('a:rect');
+      $a_rect->setAttribute('r', 'r');
+      $a_rect->setAttribute('b', 'b');
+      $a_rect->setAttribute('t', 't');
+      $a_rect->setAttribute('l', 'l');
+      $a_custGeom->appendChild($a_rect);
+
+    }
 
 		// 创建 <a:pathLst> 和 <a:path> 节点
 		$pathInfo = $geometry['data']['paths'][0];
@@ -285,7 +306,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 		// 遍历并生成路径指令
 		foreach ($commands as $command) {
 			$typeLine = $command[0]; // 指令类型 (M, L, C, Z)
-			$points = array_filter(explode(' ', trim(substr($command, 1)))); // 提取点数据
+			$points = explode(' ', trim(substr($command, 1))); // 提取点数据
 
 			if ($typeLine === 'M') {
 				// 创建 <a:moveTo> 节点
@@ -447,8 +468,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 		$spPr->appendChild($noFill);
 	}
 
-	//print_R($strokeStyle['paint']['color']['color']);
 	if($strokeStyle['lineWidth'] != "" || $strokeStyle['lineCap'] != "" || $strokeStyle['lineDash'] != "")   {
+    //print_R($strokeStyle);
 		// 创建 <a:ln> 节点并设置属性
 		$a_ln = $dom->createElement('a:ln');
 		if($strokeStyle['lineWidth'] != "")  {
@@ -464,6 +485,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 			$a_ln->setAttribute('cmpd', 'sng'); // 设置 cmpd 属性为 "sng"
 		}
 		$spPr->appendChild($a_ln);
+    //exit;
 
 		if($strokeStyle['paint']['color']['color'] != '')  {
 			$solidFill = $dom->createElement('a:solidFill');
@@ -481,6 +503,12 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 				$srgbClr->appendChild($lumMod);
 			}
 			$solidFill->appendChild($srgbClr);
+
+      if($strokeStyle['paint']['color']['scheme']!="")   {
+        $schemeClr = $dom->createElement('a:schemeClr');
+        $schemeClr->setAttribute('val', $strokeStyle['paint']['color']['scheme']);
+        $solidFill->appendChild($schemeClr);
+      }
 		}
 
 		// 创建 <a:prstDash> 节点并设置属性
@@ -502,6 +530,17 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 			$tailEnd->setAttribute('len', $strokeStyle['lineTailLength'] == "LARGE" ? "lg" : "sm");
 			$tailEnd->setAttribute('type', $strokeStyle['lineTailDecoration'] == "LARGE" ? "lg" : "sm");
 			$a_ln->appendChild($tailEnd);
+		}
+
+    if($strokeStyle['miterLimit'] != "" && $strokeStyle['lineJoin'] == "MITER")  {
+			$miter = $dom->createElement('a:miter');
+			$miter->setAttribute('lim', $strokeStyle['miterLimit'] * 1000);
+			$a_ln->appendChild($miter);
+		}
+
+    if($strokeStyle['paint']['type'] == "noFill")  {
+			$noFill = $dom->createElement('a:noFill');
+		  $a_ln->appendChild($noFill);
 		}
 
 		if($strokeStyle['paint']['gradient']['gradientType'] != "")  {
@@ -565,7 +604,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 		$pSp->appendChild($txBody);
 
 		$bodyPr = $dom->createElement('a:bodyPr');
-		$bodyPr->setAttribute('rtlCol', 'false');
+		//$bodyPr->setAttribute('rtlCol', 'false');
 		if($realType == "TextBox" || $realType == "Auto" || $realType == "Freeform")  {
 			switch($childrenItem['extInfo']['property']['textAutofit']) {
 				case 'NORMAL':
@@ -641,8 +680,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 			$bodyPr->appendChild($a_noAutofit);
 		}
 
-		$lstStyle = $dom->createElement('a:lstStyle');
-		$txBody->appendChild($lstStyle);
+		//$lstStyle = $dom->createElement('a:lstStyle');
+		//$txBody->appendChild($lstStyle);
 
 		// 6. 文本框, 创建段落 <a:p> 及其内容, <a:p>对像可能会有多个,所以需要循环过滤
 		$childrenList 	= $childrenItem['children'];
@@ -794,9 +833,9 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 
 						//此处变量多增加了一个['color'],需要看是否会影响到其它slide页面,目前是在layout中有效
 						if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" )  {
-							$srgbClr = $dom->createElement('a:srgbClr');
-							$srgbClr->setAttribute('val', AiToPptx_NumberToColor($文本对像['extInfo']['property']['fontColor']['color']['color']));
-							$solidFill->appendChild($srgbClr);
+              //$srgbClr = $dom->createElement('a:srgbClr');
+							//$srgbClr->setAttribute('val', AiToPptx_NumberToColor($文本对像['extInfo']['property']['fontColor']['color']['color']));
+							//$solidFill->appendChild($srgbClr);
 							if($文本对像['extInfo']['property']['fontColor']['color']['alpha'] != "")  {
 								$alpha = $dom->createElement('a:alpha');
 								$alpha->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['alpha']);
@@ -816,6 +855,13 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 						if($文本对像['extInfo']['property']['fontColor']['color']['scheme'] !="" )  {
 							$schemeClr = $dom->createElement('a:schemeClr');
 							$schemeClr->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['scheme']);
+
+              if($文本对像['extInfo']['property']['fontColor']['color']['tint']!="")   {
+                $tint = $dom->createElement('a:tint');
+                $tint->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['tint']);
+                $schemeClr->appendChild($tint);
+              }
+
 							$solidFill->appendChild($schemeClr);
 						}
 
@@ -832,10 +878,10 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath='')  {
 					}
 				}
 
-				$endParaRPr = $dom->createElement('a:endParaRPr');
-				$endParaRPr->setAttribute('lang', 'en-US');
-				$endParaRPr->setAttribute('sz', '1100');
-				$p->appendChild($endParaRPr);
+				//$endParaRPr = $dom->createElement('a:endParaRPr');
+				//$endParaRPr->setAttribute('lang', 'en-US');
+				//$endParaRPr->setAttribute('sz', '1100');
+				//$p->appendChild($endParaRPr);
 			}
 
 		}
