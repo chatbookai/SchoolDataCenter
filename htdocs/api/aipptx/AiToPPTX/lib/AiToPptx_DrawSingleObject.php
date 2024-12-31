@@ -924,9 +924,9 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
 						//此处变量多增加了一个['color'],需要看是否会影响到其它slide页面,目前是在layout中有效
 						if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" )  {
-              //$srgbClr = $dom->createElement('a:srgbClr');
+              $srgbClr = $dom->createElement('a:srgbClr');
 							//$srgbClr->setAttribute('val', AiToPptx_NumberToColor($文本对像['extInfo']['property']['fontColor']['color']['color']));
-							//$solidFill->appendChild($srgbClr);
+							$solidFill->appendChild($srgbClr);
 							if($文本对像['extInfo']['property']['fontColor']['color']['alpha'] != "")  {
 								$alpha = $dom->createElement('a:alpha');
 								$alpha->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['alpha']);
