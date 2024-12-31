@@ -12,6 +12,8 @@ function AiToPptx_DrawGroupObject($childrenItem, $DirPath)  {
 	global $SharpCounter;
 	$anchor 			= $childrenItem['extInfo']['property']['anchor'];
 	$interiorAnchor 	= $childrenItem['extInfo']['property']['interiorAnchor'];
+	$flipVertical 	  = $childrenItem['extInfo']['property']['flipVertical'];
+	$flipHorizontal 	= $childrenItem['extInfo']['property']['flipHorizontal'];
 	// 初始化 DOMDocument
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true;
@@ -41,8 +43,11 @@ function AiToPptx_DrawGroupObject($childrenItem, $DirPath)  {
 
 	// 创建 <a:xfrm> 节点及其子节点
 	$xfrm = $dom->createElement('a:xfrm');
-	if($rotation > 0) {
-		$xfrm->setAttribute('rot', $rotation * 60000);
+	if($flipVertical == 1) {
+		$xfrm->setAttribute('flipV', 'true');
+	}
+  if($flipHorizontal == 1) {
+		$xfrm->setAttribute('flipH', 'true');
 	}
 
 	$off = $dom->createElement('a:off');

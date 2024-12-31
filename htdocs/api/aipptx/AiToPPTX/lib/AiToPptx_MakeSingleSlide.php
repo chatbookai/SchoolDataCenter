@@ -9,6 +9,10 @@
 */
 
 function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
+
+  global $RelationshipsMap;         $RelationshipsMap = [];
+  global $RelationshipsMapStartId;  $RelationshipsMapStartId = 2;
+
 	global $SharpCounter;
 	$childrenList	= $PageData['children'];
 	$extInfo	    = $PageData['extInfo'];
@@ -24,6 +28,7 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 		'p:sld'
 	);
 	$pSld->setAttribute('xmlns:a', 'http://schemas.openxmlformats.org/drawingml/2006/main');
+	$pSld->setAttribute('xmlns:r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
 
 	// 创建 <p:clrMapOvr> 元素及其子元素 <a:masterClrMapping>
 	$clrMapOvr = $dom->createElement('p:clrMapOvr');
@@ -156,10 +161,11 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 	$RelationContent 	= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 <Relationship Id="rId1" Target="../slideLayouts/slideLayout'.($slideLayoutIdx+1).'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout"/>
+'.join("\n", $RelationshipsMap).'
 </Relationships>';
 	file_put_contents($RelationPath, $RelationContent);
 
-  //print $dom->saveXML();//exit;
+  //print $dom->saveXML();exit;
 	return $dom->saveXML();
 }
 

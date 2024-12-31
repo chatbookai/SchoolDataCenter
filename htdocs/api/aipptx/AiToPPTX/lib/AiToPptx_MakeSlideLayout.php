@@ -23,6 +23,14 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
     $sldLayout->setAttribute('type', 'blank');
     $sldLayout->setAttribute('preserve', '1');
   }
+  if($Layout['type'] == "TITLE_AND_CONTENT")    {
+    $sldLayout->setAttribute('type', 'obj');
+    $sldLayout->setAttribute('preserve', '1');
+  }
+  if($Layout['type'] == "SECTION_HEADER")    {
+    $sldLayout->setAttribute('type', 'secHead');
+    $sldLayout->setAttribute('preserve', '1');
+  }
   if($Layout['type'] == "CUST") {
     $sldLayout->setAttribute('preserve', '1');
     $sldLayout->setAttribute('userDrawn', '1');

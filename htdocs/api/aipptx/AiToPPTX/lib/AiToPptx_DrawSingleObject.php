@@ -22,6 +22,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	$placeholder	= $childrenItem['extInfo']['property']['placeholder'];
 	$prstTxWarp 	= $childrenItem['extInfo']['property']['prstTxWarp'];
 	$flipVertical 	= $childrenItem['extInfo']['property']['flipVertical'];
+	$flipHorizontal = $childrenItem['extInfo']['property']['flipHorizontal'];
 	$rotation 		= $childrenItem['extInfo']['property']['rotation'];
 	$fileName 		= $childrenItem['extInfo']['property']['fileName'];
 	$imageData 		= $childrenItem['extInfo']['property']['image'];
@@ -85,15 +86,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		$nvSpPr->appendChild($cNvSpPr);
 	}
 
-  // 存储图片 - 没有文件名,应该是纹路填充类
-  if($fillStyle['texture']['imageData'] != "" && $fillStyle['texture']['contentType'] =="image/jpeg")  {  // $Type 的值此时有可能为 text
-    //print_R($DirPath."/".$fileName);print "\n";
-    global $GlobalImageCounter;
-    $GlobalImageCounter += 1;
-    $fileName = "image".$GlobalImageCounter.".jpeg";
-    AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
-  }
-
 	if($Type == "image" && $fileName != "")  {
     // 存储图片 - 存在文件类型和文件名
     if($imageData != "")  {
@@ -128,6 +120,15 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		// 将 <a:blip> 添加到 <p:blipFill> 中
 		$p_blipFill->appendChild($a_blip);
 
+    if($fillStyle['texture']['alphaModFix'] != "")   {
+      $a_alphaModFix = $dom->createElement('a:alphaModFix');
+      $a_alphaModFix->setAttribute('amt', $fillStyle['texture']['alphaModFix']);
+      $a_blip->appendChild($a_alphaModFix);
+    }
+
+    if($clipping[2] == "47387")  {
+      //print_R($childrenItem);exit;
+    }
 
 		$a_srcRect = $dom->createElement('a:srcRect');
 		if(isset($clipping[0]) && $clipping[0]>0 ) $a_srcRect->setAttribute('t', $clipping[0]);
@@ -204,6 +205,13 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
 			$nvPr->appendChild($pPh);
 			break;
+		case 'CONTENT':
+			$pPh = $dom->createElement('p:ph');
+			$pPh->setAttribute('type', 'obj');
+			if(isset($placeholder['size'])) $pPh->setAttribute('sz', strtolower($placeholder['size']));
+			if(isset($placeholder['idx'])) 	$pPh->setAttribute('idx', strtolower($placeholder['idx']));
+			$nvPr->appendChild($pPh);
+			break;
 	}
 
 	if($nvSpPr)  {
@@ -218,6 +226,9 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	if($flipVertical == 1) {
 		$xfrm->setAttribute('flipV', 'true');
 	}
+  if($flipHorizontal == 1) {
+		$xfrm->setAttribute('flipH', 'true');
+	}
 	if($rotation > 0) {
 		$xfrm->setAttribute('rot', $rotation * 60000);
 	}
@@ -228,8 +239,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	$off->setAttribute('y', strval(intval($anchor[1] * 12700)));
 	$xfrm->appendChild($off);
 
-  if(strval(intval($anchor[0] * 12700)) == "3187240")  {
-    //print $anchor;print_R($childrenItem); //exit;
+  if(strval(intval($anchor[2] * 12700)) == "3177596")  {
+    //print_R($childrenItem)."\n"; exit;
   }
 
 	$ext = $dom->createElement('a:ext');
@@ -346,7 +357,71 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	}
 
 	if ($fillStyle['type'] == 'texture') {
-		// 未完成
+    global $RelationshipsMap;
+    global $RelationshipsMapStartId;
+
+    // 存储图片 - 没有文件名,应该是纹路填充类
+    if($fillStyle['texture']['imageData'] != "" && $fillStyle['texture']['contentType'] =="image/jpeg")  {
+      global $GlobalImageCounter;
+      $GlobalImageCounter += 1;
+      $fileName = "image".$GlobalImageCounter.".jpeg";
+      AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
+    }
+    //print $GlobalImageCounter;exit;
+    $blipFill = $dom->createElement('a:blipFill');
+    $blip = $dom->createElement('a:blip');
+    $blip->setAttribute('r:embed', 'rId' . $RelationshipsMapStartId);
+    $RelationshipsMap[] = '<Relationship Id="rId'.$RelationshipsMapStartId.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
+    $RelationshipsMapStartId ++;
+
+    if($fillStyle['texture']['duoTone'][0]['scheme'] != "")  {
+      $duotone = $dom->createElement('a:duotone');
+      $schemeClr = $dom->createElement('a:schemeClr');
+      $schemeClr->setAttribute('val', $fillStyle['texture']['duoTone'][0]['scheme']);
+      if($fillStyle['texture']['duoTone'][0]['satMod']) {
+        $satMod = $dom->createElement('a:satMod');
+        $satMod->setAttribute('val', $fillStyle['texture']['duoTone'][0]['satMod']);
+        $schemeClr->appendChild($satMod);
+      }
+      if($fillStyle['texture']['duoTone'][0]['shade']) {
+        $shade = $dom->createElement('a:shade');
+        $shade->setAttribute('val', $fillStyle['texture']['duoTone'][0]['shade']);
+        $schemeClr->appendChild($shade);
+      }
+      $duotone->appendChild($schemeClr);
+
+      if($fillStyle['texture']['duoTonePrst'][0])   {
+        $prstClr = $dom->createElement('a:prstClr');
+        $prstClr->setAttribute('val', $fillStyle['texture']['duoTonePrst'][0]);
+        $duotone->appendChild($prstClr);
+      }
+
+      $blip->appendChild($duotone);
+    }
+
+    // 将 <a:blip> 添加到 <a:blipFill>
+    $blipFill->appendChild($blip);
+
+    // 创建 <a:srcRect> 元素
+    $srcRect = $dom->createElement('a:srcRect');
+    $blipFill->appendChild($srcRect);
+
+    // 创建 <a:stretch> 元素
+    $stretch = $dom->createElement('a:stretch');
+
+    // 创建 <a:fillRect> 元素，并设置 t, l, b, r 属性
+    $fillRect = $dom->createElement('a:fillRect');
+    $fillRect->setAttribute('t', '0');
+    $fillRect->setAttribute('l', '-14152');
+    $fillRect->setAttribute('b', '0');
+    $fillRect->setAttribute('r', '-23020');
+    $stretch->appendChild($fillRect);
+
+    // 将 <a:stretch> 添加到 <a:blipFill>
+    $blipFill->appendChild($stretch);
+
+    $spPr->appendChild($blipFill);
+    //print_R($childrenItem)."\n"; exit;
 	}
 
 	if ($fillStyle['type'] == 'color') {
@@ -534,7 +609,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
     if($strokeStyle['miterLimit'] != "" && $strokeStyle['lineJoin'] == "MITER")  {
 			$miter = $dom->createElement('a:miter');
-			$miter->setAttribute('lim', $strokeStyle['miterLimit'] * 1000);
+			$miter->setAttribute('lim', $strokeStyle['miterLimit'] * 100000);
 			$a_ln->appendChild($miter);
 		}
 
@@ -701,12 +776,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
 				$pPr = $dom->createElement('a:pPr');
 				$p->appendChild($pPr);
-				if(isset($文本属性['property']['indent'])) {
-					$pPr->setAttribute('indent', intval($文本属性['property']['indent'] * 12700));
-				}
-				if(isset($文本属性['property']['indentLevel'])) {
-					$pPr->setAttribute('lvl', intval($文本属性['property']['indentLevel']));
-				}
 				switch($文本属性['property']['textAlign']) {
 					case 'CENTER':
 						$pPr->setAttribute('algn', 'ctr');
@@ -723,6 +792,12 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 					case 'BOTTOM':
 						$pPr->setAttribute('algn', 'b');
 						break;
+				}
+				if(isset($文本属性['property']['indent'])) {
+					$pPr->setAttribute('indent', intval($文本属性['property']['indent'] * 12700));
+				}
+				if(isset($文本属性['property']['indentLevel'])) {
+					$pPr->setAttribute('lvl', intval($文本属性['property']['indentLevel']));
 				}
 
 				if(isset($文本属性['property']['leftMargin'])) {
@@ -741,11 +816,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 					$pPr->appendChild($buChar);
 				}
 
-				if(isset($文本属性['property']['bulletStyle']['buNone'])) {
-					$buNone = $dom->createElement('a:buNone');
-					$pPr->appendChild($buNone);
-				}
-
 				if(isset($文本属性['property']['lineSpacing'])) {
 					$lnSpc = $dom->createElement('a:lnSpc');
 					$spcPct = $dom->createElement('a:spcPct');
@@ -762,9 +832,14 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 					$pPr->appendChild($spcBef);
 				}
 
-        //print_R($文本属性);
-				$defRPr = $dom->createElement('a:defRPr');
-				$pPr->appendChild($defRPr);
+				if(isset($文本属性['property']['bulletStyle']['buNone'])) {
+					$buNone = $dom->createElement('a:buNone');
+					$pPr->appendChild($buNone);
+				}
+
+        //print_R($文本属性); 暂时注释掉
+				//$defRPr = $dom->createElement('a:defRPr');
+				//$pPr->appendChild($defRPr);
 
 
 				$文本对像List		= (array)$childrenListItem['children'];

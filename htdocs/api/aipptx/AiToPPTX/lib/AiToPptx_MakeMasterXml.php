@@ -35,11 +35,22 @@ function AiToPptx_MakeMasterXml($slideMasters, $DirPath)  {
 	// 添加 <a:solidFill> 元素
 	$solidFill = $dom->createElement('a:solidFill');
 	$bgPr->appendChild($solidFill);
+  $fillStyle = $slideMasters[0]['background']['fillStyle'];
+  if($fillStyle['color']['scheme'] != '')   {
+    $schemeClr = $dom->createElement('a:schemeClr');
+    $schemeClr->setAttribute('val', $fillStyle['color']['scheme']);
+    $solidFill->appendChild($schemeClr);
+    if($fillStyle['color']['alpha'] != '')   {
+      $a_alpha = $dom->createElement('a:alpha');
+      $a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
+      $schemeClr->appendChild($a_alpha);
+    }
+  }
 
-	// 添加 <a:srgbClr> 元素
-	$srgbClr = $dom->createElement('a:srgbClr');
+	// 添加 <a:srgbClr> 元素 暂时不启用
+	//$srgbClr = $dom->createElement('a:srgbClr');
 	//$srgbClr->setAttribute('val', 'FFFFFF');
-	$solidFill->appendChild($srgbClr);
+	//$solidFill->appendChild($srgbClr);
 
 	// 添加 <p:spTree> 元素
 	$spTree = $dom->createElement('p:spTree');
