@@ -10,6 +10,10 @@
 
 function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 
+	global $关系引用ID值列表SlideLayout;
+	$关系引用ID值列表SlideLayout 		= [];
+	$关系引用ID值列表SlideLayout[] 	= '<Relationship Id="rId1" Target="../slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
+
 	// 创建DOM对象并设置XML版本和编码
 	$dom = new DOMDocument('1.0', 'UTF-8');
 	$dom->formatOutput = true;
@@ -99,10 +103,17 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	$bgPr->appendChild($solidFill);
   */
 
+  //得到图片路径信息
+  $得到图片路径信息 = explode('/', $FilePath);
+  array_pop($得到图片路径信息);
+  array_pop($得到图片路径信息);
+  $得到图片路径信息[] = 'media';
+  $DirPath = join('/', $得到图片路径信息);
+
 	$fillStyle 		  = $Layout['background']['fillStyle'];
-  $bgPr           = 渲染fillStyle($dom, $fillStyle, $bgPr);
+  $bgPr           = 渲染fillStyle($dom, $fillStyle, $bgPr, $DirPath);
 	$strokeStyle 		= $Layout['background']['strokeStyle'];
-  $bgPr           = 渲染strokeStyle($dom, $strokeStyle, $bgPr);
+  $bgPr           = 渲染strokeStyle($dom, $strokeStyle, $bgPr, $DirPath);
 
 	// 组装 <p:bg> 树
 	$bg->appendChild($bgPr);
@@ -148,16 +159,6 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	$spTree->appendChild($grpSpPr);
 
 	// 组装 <p:sp>
-	global $关系引用ID值列表SlideLayout;
-	$关系引用ID值列表SlideLayout 		= [];
-	$关系引用ID值列表SlideLayout[] 	= '<Relationship Id="rId1" Target="../slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
-
-  //得到图片路径信息
-  $得到图片路径信息 = explode('/', $FilePath);
-  array_pop($得到图片路径信息);
-  array_pop($得到图片路径信息);
-  $得到图片路径信息[] = 'media';
-  $DirPath = join('/', $得到图片路径信息);
 
   foreach ($Layout['children'] as $childrenItem) {
 		$Type 				  = $childrenItem['type'];
@@ -222,7 +223,7 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	//写入文件
 	$dom->save($FilePath);
 
-  print $dom->saveXML();print_R($Layout);exit;
+  //print $dom->saveXML();print_R($Layout);exit;
 
 	return $dom->saveXML();
 

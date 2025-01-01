@@ -87,11 +87,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	}
 
 	if($Type == "image" && $fileName != "")  {
-    // 存储图片 - 存在文件类型和文件名
-    if($imageData != "")  {
-      AiToPptx_SaveBase64ImageToFile($imageData, $DirPath."/".$fileName);
-    }
-		// 3. 添加 <p:nvPicPr> 子元素及其子元素
+
+		// 添加 <p:nvPicPr> 子元素及其子元素
 		$nvSpPr = $dom->createElement('p:nvPicPr');
 		$pSp->appendChild($nvSpPr);
 		$cNvPr = $dom->createElement('p:cNvPr');
@@ -107,10 +104,14 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
 		$nvSpPr->appendChild($cNvPicPr);
 
-		// 生成rId的值
-		global $关系引用ID值列表SlideLayout;
-		$关系引用ID = sizeof((array)$关系引用ID值列表SlideLayout) + 1;
-		$关系引用ID值列表SlideLayout[] = '<Relationship Id="rId'.$关系引用ID.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
+    // 存储图片 - 存在文件类型和文件名
+    if($imageData != "")  {
+      AiToPptx_SaveBase64ImageToFile($imageData, $DirPath."/".$fileName);
+      global $关系引用ID值列表SlideLayout;
+      $关系引用ID = sizeof((array)$关系引用ID值列表SlideLayout) + 1;
+      $关系引用ID值列表SlideLayout[] = '<Relationship Id="rId'.$关系引用ID.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
+    }
+
 		// 创建 <p:blipFill> 元素
 		$p_blipFill = $dom->createElement('p:blipFill');
 		// 创建 <a:blip> 元素，并添加 r:embed 属性
@@ -350,8 +351,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		//print $dom->asXML();exit;
 	}
 
-  $spPr = 渲染fillStyle($dom, $fillStyle, $spPr);
-  $spPr = 渲染strokeStyle($dom, $strokeStyle, $spPr);
+  $spPr = 渲染fillStyle($dom, $fillStyle, $spPr, $DirPath);
+  $spPr = 渲染strokeStyle($dom, $strokeStyle, $spPr, $DirPath);
 
   if(is_array($effectLst))  {
     $a_effectLst = $dom->createElement('a:effectLst');
@@ -686,11 +687,9 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 }
 
 
-function 渲染fillStyle($dom, $fillStyle, $spPr)                {
+function 渲染fillStyle($dom, $fillStyle, $spPr, $DirPath)                {
 
   if ($fillStyle['type'] == 'texture')        {
-    global $RelationshipsMap;
-    global $RelationshipsMapStartId;
 
     // 存储图片 - 没有文件名,应该是纹路填充类
     if(strlen($fillStyle['texture']['imageData'])>100 && $fillStyle['texture']['contentType'] == "image/jpeg")  {
@@ -698,6 +697,9 @@ function 渲染fillStyle($dom, $fillStyle, $spPr)                {
       $GlobalImageCounter += 1;
       $fileName = "image".$GlobalImageCounter.".jpeg";
       AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
+      global $关系引用ID值列表SlideLayout;
+      $关系引用ID = sizeof((array)$关系引用ID值列表SlideLayout) + 1;
+      $关系引用ID值列表SlideLayout[] = '<Relationship Id="rId'.$关系引用ID.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
     }
     if(strlen($fillStyle['texture']['imageData'])>100 && $fillStyle['texture']['contentType'] == "image/png")  {
       //print_R($fillStyle);
@@ -705,14 +707,15 @@ function 渲染fillStyle($dom, $fillStyle, $spPr)                {
       $GlobalImageCounter += 1;
       $fileName = "image".$GlobalImageCounter.".png";
       AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
+      global $关系引用ID值列表SlideLayout;
+      $关系引用ID = sizeof((array)$关系引用ID值列表SlideLayout) + 1;
+      $关系引用ID值列表SlideLayout[] = '<Relationship Id="rId'.$关系引用ID.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
     }
     //print $GlobalImageCounter;exit;
 
     $a_blipFill = $dom->createElement('a:blipFill');
     $blip = $dom->createElement('a:blip');
-    $blip->setAttribute('r:embed', 'rId' . $RelationshipsMapStartId);
-    $RelationshipsMap[] = '<Relationship Id="rId'.$RelationshipsMapStartId.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
-    $RelationshipsMapStartId ++;
+    $blip->setAttribute('r:embed', 'rId' . $关系引用ID);
 
     if($fillStyle['texture']['duoTone'][0]['scheme'] != "")  {
       $duotone = $dom->createElement('a:duotone');
@@ -883,7 +886,7 @@ function 渲染fillStyle($dom, $fillStyle, $spPr)                {
 }
 
 
-function 渲染strokeStyle($dom, $strokeStyle, $spPr) {
+function 渲染strokeStyle($dom, $strokeStyle, $spPr, $DirPath) {
 
   if($strokeStyle['lineWidth'] != "" || $strokeStyle['lineCap'] != "" || $strokeStyle['lineDash'] != "")   {
     //print_R($strokeStyle);

@@ -10,8 +10,8 @@
 
 function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 
-  global $RelationshipsMap;         $RelationshipsMap = [];
-  global $RelationshipsMapStartId;  $RelationshipsMapStartId = 2;
+	global $关系引用ID值列表SlideLayout;
+	$关系引用ID值列表SlideLayout 		= [];
 
 	global $SharpCounter;
 	$childrenList	= $PageData['children'];
@@ -79,10 +79,18 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
   }
 	$pBgPr->appendChild($solidFill);
   */
+
+  //得到图片路径信息
+  $得到图片路径信息 = explode('/', $FilePath);
+  array_pop($得到图片路径信息);
+  array_pop($得到图片路径信息);
+  $得到图片路径信息[] = 'media';
+  $DirPath = join('/', $得到图片路径信息);
+
   $fillStyle 		  = $PageData['extInfo']['background']['fillStyle'];
-  $pBgPr           = 渲染fillStyle($dom, $fillStyle, $pBgPr);
+  $pBgPr           = 渲染fillStyle($dom, $fillStyle, $pBgPr, $DirPath);
 	$strokeStyle 		= $PageData['extInfo']['background']['strokeStyle'];
-  $pBgPr           = 渲染strokeStyle($dom, $strokeStyle, $pBgPr);
+  $pBgPr           = 渲染strokeStyle($dom, $strokeStyle, $pBgPr, $DirPath);
 
 	$pBg->appendChild($pBgPr);
 
@@ -148,13 +156,6 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 		$rotation 			= $childrenItem['extInfo']['property']['rotation'];
 		$groupFillStyle 	= $childrenItem['extInfo']['property']['groupFillStyle'];
 
-    //得到图片路径信息
-    $得到图片路径信息 = explode('/', $FilePath);
-    array_pop($得到图片路径信息);
-    array_pop($得到图片路径信息);
-    $得到图片路径信息[] = 'media';
-    $DirPath = join('/', $得到图片路径信息);
-
 		if($realType == "Group") {
 			//print_R($childrenItem);
 			$绘制元素RESULT 	= AiToPptx_DrawGroupObject($childrenItem, $DirPath);
@@ -184,7 +185,7 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 	$RelationContent 	= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 <Relationship Id="rId1" Target="../slideLayouts/slideLayout'.($slideLayoutIdx+1).'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout"/>
-'.join("\n", $RelationshipsMap).'
+'.join('', $关系引用ID值列表SlideLayout).'
 </Relationships>';
 	file_put_contents($RelationPath, $RelationContent);
 
