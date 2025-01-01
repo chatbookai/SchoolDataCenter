@@ -91,7 +91,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
     if($imageData != "")  {
       AiToPptx_SaveBase64ImageToFile($imageData, $DirPath."/".$fileName);
     }
-		//print_R($fillStyle);
 		// 3. 添加 <p:nvPicPr> 子元素及其子元素
 		$nvSpPr = $dom->createElement('p:nvPicPr');
 		$pSp->appendChild($nvSpPr);
@@ -137,17 +136,14 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		if(isset($clipping[3]) && $clipping[3]>0 ) $a_srcRect->setAttribute('r', $clipping[3]);
 		$p_blipFill->appendChild($a_srcRect);
 
-		// 创建 <a:stretch> 元素
 		$a_stretch = $dom->createElement('a:stretch');
-		// 创建 <a:fillRect> 元素，并设置边距属性
 		$a_fillRect = $dom->createElement('a:fillRect');
 		$a_fillRect->setAttribute('t', $fillStyle['texture']['stretch'][0]);
 		$a_fillRect->setAttribute('l', $fillStyle['texture']['stretch'][1]);
 		$a_fillRect->setAttribute('b', $fillStyle['texture']['stretch'][2]);
 		$a_fillRect->setAttribute('r', $fillStyle['texture']['stretch'][3]);
-		// 将 <a:fillRect> 添加到 <a:stretch> 中
 		$a_stretch->appendChild($a_fillRect);
-		// 将 <a:stretch> 添加到 <p:blipFill> 中
+
 		$p_blipFill->appendChild($a_stretch);
 
 		$pSp->appendChild($p_blipFill);
@@ -354,327 +350,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		//print $dom->asXML();exit;
 	}
 
-	if ($fillStyle['type'] == 'texture')        {
-    global $RelationshipsMap;
-    global $RelationshipsMapStartId;
-
-    // 存储图片 - 没有文件名,应该是纹路填充类
-    if($fillStyle['texture']['imageData'] != "" && $fillStyle['texture']['contentType'] =="image/jpeg")  {
-      global $GlobalImageCounter;
-      $GlobalImageCounter += 1;
-      $fileName = "image".$GlobalImageCounter.".jpeg";
-      AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
-    }
-    //print $GlobalImageCounter;exit;
-
-    $a_blipFill = $dom->createElement('a:blipFill');
-    $blip = $dom->createElement('a:blip');
-    $blip->setAttribute('r:embed', 'rId' . $RelationshipsMapStartId);
-    $RelationshipsMap[] = '<Relationship Id="rId'.$RelationshipsMapStartId.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
-    $RelationshipsMapStartId ++;
-
-    if($fillStyle['texture']['duoTone'][0]['scheme'] != "")  {
-      $duotone = $dom->createElement('a:duotone');
-      $schemeClr = $dom->createElement('a:schemeClr');
-      $schemeClr->setAttribute('val', $fillStyle['texture']['duoTone'][0]['scheme']);
-      if($fillStyle['texture']['duoTone'][0]['satMod']) {
-        $satMod = $dom->createElement('a:satMod');
-        $satMod->setAttribute('val', $fillStyle['texture']['duoTone'][0]['satMod']);
-        $schemeClr->appendChild($satMod);
-      }
-      if($fillStyle['texture']['duoTone'][0]['shade']) {
-        $shade = $dom->createElement('a:shade');
-        $shade->setAttribute('val', $fillStyle['texture']['duoTone'][0]['shade']);
-        $schemeClr->appendChild($shade);
-      }
-      $duotone->appendChild($schemeClr);
-
-      if($fillStyle['texture']['duoTonePrst'][0])   {
-        $prstClr = $dom->createElement('a:prstClr');
-        $prstClr->setAttribute('val', $fillStyle['texture']['duoTonePrst'][0]);
-        $duotone->appendChild($prstClr);
-      }
-
-      $blip->appendChild($duotone);
-    }
-
-    // 将 <a:blip> 添加到 <a:blipFill>
-    $a_blipFill->appendChild($blip);
-
-    $srcRect = $dom->createElement('a:srcRect');
-    $a_blipFill->appendChild($srcRect);
-
-    $a_stretch = $dom->createElement('a:stretch');
-
-    $a_fillRect = $dom->createElement('a:fillRect');
-    $a_fillRect->setAttribute('t', '0');
-    $a_fillRect->setAttribute('r', '-14152');
-    $a_fillRect->setAttribute('b', '0');
-    $a_fillRect->setAttribute('l', '-23020');
-    $a_stretch->appendChild($a_fillRect);
-
-    $a_blipFill->appendChild($a_stretch);
-
-    //$spPr->appendChild($a_blipFill); //不要增加,有些地方是不需要输出的.
-    //print_R($childrenItem)."\n"; exit;
-	}
-
-	if ($fillStyle['type'] == 'color') {
-		// 创建 <a:solidFill> 节点
-		$a_solidFill = $dom->createElement('a:solidFill');
-		$spPr->appendChild($a_solidFill);
-
-		// 创建 <a:schemeClr> 节点并设置属性
-		if($fillStyle['color']['scheme'] != "")  {
-			$a_schemeClr = $dom->createElement('a:schemeClr');
-			$a_schemeClr->setAttribute('val', $fillStyle['color']['scheme']);
-			$a_solidFill->appendChild($a_schemeClr);
-			if($fillStyle['color']['alpha'] != "")  {
-				$a_alpha = $dom->createElement('a:alpha');
-				$a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
-				$a_schemeClr->appendChild($a_alpha);
-			}
-			if($fillStyle['color']['lumMod'] != "")  {
-				$lumMod = $dom->createElement('a:lumMod');
-				$lumMod->setAttribute('val', $fillStyle['color']['lumMod']);
-				$a_schemeClr->appendChild($lumMod);
-			}
-			if($fillStyle['color']['lumOff'] != "")  {
-				$lumOff = $dom->createElement('a:lumOff');
-				$lumOff->setAttribute('val', $fillStyle['color']['lumOff']);
-				$a_schemeClr->appendChild($lumOff);
-			}
-		}
-
-		if($fillStyle['color']['realColor'] != '' && $fillStyle['color']['scheme'] == '')  {
-			$srgbClr = $dom->createElement('a:srgbClr');
-			if($fillStyle['color']['color'] == '-1')  {
-				$srgbClr->setAttribute('val', 'FFFFFF');
-			}
-			else {
-				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($fillStyle['color']['color']));
-			}
-			if($fillStyle['color']['alpha'] != "" && $fillStyle['color']['scheme'] == "")  {
-				$a_alpha = $dom->createElement('a:alpha');
-				$a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
-				$srgbClr->appendChild($a_alpha);
-			}
-			if($fillStyle['color']['lumMod'] != "" && $fillStyle['color']['scheme'] == "")  {
-				$lumMod = $dom->createElement('a:lumMod');
-				$lumMod->setAttribute('val', $fillStyle['color']['lumMod']);
-				$srgbClr->appendChild($lumMod);
-			}
-			if($fillStyle['color']['lumOff'] != "" && $fillStyle['color']['scheme'] == "")  {
-				$lumOff = $dom->createElement('a:lumOff');
-				$lumOff->setAttribute('val', $fillStyle['color']['lumOff']);
-				$srgbClr->appendChild($lumOff);
-			}
-			$a_solidFill->appendChild($srgbClr);
-		}
-
-		// 将 <a:schemeClr> 添加到 <a:solidFill>
-	}
-
-	if ($fillStyle['type'] == 'gradient') {
-		// 创建 <a:gradFill> 根节点
-		$gradFill = $dom->createElement('a:gradFill');
-		$dom->appendChild($gradFill);
-
-		// 创建 <a:gsLst> 节点
-		$gsLst = $dom->createElement('a:gsLst');
-		$gradFill->appendChild($gsLst);
-
-		// 遍历 colors 数组并生成 <a:gs> 节点
-		foreach ($fillStyle['gradient']['colors'] as $index => $color) {
-			$gs 	= $dom->createElement('a:gs');
-			$pos 	= $fillStyle['gradient']['fractions'][$index] * 100000; // 将比例转换为整数形式
-			$gs->setAttribute('pos', (string)$pos);
-			$gsLst->appendChild($gs);
-
-			// 创建 <a:srgbClr> 节点并设置颜色
-			$srgbClr = $dom->createElement('a:srgbClr');
-			$srgbClr->setAttribute('val', strtoupper(dechex($color['color'] & 0xFFFFFF))); // 将颜色转换为十六进制格式
-			$gs->appendChild($srgbClr);
-
-			if (isset($color['alpha'])) {
-				$alpha = $dom->createElement('a:alpha');
-				$alpha->setAttribute('val', (string)$color['alpha']);
-				$srgbClr->appendChild($alpha);
-			}
-
-			if (isset($color['lumMod'])) {
-				$lumMod = $dom->createElement('a:lumMod');
-				$lumMod->setAttribute('val', (string)$color['lumMod']);
-				$srgbClr->appendChild($lumMod);
-			}
-
-			if (isset($color['lumOff'])) {
-				$lumOff = $dom->createElement('a:lumOff');
-				$lumOff->setAttribute('val', (string)$color['lumOff']);
-				$srgbClr->appendChild($lumOff);
-			}
-		}
-
-		// 创建 <a:lin> 节点并设置角度
-		$lin 	= $dom->createElement('a:lin');
-		$angle 	= $fillStyle['gradient']['angle'] * 60000; // 将角度转换为 EMU 单位（1° = 60000 EMU）
-		$lin->setAttribute('ang', (string)$angle);
-		$gradFill->appendChild($lin);
-
-		$spPr->appendChild($gradFill);
-	}
-
-	if ($fillStyle['type'] == 'groupFill') {
-		// 创建 <a:solidFill> 节点
-		$grpFill = $dom->createElement('a:grpFill');
-		$spPr->appendChild($grpFill);
-	}
-
-	if ($fillStyle['type'] == 'noFill') {
-		// 创建 <a:solidFill> 节点
-		$noFill = $dom->createElement('a:noFill');
-		$spPr->appendChild($noFill);
-	}
-
-	if($strokeStyle['lineWidth'] != "" || $strokeStyle['lineCap'] != "" || $strokeStyle['lineDash'] != "")   {
-    //print_R($strokeStyle);
-		// 创建 <a:ln> 节点并设置属性
-		$a_ln = $dom->createElement('a:ln');
-		if($strokeStyle['lineWidth'] != "")  {
-			$a_ln->setAttribute('w', strval(intval($strokeStyle['lineWidth'] * 12700)));
-		}
-		if($strokeStyle['lineCap'] == "ROUND")  {
-			$a_ln->setAttribute('cap', 'rnd'); // 设置 cap 属性为 "rnd"
-		}
-		else if($strokeStyle['lineCap'] != "")  {
-			$a_ln->setAttribute('cap', strtolower($strokeStyle['lineCap']));
-		}
-		if($strokeStyle['lineCompound'] == "SINGLE")  {
-			$a_ln->setAttribute('cmpd', 'sng'); // 设置 cmpd 属性为 "sng"
-		}
-		$spPr->appendChild($a_ln);
-    //exit;
-    if(strval(intval($strokeStyle['lineWidth'] * 12700)) == 38100)  {
-      //print_R($childrenItem);exit;
-    }
-
-		if($strokeStyle['paint']['color']['color'] != '')  {
-			$solidFill = $dom->createElement('a:solidFill');
-			$a_ln->appendChild($solidFill);
-      //print_R($strokeStyle['paint']['color']);exit;
-			if($strokeStyle['paint']['color']['color'] != '')  {
-        $srgbClr = $dom->createElement('a:srgbClr');
-				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($strokeStyle['paint']['color']['color']));
-        if($strokeStyle['paint']['color']['alpha'] != '')  {
-          $alpha = $dom->createElement('a:alpha');
-          $alpha->setAttribute('val', $strokeStyle['paint']['color']['alpha']);
-          $srgbClr->appendChild($alpha);
-        }
-        if($strokeStyle['paint']['color']['lumMod'] != '')  {
-          $lumMod = $dom->createElement('a:lumMod');
-          $lumMod->setAttribute('val', $strokeStyle['paint']['color']['lumMod']);
-          $srgbClr->appendChild($lumMod);
-        }
-        if($strokeStyle['paint']['color']['lumOff'] != '')  {
-          $lumOff = $dom->createElement('a:lumOff');
-          $lumOff->setAttribute('val', $strokeStyle['paint']['color']['lumOff']);
-          $srgbClr->appendChild($lumOff);
-        }
-        $solidFill->appendChild($srgbClr);
-			}
-      if($strokeStyle['paint']['color']['scheme']!="")   {
-        $schemeClr = $dom->createElement('a:schemeClr');
-        $schemeClr->setAttribute('val', $strokeStyle['paint']['color']['scheme']);
-        $solidFill->appendChild($schemeClr);
-      }
-		}
-
-		// 创建 <a:prstDash> 节点并设置属性
-		if($strokeStyle['lineDash'] != "")  {
-			$a_prstDash = $dom->createElement('a:prstDash');
-			$a_prstDash->setAttribute('val', strtolower($strokeStyle['lineDash']));
-			$a_ln->appendChild($a_prstDash);
-		}
-
-		if($strokeStyle['lineHeadWidth'] != "" && $strokeStyle['lineHeadLength'] != "")  {
-			$headEnd = $dom->createElement('a:headEnd');
-			$headEnd->setAttribute('w', $strokeStyle['lineHeadWidth'] == "LARGE" ? "lg" : "sm");
-			$headEnd->setAttribute('len', $strokeStyle['lineHeadLength'] == "LARGE" ? "lg" : "sm");
-			$a_ln->appendChild($headEnd);
-		}
-
-		if($strokeStyle['lineTailLength'] != "" && $strokeStyle['lineTailDecoration'] != "")  {
-			$tailEnd = $dom->createElement('a:tailEnd');
-			$tailEnd->setAttribute('len', $strokeStyle['lineTailLength'] == "LARGE" ? "lg" : "sm");
-			$tailEnd->setAttribute('type', $strokeStyle['lineTailDecoration'] == "LARGE" ? "lg" : "sm");
-			$a_ln->appendChild($tailEnd);
-		}
-
-    if($strokeStyle['miterLimit'] != "" && $strokeStyle['lineJoin'] == "MITER")  {
-			$miter = $dom->createElement('a:miter');
-			$miter->setAttribute('lim', $strokeStyle['miterLimit'] * 100000);
-			$a_ln->appendChild($miter);
-		}
-
-    if($strokeStyle['paint']['type'] == "noFill")  {
-			$noFill = $dom->createElement('a:noFill');
-		  $a_ln->appendChild($noFill);
-		}
-
-		if($strokeStyle['paint']['gradient']['gradientType'] != "")  {
-			//print_R($strokeStyle['paint']['gradient']);exit;
-			// 创建根节点 <a:gradFill>
-			$gradFill = $dom->createElement('a:gradFill');
-
-			// 创建 <a:gsLst> 节点
-			$gsLst = $dom->createElement('a:gsLst');
-			$gradFill->appendChild($gsLst);
-
-			// 遍历 colors 数组，生成 <a:gs> 节点
-			foreach ($strokeStyle['paint']['gradient']['colors'] as $index => $color) {
-				// 创建 <a:gs>，并设置 pos 属性
-				$gs = $dom->createElement('a:gs');
-				$pos = $strokeStyle['paint']['gradient']['fractions'][$index] * 100000; // 转换为 0 ~ 100000 的范围
-				$gs->setAttribute('pos', (string)$pos);
-				$gsLst->appendChild($gs);
-
-				// 创建 <a:srgbClr>，并设置 val 属性
-				$srgbClr = $dom->createElement('a:srgbClr');
-				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($color['color']));
-				$gs->appendChild($srgbClr);
-
-				// 如果有 alpha 属性，添加 <a:alpha> 节点
-				if (isset($color['alpha'])) {
-					$alpha = $dom->createElement('a:alpha');
-					$alpha->setAttribute('val', (string)$color['alpha']);
-					$srgbClr->appendChild($alpha);
-				}
-
-				// 如果有 lumMod 属性，添加 <a:lumMod> 节点
-				if (isset($color['lumMod'])) {
-					$lumMod = $dom->createElement('a:lumMod');
-					$lumMod->setAttribute('val', (string)$color['lumMod']);
-					$srgbClr->appendChild($lumMod);
-				}
-
-				// 如果有 lumOff 属性，添加 <a:lumOff> 节点
-				if (isset($color['lumOff'])) {
-					$lumOff = $dom->createElement('a:lumOff');
-					$lumOff->setAttribute('val', (string)$color['lumOff']);
-					$srgbClr->appendChild($lumOff);
-				}
-			}
-
-			// 创建 <a:lin> 节点，并设置 ang 属性
-			$lin = $dom->createElement('a:lin');
-			$angle = $strokeStyle['paint']['gradient']['angle'] * 60000; // 将角度转换为 EMU 单位
-			$lin->setAttribute('ang', (string)$angle);
-			$gradFill->appendChild($lin);
-
-			$a_ln->appendChild($gradFill);
-		}
-
-	}
+  $spPr = 渲染fillStyle($dom, $fillStyle, $spPr);
+  $spPr = 渲染strokeStyle($dom, $strokeStyle, $spPr);
 
   if(is_array($effectLst))  {
     $a_effectLst = $dom->createElement('a:effectLst');
@@ -928,7 +605,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 						}
 
 						//此处变量多增加了一个['color'],需要看是否会影响到其它slide页面,目前是在layout中有效
-						if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" )  {
+						if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" && $文本对像['extInfo']['property']['fontColor']['color']['scheme'] =="")  {
               $srgbClr = $dom->createElement('a:srgbClr');
 							$srgbClr->setAttribute('val', AiToPptx_NumberToColor($文本对像['extInfo']['property']['fontColor']['color']['color'])); //不能删除,在些某些情况下面是合规的
 							$solidFill->appendChild($srgbClr);
@@ -948,6 +625,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 								$srgbClr->appendChild($lumOff);
 							}
 						}
+
 						if($文本对像['extInfo']['property']['fontColor']['color']['scheme'] !="" )  {
 							$schemeClr = $dom->createElement('a:schemeClr');
 							$schemeClr->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['scheme']);
@@ -957,6 +635,21 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
                 $tint->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['tint']);
                 $schemeClr->appendChild($tint);
               }
+              if($文本对像['extInfo']['property']['fontColor']['color']['alpha'] != "")  {
+								$alpha = $dom->createElement('a:alpha');
+								$alpha->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['alpha']);
+								$schemeClr->appendChild($alpha);
+							}
+							if($文本对像['extInfo']['property']['fontColor']['color']['lumMod'] != "")  {
+								$lumMod = $dom->createElement('a:lumMod');
+								$lumMod->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['lumMod']);
+								$schemeClr->appendChild($lumMod);
+							}
+							if($文本对像['extInfo']['property']['fontColor']['color']['lumOff'] != "")  {
+								$lumOff = $dom->createElement('a:lumOff');
+								$lumOff->setAttribute('val', $文本对像['extInfo']['property']['fontColor']['color']['lumOff']);
+								$schemeClr->appendChild($lumOff);
+							}
 
 							$solidFill->appendChild($schemeClr);
 						}
@@ -993,5 +686,346 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 }
 
 
+function 渲染fillStyle($dom, $fillStyle, $spPr)                {
 
+  if ($fillStyle['type'] == 'texture')        {
+    global $RelationshipsMap;
+    global $RelationshipsMapStartId;
+
+    // 存储图片 - 没有文件名,应该是纹路填充类
+    if(strlen($fillStyle['texture']['imageData'])>100 && $fillStyle['texture']['contentType'] == "image/jpeg")  {
+      global $GlobalImageCounter;
+      $GlobalImageCounter += 1;
+      $fileName = "image".$GlobalImageCounter.".jpeg";
+      AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
+    }
+    if(strlen($fillStyle['texture']['imageData'])>100 && $fillStyle['texture']['contentType'] == "image/png")  {
+      //print_R($fillStyle);
+      global $GlobalImageCounter;
+      $GlobalImageCounter += 1;
+      $fileName = "image".$GlobalImageCounter.".png";
+      AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
+    }
+    //print $GlobalImageCounter;exit;
+
+    $a_blipFill = $dom->createElement('a:blipFill');
+    $blip = $dom->createElement('a:blip');
+    $blip->setAttribute('r:embed', 'rId' . $RelationshipsMapStartId);
+    $RelationshipsMap[] = '<Relationship Id="rId'.$RelationshipsMapStartId.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
+    $RelationshipsMapStartId ++;
+
+    if($fillStyle['texture']['duoTone'][0]['scheme'] != "")  {
+      $duotone = $dom->createElement('a:duotone');
+      $schemeClr = $dom->createElement('a:schemeClr');
+      $schemeClr->setAttribute('val', $fillStyle['texture']['duoTone'][0]['scheme']);
+      if($fillStyle['texture']['duoTone'][0]['satMod']) {
+        $satMod = $dom->createElement('a:satMod');
+        $satMod->setAttribute('val', $fillStyle['texture']['duoTone'][0]['satMod']);
+        $schemeClr->appendChild($satMod);
+      }
+      if($fillStyle['texture']['duoTone'][0]['shade']) {
+        $shade = $dom->createElement('a:shade');
+        $shade->setAttribute('val', $fillStyle['texture']['duoTone'][0]['shade']);
+        $schemeClr->appendChild($shade);
+      }
+      $duotone->appendChild($schemeClr);
+
+      if($fillStyle['texture']['duoTonePrst'][0])   {
+        $prstClr = $dom->createElement('a:prstClr');
+        $prstClr->setAttribute('val', $fillStyle['texture']['duoTonePrst'][0]);
+        $duotone->appendChild($prstClr);
+      }
+
+      $blip->appendChild($duotone);
+    }
+
+    // 将 <a:blip> 添加到 <a:blipFill>
+    $a_blipFill->appendChild($blip);
+
+    $srcRect = $dom->createElement('a:srcRect');
+    $a_blipFill->appendChild($srcRect);
+
+    $a_stretch = $dom->createElement('a:stretch');
+		$a_fillRect = $dom->createElement('a:fillRect');
+		$a_fillRect->setAttribute('t', $fillStyle['texture']['stretch'][0]);
+		$a_fillRect->setAttribute('l', $fillStyle['texture']['stretch'][1]);
+		$a_fillRect->setAttribute('b', $fillStyle['texture']['stretch'][2]);
+		$a_fillRect->setAttribute('r', $fillStyle['texture']['stretch'][3]);
+		$a_stretch->appendChild($a_fillRect);
+
+    $a_blipFill->appendChild($a_stretch);
+
+    if(strlen($fillStyle['texture']['imageData'])>100)  {
+      $spPr->appendChild($a_blipFill); //不要增加,有些地方是不需要输出的.
+    }
+    //print_R($childrenItem)."\n"; exit;
+	}
+
+	if ($fillStyle['type'] == 'color') {
+		// 创建 <a:solidFill> 节点
+		$a_solidFill = $dom->createElement('a:solidFill');
+		$spPr->appendChild($a_solidFill);
+
+		// 创建 <a:schemeClr> 节点并设置属性
+		if($fillStyle['color']['scheme'] != "")  {
+			$a_schemeClr = $dom->createElement('a:schemeClr');
+			$a_schemeClr->setAttribute('val', $fillStyle['color']['scheme']);
+			$a_solidFill->appendChild($a_schemeClr);
+			if($fillStyle['color']['alpha'] != "")  {
+				$a_alpha = $dom->createElement('a:alpha');
+				$a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
+				$a_schemeClr->appendChild($a_alpha);
+			}
+			if($fillStyle['color']['lumMod'] != "")  {
+				$lumMod = $dom->createElement('a:lumMod');
+				$lumMod->setAttribute('val', $fillStyle['color']['lumMod']);
+				$a_schemeClr->appendChild($lumMod);
+			}
+			if($fillStyle['color']['lumOff'] != "")  {
+				$lumOff = $dom->createElement('a:lumOff');
+				$lumOff->setAttribute('val', $fillStyle['color']['lumOff']);
+				$a_schemeClr->appendChild($lumOff);
+			}
+		}
+
+		if($fillStyle['color']['realColor'] != '' && $fillStyle['color']['scheme'] == '')  {
+			$srgbClr = $dom->createElement('a:srgbClr');
+			if($fillStyle['color']['color'] == '-1')  {
+				$srgbClr->setAttribute('val', 'FFFFFF');
+			}
+			else {
+				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($fillStyle['color']['color']));
+			}
+			if($fillStyle['color']['alpha'] != "" && $fillStyle['color']['scheme'] == "")  {
+				$a_alpha = $dom->createElement('a:alpha');
+				$a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
+				$srgbClr->appendChild($a_alpha);
+			}
+			if($fillStyle['color']['lumMod'] != "" && $fillStyle['color']['scheme'] == "")  {
+				$lumMod = $dom->createElement('a:lumMod');
+				$lumMod->setAttribute('val', $fillStyle['color']['lumMod']);
+				$srgbClr->appendChild($lumMod);
+			}
+			if($fillStyle['color']['lumOff'] != "" && $fillStyle['color']['scheme'] == "")  {
+				$lumOff = $dom->createElement('a:lumOff');
+				$lumOff->setAttribute('val', $fillStyle['color']['lumOff']);
+				$srgbClr->appendChild($lumOff);
+			}
+			$a_solidFill->appendChild($srgbClr);
+		}
+
+		// 将 <a:schemeClr> 添加到 <a:solidFill>
+	}
+
+	if ($fillStyle['type'] == 'gradient') {
+		// 创建 <a:gradFill> 根节点
+		$gradFill = $dom->createElement('a:gradFill');
+		$dom->appendChild($gradFill);
+
+		// 创建 <a:gsLst> 节点
+		$gsLst = $dom->createElement('a:gsLst');
+		$gradFill->appendChild($gsLst);
+
+		// 遍历 colors 数组并生成 <a:gs> 节点
+		foreach ($fillStyle['gradient']['colors'] as $index => $color) {
+			$gs 	= $dom->createElement('a:gs');
+			$pos 	= $fillStyle['gradient']['fractions'][$index] * 100000; // 将比例转换为整数形式
+			$gs->setAttribute('pos', (string)$pos);
+			$gsLst->appendChild($gs);
+
+			// 创建 <a:srgbClr> 节点并设置颜色
+			$srgbClr = $dom->createElement('a:srgbClr');
+			$srgbClr->setAttribute('val', strtoupper(dechex($color['color'] & 0xFFFFFF))); // 将颜色转换为十六进制格式
+			$gs->appendChild($srgbClr);
+
+			if (isset($color['alpha'])) {
+				$alpha = $dom->createElement('a:alpha');
+				$alpha->setAttribute('val', (string)$color['alpha']);
+				$srgbClr->appendChild($alpha);
+			}
+
+			if (isset($color['lumMod'])) {
+				$lumMod = $dom->createElement('a:lumMod');
+				$lumMod->setAttribute('val', (string)$color['lumMod']);
+				$srgbClr->appendChild($lumMod);
+			}
+
+			if (isset($color['lumOff'])) {
+				$lumOff = $dom->createElement('a:lumOff');
+				$lumOff->setAttribute('val', (string)$color['lumOff']);
+				$srgbClr->appendChild($lumOff);
+			}
+		}
+
+		// 创建 <a:lin> 节点并设置角度
+		$lin 	= $dom->createElement('a:lin');
+		$angle 	= $fillStyle['gradient']['angle'] * 60000; // 将角度转换为 EMU 单位（1° = 60000 EMU）
+		$lin->setAttribute('ang', (string)$angle);
+		$gradFill->appendChild($lin);
+
+		$spPr->appendChild($gradFill);
+	}
+
+	if ($fillStyle['type'] == 'groupFill') {
+		// 创建 <a:solidFill> 节点
+		$grpFill = $dom->createElement('a:grpFill');
+		$spPr->appendChild($grpFill);
+	}
+
+	if ($fillStyle['type'] == 'noFill') {
+		// 创建 <a:solidFill> 节点
+		$noFill = $dom->createElement('a:noFill');
+		$spPr->appendChild($noFill);
+	}
+
+  return $spPr;
+
+}
+
+
+function 渲染strokeStyle($dom, $strokeStyle, $spPr) {
+
+  if($strokeStyle['lineWidth'] != "" || $strokeStyle['lineCap'] != "" || $strokeStyle['lineDash'] != "")   {
+    //print_R($strokeStyle);
+		// 创建 <a:ln> 节点并设置属性
+		$a_ln = $dom->createElement('a:ln');
+		if($strokeStyle['lineWidth'] != "")  {
+			$a_ln->setAttribute('w', strval(intval($strokeStyle['lineWidth'] * 12700)));
+		}
+		if($strokeStyle['lineCap'] == "ROUND")  {
+			$a_ln->setAttribute('cap', 'rnd'); // 设置 cap 属性为 "rnd"
+		}
+		else if($strokeStyle['lineCap'] != "")  {
+			$a_ln->setAttribute('cap', strtolower($strokeStyle['lineCap']));
+		}
+		if($strokeStyle['lineCompound'] == "SINGLE")  {
+			$a_ln->setAttribute('cmpd', 'sng'); // 设置 cmpd 属性为 "sng"
+		}
+		$spPr->appendChild($a_ln);
+    //exit;
+    if(strval(intval($strokeStyle['lineWidth'] * 12700)) == 38100)  {
+      //print_R($childrenItem);exit;
+    }
+
+		if($strokeStyle['paint']['color']['color'] != '')  {
+			$solidFill = $dom->createElement('a:solidFill');
+			$a_ln->appendChild($solidFill);
+      //print_R($strokeStyle['paint']['color']);exit;
+			if($strokeStyle['paint']['color']['color'] != '')  {
+        $srgbClr = $dom->createElement('a:srgbClr');
+				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($strokeStyle['paint']['color']['color']));
+        if($strokeStyle['paint']['color']['alpha'] != '')  {
+          $alpha = $dom->createElement('a:alpha');
+          $alpha->setAttribute('val', $strokeStyle['paint']['color']['alpha']);
+          $srgbClr->appendChild($alpha);
+        }
+        if($strokeStyle['paint']['color']['lumMod'] != '')  {
+          $lumMod = $dom->createElement('a:lumMod');
+          $lumMod->setAttribute('val', $strokeStyle['paint']['color']['lumMod']);
+          $srgbClr->appendChild($lumMod);
+        }
+        if($strokeStyle['paint']['color']['lumOff'] != '')  {
+          $lumOff = $dom->createElement('a:lumOff');
+          $lumOff->setAttribute('val', $strokeStyle['paint']['color']['lumOff']);
+          $srgbClr->appendChild($lumOff);
+        }
+        $solidFill->appendChild($srgbClr);
+			}
+      if($strokeStyle['paint']['color']['scheme']!="")   {
+        $schemeClr = $dom->createElement('a:schemeClr');
+        $schemeClr->setAttribute('val', $strokeStyle['paint']['color']['scheme']);
+        $solidFill->appendChild($schemeClr);
+      }
+		}
+
+		// 创建 <a:prstDash> 节点并设置属性
+		if($strokeStyle['lineDash'] != "")  {
+			$a_prstDash = $dom->createElement('a:prstDash');
+			$a_prstDash->setAttribute('val', strtolower($strokeStyle['lineDash']));
+			$a_ln->appendChild($a_prstDash);
+		}
+
+		if($strokeStyle['lineHeadWidth'] != "" && $strokeStyle['lineHeadLength'] != "")  {
+			$headEnd = $dom->createElement('a:headEnd');
+			$headEnd->setAttribute('w', $strokeStyle['lineHeadWidth'] == "LARGE" ? "lg" : "sm");
+			$headEnd->setAttribute('len', $strokeStyle['lineHeadLength'] == "LARGE" ? "lg" : "sm");
+			$a_ln->appendChild($headEnd);
+		}
+
+		if($strokeStyle['lineTailLength'] != "" && $strokeStyle['lineTailDecoration'] != "")  {
+			$tailEnd = $dom->createElement('a:tailEnd');
+			$tailEnd->setAttribute('len', $strokeStyle['lineTailLength'] == "LARGE" ? "lg" : "sm");
+			$tailEnd->setAttribute('type', $strokeStyle['lineTailDecoration'] == "LARGE" ? "lg" : "sm");
+			$a_ln->appendChild($tailEnd);
+		}
+
+    if($strokeStyle['miterLimit'] != "" && $strokeStyle['lineJoin'] == "MITER")  {
+			$miter = $dom->createElement('a:miter');
+			$miter->setAttribute('lim', $strokeStyle['miterLimit'] * 100000);
+			$a_ln->appendChild($miter);
+		}
+
+    if($strokeStyle['paint']['type'] == "noFill")  {
+			$noFill = $dom->createElement('a:noFill');
+		  $a_ln->appendChild($noFill);
+		}
+
+		if($strokeStyle['paint']['gradient']['gradientType'] != "")  {
+			//print_R($strokeStyle['paint']['gradient']);exit;
+			// 创建根节点 <a:gradFill>
+			$gradFill = $dom->createElement('a:gradFill');
+
+			// 创建 <a:gsLst> 节点
+			$gsLst = $dom->createElement('a:gsLst');
+			$gradFill->appendChild($gsLst);
+
+			// 遍历 colors 数组，生成 <a:gs> 节点
+			foreach ($strokeStyle['paint']['gradient']['colors'] as $index => $color) {
+				// 创建 <a:gs>，并设置 pos 属性
+				$gs = $dom->createElement('a:gs');
+				$pos = $strokeStyle['paint']['gradient']['fractions'][$index] * 100000; // 转换为 0 ~ 100000 的范围
+				$gs->setAttribute('pos', (string)$pos);
+				$gsLst->appendChild($gs);
+
+				// 创建 <a:srgbClr>，并设置 val 属性
+				$srgbClr = $dom->createElement('a:srgbClr');
+				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($color['color']));
+				$gs->appendChild($srgbClr);
+
+				// 如果有 alpha 属性，添加 <a:alpha> 节点
+				if (isset($color['alpha'])) {
+					$alpha = $dom->createElement('a:alpha');
+					$alpha->setAttribute('val', (string)$color['alpha']);
+					$srgbClr->appendChild($alpha);
+				}
+
+				// 如果有 lumMod 属性，添加 <a:lumMod> 节点
+				if (isset($color['lumMod'])) {
+					$lumMod = $dom->createElement('a:lumMod');
+					$lumMod->setAttribute('val', (string)$color['lumMod']);
+					$srgbClr->appendChild($lumMod);
+				}
+
+				// 如果有 lumOff 属性，添加 <a:lumOff> 节点
+				if (isset($color['lumOff'])) {
+					$lumOff = $dom->createElement('a:lumOff');
+					$lumOff->setAttribute('val', (string)$color['lumOff']);
+					$srgbClr->appendChild($lumOff);
+				}
+			}
+
+			// 创建 <a:lin> 节点，并设置 ang 属性
+			$lin = $dom->createElement('a:lin');
+			$angle = $strokeStyle['paint']['gradient']['angle'] * 60000; // 将角度转换为 EMU 单位
+			$lin->setAttribute('ang', (string)$angle);
+			$gradFill->appendChild($lin);
+
+			$a_ln->appendChild($gradFill);
+		}
+
+	}
+
+  return $spPr;
+
+}
 ?>

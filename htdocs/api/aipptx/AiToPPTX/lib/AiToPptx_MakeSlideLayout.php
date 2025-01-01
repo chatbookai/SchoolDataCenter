@@ -60,8 +60,8 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	// 创建 <p:bg> 元素及其子元素
 	$bg = $dom->createElement('p:bg');
 	$bgPr = $dom->createElement('p:bgPr');
+  /*
 	$solidFill = $dom->createElement('a:solidFill');
-
   if($Layout['background']['realType']=="Background" && $Layout['background']['fillStyle']['type']=="color")  {
     if($Layout['background']['fillStyle']['color']['scheme']!="") {
       $schemeClr = $dom->createElement('a:schemeClr');
@@ -96,9 +96,15 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
       $solidFill->appendChild($srgbClr);
     }
   }
+	$bgPr->appendChild($solidFill);
+  */
+
+	$fillStyle 		  = $Layout['background']['fillStyle'];
+  $bgPr           = 渲染fillStyle($dom, $fillStyle, $bgPr);
+	$strokeStyle 		= $Layout['background']['strokeStyle'];
+  $bgPr           = 渲染strokeStyle($dom, $strokeStyle, $bgPr);
 
 	// 组装 <p:bg> 树
-	$bgPr->appendChild($solidFill);
 	$bg->appendChild($bgPr);
 	$cSld->appendChild($bg);
 
@@ -216,7 +222,7 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	//写入文件
 	$dom->save($FilePath);
 
-  //print_R($Layout);print $dom->saveXML();exit;
+  print $dom->saveXML();print_R($Layout);exit;
 
 	return $dom->saveXML();
 

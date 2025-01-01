@@ -41,8 +41,8 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 	// 创建 <p:bg> 元素及其子元素
 	$pBg = $dom->createElement('p:bg');
 	$pBgPr = $dom->createElement('p:bgPr');
+  /*
 	$solidFill = $dom->createElement('a:solidFill');
-
   if($extInfo['background']['realType']=="Background" && $extInfo['background']['fillStyle']['type']=="color")  {
     if($extInfo['background']['fillStyle']['color']['scheme']!="") {
       $schemeClr = $dom->createElement('a:schemeClr');
@@ -77,9 +77,13 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
       $solidFill->appendChild($srgbClr);
     }
   }
-
-	// 构建背景元素层级关系
 	$pBgPr->appendChild($solidFill);
+  */
+  $fillStyle 		  = $PageData['extInfo']['background']['fillStyle'];
+  $pBgPr           = 渲染fillStyle($dom, $fillStyle, $pBgPr);
+	$strokeStyle 		= $PageData['extInfo']['background']['strokeStyle'];
+  $pBgPr           = 渲染strokeStyle($dom, $strokeStyle, $pBgPr);
+
 	$pBg->appendChild($pBgPr);
 
 	// 将 <p:bg> 添加到 <p:cSld>
@@ -184,7 +188,7 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 </Relationships>';
 	file_put_contents($RelationPath, $RelationContent);
 
-  //print_R($PageData); print $dom->saveXML(); exit;
+  //print $dom->saveXML(); print_R($PageData); exit;
 	return $dom->saveXML();
 }
 
