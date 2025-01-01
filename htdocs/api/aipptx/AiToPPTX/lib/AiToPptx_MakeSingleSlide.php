@@ -47,14 +47,33 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
     if($extInfo['background']['fillStyle']['color']['scheme']!="") {
       $schemeClr = $dom->createElement('a:schemeClr');
       $schemeClr->setAttribute('val', $extInfo['background']['fillStyle']['color']['scheme']);
-      $alpha = $dom->createElement('a:alpha');
-      $alpha->setAttribute('val', $extInfo['background']['fillStyle']['color']['alpha']);
-      $schemeClr->appendChild($alpha);
+
+      if($extInfo['background']['fillStyle']['color']['alpha']) {
+        $alpha = $dom->createElement('a:alpha');
+        $alpha->setAttribute('val', $extInfo['background']['fillStyle']['color']['alpha']);
+        $schemeClr->appendChild($alpha);
+      }
+      if($extInfo['background']['fillStyle']['color']['lumMod']) {
+        $lumMod = $dom->createElement('a:lumMod');
+        $lumMod->setAttribute('val', $extInfo['background']['fillStyle']['color']['lumMod']);
+        $schemeClr->appendChild($lumMod);
+      }
+      if($extInfo['background']['fillStyle']['color']['lumOff']) {
+        $lumOff = $dom->createElement('a:lumOff');
+        $lumOff->setAttribute('val', $extInfo['background']['fillStyle']['color']['lumOff']);
+        $schemeClr->appendChild($lumOff);
+      }
+
       $solidFill->appendChild($schemeClr);
     }
-    if($extInfo['background']['fillStyle']['color']['color']=="-1") {
+    if($extInfo['background']['fillStyle']['color']['color']!="") {
       $srgbClr = $dom->createElement('a:srgbClr');
-      $srgbClr->setAttribute('val', 'FFFFFF');
+      if($extInfo['background']['fillStyle']['color']['color'] == '-1')  {
+				$srgbClr->setAttribute('val', 'FFFFFF');
+			}
+			else {
+				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($extInfo['background']['fillStyle']['color']['color']));
+			}
       $solidFill->appendChild($srgbClr);
     }
   }
@@ -165,7 +184,7 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 </Relationships>';
 	file_put_contents($RelationPath, $RelationContent);
 
-  //print $dom->saveXML();exit;
+  //print_R($PageData); print $dom->saveXML(); exit;
 	return $dom->saveXML();
 }
 

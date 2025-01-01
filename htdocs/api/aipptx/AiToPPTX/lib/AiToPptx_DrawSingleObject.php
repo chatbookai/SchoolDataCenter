@@ -29,7 +29,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 	$extension 		= $childrenItem['extInfo']['property']['extension'];
 	$contentType	= $childrenItem['extInfo']['property']['contentType'];
 	$clipping 		= $childrenItem['extInfo']['property']['clipping'];
-	//print_R($childrenItem);
+	//print_R($childrenItem['type']);
 
 	// 1. 创建 DOMDocument 对象
 	$dom = new DOMDocument('1.0', 'UTF-8');
@@ -126,25 +126,25 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
       $a_blip->appendChild($a_alphaModFix);
     }
 
-    if($clipping[2] == "47387")  {
+    if($clipping[1] == "91199")  {
       //print_R($childrenItem);exit;
     }
 
 		$a_srcRect = $dom->createElement('a:srcRect');
 		if(isset($clipping[0]) && $clipping[0]>0 ) $a_srcRect->setAttribute('t', $clipping[0]);
-		if(isset($clipping[1]) && $clipping[1]>0 ) $a_srcRect->setAttribute('r', $clipping[1]);
+		if(isset($clipping[1]) && $clipping[1]>0 ) $a_srcRect->setAttribute('l', $clipping[1]);
 		if(isset($clipping[2]) && $clipping[2]>0 ) $a_srcRect->setAttribute('b', $clipping[2]);
-		if(isset($clipping[3]) && $clipping[3]>0 ) $a_srcRect->setAttribute('l', $clipping[3]);
+		if(isset($clipping[3]) && $clipping[3]>0 ) $a_srcRect->setAttribute('r', $clipping[3]);
 		$p_blipFill->appendChild($a_srcRect);
 
 		// 创建 <a:stretch> 元素
 		$a_stretch = $dom->createElement('a:stretch');
 		// 创建 <a:fillRect> 元素，并设置边距属性
 		$a_fillRect = $dom->createElement('a:fillRect');
-		$a_fillRect->setAttribute('t', '0');
-		$a_fillRect->setAttribute('l', '0');
-		$a_fillRect->setAttribute('b', '0');
-		$a_fillRect->setAttribute('r', '0');
+		$a_fillRect->setAttribute('t', $fillStyle['texture']['stretch'][0]);
+		$a_fillRect->setAttribute('l', $fillStyle['texture']['stretch'][1]);
+		$a_fillRect->setAttribute('b', $fillStyle['texture']['stretch'][2]);
+		$a_fillRect->setAttribute('r', $fillStyle['texture']['stretch'][3]);
 		// 将 <a:fillRect> 添加到 <a:stretch> 中
 		$a_stretch->appendChild($a_fillRect);
 		// 将 <a:stretch> 添加到 <p:blipFill> 中
@@ -152,7 +152,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
 		$pSp->appendChild($p_blipFill);
 	}
-
 
 	$nvPr = $dom->createElement('p:nvPr');
 	switch($placeholder['type']) {
@@ -273,8 +272,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
 	//绘制任意几何图形
   //print "TYPE:".$Type." ".$geometry['name']."<BR>";
-	if (     ($Type == "text" && $geometry['name'] == "custom")
-        || ($realType == "Picture" && $geometry['name'] == "custom")
+	if ( ($Type == "text" && $geometry['name'] == "custom") || ($realType == "Picture" && $geometry['name'] == "custom")
       ) {
 		//print_R($childrenItem);
 		$a_custGeom = $dom->createElement('a:custGeom');
@@ -356,7 +354,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		//print $dom->asXML();exit;
 	}
 
-	if ($fillStyle['type'] == 'texture') {
+	if ($fillStyle['type'] == 'texture')        {
     global $RelationshipsMap;
     global $RelationshipsMapStartId;
 
@@ -368,7 +366,8 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
       AiToPptx_SaveBase64ImageToFile($fillStyle['texture']['imageData'], $DirPath."/".$fileName);
     }
     //print $GlobalImageCounter;exit;
-    $blipFill = $dom->createElement('a:blipFill');
+
+    $a_blipFill = $dom->createElement('a:blipFill');
     $blip = $dom->createElement('a:blip');
     $blip->setAttribute('r:embed', 'rId' . $RelationshipsMapStartId);
     $RelationshipsMap[] = '<Relationship Id="rId'.$RelationshipsMapStartId.'" Target="../media/'.$fileName.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"/>';
@@ -400,27 +399,23 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
     }
 
     // 将 <a:blip> 添加到 <a:blipFill>
-    $blipFill->appendChild($blip);
+    $a_blipFill->appendChild($blip);
 
-    // 创建 <a:srcRect> 元素
     $srcRect = $dom->createElement('a:srcRect');
-    $blipFill->appendChild($srcRect);
+    $a_blipFill->appendChild($srcRect);
 
-    // 创建 <a:stretch> 元素
-    $stretch = $dom->createElement('a:stretch');
+    $a_stretch = $dom->createElement('a:stretch');
 
-    // 创建 <a:fillRect> 元素，并设置 t, l, b, r 属性
-    $fillRect = $dom->createElement('a:fillRect');
-    $fillRect->setAttribute('t', '0');
-    $fillRect->setAttribute('l', '-14152');
-    $fillRect->setAttribute('b', '0');
-    $fillRect->setAttribute('r', '-23020');
-    $stretch->appendChild($fillRect);
+    $a_fillRect = $dom->createElement('a:fillRect');
+    $a_fillRect->setAttribute('t', '0');
+    $a_fillRect->setAttribute('r', '-14152');
+    $a_fillRect->setAttribute('b', '0');
+    $a_fillRect->setAttribute('l', '-23020');
+    $a_stretch->appendChild($a_fillRect);
 
-    // 将 <a:stretch> 添加到 <a:blipFill>
-    $blipFill->appendChild($stretch);
+    $a_blipFill->appendChild($a_stretch);
 
-    $spPr->appendChild($blipFill);
+    //$spPr->appendChild($a_blipFill); 不要增加,有些地方是不需要输出的.
     //print_R($childrenItem)."\n"; exit;
 	}
 
@@ -477,13 +472,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 			$a_solidFill->appendChild($srgbClr);
 		}
 
-		// 创建 <a:alpha> 节点并设置属性
-		if($fillStyle['color']['alpha'] != "" && $fillStyle['color']['scheme'] != "")  {
-			$a_alpha = $dom->createElement('a:alpha');
-			$a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
-			$a_schemeClr->appendChild($a_alpha);
-		}
-
 		// 将 <a:schemeClr> 添加到 <a:solidFill>
 	}
 
@@ -508,7 +496,12 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 			$srgbClr->setAttribute('val', strtoupper(dechex($color['color'] & 0xFFFFFF))); // 将颜色转换为十六进制格式
 			$gs->appendChild($srgbClr);
 
-			// 如果存在 lumMod 和 lumOff，添加这些节点
+			if (isset($color['alpha'])) {
+				$alpha = $dom->createElement('a:alpha');
+				$alpha->setAttribute('val', (string)$color['alpha']);
+				$srgbClr->appendChild($alpha);
+			}
+
 			if (isset($color['lumMod'])) {
 				$lumMod = $dom->createElement('a:lumMod');
 				$lumMod->setAttribute('val', (string)$color['lumMod']);
@@ -568,14 +561,24 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		if($strokeStyle['paint']['color']['color'] != '')  {
 			$solidFill = $dom->createElement('a:solidFill');
 			$a_ln->appendChild($solidFill);
-			if($strokeStyle['paint']['color']['color'] != '' && false)  {
+      //print_R($strokeStyle['paint']['color']);exit;
+			if($strokeStyle['paint']['color']['color'] != '')  {
         $srgbClr = $dom->createElement('a:srgbClr');
-				$srgbClr->setAttribute('val', 'FFFFFF');
 				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($strokeStyle['paint']['color']['color']));
+        if($strokeStyle['paint']['color']['alpha'] != '')  {
+          $alpha = $dom->createElement('a:alpha');
+          $alpha->setAttribute('val', $strokeStyle['paint']['color']['alpha']);
+          $srgbClr->appendChild($alpha);
+        }
         if($strokeStyle['paint']['color']['lumMod'] != '')  {
           $lumMod = $dom->createElement('a:lumMod');
           $lumMod->setAttribute('val', $strokeStyle['paint']['color']['lumMod']);
           $srgbClr->appendChild($lumMod);
+        }
+        if($strokeStyle['paint']['color']['lumOff'] != '')  {
+          $lumOff = $dom->createElement('a:lumOff');
+          $lumOff->setAttribute('val', $strokeStyle['paint']['color']['lumOff']);
+          $srgbClr->appendChild($lumOff);
         }
         $solidFill->appendChild($srgbClr);
 			}
@@ -738,6 +741,9 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		elseif(isset($childrenItem['extInfo']['property']['textWordWrap'])) {
 			$bodyPr->setAttribute('wrap', 'none');
 		}
+		if($childrenItem['extInfo']['property']['textHorizontalCentered'] == 1) {
+			$bodyPr->setAttribute('anchorCtr', 'true');
+		}
 		$bodyPr->setAttribute('tIns', '45720');
 		$bodyPr->setAttribute('lIns', '91440');
 		$bodyPr->setAttribute('bIns', '45720');
@@ -831,7 +837,6 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 					$spcBef->appendChild($spcPts);
 					$pPr->appendChild($spcBef);
 				}
-
 				if(isset($文本属性['property']['bulletStyle']['buNone'])) {
 					$buNone = $dom->createElement('a:buNone');
 					$pPr->appendChild($buNone);
@@ -925,7 +930,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 						//此处变量多增加了一个['color'],需要看是否会影响到其它slide页面,目前是在layout中有效
 						if($文本对像['extInfo']['property']['fontColor']['color']['color'] !="" )  {
               $srgbClr = $dom->createElement('a:srgbClr');
-							//$srgbClr->setAttribute('val', AiToPptx_NumberToColor($文本对像['extInfo']['property']['fontColor']['color']['color']));
+							$srgbClr->setAttribute('val', AiToPptx_NumberToColor($文本对像['extInfo']['property']['fontColor']['color']['color'])); //不能删除,在些某些情况下面是合规的
 							$solidFill->appendChild($srgbClr);
 							if($文本对像['extInfo']['property']['fontColor']['color']['alpha'] != "")  {
 								$alpha = $dom->createElement('a:alpha');
@@ -982,6 +987,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		//print_R($childrenItem);
 		//print_R($dom->saveXML());
 	}
+  //print_R($dom->saveXML());exit;
 
 	return $pSp;
 }

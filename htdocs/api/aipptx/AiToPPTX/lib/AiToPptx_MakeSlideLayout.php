@@ -66,14 +66,33 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
     if($Layout['background']['fillStyle']['color']['scheme']!="") {
       $schemeClr = $dom->createElement('a:schemeClr');
       $schemeClr->setAttribute('val', $Layout['background']['fillStyle']['color']['scheme']);
-      $alpha = $dom->createElement('a:alpha');
-      $alpha->setAttribute('val', $Layout['background']['fillStyle']['color']['alpha']);
-      $schemeClr->appendChild($alpha);
+
+      if($Layout['background']['fillStyle']['color']['alpha']) {
+        $alpha = $dom->createElement('a:alpha');
+        $alpha->setAttribute('val', $Layout['background']['fillStyle']['color']['alpha']);
+        $schemeClr->appendChild($alpha);
+      }
+      if($Layout['background']['fillStyle']['color']['lumMod']) {
+        $lumMod = $dom->createElement('a:lumMod');
+        $lumMod->setAttribute('val', $Layout['background']['fillStyle']['color']['lumMod']);
+        $schemeClr->appendChild($lumMod);
+      }
+      if($Layout['background']['fillStyle']['color']['lumOff']) {
+        $lumOff = $dom->createElement('a:lumOff');
+        $lumOff->setAttribute('val', $Layout['background']['fillStyle']['color']['lumOff']);
+        $schemeClr->appendChild($lumOff);
+      }
+
       $solidFill->appendChild($schemeClr);
     }
-    if($Layout['background']['fillStyle']['color']['color']=="-1") {
+    if($Layout['background']['fillStyle']['color']['color']!="") {
       $srgbClr = $dom->createElement('a:srgbClr');
-      $srgbClr->setAttribute('val', 'FFFFFF');
+      if($Layout['background']['fillStyle']['color']['color'] == '-1')  {
+				$srgbClr->setAttribute('val', 'FFFFFF');
+			}
+			else {
+				$srgbClr->setAttribute('val', AiToPptx_NumberToColor($Layout['background']['fillStyle']['color']['color']));
+			}
       $solidFill->appendChild($srgbClr);
     }
   }
@@ -197,7 +216,7 @@ function AiToPptx_MakeSlideLayout($Layout, $FilePath, $RelationPath) {
 	//写入文件
 	$dom->save($FilePath);
 
-  //print $dom->saveXML();exit;
+  //print_R($Layout);print $dom->saveXML();exit;
 
 	return $dom->saveXML();
 

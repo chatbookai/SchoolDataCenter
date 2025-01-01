@@ -45,6 +45,16 @@ function AiToPptx_MakeMasterXml($slideMasters, $DirPath)  {
       $a_alpha->setAttribute('val', $fillStyle['color']['alpha']);
       $schemeClr->appendChild($a_alpha);
     }
+    if($fillStyle['color']['lumMod']) {
+      $lumMod = $dom->createElement('a:lumMod');
+      $lumMod->setAttribute('val', $fillStyle['color']['lumMod']);
+      $schemeClr->appendChild($lumMod);
+    }
+    if($fillStyle['color']['lumOff']) {
+      $lumOff = $dom->createElement('a:lumOff');
+      $lumOff->setAttribute('val', $fillStyle['color']['lumOff']);
+      $schemeClr->appendChild($lumOff);
+    }
   }
 
 	// 添加 <a:srgbClr> 元素 暂时不启用

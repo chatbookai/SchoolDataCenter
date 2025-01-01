@@ -12,12 +12,12 @@ require_once("../../vendor/autoload.php");
 require_once('./../AiToPPTX/include.inc.php');
 
 // 导入原始数据
-$JsonContent      	= file_get_contents("./../json/粉色渐变商务主题.json");
+$JsonContent      	= file_get_contents("./../json/酒红色时尚商务模板.json");
 $JsonData          	= json_decode($JsonContent, true);
 //print_R($JsonData);exit;
 
 $TargetCacheDir 		= realpath("./../cache");
-$TargetPptxFilePath = './../cache/粉色渐变商务主题.pptx';
+$TargetPptxFilePath = './../cache/酒红色时尚商务模板.pptx';
 
 AiToPptx_MakePptx($JsonData, $TargetCacheDir, $TargetPptxFilePath)
 

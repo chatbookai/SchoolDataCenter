@@ -128,14 +128,6 @@ function AiToPptx_DrawGroupObject($childrenItem, $DirPath)  {
 			$a_solidFill->appendChild($srgbClr);
 		}
 
-		// 创建 <a:alpha> 节点并设置属性
-		if($groupFillStyle['color']['alpha'] != "" && $groupFillStyle['color']['scheme'] != "")  {
-			$a_alpha = $dom->createElement('a:alpha');
-			$a_alpha->setAttribute('val', $groupFillStyle['color']['alpha']);
-			$a_schemeClr->appendChild($a_alpha);
-		}
-
-		// 将 <a:schemeClr> 添加到 <a:solidFill>
 	}
 
 	if ($groupFillStyle['type'] == 'gradient') {
@@ -160,6 +152,12 @@ function AiToPptx_DrawGroupObject($childrenItem, $DirPath)  {
 			$gs->appendChild($srgbClr);
 
 			// 如果存在 lumMod 和 lumOff，添加这些节点
+      if (isset($color['alpha'])) {
+				$alpha = $dom->createElement('a:alpha');
+				$alpha->setAttribute('val', (string)$color['alpha']);
+				$srgbClr->appendChild($alpha);
+			}
+
 			if (isset($color['lumMod'])) {
 				$lumMod = $dom->createElement('a:lumMod');
 				$lumMod->setAttribute('val', (string)$color['lumMod']);
