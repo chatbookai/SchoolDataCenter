@@ -12,6 +12,7 @@ function AiToPptx_MakeSingleSlide($PageData, $FilePath, $RelationPath)  {
 
 	global $关系引用ID值列表SlideLayout;
 	$关系引用ID值列表SlideLayout 		= [];
+  $关系引用ID值列表SlideLayout[] 	= '';
 
 	global $SharpCounter;
 	$childrenList	= $PageData['children'];

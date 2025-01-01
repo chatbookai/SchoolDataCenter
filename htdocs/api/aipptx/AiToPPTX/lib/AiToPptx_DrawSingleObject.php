@@ -120,7 +120,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		// 将 <a:blip> 添加到 <p:blipFill> 中
 		$p_blipFill->appendChild($a_blip);
 
-    if($fillStyle['texture']['alphaModFix'] != "")   {
+    if($fillStyle['texture']['alphaModFix'] != "" && false)   {
       $a_alphaModFix = $dom->createElement('a:alphaModFix');
       $a_alphaModFix->setAttribute('amt', $fillStyle['texture']['alphaModFix']);
       $a_blip->appendChild($a_alphaModFix);
@@ -716,6 +716,12 @@ function 渲染fillStyle($dom, $fillStyle, $spPr, $DirPath)                {
     $a_blipFill = $dom->createElement('a:blipFill');
     $blip = $dom->createElement('a:blip');
     $blip->setAttribute('r:embed', 'rId' . $关系引用ID);
+
+    if($fillStyle['texture']['alphaModFix'] != "")   {
+      $a_alphaModFix = $dom->createElement('a:alphaModFix');
+      $a_alphaModFix->setAttribute('amt', $fillStyle['texture']['alphaModFix']);
+      $blip->appendChild($a_alphaModFix);
+    }
 
     if($fillStyle['texture']['duoTone'][0]['scheme'] != "")  {
       $duotone = $dom->createElement('a:duotone');
