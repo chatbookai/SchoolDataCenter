@@ -415,7 +415,7 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 
     $a_blipFill->appendChild($a_stretch);
 
-    //$spPr->appendChild($a_blipFill); 不要增加,有些地方是不需要输出的.
+    //$spPr->appendChild($a_blipFill); //不要增加,有些地方是不需要输出的.
     //print_R($childrenItem)."\n"; exit;
 	}
 
