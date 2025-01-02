@@ -85,6 +85,9 @@ const AuthProvider = ({ children }: Props) => {
               handleLogout()
             }
           })
+          .catch(() => {
+            setLoading(false)
+          })
       }
       else {
         setLoading(false)
