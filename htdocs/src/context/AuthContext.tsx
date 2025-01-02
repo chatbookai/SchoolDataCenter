@@ -90,8 +90,20 @@ const AuthProvider = ({ children }: Props) => {
           .catch(() => {
             window.localStorage.removeItem('userData')
             window.localStorage.removeItem('refreshToken')
+            window.localStorage.removeItem(defaultConfig.storageAccessKeyName)
             window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
             window.localStorage.removeItem('GO_SYSTEM')
+            const keysToRemove = Object.keys(window.localStorage).filter((key) =>
+              key.startsWith('ChatChat_ChatApp-')
+            );
+            keysToRemove.forEach((key) => {
+              localStorage.removeItem(key);
+            });
+            window.localStorage.removeItem('ChatChatHistory')
+            window.localStorage.removeItem('storageChatApp')
+            window.localStorage.removeItem('storageMainMenus')
+            window.localStorage.removeItem('storageMyCoursesList')
+
             setUser(null)
             setLoading(false)
             console.log("router.pathname", router.pathname)
@@ -161,8 +173,20 @@ const AuthProvider = ({ children }: Props) => {
         else {
           setUser(null)
           window.localStorage.removeItem('userData')
-          window.localStorage.removeItem('GO_SYSTEM')
+          window.localStorage.removeItem('refreshToken')
+          window.localStorage.removeItem(defaultConfig.storageAccessKeyName)
           window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
+          window.localStorage.removeItem('GO_SYSTEM')
+          const keysToRemove = Object.keys(window.localStorage).filter((key) =>
+            key.startsWith('ChatChat_ChatApp-')
+          );
+          keysToRemove.forEach((key) => {
+            localStorage.removeItem(key);
+          });
+          window.localStorage.removeItem('ChatChatHistory')
+          window.localStorage.removeItem('storageChatApp')
+          window.localStorage.removeItem('storageMainMenus')
+          window.localStorage.removeItem('storageMyCoursesList')
           if (errorCallback) errorCallback({})
         }
       })
@@ -224,8 +248,20 @@ const AuthProvider = ({ children }: Props) => {
   const handleLogout = () => {
     setUser(null)
     window.localStorage.removeItem('userData')
-    window.localStorage.removeItem('GO_SYSTEM')
+    window.localStorage.removeItem('refreshToken')
+    window.localStorage.removeItem(defaultConfig.storageAccessKeyName)
     window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
+    window.localStorage.removeItem('GO_SYSTEM')
+    const keysToRemove = Object.keys(window.localStorage).filter((key) =>
+      key.startsWith('ChatChat_ChatApp-')
+    );
+    keysToRemove.forEach((key) => {
+      localStorage.removeItem(key);
+    });
+    window.localStorage.removeItem('ChatChatHistory')
+    window.localStorage.removeItem('storageChatApp')
+    window.localStorage.removeItem('storageMainMenus')
+    window.localStorage.removeItem('storageMyCoursesList')
     router.push('/login')
   }
 
