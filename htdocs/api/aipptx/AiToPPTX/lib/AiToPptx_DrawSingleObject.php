@@ -267,6 +267,42 @@ function AiToPptx_DrawSingleObject($childrenItem, $DirPath)  {
 		$spPr->appendChild($noFill);
 	}
 
+
+  if(isset($childrenItem['extInfo']['property']['scene3d']))  {
+    $scene3d = $childrenItem['extInfo']['property']['scene3d'];
+		$a_scene3d = $dom->createElement('a:scene3d');
+
+    if($scene3d['cameraPrst']!="")  {
+      $camera = $dom->createElement('a:camera');
+      $camera->setAttribute('prst', $scene3d['cameraPrst']);
+      $camera->setAttribute('zoom', $scene3d['cameraZoom']);
+      $a_scene3d->appendChild($camera);
+    }
+    if($scene3d['lightRigRig']!="")  {
+      $lightRig = $dom->createElement('a:lightRig');
+      $lightRig->setAttribute('rig', $scene3d['lightRigRig']);
+      $lightRig->setAttribute('dir', $scene3d['lightRigDir']);
+      $rot = $dom->createElement('a:rot');
+      $rot->setAttribute('lat', $scene3d['lightRigRot']['x'] * 60000);
+      $rot->setAttribute('lon', $scene3d['lightRigRot']['y'] * 60000);
+      $rot->setAttribute('rev', $scene3d['lightRigRot']['z'] * 60000);
+      $lightRig->appendChild($rot);
+      $a_scene3d->appendChild($lightRig);
+    }
+
+    $spPr->appendChild($a_scene3d);
+	}
+
+  if(isset($childrenItem['extInfo']['property']['sp3d']))  {
+    $sp3d = $childrenItem['extInfo']['property']['sp3d'];
+		$a_sp3d = $dom->createElement('a:sp3d');
+    if($sp3d['extrusionH']!='') {
+      $a_sp3d->setAttribute('extrusionH', $sp3d['extrusionH']);
+    }
+
+    $spPr->appendChild($a_sp3d);
+	}
+
 	//绘制任意几何图形
   //print "TYPE:".$Type." ".$geometry['name']."<BR>";
 	if ( ($Type == "text" && $geometry['name'] == "custom") || ($realType == "Picture" && $geometry['name'] == "custom")
