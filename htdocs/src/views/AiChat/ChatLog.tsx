@@ -213,22 +213,22 @@ const ChatLog = (props: any) => {
         >
           {isSender ?
           <Box display="flex" alignItems="center" justifyContent="right" borderRadius="8px" p={0} mb={1} >
-            <Tooltip title={t('Copy')}>
+            <Tooltip title={t('复制')}>
               <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                 navigator.clipboard.writeText(item.messages[0].msg);
-                toast.success(t('Copied success') as string, { duration: 1000 })
+                toast.success(t('复制成功') as string, { duration: 1000 })
               }}>
                 <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('ReGenerate')}>
+            <Tooltip title={t('重新生成')}>
               <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                 handleSendMsg(item.messages[0].msg)
               }}>
                 <Icon icon='mdi:refresh' fontSize='inherit' />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('Delete')}>
+            <Tooltip title={t('删除')}>
               <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                 handleDeleteOneChatLogById(item.messages[0].chatlogId)
               }}>
@@ -293,7 +293,7 @@ const ChatLog = (props: any) => {
                 }}
                 >
                   <CircularProgress color='success' size={10} sx={{mr: 1}}/>
-                  {t('AI Chat')}
+                  {t('AI 对话')}
               </Typography>
             </Fragment>
             :
@@ -301,10 +301,10 @@ const ChatLog = (props: any) => {
             }
             {(sendButtonDisable == true && index < ChatItemMsgList.length - 1) || (sendButtonDisable == false && index > 0) ?
             <Fragment>
-              <Tooltip title={t('Copy')}>
+              <Tooltip title={t('复制')}>
                 <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                   navigator.clipboard.writeText(item.messages[0].msg);
-                  toast.success(t('Copied success') as string, { duration: 1000 })
+                  toast.success(t('复制成功') as string, { duration: 1000 })
                 }}>
                   <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
                 </IconButton>
@@ -366,13 +366,13 @@ const ChatLog = (props: any) => {
                           { index == 0 ?
                             <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
                           :
-                            <ReactMarkdown remarkPlugins={[RemarkBreaks]}>{chat.msg.replaceAll('\\n', '\n')}</ReactMarkdown>
+                            <ReactMarkdown remarkPlugins={[RemarkBreaks]}>{chat.msg.replaceAll('\\\\n', '  \n').replaceAll('\\n\\n', '  \n').replaceAll('\\n', '  \n')}</ReactMarkdown>
                           }
                           {!isSender && index == ChatItemMsgList.length - 1 && index>0 && questionGuide ?
                             <Box>
                               <Box display="flex" alignItems="center">
                                 <Avatar src={'/images/aichat/cq.png'} sx={{ mr: 2.5, width: 26, height: 26 }} />
-                                {t('QuestionGuide')}
+                                {t('相关问题')}
                               </Box>
                               {questionGuide && questionGuide.length > 0 && Array.isArray(questionGuide) && questionGuide.map((question: string, index: number)=>{
 
@@ -386,7 +386,7 @@ const ChatLog = (props: any) => {
                                       {question}
                                     </LinkStyled>
                                     :
-                                    <Typography sx={{my: 0.5  }} variant='body2'>{t(question)}</Typography>
+                                    <Typography sx={{my: 0.5  }} variant='body2'>{t('正在为您生成近似的三个相关问题,请稍等...')}</Typography>
                                     }
 
                                   </ListItem>
@@ -407,17 +407,17 @@ const ChatLog = (props: any) => {
                             >
                               {!isSender && Number(chat.responseTime) > 0 && ( (index + 1 == ChatItemMsgList.length && !sendButtonDisable) || (index + 1 < ChatItemMsgList.length))?
                               <Box display="flex" alignItems="center" justifyContent="left" borderRadius="8px" p={0} mb={1} >
-                                  <Tooltip title={t('ViewDetail')}>
+                                  <Tooltip title={t('查看明细')}>
                                     <Button color='success' size="small" style={{ whiteSpace: 'nowrap' }} onClick={()=>{
                                       const historyAll: any[] = [...chat.history]
                                       historyAll.push([chat.question, chat.msg])
                                       setContextPreviewOpen(true)
                                       setContextPreviewData(historyAll)
                                     }}>
-                                      {t('ContextCount')}({(chat.history.length+1)*2+1})
+                                      {t('对话数量')}({(chat.history.length+1)*2+1})
                                     </Button>
                                   </Tooltip>
-                                  <Tooltip title={t('RunningTime')}>
+                                  <Tooltip title={t('运行时间')}>
                                     <Button color='error' size="small" style={{ whiteSpace: 'nowrap' }} disableTouchRipple disableRipple>{chat.responseTime}S</Button>
                                   </Tooltip>
                                   <Button color='info' size="small" disabled style={{ whiteSpace: 'nowrap' }}>

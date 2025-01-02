@@ -17,7 +17,6 @@ export const authConfig = {
     AppMarkId: AppMarkId,
     AppSchoolConfigMap: AppSchoolConfigMap,
     indexMenuspath: indexMenuspath,
-    meEndpoint: APP_URL + 'jwt.php?action=refresh',
     loginEndpoint: APP_URL + 'jwt.php?action=login',
     logoutEndpoint: APP_URL + 'jwt.php?action=logout',
     refreshEndpoint: APP_URL + 'jwt.php?action=refresh',

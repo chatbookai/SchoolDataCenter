@@ -187,23 +187,26 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
                 }),
             });
             if (!response.body) {
-            throw new Error('Response body is not readable as a stream');
+              throw new Error('Response body is not readable as a stream');
             }
+
             const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
             let responseText = "";
+
             while (true) {
                 const { done, value } = await reader.read();
-                const text = new TextDecoder('utf-8').decode(value);
-                const filterText = filterDeepSeekAiResultToText(text)
-                console.log("filterDeepSeekAiResultToText", filterText)
-                setProcessingMessage((prevText: string) => prevText + filterText);
-                responseText = responseText + filterText;
-                setQuestionGuide(null)
                 if (done || stopMsg) {
-                    setProcessingMessage('')
+                    setProcessingMessage('');
                     break;
                 }
+                const chunk = decoder.decode(value, { stream: true });
+                const filterText = filterDeepSeekAiResultToText(chunk);
+                setProcessingMessage((prevText: string) => prevText + filterText);
+                responseText += filterText;
+                setQuestionGuide(null);
             }
+
             if(responseText) {
                 console.log("OpenAI Response:", UserId, responseText)
                 const endTime = performance.now()
@@ -274,17 +277,19 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
 }
 
 export function filterDeepSeekAiResultToText(jsonString: string) {
-
-  const jsonList = jsonString.split('"choices":[{"index":0,"delta":{"content":"')
-  if(jsonList && jsonList[1] && jsonList[1]!='')  {
-    const LastPart = jsonList[1].split('"},"logprobs":null,"finish_reason"')
-    if(LastPart[0] && LastPart[1])  {
-
-      return LastPart[0]
+  let ResultText = ''
+  const jsonStringList = jsonString.split('data:')
+  jsonStringList.map((Item: string)=>{
+    const jsonList = Item.split('"choices":[{"index":0,"delta":{"content":"')
+    if(jsonList && jsonList[1] && jsonList[1]!='')  {
+      const LastPart = jsonList[1].split('"},"logprobs":null,"finish_reason"')
+      if(LastPart[0] && LastPart[1])  {
+        ResultText += LastPart[0]
+      }
     }
-  }
+  })
 
-  return ''
+  return ResultText
 }
 
 function extractTextBetween(text: string, startMarker: string, endMarker: string) {

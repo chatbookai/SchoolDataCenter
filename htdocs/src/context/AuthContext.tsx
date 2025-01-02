@@ -52,7 +52,7 @@ const AuthProvider = ({ children }: Props) => {
       if (authConfig && storedToken && storedToken!=undefined) {
         setLoading(true)
         await axios
-          .get(authConfig.meEndpoint, {
+          .get(authConfig.refreshEndpoint, {
             headers: {
               Authorization: storedToken
             }
@@ -80,15 +80,21 @@ const AuthProvider = ({ children }: Props) => {
                 dataJson = data
             }
             setLoading(false)
-            setUser({ ...dataJson.userData })
+            dataJson.userData && setUser({ ...dataJson.userData })
+            if(dataJson.status == "ERROR") {
+              if (!router.pathname.includes('login')) {
+                router.replace('/login')
+              }
+            }
           })
           .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem(defaultConfig.storageTokenKeyName)
-            localStorage.removeItem('GO_SYSTEM')
+            window.localStorage.removeItem('userData')
+            window.localStorage.removeItem('refreshToken')
+            window.localStorage.removeItem(defaultConfig.storageTokenKeyName)
+            window.localStorage.removeItem('GO_SYSTEM')
             setUser(null)
             setLoading(false)
+            console.log("router.pathname", router.pathname)
             if (!router.pathname.includes('login')) {
               router.replace('/login')
             }
@@ -203,6 +209,12 @@ const AuthProvider = ({ children }: Props) => {
           if(dataJson.status == 'ok' && dataJson.accessKey) {
             window.localStorage.setItem(defaultConfig.storageAccessKeyName, dataJson.accessKey)
             setUser({ ...dataJson.userData })
+          }
+
+          if(dataJson.status == 'ERROR') {
+            if (!router.pathname.includes('login')) {
+              router.replace('/login')
+            }
           }
 
         })
