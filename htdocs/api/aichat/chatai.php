@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken");
 header("Content-type: text/html; charset=utf-8");
-//header('Content-Type: text/event-stream');
+header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
 // Handle preflight requests
@@ -48,6 +48,8 @@ if($用户输入 != "" && $appId != "")  {
     $HistoryRecords   = $rs_a[0]['HistoryRecords'];
     $PresencePenalty  = $rs_a[0]['PresencePenalty'];
     $SystemPrompt     = $rs_a[0]['SystemPrompt'];
+    $SystemPrompt     .= " 只需要输入一个 \n 就可以，不要输出 \\n \\\n \\\\n \\\\\n 等这样的内容。";
+
 
     switch($AppModel) {
       case 'DeepSeekChat':
@@ -67,8 +69,11 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
   $messages 	= [];
   $messages[] = ['content'=>$系统模板, 'role'=>'system'];
   foreach($历史消息 as $消息) {
+    $过滤AI回复文本 = str_replace("\\\\\\n", "\n", $消息[1]);
+    $过滤AI回复文本 = str_replace("\\\\n", "\n", $过滤AI回复文本);
+    $过滤AI回复文本 = str_replace("\\n", "\n", $过滤AI回复文本);
     $messages[] = ['content'=>$消息[0], 'role'=>'user'];
-    $messages[] = ['content'=>$消息[1], 'role'=>'assistant'];
+    $messages[] = ['content'=>$过滤AI回复文本, 'role'=>'assistant'];
   }
   $messages[] = ['content'=>$用户输入, 'role'=>'user'];
   //print_R($messages);exit;

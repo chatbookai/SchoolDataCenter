@@ -46,7 +46,7 @@ const AppSoulChatList = (props: any) => {
 
   const [historyCounter, setHistoryCounter] = useState<number>(0)
 
-  const QuestionGuideTemplate = '你是一个AI智能助手，可以回答和解决我的问题。请结合前面的对话记录，以用户自己的角度，帮用户生成 3 个问题，引导用户继续提问。问题的长度应小于20个字符，要求使用UTF-8编码，按 JSON 格式返回: ["问题1", "问题2", "问题3"]'
+  const QuestionGuideTemplate = '你是一个AI智能助手，可以回答和解决我的问题。请结合前面的对话记录，以用户自己的角度，帮用户生成 3 个问题，用于引导用户来进行继续提问。要求提问的角度要站在用户的角度生成提问句子。问题的长度应小于20个字符，要求使用UTF-8编码，按 JSON 格式返回: ["问题1", "问题2", "问题3"]'
 
   const handleSetChatWithApp = async (item: any) => {
     setPageModel("ChatWithApp")

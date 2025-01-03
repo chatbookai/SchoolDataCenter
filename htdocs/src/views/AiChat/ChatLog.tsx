@@ -366,7 +366,7 @@ const ChatLog = (props: any) => {
                           { index == 0 ?
                             <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
                           :
-                            <ReactMarkdown remarkPlugins={[RemarkBreaks]}>{chat.msg.replaceAll('\\\\n', '  \n').replaceAll('\\n\\n', '  \n').replaceAll('\\n', '  \n')}</ReactMarkdown>
+                            <ReactMarkdown remarkPlugins={[RemarkBreaks]}>{chat.msg.replaceAll("\\\\\n", '  \n').replaceAll("\\\\n", '  \n').replaceAll("\\\n", '  \n').replaceAll("\\n", '  \n')}</ReactMarkdown>
                           }
                           {!isSender && index == ChatItemMsgList.length - 1 && index>0 && questionGuide ?
                             <Box>
