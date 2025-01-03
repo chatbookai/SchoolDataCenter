@@ -6,6 +6,9 @@
 * Copyright (c) 2023
 * License: GPL V3 or Commercial license
 */
+header("Cache-Control: no-store, no-cache, max-age=0");
+header("Pragma: no-cache");
+header("Expires: 0");
 header("Content-Type: application/json");
 require_once('../cors.php');
 require_once('../include.inc.php');

@@ -86,7 +86,9 @@ if($_SESSION['LOGIN_USER_EDUID']!="")  {
                 $userData['username']   = $StudentInfo['学号'];
                 $userData['role']       = "学生";
                 $userData['type']       = "Student";
+                $userData['ExpireTime'] = time() + (3 * 60 * 30);
                 $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
+                $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['accessToken']      = $accessToken;
                 $RS['userData']         = $userData;
                 print_r(json_encode($RS));
@@ -110,7 +112,9 @@ if($_SESSION['LOGIN_USER_EDUID']!="")  {
             $userData['email']      = $UserInfo['EMAIL'];
             $userData['role']       = $userData['PRIV_NAME'];
             $userData['type']       = "User";
+            $userData['ExpireTime'] = time() + (3 * 60 * 30);
             $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
+            $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
             $RS['accessToken']      = $accessToken;
             $RS['userData']         = $userData;
             $RS['status']           = "OK";
@@ -123,11 +127,24 @@ if($_SESSION['LOGIN_USER_EDUID']!="")  {
             $USER_PROFILE[] 	= array("左边"=>"角色","右边"=>$userData['PRIV_NAME']);
             $RS['USER_PROFILE'] = $USER_PROFILE;
             SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
+
+            $GO_SYSTEM                          = [];
+            $userInfoX                          = [];
+            $userInfoX['userToken']             = $accessToken;
+            $userInfoX['tokenName']             = "satoken";
+            $userInfoX['userId']                = $UserInfo['id'];
+            $userInfoX['userName']              = $UserInfo['USER_ID'];
+            $userInfoX['nickName']              = $UserInfo['USER_NAME'];
+            $userInfoX['t']                     = "function H(...q){return $(re=>Reflect.apply(er.translate,null,[re,...q]),()=>er.parseTranslateArgs(...q),\\\"translate\\\",re=>Reflect.apply(re.t,re,[...q]),re=>re,re=>Re.isString(re))}";
+            $GO_SYSTEM['userInfo']              = $userInfoX;
+            $GO_SYSTEM['fetchInfo']['OSSUrl']   = "/api/goview/bucket/";
+
             print "<script>
-            var data = ".json_encode($UserInfo).";
-            localStorage.setItem('userData', JSON.stringify(data));
+            localStorage.setItem('userData', '".json_encode($userData)."');
             localStorage.setItem('accessToken', '".$accessToken."');
-            localStorage.setItem('i18nextLng', 'zh');
+            localStorage.setItem('accessKey', '".$RS['accessKey']."');
+            localStorage.setItem('GO_SYSTEM', '".json_encode($GO_SYSTEM)."');
+            localStorage.setItem('i18nextLng', 'zh-CN');
             setTimeout(function() {
                 window.location.href = '/';
             }, 1000);

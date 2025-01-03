@@ -63,7 +63,7 @@ if($_GET['action']=="login")                {
                 $userData['username']   = $StudentInfo['学号'];
                 $userData['role']       = "学生";
                 $userData['type']       = "Student";
-                $userData['ExpireTime'] = time() + (3 * 60);
+                $userData['ExpireTime'] = time() + (3 * 60 * 30);
                 $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
@@ -121,7 +121,7 @@ if($_GET['action']=="login")                {
                 $userData['username']   = $StudentInfo['学生学号'];
                 $userData['role']       = "校友";
                 $userData['type']       = "Schoolmate";
-                $userData['ExpireTime'] = time() + (3 * 60);
+                $userData['ExpireTime'] = time() + (3 * 60 * 30);
                 $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
@@ -172,7 +172,7 @@ if($_GET['action']=="login")                {
             $userData['email']      = $UserInfo['EMAIL'];
             $userData['role']       = $userData['PRIV_NAME'];
             $userData['type']       = "User";
-            $userData['ExpireTime'] = time() + (3 * 60);
+            $userData['ExpireTime'] = time() + (3 * 60 * 30);
             $accessToken            = EncryptID(JWT::encode($userData, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
             $RS['accessToken']      = $accessToken;
             $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
@@ -188,11 +188,11 @@ if($_GET['action']=="login")                {
             $userInfoX['t']                     = "function H(...q){return $(re=>Reflect.apply(er.translate,null,[re,...q]),()=>er.parseTranslateArgs(...q),\"translate\",re=>Reflect.apply(re.t,re,[...q]),re=>re,re=>Re.isString(re))}";
             $GO_SYSTEM['userInfo']              = $userInfoX;
             $GO_SYSTEM['fetchInfo']['OSSUrl']   = "/api/goview/bucket/";
-            $RS['GO_SYSTEM']        = $GO_SYSTEM;
+            $RS['GO_SYSTEM']  = $GO_SYSTEM;
 
-            $RS['status']           = "OK";
+            $RS['status']     = "OK";
             //形成个人信息展示页面的数据列表
-            $USER_PROFILE 	= array();
+            $USER_PROFILE 	  = array();
             $USER_PROFILE[] 	= array("左边"=>"用户类型","右边"=>"教职工");
             $USER_PROFILE[] 	= array("左边"=>"用户名","右边"=>$userData['USER_ID']);
             $USER_PROFILE[] 	= array("左边"=>"姓名","右边"=>$userData['USER_NAME']);
@@ -226,7 +226,7 @@ if($_GET['action']=="login")                {
 
 if($_GET['action']=="refresh")                {
     $CheckAuthUserLoginStatus               = CheckAuthUserLoginStatus();
-    $CheckAuthUserLoginStatus->ExpireTime   = time() + (3 * 60);
+    $CheckAuthUserLoginStatus->ExpireTime   = time() + (3 * 60 * 30);
     $accessToken                = EncryptID(JWT::encode((array) $CheckAuthUserLoginStatus, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
     $RS['status']               = 'ok';
     $RS['accessToken']          = $accessToken;
