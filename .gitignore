@@ -1,0 +1,50 @@
+/xampp/tmp
+/xampp/mysql/data/ib_logfile0
+/xampp/mysql/data/ib_logfile1
+/xampp/mysql/data/mysql_error.log
+/xampp/mysql/data/mysql.pid
+/xampp/mysql/data/ibtmp1
+
+/xampp/apache/logs/error.log
+/xampp/apache/logs/access.log
+/xampp/apache/logs/error.log
+/xampp/apache/logs/httpd.pid
+/xampp/apache/logs/access.log
+/xampp/apache/logs/error.log
+/xampp/apache/logs/access.log
+/xampp/apache/logs/error.log
+/xampp/apache/logs/httpd.pid
+/xampp/apache/logs/ssl_request.log
+
+/xampp/php/php_error.log
+
+/xampp/xampp-control.log
+
+# git rm --cached mysql/data/ib_logfile0
+# git rm --cached mysql/data/ib_logfile1
+# git rm --cached mysql/data/mysql_error.log
+# git rm --cached mysql/data/mysql.pid
+# git rm -r --cached apache/logs
+# git rm -r --cached xampp-control.ini
+# git commit -m "Remove ignored files from index"
+
+/xampp/xampp-control.ini
+
+/webroot.zip
+
+/api/tools
+/api/autotask
+/api/download
+/api/aipptx/cache
+/api/aipptx/output
+/api/download/DandianDataCenter.apk
+
+/xampp/apache/conf/extra/httpd-xampp.conf
+/xampp/xampp-control.ini
+/xampp/wget
+
+/.next
+/node_modules
+/webroot
+/api/aipptx/json
+/api/aipptx/templates

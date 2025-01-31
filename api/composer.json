@@ -1,0 +1,8 @@
+{
+    "require": {
+        "lcobucci/jwt": "^4.0",
+        "firebase/php-jwt": "^6.3",
+        "phpoffice/phpspreadsheet": "^1.25",
+		"phpoffice/phppresentation": "dev-master"
+    }
+}
