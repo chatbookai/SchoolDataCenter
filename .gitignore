@@ -47,3 +47,6 @@
 /webroot
 /api/aipptx/json
 /api/aipptx/templates
+
+/go-view/dist
+/go-view/node_modules
