@@ -32,6 +32,9 @@ import RemarkBreaks from "remark-breaks";
 
 import SendMsgForm from 'src/views/AiChat/SendMsgForm'
 
+import ModuleTableData from 'src/views/AiChat/module/TableData'
+
+
 // ** Types Imports
 import {
   MessageType,
@@ -419,7 +422,7 @@ const ChatLog = (props: any) => {
                                           borderRadius: 1,
                                           width: isSender ? 'fit-content' : '100%',
                                           fontSize: '0.875rem',
-                                          p: theme => theme.spacing(0.1, 1, 0.1, 2.5),
+                                          p: theme => theme.spacing(0.1, 2, 0.1, 2.5),
                                           ml: isSender ? 'auto' : undefined,
                                           borderTopLeftRadius: !isSender ? 0 : undefined,
                                           borderTopRightRadius: isSender ? 0 : undefined,
@@ -427,11 +430,18 @@ const ChatLog = (props: any) => {
                                           backgroundColor: isSender ? 'primary.main' : 'background.paper'
                                         }}
                             >
-                              { index == 0 ?
+                              { index == 0 && (
                                 <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
-                              :
+                              )}
+
+                              { index > 0 && chat.msg && chat.msg.includes('"module":"table"') && (
+                                <ModuleTableData data={chat.msg} />
+                              )}
+
+                              { index > 0 && chat.msg && !chat.msg.includes('"module":"') && (
                                 <ReactMarkdown remarkPlugins={[RemarkBreaks]}>{chat.msg.replaceAll("\\\\\n", '  \n').replaceAll("\\\\n", '  \n').replaceAll("\\\n", '  \n').replaceAll("\\n", '  \n')}</ReactMarkdown>
-                              }
+                              )}
+
                               {!isSender && index == ChatItemMsgList.length - 1 && index>0 && questionGuide ?
                                 <Box>
                                   <Box display="flex" alignItems="center">

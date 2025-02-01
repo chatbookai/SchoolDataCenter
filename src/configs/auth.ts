@@ -1,10 +1,10 @@
 
 export const AppSchoolConfigMap: any    = {}
-AppSchoolConfigMap['dandian.net']    = ["http://localhost/api/", '单点数据中心', "auth/menus.php", "http://localhost/api/"]
+AppSchoolConfigMap['dandian.net']    = ["https://fdzz.dandian.net:8443/api/", '单点数据中心', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
 AppSchoolConfigMap['fdzyzz.com'] = ["https://fdzz.dandian.net:8443/api/", '福鼎职业中专', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
 AppSchoolConfigMap['fjsmnx.com'] = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业学校', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
 
-const AppMarkId = "fdzyzz.com"; //需要针对每个学校的情况进行修改
+const AppMarkId = "dandian.net"; //需要针对每个学校的情况进行修改
 
 const APP_URL = AppSchoolConfigMap[AppMarkId][0]
 const AppName = AppSchoolConfigMap[AppMarkId][1]

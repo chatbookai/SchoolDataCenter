@@ -23,7 +23,7 @@ $_POST          = json_decode($payload,true);
 
 $temperature    = intval($_POST['temperature']*10)/10;
 $历史消息        = (array)$_POST['history'];
-$用户输入        = "得到我的成绩"; //(string)$_POST['question'];
+$用户输入        = (string)$_POST['question'];
 
 $DB_TYPE        = 'mysqli';
 if($用户输入 != "")   {
