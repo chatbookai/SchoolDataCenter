@@ -33,6 +33,7 @@ import RemarkBreaks from "remark-breaks";
 import SendMsgForm from 'src/views/AiChat/SendMsgForm'
 
 import ModuleTableData from 'src/views/AiChat/module/TableData'
+import ModuleMsgData from 'src/views/AiChat/module/MsgData'
 
 
 // ** Types Imports
@@ -436,6 +437,10 @@ const ChatLog = (props: any) => {
 
                               { index > 0 && chat.msg && chat.msg.includes('"module":"table"') && (
                                 <ModuleTableData data={chat.msg} />
+                              )}
+
+                              { index > 0 && chat.msg && chat.msg.includes('"module":"msg"') && (
+                                <ModuleMsgData data={chat.msg} />
                               )}
 
                               { index > 0 && chat.msg && !chat.msg.includes('"module":"') && (

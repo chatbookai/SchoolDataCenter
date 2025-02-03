@@ -11,7 +11,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 
-const TableDataL = ({ data }: any) => {
+const TableData = ({ data }: any) => {
   const dataJson = JSON.parse(data)
   const dataJsonData = dataJson.data
   console.log("dataJsonData", dataJsonData)
@@ -80,4 +80,4 @@ const TableDataL = ({ data }: any) => {
   )
 }
 
-export default TableDataL
+export default TableData

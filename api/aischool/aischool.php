@@ -68,10 +68,21 @@ if($用户输入 != "")   {
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
   $名称 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
 
+  if($名称 == "")  {
+    $RS = [];
+    $RS['data']     = [];
+    $RS['message']  = '没有获得到对应的模块';
+    $RS['module']   = 'msg';
+    $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
+    $RS['构建提示词语']  = $构建提示词语;
+    print_R(json_encode($RS));
+    exit;
+    exit;
+  }
   //获得具体SQL语句
   $当前学期      = getCurrentXueQi();
   $sql          = "select * from data_ai_dashboard where 名称='".$名称."'";
-  $rs           = $db->Execute($sql);
+  $rs           = $db->Execute($sql) or print $sql;
   $rs_a         = $rs->GetArray();
   $Item         = $rs_a[0];
   $提示词语 = $Item['提示词语'];
@@ -79,7 +90,10 @@ if($用户输入 != "")   {
   $提示词语 = str_replace("[当前学期]", $当前学期, $提示词语);
   $提示词语 = str_replace("[当前日期]", date('Y-m-d'), $提示词语);
   $提示词语 = str_replace("[我的用户名]", "810120", $提示词语);
-  $提示词语 = str_replace("[我的学号]", "240401049", $提示词语);
+  $提示词语 = str_replace("[我的学号]", "230401001", $提示词语);
+  $提示词语 = str_replace("[我管理的班级]", "", $提示词语);
+  $提示词语 = str_replace("[我所教课的班级]", "", $提示词语);
+  $提示词语 = str_replace("[我所教课的课程]", "", $提示词语);
   $构建提示词语 = $用户输入;
   $DeepSeekAiChatResult = DeepSeekAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
@@ -87,9 +101,21 @@ if($用户输入 != "")   {
   $SQL结果 = str_replace("```sql", "", $SQL结果);
   $SQL结果 = str_replace("```", "", $SQL结果);
 
+  if($SQL结果 == "")  {
+    $RS = [];
+    $RS['data']     = [];
+    $RS['message']  = '没有获得到对应的数据库查询条件';
+    $RS['module']   = 'msg';
+    $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
+    $RS['构建提示词语']  = $构建提示词语;
+    $RS['提示词语']     = $提示词语;
+    print_R(json_encode($RS));
+    exit;
+  }
+
   //开始执行SQL语句
   $sql          = "select * from data_datasource where id='".$Item['数据源']."'";
-  $rs           = $db->Execute($sql);
+  $rs           = $db->Execute($sql) or print $sql;
   $rs_a         = $rs->GetArray();
   $Item         = $rs_a[0];
   $db_remote = NewADOConnection($DB_TYPE='mysqli');
@@ -97,14 +123,24 @@ if($用户输入 != "")   {
   $db_remote->Execute("Set names utf8;");
   $db_remote->setFetchMode(ADODB_FETCH_ASSOC);
 
-  $rs   = $db_remote->Execute($SQL结果);
+  if(!$db_remote)  {
+    $RS = [];
+    $RS['data']     = [];
+    $RS['message']  = '远程数据源连接失败';
+    $RS['module']   = 'msg';
+    $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
+    print_R(json_encode($RS));
+    exit;
+  }
+
+  $rs   = $db_remote->Execute($SQL结果) or print $sql;
   $rs_a = $rs->GetArray();
   $RS = [];
   $RS['sql']      = $SQL结果;
   $RS['data']     = $rs_a;
   $RS['module']   = 'table';
-  //$RS['提示词语1']  = $构建提示词语;
-  //$RS['提示词语2']  = $提示词语;
+  $RS['提示词语1']  = $构建提示词语;
+  $RS['提示词语2']  = $提示词语;
   print_R(json_encode($RS));
   exit;
 
