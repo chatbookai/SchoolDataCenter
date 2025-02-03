@@ -202,7 +202,7 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
               setStepingMessage('当前查询归属:' + responseRouterTextJSON.message)
               setTimeout(() => {
                 setStepingMessage('已经开始数据查询中, 预计需要3-5秒.'); // 修改为你想设置的新值
-              }, 1000);
+              }, 3000);
             }
             if(responseRouterTextJSON && responseRouterTextJSON.message && responseRouterTextJSON.module == 'msg')            {
               const endTime = performance.now()
