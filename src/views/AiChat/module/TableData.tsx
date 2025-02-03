@@ -10,6 +10,7 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
+import Typography from '@mui/material/Typography'
 
 const TableData = ({ data }: any) => {
   const dataJson = JSON.parse(data)
@@ -67,15 +68,27 @@ const TableData = ({ data }: any) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 25, 100]}
-        component='div'
-        count={dataJsonData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {dataJsonData && dataJsonData.length > 0 && (
+        <TablePagination
+          rowsPerPageOptions={[5, 25, 100]}
+          component='div'
+          count={dataJsonData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
+      {dataJsonData && dataJsonData.length == 0 && dataJson.message && (
+        <Typography sx={{
+          width: 'fit-content',
+          fontSize: '0.875rem',
+          p: theme => theme.spacing(0.5, 2, 0.5, 2),
+          ml: 1,
+          color: 'text.primary',
+        }}
+        >{dataJson.message}</Typography>
+      )}
     </>
   )
 }

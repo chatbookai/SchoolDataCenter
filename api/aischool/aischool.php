@@ -2,8 +2,9 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken");
-header("Content-type: text/html; charset=utf-8");
-header('Content-Type: text/event-stream');
+//header("Content-type: text/html; charset=utf-8");
+//header('Content-Type: text/event-stream');
+header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-cache');
 
 // Handle preflight requests
@@ -24,9 +25,10 @@ $_POST          = json_decode($payload,true);
 $temperature    = intval($_POST['temperature']*10)/10;
 $历史消息        = (array)$_POST['history'];
 $用户输入        = (string)$_POST['question'];
+$模块            = (string)$_POST['module'];
 
 $DB_TYPE        = 'mysqli';
-if($用户输入 != "")   {
+if($用户输入 != "" && $_GET['action'] == 'router')   {
   //保存到数据
   $sql  = "select * from data_ai_dashboard ";
   $rs   = $db->Execute($sql);
@@ -55,16 +57,24 @@ if($用户输入 != "")   {
     }
   }
 
+  $用户输入Array = [];
+  foreach($历史消息 as $消息) {
+    $用户输入Array[] = $消息[0];
+  }
+  $用户输入Array[] = $用户输入;
+
+  //$用户输入Array = array_reverse($用户输入Array);
+
   //构建提示词语
-  $构建提示词语 = "我的信息输入为: '".$用户输入."', 需要从以下可能的条件中选取其中一个. \n";
+  $构建提示词语 = "我的信息输入为: '".join(',', $用户输入Array)."', 我输入的内容为多个命令, 中间使用逗号隔开了, 优化级规则为:最后面输入内容的优先级为最高, 如果跟前面的内容冲突,则使用最后面的内容. 要求:从以下可能的条件中选取其中一个. 切记: 最后面的命令的优先级为最高. \n";
   for($i=0;$i<sizeof($rs_a);$i++) {
     $RS_Item = $rs_a[$i];
     $构建提示词语 .= "第".($i+1)."种情况下面需要匹配的文本: '".$RS_Item['AI匹配关键字']."', 当前情况如果匹配成功, 就直接返回: '".$RS_Item['名称']."' \n";
   }
   $构建提示词语 .= "要求直接返回结果, 不需要返回过多解释信息.\n";
 
-  $SystemPrompt = "需要把用户输入的信息,跟提交的几个选项进行对比, 返回匹配度最高的一个选项.";
-  $DeepSeekAiChatResult = DeepSeekAiChat($SystemPrompt, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
+  $SystemPrompt = "需要把用户输入的信息, 跟提交的几个选项进行对比, 返回匹配度最高的一个选项.";
+  $DeepSeekAiChatResult = DeepSeekAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
   $名称 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
 
@@ -75,13 +85,28 @@ if($用户输入 != "")   {
     $RS['module']   = 'msg';
     $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
     $RS['构建提示词语']  = $构建提示词语;
+    $RS['历史消息']     = $历史消息;
     print_R(json_encode($RS));
     exit;
+  }
+  else {
+    $RS = [];
+    $RS['data']     = [];
+    $RS['message']  = $名称;
+    $RS['module']   = 'status';
+    //$RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
+    $RS['构建提示词语']  = $构建提示词语;
+    $RS['历史消息']     = $历史消息;
+    print_R(json_encode($RS));
     exit;
   }
+}
+
+
+if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   //获得具体SQL语句
   $当前学期      = getCurrentXueQi();
-  $sql          = "select * from data_ai_dashboard where 名称='".$名称."'";
+  $sql          = "select * from data_ai_dashboard where 名称='".$模块."'";
   $rs           = $db->Execute($sql) or print $sql;
   $rs_a         = $rs->GetArray();
   $Item         = $rs_a[0];
@@ -101,6 +126,18 @@ if($用户输入 != "")   {
   $SQL结果 = str_replace("```sql", "", $SQL结果);
   $SQL结果 = str_replace("```", "", $SQL结果);
 
+  if($DeepSeekAiChatResultJSON == null)  {
+    $RS = [];
+    $RS['data']     = [];
+    $RS['message']  = '没有从AI模型获得到对应的数据库查询条件';
+    $RS['module']   = 'msg';
+    $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
+    $RS['构建提示词语']  = $构建提示词语;
+    $RS['提示词语']     = $提示词语;
+    print_R(json_encode($RS));
+    exit;
+  }
+
   if($SQL结果 == "")  {
     $RS = [];
     $RS['data']     = [];
@@ -115,7 +152,7 @@ if($用户输入 != "")   {
 
   //开始执行SQL语句
   $sql          = "select * from data_datasource where id='".$Item['数据源']."'";
-  $rs           = $db->Execute($sql) or print $sql;
+  $rs           = $db->Execute($sql) or print_R($Item);
   $rs_a         = $rs->GetArray();
   $Item         = $rs_a[0];
   $db_remote = NewADOConnection($DB_TYPE='mysqli');
@@ -133,12 +170,13 @@ if($用户输入 != "")   {
     exit;
   }
 
-  $rs   = $db_remote->Execute($SQL结果) or print $sql;
+  $rs   = $db_remote->Execute($SQL结果) or 远程数据库SQL执行错误("数据库执行错误: ".$SQL结果);
   $rs_a = $rs->GetArray();
   $RS = [];
-  $RS['sql']      = $SQL结果;
-  $RS['data']     = $rs_a;
-  $RS['module']   = 'table';
+  $RS['sql']       = $SQL结果;
+  $RS['data']      = $rs_a;
+  $RS['module']    = 'table';
+  $RS['message']   = sizeof($rs_a) == 0 ? '没有获取到数据,您可以尝试一下其它的查询条件.' : '';
   $RS['提示词语1']  = $构建提示词语;
   $RS['提示词语2']  = $提示词语;
   print_R(json_encode($RS));
@@ -152,13 +190,11 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
   $messages 	= [];
   $messages[] = ['content'=>$系统模板, 'role'=>'system'];
   foreach($历史消息 as $消息) {
-    $过滤AI回复文本 = str_replace("\\\\\\n", "\n", $消息[1]);
-    $过滤AI回复文本 = str_replace("\\\\n", "\n", $过滤AI回复文本);
-    $过滤AI回复文本 = str_replace("\\n", "\n", $过滤AI回复文本);
     $messages[] = ['content'=>$消息[0], 'role'=>'user'];
-    $messages[] = ['content'=>$过滤AI回复文本, 'role'=>'assistant'];
+    $messages[] = ['content'=>"", 'role'=>'assistant'];
   }
   $messages[] = ['content'=>$用户输入, 'role'=>'user'];
+  //print_R($messages);
   curl_setopt_array($curl, array(
       CURLOPT_URL => 'https://api.deepseek.com/chat/completions',
       CURLOPT_RETURNTRANSFER => true,
@@ -227,6 +263,15 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
     curl_close($curl);
     return $result;
   }
+}
+
+function 远程数据库SQL执行错误($message) {
+  $RS = [];
+  $RS['data']     = [];
+  $RS['message']  = $message;
+  $RS['module']   = 'msg';
+  print_R(json_encode($RS));
+  exit;
 }
 
 function 保存到数据库($IsStream, $用户输入, $输出TEXT, $备注)  {

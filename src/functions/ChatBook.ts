@@ -151,7 +151,7 @@ export function ChatChatInput(appId: string, chatlogId: string, Question: string
     window.localStorage.setItem(ChatChat + "_" + appId, JSON.stringify(ChatChatList))
 }
 
-export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Message: string, Token: string, UserId: number | string, chatId: number | string, setProcessingMessage: any, setFinishedMessage: any, setQuestionGuide: any, questionGuideTemplate: string, stopMsg: boolean, setStopMsg: any, temperature: number) {
+export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Message: string, Token: string, UserId: number | string, chatId: number | string, setProcessingMessage: any, setFinishedMessage: any, setQuestionGuide: any, setStepingMessage: any, questionGuideTemplate: string, stopMsg: boolean, setStopMsg: any, temperature: number) {
     const appId = app.id
     console.log("app", app)
     const MaxHistory = Number(app.HistoryRecords)
@@ -170,11 +170,50 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
     try {
         setProcessingMessage('')
         console.log("chatId", chatId)
-        const ChatAiUrl = app.AppName == "AI智能仪表盘" ? "aischool/aischool.php" : "aichat/chatai.php";
-        const IsStream = app.AppName == "AI智能仪表盘" ? false : true;
-        if(chatId && UserId)  {
+        if(app.AppName == "AI智能仪表盘")  {
+          if(chatId && UserId)  {
+            setStepingMessage('开始判断当前查询归属哪个模块')
             const startTime = performance.now()
-            const response = await fetch(authConfig.backEndApiAiBaseUrl + ChatAiUrl, {
+            const responseRouter = await fetch(authConfig.backEndApiAiBaseUrl + "aischool/aischool.php?action=router", {
+              method: 'POST',
+              headers: {
+                  Authorization: Token,
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  question: Message,
+                  history: MaxHistory == 0 ? [] : History.slice(0-MaxHistory),
+                  appId: appId,
+                  _id,
+                  allowChatLog: 1,
+                  temperature: temperature
+              }),
+            });
+            if (!responseRouter.body) {
+              throw new Error('Response body is not readable as a stream');
+            }
+
+            //流式输出, 通常用于显示文本信息
+            //非流式输出, 支持显示: 图片, 图表, 表格等其它类型
+            const responseRouterTextJSON = await responseRouter.json();
+            console.log("AI智能仪表盘 responseTextJSON", responseRouterTextJSON)
+            console.log("AI智能仪表盘 OpenAI Response object1:", responseRouterTextJSON.data)
+            if(responseRouterTextJSON && responseRouterTextJSON.message) {
+              setStepingMessage('当前查询归属:' + responseRouterTextJSON.message)
+              setTimeout(() => {
+                setStepingMessage('已经开始数据查询中, 预计需要3-5秒.'); // 修改为你想设置的新值
+              }, 1000);
+            }
+            if(responseRouterTextJSON && responseRouterTextJSON.message && responseRouterTextJSON.module == 'msg')            {
+              const endTime = performance.now()
+              const responseTime = Math.round((endTime - startTime) * 100 / 1000) / 100
+              ChatChatInput(appId, _id, Message, JSON.stringify(responseRouterTextJSON), 999999, responseTime, History)
+              ChatChatHistoryInput(_id, Message, JSON.stringify(responseRouterTextJSON), UserId, chatId, appId, responseTime, History)
+              setFinishedMessage(JSON.stringify(responseRouterTextJSON));
+            }
+
+            if(responseRouterTextJSON && responseRouterTextJSON.message && responseRouterTextJSON.module == 'status')         {
+              const responseContent = await fetch(authConfig.backEndApiAiBaseUrl + "aischool/aischool.php?action=content", {
                 method: 'POST',
                 headers: {
                     Authorization: Token,
@@ -186,17 +225,63 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
                     appId: appId,
                     _id,
                     allowChatLog: 1,
+                    module: responseRouterTextJSON.message,
                     temperature: temperature
                 }),
-            });
-            if (!response.body) {
-              throw new Error('Response body is not readable as a stream');
+              });
+              if (!responseContent.body) {
+                throw new Error('Response body is not readable as a stream');
+              }
+
+              //流式输出, 通常用于显示文本信息
+              //非流式输出, 支持显示: 图片, 图表, 表格等其它类型
+              const responseContentTextJSON = await responseContent.json();
+              console.log("AI智能仪表盘 responseTextJSON", responseContentTextJSON)
+              console.log("AI智能仪表盘 OpenAI Response object1:", responseContentTextJSON.data)
+              if(responseContentTextJSON && responseContentTextJSON.data) {
+                console.log("AI智能仪表盘 OpenAI Response string:", UserId, "")
+                const endTime = performance.now()
+                const responseTime = Math.round((endTime - startTime) * 100 / 1000) / 100
+                ChatChatInput(appId, _id, Message, JSON.stringify(responseContentTextJSON), 999999, responseTime, History)
+                ChatChatHistoryInput(_id, Message, JSON.stringify(responseContentTextJSON), UserId, chatId, appId, responseTime, History)
+                setFinishedMessage(JSON.stringify(responseContentTextJSON));
+              }
+
             }
 
-            let responseText = "";
+            return true
 
-            //流式输出, 通常用于显示文本信息
-            if(IsStream == true)  {
+          }
+          else {
+            return false
+          }
+        }
+        else {
+          const ChatAiUrl = "aichat/chatai.php";
+          if(chatId && UserId)  {
+              const startTime = performance.now()
+              const response = await fetch(authConfig.backEndApiAiBaseUrl + ChatAiUrl, {
+                  method: 'POST',
+                  headers: {
+                      Authorization: Token,
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      question: Message,
+                      history: MaxHistory == 0 ? [] : History.slice(0-MaxHistory),
+                      appId: appId,
+                      _id,
+                      allowChatLog: 1,
+                      temperature: temperature
+                  }),
+              });
+              if (!response.body) {
+                throw new Error('Response body is not readable as a stream');
+              }
+
+              let responseText = "";
+
+              //流式输出, 通常用于显示文本信息
               const reader = response.body.getReader();
               const decoder = new TextDecoder('utf-8');
               while (true) {
@@ -219,7 +304,7 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
                 ChatChatHistoryInput(_id, Message, responseText, UserId, chatId, appId, responseTime, History)
                 setFinishedMessage(responseText);
 
-                if(app.SimilarQuestions > 0 && IsStream == true) {
+                if(app.SimilarQuestions > 0) {
                     const url = authConfig.backEndApiAiBaseUrl + 'aichat/chataijson.php';
                     const headers = {
                         Authorization: Token,
@@ -266,30 +351,12 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
               else {
                 return true
               }
-            }
-            else {
-              //非流式输出, 支持显示: 图片, 图表, 表格等其它类型
-              const responseTextJSON = await response.json();
-              console.log("responseTextJSON", responseTextJSON)
-              console.log("OpenAI Response object1:", responseTextJSON.data)
-              if(responseTextJSON && responseTextJSON.data) {
-                console.log("OpenAI Response string:", UserId, responseText)
-                const endTime = performance.now()
-                const responseTime = Math.round((endTime - startTime) * 100 / 1000) / 100
-                ChatChatInput(appId, _id, Message, JSON.stringify(responseTextJSON), 999999, responseTime, History)
-                ChatChatHistoryInput(_id, Message, JSON.stringify(responseTextJSON), UserId, chatId, appId, responseTime, History)
-                setFinishedMessage(JSON.stringify(responseTextJSON));
-              }
 
-              return true
-            }
-
-
+          }
+          else {
+              return false
+          }
         }
-        else {
-            return false
-        }
-
     }
     catch (error: any) {
         console.log('Error:', error.message);

@@ -34,6 +34,7 @@ const ChatIndex = (props: any) => {
   const getChatLogList = async function (appId: string, appTemplate: string) {
     const userId = auth?.user?.username
     const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+    setTemperature(Number(app.Temperature) / 10) //暂时无用
     try {
       if(userId && authorization && false) { //暂时不需要从服务器端下载用户的AI聊天对话, 聊天对话只使用本地保存的那份
         const RS = await axios.post(authConfig.backEndApiHost + 'aichat/chatlog.php', {appId, pageId: 0, action: 'getChatList'}, {
@@ -156,6 +157,7 @@ const ChatIndex = (props: any) => {
   const [sendButtonText, setSendButtonText] = useState<string>('')
   const [sendInputText, setSendInputText] = useState<string>('')
   const [processingMessage, setProcessingMessage] = useState("")
+  const [stepingMessage, setStepingMessage] = useState("")
   const [finishedMessage, setFinishedMessage] = useState("")
   const [responseTime, setResponseTime] = useState<number | null>(null);
   const [questionGuide, setQuestionGuide] = useState<any>()
@@ -201,7 +203,8 @@ const ChatIndex = (props: any) => {
         },
         "selectedChat": selectedChat
       }
-      console.log("temperature", setTemperature)
+
+      //console.log("temperature", setTemperature)
       console.log("finishedMessage", finishedMessage)
       setStore(storeInit)
       setHistoryCounter(ChatChatListValue.length)
@@ -245,7 +248,7 @@ const ChatIndex = (props: any) => {
       ChatChatInput(app.id, _id, Obj.send, Obj.message, userId, 0, [])
       setRefreshChatCounter(refreshChatCounter + 1)
       const startTime = performance.now()
-      const ChatAiOutputV1Status = await ChatAiOutputV1(authConfig, app, _id, Obj.message, authorization, userId, chatId, setProcessingMessage, setFinishedMessage, setQuestionGuide, app.QuestionGuideTemplate, stopMsg, setStopMsg, temperature)
+      const ChatAiOutputV1Status = await ChatAiOutputV1(authConfig, app, _id, Obj.message, authorization, userId, chatId, setProcessingMessage, setFinishedMessage, setQuestionGuide, setStepingMessage, app.QuestionGuideTemplate, stopMsg, setStopMsg, temperature)
       const endTime = performance.now();
       setResponseTime(endTime - startTime);
       if(ChatAiOutputV1Status)      {
@@ -287,6 +290,7 @@ const ChatIndex = (props: any) => {
       handleSetRowInMsg={handleSetRowInMsg}
       maxRows={maxRows}
       setStopMsg={setStopMsg}
+      stepingMessage={stepingMessage}
       />
     </Box>
   )

@@ -96,7 +96,7 @@ const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
   const { authConfig, data, chatName, app, sendButtonDisable, handleDeleteOneChatLogById, sendMsg, store, questionGuide, setClearButtonClickEvent, setPageModel,
-          sendButtonLoading, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows, setStopMsg
+          sendButtonLoading, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows, setStopMsg, stepingMessage
         } = props
 
   const handleSendMsg = (msg: string) => {
@@ -115,7 +115,7 @@ const ChatLog = (props: any) => {
   // ** Scroll to chat bottom
   const scrollToBottom = () => {
 
-    if (chatArea.current && sendButtonDisable) {
+    if (chatArea.current && sendButtonDisable == false) {
       // @ts-ignore
       chatArea.current.scrollTop = Number.MAX_SAFE_INTEGER;
     }
@@ -197,11 +197,11 @@ const ChatLog = (props: any) => {
   }, [formattedChatData()]);
 
   useEffect(() => {
-    if (data && sendButtonDisable) {
+    if (data && sendButtonDisable == false) {
       scrollToBottom()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, questionGuide])
+  }, [data, questionGuide, sendButtonDisable])
 
 
   return (
@@ -443,6 +443,10 @@ const ChatLog = (props: any) => {
                                 <ModuleMsgData data={chat.msg} />
                               )}
 
+                              { index > 0 && chat.msg && chat.msg.includes('"module":"module"') && (
+                                <ModuleMsgData data={chat.msg} />
+                              )}
+
                               { index > 0 && chat.msg && !chat.msg.includes('"module":"') && (
                                 <ReactMarkdown remarkPlugins={[RemarkBreaks]}>{chat.msg.replaceAll("\\\\\n", '  \n').replaceAll("\\\\n", '  \n').replaceAll("\\\n", '  \n').replaceAll("\\n", '  \n')}</ReactMarkdown>
                               )}
@@ -579,6 +583,52 @@ const ChatLog = (props: any) => {
           )
         })
         }
+        {sendButtonDisable == true && app.AppName == "AI智能仪表盘" && (
+          <Box display="flex" alignItems="center" justifyContent="left" borderRadius="8px" p={0} mb={1} pt={3} >
+            <CustomAvatar
+              skin='light'
+              color={'primary'}
+              sx={{
+                width: '2rem',
+                height: '2rem',
+                fontSize: '0.875rem',
+              }}
+              {...{
+                src: app.avatar? AppAvatar(authConfig.backEndApiHost, app.avatar) : '/images/avatars/1.png',
+                alt: chatName
+              }}
+            >
+            </CustomAvatar>
+            <Typography
+              sx={{
+                width: 'fit-content',
+                fontSize: '0.875rem',
+                p: theme => theme.spacing(0.5, 2, 0.5, 2),
+                ml: 1,
+                color: 'text.primary',
+              }}
+              >
+                {chatName}
+            </Typography>
+            <Fragment>
+              <Typography
+                sx={{
+                  boxShadow: 1,
+                  borderRadius: 0.5,
+                  width: 'fit-content',
+                  fontSize: '0.875rem',
+                  p: theme => theme.spacing(0.5, 2, 0.5, 2),
+                  ml: 1,
+                  color: 'text.primary',
+                  backgroundColor: 'background.paper'
+                }}
+                >
+                  <CircularProgress color='success' size={10} sx={{mr: 1}}/>
+                  {stepingMessage}
+              </Typography>
+            </Fragment>
+          </Box>
+        )}
       </Box>
       <Box sx={{
               mt: 'auto', // 自动填充剩余空间

@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography'
 
 const MsgData = ({ data }: any) => {
   const dataJson = JSON.parse(data)
-  console.log("MsgData", dataJson)
 
   return (
     <>
