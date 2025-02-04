@@ -34,7 +34,8 @@ import SendMsgForm from 'src/views/AiChat/SendMsgForm'
 
 import ModuleTableData from 'src/views/AiChat/module/TableData'
 import ModuleMsgData from 'src/views/AiChat/module/MsgData'
-
+import ApexLineChart from 'src/views/AiChat/module/ApexLineChart'
+import ApexBarChart from 'src/views/AiChat/module/ApexBarChart'
 
 // ** Types Imports
 import {
@@ -295,19 +296,19 @@ const ChatLog = (props: any) => {
             >
               {isSender == true && (
                 <Box display="flex" alignItems="center" justifyContent="right" borderRadius="8px" p={0} mb={1} >
+                  <Tooltip title={t('重新生成')}>
+                    <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
+                      handleSendMsg(item.messages[0].msg)
+                    }}>
+                      <Icon icon='mdi:refresh' fontSize='inherit' />
+                    </IconButton>
+                  </Tooltip>
                   <Tooltip title={t('复制')}>
                     <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
                       navigator.clipboard.writeText(item.messages[0].msg);
                       toast.success(t('复制成功') as string, { duration: 1000 })
                     }}>
                       <Icon icon='material-symbols:file-copy-outline-rounded' fontSize='inherit' />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t('重新生成')}>
-                    <IconButton aria-label='capture screenshot' color='secondary' size='small' onClick={()=>{
-                      handleSendMsg(item.messages[0].msg)
-                    }}>
-                      <Icon icon='mdi:refresh' fontSize='inherit' />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title={t('删除')}>
@@ -479,6 +480,18 @@ const ChatLog = (props: any) => {
 
                             { index > 0 && chat.msg && chat.msg.includes('"module":"table"') && (
                               <ModuleTableData data={chat.msg} />
+                            )}
+
+                            { index > 0 && chat.msg && chat.msg.includes('"module":"line"') && (
+                              <ApexLineChart dataSource={chat.msg} />
+                            )}
+
+                            { index > 0 && chat.msg && chat.msg.includes('"module":"pie"') && (
+                              <ApexLineChart dataSource={chat.msg} />
+                            )}
+
+                            { index > 0 && chat.msg && chat.msg.includes('"module":"bar"') && (
+                              <ApexBarChart dataSource={chat.msg} />
                             )}
 
                             {!isSender && Number(chat.responseTime) > 0 && ( (index + 1 == ChatItemMsgList.length && !sendButtonDisable) || (index + 1 < ChatItemMsgList.length))?

@@ -16,6 +16,10 @@ require_once('../include.inc.php');
 
 //CheckAuthUserLoginStatus();
 
+//$DeepSeekAiChatResult = OpenKeyCloudAiChat("你是谁?", "你是谁?", $历史消息=[], $temperature=0.7, $IsStream='false', $备注='');
+//$DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
+//$名称 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
+//print_R($名称);print_R($DeepSeekAiChatResult);exit;
 
 $USER_ID        = $GLOBAL_USER->USER_ID;
 
@@ -122,14 +126,31 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   $构建提示词语 = $用户输入;
   $DeepSeekAiChatResult = OpenKeyCloudAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
-  $SQL结果 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
-  $SQL结果 = str_replace("```sql", "", $SQL结果);
-  $SQL结果 = str_replace("```", "", $SQL结果);
+  $SQLJSON结果 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
+  $SQLJSON结果 = str_replace("json", "", $SQLJSON结果);
+  $SQLJSON结果 = str_replace("```", "", $SQLJSON结果);
+  $SQLJSON结果 = trim($SQLJSON结果);
+  $SQLJSON     = json_decode($SQLJSON结果, true);
+
+  $ChartType = $SQLJSON['type'];
+  $ChartSql = $SQLJSON['sql'];
 
   if($DeepSeekAiChatResultJSON == null)  {
     $RS = [];
     $RS['data']     = [];
     $RS['message']  = '没有从AI模型获得到对应的数据库查询条件';
+    $RS['module']   = 'msg';
+    $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
+    $RS['构建提示词语']   = $构建提示词语;
+    $RS['提示词语']       = $提示词语;
+    print_R(json_encode($RS));
+    exit;
+  }
+
+  if($ChartSql == "")  {
+    $RS = [];
+    $RS['data']     = [];
+    $RS['message']  = '没有获得到对应的数据库查询条件. ' . $SQLJSON结果;
     $RS['module']   = 'msg';
     $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
     $RS['构建提示词语']  = $构建提示词语;
@@ -138,10 +159,10 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
     exit;
   }
 
-  if($SQL结果 == "")  {
+  if(!in_array($ChartType, ['table','line','bar','pie']))  {
     $RS = [];
     $RS['data']     = [];
-    $RS['message']  = '没有获得到对应的数据库查询条件';
+    $RS['message']  = '只支持表格, 线状图, 柱状图, 饼状图, 不支持: '.$ChartType;
     $RS['module']   = 'msg';
     $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
     $RS['构建提示词语']  = $构建提示词语;
@@ -170,15 +191,35 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
     exit;
   }
 
-  $rs   = $db_remote->Execute($SQL结果) or 远程数据库SQL执行错误("数据库执行错误: ".$SQL结果);
+  $rs   = $db_remote->Execute($ChartSql) or 远程数据库SQL执行错误("数据库执行错误: ".$ChartSql);
   $rs_a = $rs->GetArray();
   $RS = [];
-  $RS['sql']       = $SQL结果;
+  $RS['sql']       = $ChartSql;
   $RS['data']      = $rs_a;
-  $RS['module']    = 'table';
+  $RS['module']    = $ChartType;
   $RS['message']   = sizeof($rs_a) == 0 ? '没有获取到数据,您可以尝试一下其它的查询条件.' : '';
   $RS['提示词语1']  = $构建提示词语;
   $RS['提示词语2']  = $提示词语;
+  if($ChartType == 'line' || $ChartType == 'bar' || $ChartType == 'pie')  {
+    $dataX = [];
+    $dataY = [];
+    foreach($rs_a as $Item) {
+      $Keys   = array_keys($Item);
+      $Values = array_values($Item);
+      $dataX[] = $Values[0];
+      $dataY[] = $Values[1];
+
+    }
+    $ChartJson = [];
+    $ChartJson['SubTitle']  = "按天统计班级学生积分之和";
+    $ChartJson['Title']     = "";
+    $ChartJson['TopRightOptions']   = [];
+    $ChartJson['dataX']     = $dataX;
+    $ChartJson['dataY']     = [['name'=>'统计图表', 'data'=>$dataY]];
+    $ChartJson['type']      = 'ApexLineChart';
+    $ChartJson['grid']      = 8;
+    $RS['Chart']            = $ChartJson;
+  }
   print_R(json_encode($RS));
   exit;
 
@@ -197,7 +238,7 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
   $messages[] = ['content'=>$用户输入, 'role'=>'user'];
   //print_R($messages);
   curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://openkey.cloud/',
+      CURLOPT_URL => 'https://openkey.cloud/v1/chat/completions',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -208,15 +249,10 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
       CURLOPT_POSTFIELDS =>'{
       "messages": '.json_encode($messages).',
       "model": "gpt-4o-mini",
-      "frequency_penalty": 0,
-      "max_tokens": 2048,
-      "presence_penalty": 0,
+      "max_tokens": 512,
       "stop": null,
       "stream": '.$IsStream.',
-      "temperature": '.$temperature.',
-      "top_p": 1,
-      "logprobs": false,
-      "top_logprobs": null
+      "temperature": '.$temperature.'
       }',
       CURLOPT_HTTPHEADER => array(
           'Content-Type: application/json',
@@ -261,7 +297,6 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
     if (curl_errno($curl)) {
       echo 'Error: ' . curl_error($curl);
     }
-    print_R($result);
     curl_close($curl);
     return $result;
   }

@@ -39,7 +39,7 @@ const TableData = ({ data }: any) => {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ height: 380 }}>
+      <TableContainer component={Paper} sx={{ height: (dataJsonData && dataJsonData.length > 10 ? 380 : '100%') }}>
         <Table stickyHeader size='small'>
           <TableHead>
             <TableRow>
@@ -68,7 +68,7 @@ const TableData = ({ data }: any) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {dataJsonData && dataJsonData.length > 0 && (
+      {dataJsonData && dataJsonData.length > 10 && (
         <TablePagination
           rowsPerPageOptions={[10, 25, 50]}
           component='div'

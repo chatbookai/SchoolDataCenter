@@ -172,7 +172,7 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
         console.log("chatId", chatId)
         if(app.AppName == "AI智能仪表盘")  {
           if(chatId && UserId)  {
-            setStepingMessage('开始判断当前查询归属哪个模块')
+            setStepingMessage('开始判断当前查询归属哪个模块,预计需要3-5秒')
             const startTime = performance.now()
             const responseRouter = await fetch(authConfig.backEndApiAiBaseUrl + "aichat/schoolai.php?action=router", {
               method: 'POST',
@@ -199,7 +199,7 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
             console.log("AI智能仪表盘 responseTextJSON", responseRouterTextJSON)
             console.log("AI智能仪表盘 OpenAI Response object1:", responseRouterTextJSON.data)
             if(responseRouterTextJSON && responseRouterTextJSON.message) {
-              setStepingMessage('当前查询归属:' + responseRouterTextJSON.message)
+              setStepingMessage('当前查询归属:' + responseRouterTextJSON.message + ', 准备下步骤: 数据查询')
               setTimeout(() => {
                 setStepingMessage('已经开始数据查询中, 预计需要3-5秒.'); // 修改为你想设置的新值
               }, 3000);
