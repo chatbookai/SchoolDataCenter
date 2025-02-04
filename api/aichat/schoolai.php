@@ -74,7 +74,7 @@ if($用户输入 != "" && $_GET['action'] == 'router')   {
   $构建提示词语 .= "要求直接返回结果, 不需要返回过多解释信息.\n";
 
   $SystemPrompt = "需要把用户输入的信息, 跟提交的几个选项进行对比, 返回匹配度最高的一个选项.";
-  $DeepSeekAiChatResult = DeepSeekAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
+  $DeepSeekAiChatResult = OpenKeyCloudAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
   $名称 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
 
@@ -120,7 +120,7 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   $提示词语 = str_replace("[我所教课的班级]", "", $提示词语);
   $提示词语 = str_replace("[我所教课的课程]", "", $提示词语);
   $构建提示词语 = $用户输入;
-  $DeepSeekAiChatResult = DeepSeekAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
+  $DeepSeekAiChatResult = OpenKeyCloudAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
   $SQL结果 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
   $SQL结果 = str_replace("```sql", "", $SQL结果);
@@ -182,6 +182,89 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   print_R(json_encode($RS));
   exit;
 
+}
+
+function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temperature, $IsStream, $备注)     {
+  global $APIKEY;
+  $APIKEY     = "sk-yfl7zjvggMD0F3zuB7D61442Dd2e4c0399376053D93157A3";
+  $curl 		  = curl_init();
+  $messages 	= [];
+  $messages[] = ['content'=>$系统模板, 'role'=>'system'];
+  foreach($历史消息 as $消息) {
+    $messages[] = ['content'=>$消息[0], 'role'=>'user'];
+    $messages[] = ['content'=>"", 'role'=>'assistant'];
+  }
+  $messages[] = ['content'=>$用户输入, 'role'=>'user'];
+  //print_R($messages);
+  curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://openkey.cloud/',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS =>'{
+      "messages": '.json_encode($messages).',
+      "model": "gpt-4o-mini",
+      "frequency_penalty": 0,
+      "max_tokens": 2048,
+      "presence_penalty": 0,
+      "stop": null,
+      "stream": '.$IsStream.',
+      "temperature": '.$temperature.',
+      "top_p": 1,
+      "logprobs": false,
+      "top_logprobs": null
+      }',
+      CURLOPT_HTTPHEADER => array(
+          'Content-Type: application/json',
+          'Accept: application/json',
+          'Authorization: Bearer ' . $APIKEY
+      ),
+  ));
+
+  if($IsStream == 'true')   {
+    $输出TEXT = "";
+    curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$IsStream, &$用户输入, &$输出TEXT) {
+      print $data;
+      ob_flush();
+      flush();
+
+      static $buffer = ''; // 用于存储不完整的数据块
+      $buffer .= $data; // 将当前数据块追加到缓冲区
+      while (preg_match('/"content":"([^"]*)"/', $buffer, $matches)) {
+          $outputData = $matches[1];
+          $输出TEXT .= $outputData;
+          //echo $outputData;
+          //ob_flush();
+          //flush();
+          // 从缓冲区中移除已处理的部分
+          $buffer = substr($buffer, strpos($buffer, $matches[0]) + strlen($matches[0]));
+      }
+      if(trim($data) == "data: [DONE]")  {
+        //print_R($输出TEXT);
+        //保存到数据库($IsStream, $用户输入, $输出TEXT, $备注);
+      }
+      return strlen($data);
+    });
+
+    curl_exec($curl);
+    if (curl_errno($curl)) {
+      echo 'Error: ' . curl_error($curl);
+    }
+    curl_close($curl);
+  }
+  else {
+    $result = curl_exec($curl);
+    if (curl_errno($curl)) {
+      echo 'Error: ' . curl_error($curl);
+    }
+    print_R($result);
+    curl_close($curl);
+    return $result;
+  }
 }
 
 function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature, $IsStream, $备注)     {
