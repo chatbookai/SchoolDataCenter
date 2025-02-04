@@ -19,12 +19,12 @@
 
 /xampp/xampp-control.log
 
-# git rm --cached mysql/data/ib_logfile0
-# git rm --cached mysql/data/ib_logfile1
-# git rm --cached mysql/data/mysql_error.log
-# git rm --cached mysql/data/mysql.pid
-# git rm -r --cached apache/logs
-# git rm -r --cached xampp-control.ini
+# git rm --cached xampp/mysql/data/ib_logfile0
+# git rm --cached xampp/mysql/data/ib_logfile1
+# git rm --cached xampp/mysql/data/mysql_error.log
+# git rm --cached xampp/mysql/data/mysql.pid
+# git rm -r --cached xampp/apache/logs
+# git rm -r --cached xampp/xampp-control.ini
 # git commit -m "Remove ignored files from index"
 
 /xampp/xampp-control.ini
@@ -41,6 +41,7 @@
 /xampp/apache/conf/extra/httpd-xampp.conf
 /xampp/xampp-control.ini
 /xampp/wget
+/xampp/tmp
 
 /.next
 /node_modules
