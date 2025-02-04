@@ -56,7 +56,7 @@ const Footer = (props: Props) => {
         sx={{
           width: '100%',
           py: theme.spacing(footer === 'fixed' && skin === 'bordered' ? 3.875 : 4),
-          ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
+          ...(contentWidth === 'boxed' && { '@media (min-width:1920px)': { maxWidth: 1920 } }),
           ...(layout === 'vertical' && {
             borderTopLeftRadius: 14,
             borderTopRightRadius: 14,

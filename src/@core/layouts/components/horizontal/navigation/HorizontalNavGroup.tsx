@@ -62,7 +62,7 @@ const NavigationMenu = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2, 0),
   maxHeight: 'calc(100vh - 13rem)',
   backgroundColor: theme.palette.background.paper,
-  ...(themeConfig.menuTextTruncate ? { width: 260 } : { minWidth: 260 }),
+  ...(themeConfig.menuTextTruncate ? { width: 240 } : { minWidth: 240 }),
 
   '&::-webkit-scrollbar': {
     width: 6

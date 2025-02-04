@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+
 // ** Next Import
 import Link from 'next/link'
 
@@ -77,7 +79,7 @@ const VerticalNavHeader = (props: Props) => {
   const menuHeaderPaddingLeft = () => {
     if (navCollapsed && !navHover) {
       if (userNavMenuBranding) {
-        return 0
+        return 2
       } else {
         return (collapsedNavWidth - navigationBorderWidth - 30) / 8
       }
@@ -89,6 +91,27 @@ const VerticalNavHeader = (props: Props) => {
   const MenuLockedIcon = () => userMenuLockedIcon || <Icon icon='mdi:radiobox-marked' />
 
   const MenuUnlockedIcon = () => userMenuUnlockedIcon || <Icon icon='mdi:radiobox-blank' />
+
+  const [showText, setShowText] = useState(false);
+
+  useEffect(() => {
+    let timeoutId: any;
+    console.log("navHover", navCollapsed, navHover, showText)
+    if(navCollapsed) {
+      if (navHover) {
+        timeoutId = setTimeout(() => {
+          setShowText(true);
+        }, 100);
+      } else {
+        setShowText(false);
+      }
+    }
+    else {
+      setShowText(true);
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [navCollapsed, navHover]);
 
   return (
     <MenuHeaderWrapper className='nav-header' sx={{ pl: menuHeaderPaddingLeft() }}>
@@ -155,8 +178,8 @@ const VerticalNavHeader = (props: Props) => {
               </g>
             </g>
           </svg>
-          <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 3 }) }}>
-            {themeConfig.templateName}
+          <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...({ ml: 3 }) }}>
+            {showText ? themeConfig.templateName : ''}
           </HeaderTitle>
         </StyledLink>
       )}
