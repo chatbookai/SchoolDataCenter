@@ -481,6 +481,7 @@ const ChatLog = (props: any) => {
                               <ModuleTableData data={chat.msg} />
                             )}
 
+                            {!isSender && Number(chat.responseTime) > 0 && ( (index + 1 == ChatItemMsgList.length && !sendButtonDisable) || (index + 1 < ChatItemMsgList.length))?
                             <Typography sx={{
                                           boxShadow: 1,
                                           borderRadius: 1,
@@ -503,7 +504,6 @@ const ChatLog = (props: any) => {
                                     justifyContent: isSender ? 'flex-end' : 'flex-start'
                                   }}
                                 >
-                                  {!isSender && Number(chat.responseTime) > 0 && ( (index + 1 == ChatItemMsgList.length && !sendButtonDisable) || (index + 1 < ChatItemMsgList.length))?
                                   <Box display="flex" alignItems="center" justifyContent="left" borderRadius="8px" p={0} mb={1} >
                                       <Tooltip title={t('查看明细')}>
                                         <Button color='success' size="small" style={{ whiteSpace: 'nowrap' }} onClick={()=>{
@@ -522,11 +522,11 @@ const ChatLog = (props: any) => {
                                       {chat.time ? new Date(Number(chat.time)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) : null}
                                       </Button>
                                   </Box>
-                                  :
-                                  null
-                                  }
                               </Box>
                             </Typography>
+                            :
+                            null
+                            }
                           </Fragment>
                         }
                         {ChatMsgType == "Image" && ChatMsgContent && ChatMsgContent.ShortFileName ?
