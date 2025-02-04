@@ -276,7 +276,6 @@ function 解析题目文本到数据库($题目文本) {
   $班级   = (string)$_POST['班级名称'];
 
   $题目文本Array  = explode("\\n", $题目文本);
-  //print_R($题目文本Array);
 
   //清空已经题库 学期,班级,课程,题干
   if(sizeof($题目文本Array)>10) {
@@ -365,8 +364,8 @@ function 解析题目文本到数据库($题目文本) {
       $Element['课程']      = addslashes($课程);
       $Element['教材']      = addslashes($教材);
       //print_R($Element);
-      [$rs,$sql] = InsertOrUpdateTableByArray("data_exam_question",$Element,'学期,班级,课程,题干',0,'Insert');
-      //print_R($sql);
+      [$rs,$sql] = InsertOrUpdateTableByArray("data_exam_question",$Element,'学期,班级,课程,题干',0); //,'Insert'
+      print_R($rs->EOF);print_R($sql);
     }
 
   }

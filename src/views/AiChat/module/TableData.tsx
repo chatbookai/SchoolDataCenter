@@ -26,7 +26,7 @@ const TableData = ({ data }: any) => {
   }
 
   const [page, setPage] = useState<number>(0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -39,8 +39,8 @@ const TableData = ({ data }: any) => {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
-        <Table stickyHeader>
+      <TableContainer component={Paper} sx={{ height: 380 }}>
+        <Table stickyHeader size='small'>
           <TableHead>
             <TableRow>
               {columns.map(column => (
@@ -57,7 +57,7 @@ const TableData = ({ data }: any) => {
                   {columns.map((column: any) => {
 
                     return (
-                      <TableCell key={column.id} align={column.align} sx={{ height: '20px' }}>
+                      <TableCell key={column.id} align={column.align}>
                         {row[column.id]}
                       </TableCell>
                     )
@@ -70,7 +70,7 @@ const TableData = ({ data }: any) => {
       </TableContainer>
       {dataJsonData && dataJsonData.length > 0 && (
         <TablePagination
-          rowsPerPageOptions={[5, 25, 100]}
+          rowsPerPageOptions={[10, 25, 50]}
           component='div'
           count={dataJsonData.length}
           rowsPerPage={rowsPerPage}

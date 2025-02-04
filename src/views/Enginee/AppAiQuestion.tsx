@@ -13,6 +13,7 @@ import { filterDeepSeekAiResultToText } from 'src/functions/ChatBook'
 import { marked } from 'marked'
 
 import AddOrEditTable from './AddOrEditTable'
+import toast from 'react-hot-toast'
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -114,54 +115,61 @@ const AppAiQuestion = (props: any) => {
     });
 
     authConfig.backEndApiAiBaseUrl = "http://localhost/api/"
-    const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-    const response = await fetch(authConfig.backEndApiAiBaseUrl + `aichat/questionai.php`, {
-        method: 'POST',
-        headers: {
-            Authorization: authorization,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            requirements,
-            questionCounts,
-            difficulties,
-            grade,
-            textbook,
-            班级名称: selectItem.班级名称,
-            课程名称: selectItem.课程名称,
-            学期名称: selectItem.学期名称
-        }),
-    });
-    if (!response.body) {
-      throw new Error('Response body is not readable as a stream');
-    }
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder('utf-8');
-    let responseText = "";
+    try {
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const response = await fetch(authConfig.backEndApiAiBaseUrl + `aichat/questionai.php`, {
+          method: 'POST',
+          headers: {
+              Authorization: authorization,
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              requirements,
+              questionCounts,
+              difficulties,
+              grade,
+              textbook,
+              班级名称: selectItem.班级名称,
+              课程名称: selectItem.课程名称,
+              学期名称: selectItem.学期名称
+          }),
+      });
 
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done || stopMsg) {
-            setProcessingMessage('');
-            setProcessingQuestionResult(false)
-            break;
-        }
-        const chunk = decoder.decode(value, { stream: true });
-        const filterText = filterDeepSeekAiResultToText(chunk);
-        setProcessingMessage((prevText: string) => prevText + filterText);
-        responseText += filterText;
+      if (!response.body) {
+        throw new Error('Response body is not readable as a stream');
+      }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let responseText = "";
+
+      while (true) {
+          const { done, value } = await reader.read();
+          if (done || stopMsg) {
+              setProcessingMessage('');
+              setProcessingQuestionResult(false)
+              break;
+          }
+          const chunk = decoder.decode(value, { stream: true });
+          const filterText = filterDeepSeekAiResultToText(chunk);
+          setProcessingMessage((prevText: string) => prevText + filterText);
+          responseText += filterText;
+          const markdownContent = responseText.replaceAll('```markdown', '').replaceAll(/```/g, '').replaceAll('\n', '  \n')
+          setProcessingMessage(markdownContent);
+      }
+      if(responseText) {
+        const endTime = performance.now()
+        const responseTime = Math.round((endTime - startTime) * 100 / 1000) / 100
+        console.log("执行时间:", responseTime, responseText, processingMessage)
         const markdownContent = responseText.replaceAll('```markdown', '').replaceAll(/```/g, '').replaceAll('\n', '  \n')
         setProcessingMessage(markdownContent);
-    }
-    if(responseText) {
-      const endTime = performance.now()
-      const responseTime = Math.round((endTime - startTime) * 100 / 1000) / 100
-      console.log("执行时间:", responseTime, responseText, processingMessage)
-      const markdownContent = responseText.replaceAll('```markdown', '').replaceAll(/```/g, '').replaceAll('\n', '  \n')
-      setProcessingMessage(markdownContent);
-      setProcessingQuestionResult(true)
-    }
+        setProcessingQuestionResult(true)
+      }
 
+    }
+    catch(error: any) {
+      console.log("Fetch Error: ", error)
+      toast.error("AI生成题库信息失败", { duration: 2000 })
+    }
     setGenerating(false)
   };
 

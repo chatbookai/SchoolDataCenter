@@ -417,7 +417,7 @@ const ChatLog = (props: any) => {
                   return (
                     <Box key={ChatIndex} sx={{ '&:not(:last-of-type)': { mb: 3 } }}>
                         {ChatMsgType == "Chat" &&
-                          <div>
+                          <Fragment>
                             <Typography sx={{
                                           boxShadow: 1,
                                           borderRadius: 1,
@@ -433,10 +433,6 @@ const ChatLog = (props: any) => {
                             >
                               { index == 0 && (
                                 <SystemPromptTemplate text={chat.msg} handleSendMsg={handleSendMsg}/>
-                              )}
-
-                              { index > 0 && chat.msg && chat.msg.includes('"module":"table"') && (
-                                <ModuleTableData data={chat.msg} />
                               )}
 
                               { index > 0 && chat.msg && chat.msg.includes('"module":"msg"') && (
@@ -479,6 +475,25 @@ const ChatLog = (props: any) => {
                               :
                               null
                               }
+                            </Typography>
+
+                            { index > 0 && chat.msg && chat.msg.includes('"module":"table"') && (
+                              <ModuleTableData data={chat.msg} />
+                            )}
+
+                            <Typography sx={{
+                                          boxShadow: 1,
+                                          borderRadius: 1,
+                                          width: isSender ? 'fit-content' : '100%',
+                                          fontSize: '0.875rem',
+                                          p: theme => theme.spacing(0.1, 2, 0.1, 2.5),
+                                          ml: isSender ? 'auto' : undefined,
+                                          borderTopLeftRadius: !isSender ? 0 : undefined,
+                                          borderTopRightRadius: isSender ? 0 : undefined,
+                                          color: isSender ? 'common.white' : 'text.primary',
+                                          backgroundColor: isSender ? 'primary.main' : 'background.paper'
+                                        }}
+                            >
                               <Box
                                   sx={{
                                     mt: 1,
@@ -512,10 +527,10 @@ const ChatLog = (props: any) => {
                                   }
                               </Box>
                             </Typography>
-                          </div>
+                          </Fragment>
                         }
                         {ChatMsgType == "Image" && ChatMsgContent && ChatMsgContent.ShortFileName ?
-                          <div>
+                          <Fragment>
                             <LinkStyled target='_blank' href={authConfig.backEndApiHost + 'images/' + ChatMsgContent.ShortFileName}>
                               <CardMedia image={authConfig.backEndApiHost + 'images/' + ChatMsgContent.ShortFileName} sx={{ mt: 1, width: '500px', height: '500px', borderRadius: '5px' }}/>
                             </LinkStyled>
@@ -540,12 +555,12 @@ const ChatLog = (props: any) => {
                                   }
                                 </Typography>
                               </Box>
-                          </div>
+                          </Fragment>
                           :
                           null
                         }
                         {ChatMsgType == "Audio" && ChatMsgContent && ChatMsgContent.ShortFileName ?
-                          <div>
+                          <Fragment>
                             <LinkStyled target='_blank' href={authConfig.backEndApiHost + 'api/audio/' + ChatMsgContent.ShortFileName}>
                               <CardMedia component="audio" controls src={authConfig.backEndApiHost + 'api/audio/' + ChatMsgContent.ShortFileName} sx={{ mt: 1, width: '360px', borderRadius: '5px' }}/>
                             </LinkStyled>
@@ -570,7 +585,7 @@ const ChatLog = (props: any) => {
                                   }
                                 </Typography>
                               </Box>
-                          </div>
+                          </Fragment>
                           :
                           null
                         }

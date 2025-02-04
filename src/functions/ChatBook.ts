@@ -174,7 +174,7 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
           if(chatId && UserId)  {
             setStepingMessage('开始判断当前查询归属哪个模块')
             const startTime = performance.now()
-            const responseRouter = await fetch(authConfig.backEndApiAiBaseUrl + "aischool/aischool.php?action=router", {
+            const responseRouter = await fetch(authConfig.backEndApiAiBaseUrl + "aichat/schoolai.php?action=router", {
               method: 'POST',
               headers: {
                   Authorization: Token,
@@ -213,7 +213,7 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
             }
 
             if(responseRouterTextJSON && responseRouterTextJSON.message && responseRouterTextJSON.module == 'status')         {
-              const responseContent = await fetch(authConfig.backEndApiAiBaseUrl + "aischool/aischool.php?action=content", {
+              const responseContent = await fetch(authConfig.backEndApiAiBaseUrl + "aichat/schoolai.php?action=content", {
                 method: 'POST',
                 headers: {
                     Authorization: Token,
