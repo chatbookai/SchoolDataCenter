@@ -113,14 +113,15 @@ const AppAiChatList = (props: any) => {
                             sx={{textTransform: 'capitalize'}}
 
                             //startIcon={<Icon icon={item.permission == 'private' ? 'ri:git-repository-private-line' : 'material-symbols:share'} />}
-                            //</Box>onClick={()=>{
-                              //setAddEditActionId(item.id)
-                              //setViewActionOpen(true)
-                              //setEditViewCounter(0)
-                              //setCSRF_TOKEN(store.init_default.CSRF_TOKEN)
-                              //setAddEditActionName('view_default')
-                            //}}
-                          >
+                            //onClick NotUsed
+                            onClick={()=>{
+                              setAddEditActionId(item.id)
+                              setViewActionOpen(true)
+                              setEditViewCounter(0)
+                              setCSRF_TOKEN(store.init_default.CSRF_TOKEN)
+                              setAddEditActionName('view_default')
+                            }}
+                            >
                             {item.AppModel}
                           </Button>
                         </Box>
