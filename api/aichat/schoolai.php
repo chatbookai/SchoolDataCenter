@@ -31,6 +31,18 @@ $历史消息        = (array)$_POST['history'];
 $用户输入        = (string)$_POST['question'];
 $模块            = (string)$_POST['module'];
 
+$sql      = "select * from data_ai_app where AppName = 'AI智能仪表盘' ";
+$rs       = $db->Execute($sql);
+$rs_a     = $rs->GetArray();
+$应用配置  = $rs_a[0];
+$AppModel   = $应用配置['AppModel'];
+
+$sql      = "select * from data_ai_model where Name = '$AppModel' ";
+$rs       = $db->Execute($sql);
+$rs_a     = $rs->GetArray();
+$模型信息  = $rs_a[0];
+//print_R($模型信息);
+
 $DB_TYPE        = 'mysqli';
 if($用户输入 != "" && $_GET['action'] == 'router')   {
   //保存到数据
@@ -78,11 +90,32 @@ if($用户输入 != "" && $_GET['action'] == 'router')   {
   $构建提示词语 .= "要求直接返回结果, 不需要返回过多解释信息.\n";
 
   $SystemPrompt = "需要把用户输入的信息, 跟提交的几个选项进行对比, 返回匹配度最高的一个选项.";
-  $DeepSeekAiChatResult = OpenKeyCloudAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
+  switch($AppModel) {
+    case 'DeepSeekChat':
+      $DeepSeekAiChatResult = DeepSeekAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
+      break;
+    case 'OpenKeyCloud':
+      $DeepSeekAiChatResult = OpenKeyCloudAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
+      break;
+    default:
+      $DeepSeekAiChatResult = OpenKeyCloudAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
+      break;
+  }
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
   $名称 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
 
-  if($名称 == "")  {
+  if($DeepSeekAiChatResultJSON['error']['message'] != "")  {
+    $RS = [];
+    $RS['data']     = [];
+    $RS['message']  = $DeepSeekAiChatResultJSON['error']['message'];
+    $RS['module']   = 'msg';
+    $RS['DeepSeekAiChatResultJSON']  = $DeepSeekAiChatResultJSON;
+    $RS['构建提示词语']  = $构建提示词语;
+    $RS['历史消息']     = $历史消息;
+    print_R(json_encode($RS));
+    exit;
+  }
+  elseif($名称 == "")  {
     $RS = [];
     $RS['data']     = [];
     $RS['message']  = '没有获得到对应的模块';
@@ -124,7 +157,18 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   $提示词语 = str_replace("[我所教课的班级]", "", $提示词语);
   $提示词语 = str_replace("[我所教课的课程]", "", $提示词语);
   $构建提示词语 = $用户输入;
-  $DeepSeekAiChatResult = OpenKeyCloudAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
+
+  switch($AppModel) {
+    case 'DeepSeekChat':
+      $DeepSeekAiChatResult = DeepSeekAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
+      break;
+    case 'OpenKeyCloud':
+      $DeepSeekAiChatResult = OpenKeyCloudAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
+      break;
+    default:
+      $DeepSeekAiChatResult = OpenKeyCloudAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
+      break;
+  }
   $DeepSeekAiChatResultJSON = json_decode($DeepSeekAiChatResult, true);
   $SQLJSON结果 = $DeepSeekAiChatResultJSON['choices'][0]['message']['content'];
   $SQLJSON结果 = str_replace("json", "", $SQLJSON结果);
@@ -227,8 +271,7 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
 }
 
 function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temperature, $IsStream, $备注)     {
-  global $APIKEY;
-  $APIKEY     = "sk-yfl7zjvggMD0F3zuB7D61442Dd2e4c0399376053D93157A3";
+  global $模型信息;
   $curl 		  = curl_init();
   $messages 	= [];
   $messages[] = ['content'=>$系统模板, 'role'=>'system'];
@@ -239,7 +282,7 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
   $messages[] = ['content'=>$用户输入, 'role'=>'user'];
   //print_R($messages);
   curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://openkey.cloud/v1/chat/completions',
+      CURLOPT_URL => $模型信息['API'],
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -249,7 +292,7 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_POSTFIELDS =>'{
       "messages": '.json_encode($messages).',
-      "model": "gpt-4o-mini",
+      "model": "'.$模型信息['Model'].'",
       "max_tokens": 512,
       "stop": null,
       "stream": '.$IsStream.',
@@ -258,7 +301,7 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
       CURLOPT_HTTPHEADER => array(
           'Content-Type: application/json',
           'Accept: application/json',
-          'Authorization: Bearer ' . $APIKEY
+          'Authorization: Bearer '.$模型信息['Token']
       ),
   ));
 
@@ -289,14 +332,14 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
 
     curl_exec($curl);
     if (curl_errno($curl)) {
-      echo 'Error: ' . curl_error($curl);
+      echo '执行错误Error: ' . curl_error($curl);
     }
     curl_close($curl);
   }
   else {
     $result = curl_exec($curl);
     if (curl_errno($curl)) {
-      echo 'Error: ' . curl_error($curl);
+      echo '执行错误Error: ' . curl_error($curl);
     }
     curl_close($curl);
     return $result;
@@ -304,7 +347,6 @@ function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temper
 }
 
 function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature, $IsStream, $备注)     {
-  global $APIKEY;
   $curl 		  = curl_init();
   $messages 	= [];
   $messages[] = ['content'=>$系统模板, 'role'=>'system'];
@@ -315,7 +357,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
   $messages[] = ['content'=>$用户输入, 'role'=>'user'];
   //print_R($messages);
   curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api.deepseek.com/chat/completions',
+      CURLOPT_URL => $模型信息['API'],
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -325,7 +367,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_POSTFIELDS =>'{
       "messages": '.json_encode($messages).',
-      "model": "deepseek-chat",
+      "model": "'.$模型信息['Model'].'",
       "frequency_penalty": 0,
       "max_tokens": 2048,
       "presence_penalty": 0,
@@ -339,7 +381,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
       CURLOPT_HTTPHEADER => array(
           'Content-Type: application/json',
           'Accept: application/json',
-          'Authorization: Bearer ' . $APIKEY
+          'Authorization: Bearer ' . $模型信息['Token']
       ),
   ));
 
@@ -370,14 +412,14 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
 
     curl_exec($curl);
     if (curl_errno($curl)) {
-      echo 'Error: ' . curl_error($curl);
+      echo '执行错误Error: ' . curl_error($curl);
     }
     curl_close($curl);
   }
   else {
     $result = curl_exec($curl);
     if (curl_errno($curl)) {
-      echo 'Error: ' . curl_error($curl);
+      echo '执行错误Error: ' . curl_error($curl);
     }
     curl_close($curl);
     return $result;
