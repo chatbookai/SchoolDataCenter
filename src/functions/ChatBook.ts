@@ -370,9 +370,16 @@ export function filterDeepSeekAiResultToText(jsonString: string) {
   let ResultText = ''
   const jsonStringList = jsonString.split('data:')
   jsonStringList.map((Item: string)=>{
-    const jsonList = Item.split('"choices":[{"index":0,"delta":{"content":"')
-    if(jsonList && jsonList[1] && jsonList[1]!='')  {
-      const LastPart = jsonList[1].split('"},"logprobs":null,"finish_reason"')
+    const jsonListDeepSeek = Item.split('"choices":[{"index":0,"delta":{"content":"')
+    if(jsonListDeepSeek && jsonListDeepSeek[1] && jsonListDeepSeek[1]!='')  {
+      const LastPart = jsonListDeepSeek[1].split('"},"logprobs":null,"finish_reason"')
+      if(LastPart[0] && LastPart[1])  {
+        ResultText += LastPart[0]
+      }
+    }
+    const jsonListOpenAI = Item.split('{"filtered":false,"severity":"safe"}},"delta":{"content":"')
+    if(jsonListOpenAI && jsonListOpenAI[1] && jsonListOpenAI[1]!='')  {
+      const LastPart = jsonListOpenAI[1].split('"},"finish_reason":')
       if(LastPart[0] && LastPart[1])  {
         ResultText += LastPart[0]
       }

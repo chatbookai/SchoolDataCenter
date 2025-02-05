@@ -49,11 +49,20 @@ if($用户输入 != "" && $appId != "")  {
     $SystemPrompt     = $rs_a[0]['SystemPrompt'];
     $SystemPrompt     .= " 只需要输入一个 \n 就可以，不要输出 \\n \\\n \\\\n \\\\\n 等这样的内容。";
 
+    $sql      = "select * from data_ai_model where Name = '$AppModel' ";
+    $rs       = $db->Execute($sql);
+    $rs_a     = $rs->GetArray();
+    $模型信息  = $rs_a[0];
+    //print_R($sql);print_R($模型信息);exit;
 
     switch($AppModel) {
       case 'DeepSeekChat':
         //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
         DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature, $AppName, $备注);
+        break;
+      case 'OpenKeyCloud':
+        //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
+        OpenKeyCloudAiChat($SystemPrompt, $用户输入, $历史消息, $temperature, $AppName, $备注);
         break;
     }
 
@@ -63,7 +72,7 @@ if($用户输入 != "" && $appId != "")  {
 }
 
 function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature, $AppName, $备注)     {
-  global $APIKEY;
+  global $模型信息;
   $curl 		  = curl_init();
   $messages 	= [];
   $messages[] = ['content'=>$系统模板, 'role'=>'system'];
@@ -77,7 +86,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
   $messages[] = ['content'=>$用户输入, 'role'=>'user'];
   //print_R($messages);exit;
   curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api.deepseek.com/chat/completions',
+      CURLOPT_URL => $模型信息['API'],
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -87,7 +96,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_POSTFIELDS =>'{
       "messages": '.json_encode($messages).',
-      "model": "deepseek-chat",
+      "model": "'.$模型信息['Model'].'",
       "frequency_penalty": 0,
       "max_tokens": 2048,
       "presence_penalty": 0,
@@ -101,7 +110,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
       CURLOPT_HTTPHEADER => array(
           'Content-Type: application/json',
           'Accept: application/json',
-          'Authorization: Bearer ' . $APIKEY
+          'Authorization: Bearer ' . $模型信息['Token']
       ),
   ));
 
@@ -135,6 +144,73 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
     echo 'Error: ' . curl_error($curl);
   }
 
+  curl_close($curl);
+
+}
+
+function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temperature, $AppName, $备注)     {
+  global $模型信息;
+  $curl 		  = curl_init();
+  $messages 	= [];
+  $messages[] = ['content'=>$系统模板, 'role'=>'system'];
+  foreach($历史消息 as $消息) {
+    $messages[] = ['content'=>$消息[0], 'role'=>'user'];
+    $messages[] = ['content'=>"", 'role'=>'assistant'];
+  }
+  $messages[] = ['content'=>$用户输入, 'role'=>'user'];
+  //print_R($messages);
+  curl_setopt_array($curl, array(
+      CURLOPT_URL => $模型信息['API'],
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS =>'{
+      "messages": '.json_encode($messages).',
+      "model": "'.$模型信息['Model'].'",
+      "max_tokens": 512,
+      "stop": null,
+      "stream": true,
+      "temperature": '.$temperature.'
+      }',
+      CURLOPT_HTTPHEADER => array(
+          'Content-Type: application/json',
+          'Accept: application/json',
+          'Authorization: Bearer '.$模型信息['Token']
+      ),
+  ));
+
+  $输出TEXT = "";
+  curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$AppName, &$用户输入, &$输出TEXT) {
+    print $data;
+    ob_flush();
+    flush();
+
+    static $buffer = ''; // 用于存储不完整的数据块
+    $buffer .= $data; // 将当前数据块追加到缓冲区
+    while (preg_match('/"content":"([^"]*)"/', $buffer, $matches)) {
+        $outputData = $matches[1];
+        $输出TEXT .= $outputData;
+        //echo $outputData;
+        //ob_flush();
+        //flush();
+        // 从缓冲区中移除已处理的部分
+        $buffer = substr($buffer, strpos($buffer, $matches[0]) + strlen($matches[0]));
+    }
+    if(trim($data) == "data: [DONE]")  {
+      print_R($输出TEXT);
+      保存到数据库($AppName, $用户输入, $输出TEXT, $备注);
+    }
+    return strlen($data);
+  });
+
+  curl_exec($curl);
+  if (curl_errno($curl)) {
+    echo '执行错误Error: ' . curl_error($curl);
+  }
   curl_close($curl);
 
 }
