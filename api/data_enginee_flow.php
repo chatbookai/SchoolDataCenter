@@ -2304,7 +2304,7 @@ foreach($groupField as $FieldName) {
 
 $pageNumberArray = $SettingMap['pageNumberArray'];
 if($pageNumberArray=="") {
-    $pageNumberArray = [10,20,30,40,50,100,200,500];
+    $pageNumberArray = [10,15,20,30,40,50,100];
 }
 $page       = intval($_REQUEST['page']);
 $pageSize   = intval($_REQUEST['pageSize']);

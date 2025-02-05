@@ -355,7 +355,7 @@ else if ($DictMark == "") {
 
 $page       = intval($_REQUEST['page']);
 $pageSize   = intval($_REQUEST['pageSize']);
-if(!in_array($pageSize,[10,20,30,40,50,100,200,500]))  {
+if(!in_array($pageSize,[10,15,20,30,40,50,100]))  {
 	$pageSize = 30;
 }
 $fromRecord = $page * $pageSize;
@@ -461,7 +461,7 @@ $RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs
 $RS['init_default']['timeline']         = time();
 $RS['init_default']['pageNumber']       = $pageSize;
 $RS['init_default']['pageCount']        = ceil($RS['init_default']['total']/$pageSize);
-$RS['init_default']['pageNumberArray']  = [10,20,30,40,50,100,200,500];
+$RS['init_default']['pageNumberArray']  = [10,15,20,30,40,50,100];
 
 if(sizeof($columnNames)>5) {
     $pinnedColumns = ['left'=>[],'right'=>['Actions']];
