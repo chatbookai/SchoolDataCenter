@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken");
 header("Content-type: text/html; charset=utf-8");
-header('Content-Type: text/event-stream');
+//header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
 // Handle preflight requests
@@ -174,18 +174,30 @@ $用户输入        = "你需要按以下要求, 生成一些用于中小学生
    **分值**: 2
 
 ";
+
 $历史消息       = [];
-$AppModel      = "DeepSeekChat";
+$AppModel      = "OpenAI";
 $AppName       = "AI出题";
+
 if((int)$questionCounts['single'] >= 0 && $课程名称 != "" && $grade != "" && $textbook != "")  {
   $SystemPrompt   = "
   要求你扮演为一位中小学老师, 为指定的课程, 出一些可以用于考试或是测验的题目.
   返回的数据格式要求为 Markdown 格式. 不要在结果中输出 \n.";
+
+  $sql      = "select * from data_ai_model where Name = '$AppModel' ";
+  $rs       = $db->Execute($sql);
+  $rs_a     = $rs->GetArray();
+  $模型信息  = $rs_a[0];
+  //print_R($sql);print_R($模型信息);exit;
+
   switch($AppModel) {
-    case 'DeepSeekChat':
+    case 'DeepSeek':
       //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
-      //print $用户输入;
       DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature, $AppName, $备注);
+      break;
+    case 'OpenAI':
+      //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
+      OpenKeyCloudAiChat($SystemPrompt, $用户输入, $历史消息, $temperature, $AppName, $备注);
       break;
   }
   exit;
@@ -206,7 +218,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
   $messages[] = ['content'=>$用户输入, 'role'=>'user'];
   //print_R($messages);exit;
   curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api.deepseek.com/chat/completions',
+      CURLOPT_URL => $模型信息['API'],
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -216,7 +228,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_POSTFIELDS =>'{
       "messages": '.json_encode($messages).',
-      "model": "deepseek-chat",
+      "model": "'.$模型信息['Model'].'",
       "frequency_penalty": 0,
       "max_tokens": 2048,
       "presence_penalty": 0,
@@ -230,7 +242,7 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
       CURLOPT_HTTPHEADER => array(
           'Content-Type: application/json',
           'Accept: application/json',
-          'Authorization: Bearer ' . $APIKEY
+          'Authorization: Bearer ' . $模型信息['Token']
       ),
   ));
 
@@ -263,6 +275,72 @@ function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperatur
     echo 'Error: ' . curl_error($curl);
   }
 
+  curl_close($curl);
+
+}
+
+function OpenKeyCloudAiChat($系统模板, $用户输入, $历史消息, $temperature, $AppName, $备注)     {
+  global $模型信息;
+  $curl 		  = curl_init();
+  $messages 	= [];
+  $messages[] = ['content'=>$系统模板, 'role'=>'system'];
+  foreach($历史消息 as $消息) {
+    $messages[] = ['content'=>$消息[0], 'role'=>'user'];
+    $messages[] = ['content'=>"", 'role'=>'assistant'];
+  }
+  $messages[] = ['content'=>$用户输入, 'role'=>'user'];
+  //print_R($messages);
+  curl_setopt_array($curl, array(
+      CURLOPT_URL => $模型信息['API'],
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS =>'{
+      "messages": '.json_encode($messages).',
+      "model": "'.$模型信息['Model'].'",
+      "max_tokens": 512,
+      "stop": null,
+      "stream": true,
+      "temperature": '.$temperature.'
+      }',
+      CURLOPT_HTTPHEADER => array(
+          'Content-Type: application/json',
+          'Accept: application/json',
+          'Authorization: Bearer '.$模型信息['Token']
+      ),
+  ));
+
+  $输出TEXT = "";
+  curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$AppName, &$用户输入, &$输出TEXT) {
+    print $data;
+    ob_flush();
+    flush();
+
+    static $buffer = ''; // 用于存储不完整的数据块
+    $buffer .= $data; // 将当前数据块追加到缓冲区
+    while (preg_match('/"content":"([^"]*)"/', $buffer, $matches)) {
+        $outputData = $matches[1];
+        $输出TEXT .= $outputData;
+        //echo $outputData;
+        //ob_flush();
+        //flush();
+        // 从缓冲区中移除已处理的部分
+        $buffer = substr($buffer, strpos($buffer, $matches[0]) + strlen($matches[0]));
+    }
+    if(strpos($data, "data: [DONE]") !== false)  {
+      解析题目文本到数据库($输出TEXT);
+    }
+    return strlen($data);
+  });
+
+  curl_exec($curl);
+  if (curl_errno($curl)) {
+    echo '执行错误Error: ' . curl_error($curl);
+  }
   curl_close($curl);
 
 }

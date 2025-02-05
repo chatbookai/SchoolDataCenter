@@ -47,11 +47,11 @@ if($用户输入 != "" && $appId != "")  {
     //print_R($sql);print_R($模型信息);exit;
 
     switch($AppModel) {
-      case 'DeepSeekChat':
+      case 'DeepSeek':
         //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
         DeepSeekAiChat($SystemPrompt, $用户输入, $历史消息, $temperature);
         break;
-      case 'OpenKeyCloud':
+      case 'OpenAI':
         //实时输出结果, 返回结果的JSON不要做解析, 放到客户端进行解析.
         OpenKeyCloudAiChat($SystemPrompt, $用户输入, $历史消息, $temperature);
         break;

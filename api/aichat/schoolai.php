@@ -91,10 +91,10 @@ if($用户输入 != "" && $_GET['action'] == 'router')   {
 
   $SystemPrompt = "需要把用户输入的信息, 跟提交的几个选项进行对比, 返回匹配度最高的一个选项.";
   switch($AppModel) {
-    case 'DeepSeekChat':
+    case 'DeepSeek':
       $DeepSeekAiChatResult = DeepSeekAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
       break;
-    case 'OpenKeyCloud':
+    case 'OpenAI':
       $DeepSeekAiChatResult = OpenKeyCloudAiChat($SystemPrompt, $构建提示词语, $历史消息=[], $temperature, $IsStream='false', $备注);
       break;
     default:
@@ -159,10 +159,10 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   $构建提示词语 = $用户输入;
 
   switch($AppModel) {
-    case 'DeepSeekChat':
+    case 'DeepSeek':
       $DeepSeekAiChatResult = DeepSeekAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
       break;
-    case 'OpenKeyCloud':
+    case 'OpenAI':
       $DeepSeekAiChatResult = OpenKeyCloudAiChat($提示词语, $构建提示词语, $历史消息, $temperature, $IsStream='false', $备注);
       break;
     default:

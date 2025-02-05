@@ -114,7 +114,8 @@ const AppAiQuestion = (props: any) => {
       textbook
     });
 
-    authConfig.backEndApiAiBaseUrl = "http://localhost/api/"
+    //authConfig.backEndApiAiBaseUrl = "http://localhost/api/"
+
     try {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const response = await fetch(authConfig.backEndApiAiBaseUrl + `aichat/questionai.php`, {
