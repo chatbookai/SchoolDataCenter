@@ -721,7 +721,7 @@ $MAP['MobileEndField3'] 	= 'MobileEndField3';
 $MAP['MobileEndField4'] 	= 'MobileEndField4';
 $MAP['MobileEndField5'] 	= 'MobileEndField5';
 $MAP['MobileEndSecondLineLeftColorField'] 	= 'MobileEndSecondLineLeftColorField';
-$MAP['MobileEndSecondLineLeftColorRule'] 	= 'MobileEndSecondLineLeftColorRule';
+$MAP['MobileEndSecondLineLeftColorRule'] 	  = 'MobileEndSecondLineLeftColorRule';
 $MAP['MobileEndSecondLineRightColorField'] 	= 'MobileEndSecondLineRightColorField';
 $MAP['MobileEndSecondLineRightColorRule'] 	= 'MobileEndSecondLineRightColorRule';
 
@@ -732,5 +732,11 @@ $MAP['SoulChatList'] 	    = 'SoulChatList';
 $MAP['AiQuestionList'] 	    = 'AiQuestionList';
 $MAP['Except_CSRF_Actions'] = 'Except CSRF Actions';
 
+$MAP['MobileEndIconType'] 	  = 'MobileEndIconType';
+$MAP['MobileEndIconField'] 	  = 'MobileEndIconField';
+$MAP['edit_view'] 	          = 'edit_view';
+$MAP['add_edit_view'] 	      = 'add_edit_view';
+$MAP['add_edit_view_delete'] 	= 'add_edit_view_delete';
+$MAP['TextareaRows'] 	        = 'Textarea Rows';
 
 ?>

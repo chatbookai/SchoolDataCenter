@@ -134,6 +134,7 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
 
   $ChartType = $SQLJSON['type'];
   $ChartSql = $SQLJSON['sql'];
+  $ChartName = $SQLJSON['name'];
 
   if($DeepSeekAiChatResultJSON == null)  {
     $RS = [];
@@ -211,8 +212,8 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
 
     }
     $ChartJson = [];
-    $ChartJson['SubTitle']  = "按天统计班级学生积分之和";
     $ChartJson['Title']     = "";
+    $ChartJson['SubTitle']  = $ChartName;
     $ChartJson['TopRightOptions']   = [];
     $ChartJson['dataX']     = $dataX;
     $ChartJson['dataY']     = [['name'=>'统计图表', 'data'=>$dataY]];

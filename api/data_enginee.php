@@ -108,7 +108,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType)  {
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'type'=>$CurrentFieldTypeArray[0], 'label' => $EnglishName, 'value' => $FieldDefault, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false],'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false, 'dateFormat' => 'HH:mm','timeZone'=>'America/Los_Angeles','StartTime'=>$Setting['StartTime'],'EndTime'=>$Setting['EndTime']];
                 break;
             case 'textarea':
-                $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'type'=>$CurrentFieldTypeArray[0], 'label' => $EnglishName, 'value' => $FieldDefault, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false,'min'=>$Min,'max'=>$Max]];
+                $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'type'=>$CurrentFieldTypeArray[0], 'label' => $EnglishName, 'value' => $FieldDefault, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false,'min'=>$Min,'max'=>$Max],'TextareaRows'=>$Setting['TextareaRows']];
                 break;
             case 'editor':
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'type'=>$CurrentFieldTypeArray[0], 'label' => $EnglishName, 'value' => $FieldDefault, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false]];

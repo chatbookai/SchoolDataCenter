@@ -61,6 +61,8 @@ $allFieldsAdd[] = ['name' => 'FieldDefault', 'show'=>true, 'type'=>'input', 'lab
 
 $allFieldsAdd[] = ['name' => 'NewDict', 'show'=>false, 'type'=>'input', 'label' => __('NewDict'), 'value' => '', 'placeholder' => __('Create New Dict Type From Here, use comma to split'), 'helptext' => __(''), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false,'min'=>0,'max'=>999]];
 
+$allFieldsAdd[] = ['name' => 'TextareaRows', 'show'=>false, 'type'=>'number', 'label' => __('TextareaRows'), 'value' => '5', 'placeholder' => __('TextareaRows'), 'helptext' => __(''), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false,'min'=>5,'max'=>40]];
+
 $allFieldsAdd[] = ['name' => 'Min', 'show'=>false, 'type'=>'number', 'label' => __('Min'), 'value' => '', 'placeholder' => __('Minimum input'), 'helptext' => __(''), 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false,'min'=>0,'max'=>4]];
 $allFieldsAdd[] = ['name' => 'Max', 'show'=>false, 'type'=>'number', 'label' => __('Max'), 'value' => '', 'placeholder' => __('Maximum input'), 'helptext' => __(''), 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false,'min'=>0,'max'=>4]];
 $FormulaMethod = [];

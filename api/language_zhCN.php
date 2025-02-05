@@ -733,7 +733,12 @@ $MAP['SoulChatList'] 	    = '心理健康列表';
 $MAP['AiQuestionList'] 	    = 'AI课堂测验列表';
 $MAP['Except_CSRF_Actions'] = '排除CSRF的页面动作';
 
-
+$MAP['MobileEndIconType'] 	  = '移动端图标类型';
+$MAP['MobileEndIconField'] 	  = '移动端图标字段';
+$MAP['edit_view'] 	          = 'edit_view';
+$MAP['add_edit_view'] 	      = 'add_edit_view';
+$MAP['add_edit_view_delete'] 	= 'add_edit_view_delete';
+$MAP['TextareaRows'] 	        = '多行文本框高度';
 
 
 ?>

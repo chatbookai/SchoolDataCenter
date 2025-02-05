@@ -194,8 +194,6 @@ function ParamsFilter($str) {
 }
 
 function FilterString($str) {
-	$str  = str_replace("'","",$str);
-	$str  = str_replace('"',"",$str);
 	$str  = str_replace('#',"",$str);
 	$str  = str_replace('--',"",$str);
 
@@ -203,10 +201,6 @@ function FilterString($str) {
 	$str  = str_replace('$',"",$str);
 	$str  = str_replace('%',"",$str);
 	$str  = str_replace('^',"",$str);
-	$str  = str_replace('&',"",$str);
-	$str  = str_replace('(',"",$str);
-	$str  = str_replace(')',"",$str);
-	$str  = str_replace('+',"",$str);
 	$str  = str_replace("<","",$str);
 	$str  = str_replace(">","",$str);
 	$str  = str_replace("\\","",$str);

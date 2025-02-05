@@ -2611,7 +2611,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "textarea") {
 
-                                                        //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
+                                                        console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
                                                         if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined) {
 
                                                             //console.log("defaultValuesNew[FieldArray.name]--------------------------------", defaultValuesNew[FieldArray.name])
@@ -2629,7 +2629,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 size={componentsize}
                                                                                 value={value}
                                                                                 label={FieldArray.label}
-                                                                                rows={4}
+                                                                                rows={FieldArray.TextareaRows ?? 5}
                                                                                 multiline
                                                                                 onChange={(e) => {
                                                                                     onChange(e);
