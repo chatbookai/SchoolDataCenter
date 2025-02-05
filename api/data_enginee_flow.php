@@ -198,6 +198,18 @@ if($_GET['action']=="option_multi_cancel")  {
     exit;
 }
 
+if($_GET['action']=="option_multi_setting_one")  {
+    $option_multi_setting_one = option_multi_setting_one_exection($_POST['selectedRows'], $_POST['multiReviewInputValue'], $Reminder=1, $UpdateOtherTableField=1);
+    print $option_multi_setting_one;
+    exit;
+}
+
+if($_GET['action']=="option_multi_setting_two")  {
+    $option_multi_setting_two = option_multi_setting_two_exection($_POST['selectedRows'], $_POST['multiReviewInputValue'], $Reminder=1, $UpdateOtherTableField=1);
+    print $option_multi_setting_two;
+    exit;
+}
+
 if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List_Header_Array) && $TableName!="")  {
 
     //Filter data when do add save operation
@@ -2839,6 +2851,13 @@ if(in_array('Reset_Password_123654',$Bottom_Button_Actions_Array))   {
 if(in_array('Reset_Password_ID_Last6',$Bottom_Button_Actions_Array))   {
     $multireview['multireview'][] = ["text"=>__("Reset_Password_ID_Last6"),"action"=>"Reset_Password_ID_Last6","title"=>__("Modify user passwords in batches"),"content"=>__("Modify the password of the selected record to the last six digits of the ID number, if no ID number is set, the password is 123654"),"memoname"=>"","inputmust"=>false,"inputmusttip"=>"","submit"=>__("Submit"),"cancel"=>__("Cancel")];
 }
+if(in_array('Batch_Setting_One',$Bottom_Button_Actions_Array))   {
+    $multireview['multireview'][] = ["text"=>$SettingMap["Batch_Setting_One_Name"],"action"=>"option_multi_setting_one","title"=>__("Change multiple item values one time"),"content"=>__("Do you really want to change multiple item values at this time?")."\n批量把[".$SettingMap['Batch_Setting_Two_Change_Field']."]列修改为:".$SettingMap['Batch_Setting_Two_Change_Value']."","memoname"=>$SettingMap['Batch_Approval_Review_Field'],"inputmust"=>$SettingMap['Batch_Approval_Review_Field']?true:false,"inputmusttip"=>__("Opinion must input"),"submit"=>__("Submit"),"cancel"=>__("Cancel")];
+}
+if(in_array('Batch_Setting_Two',$Bottom_Button_Actions_Array))   {
+    $multireview['multireview'][] = ["text"=>$SettingMap["Batch_Setting_Two_Name"],"action"=>"option_multi_setting_two","title"=>__("Change multiple item values one time"),"content"=>__("Do you really want to change multiple item values at this time?")."\n批量把[".$SettingMap['Batch_Setting_Two_Change_Field']."]列修改为:".$SettingMap['Batch_Setting_Two_Change_Value']."","memoname"=>$SettingMap['Batch_Approval_Review_Field'],"inputmust"=>$SettingMap['Batch_Approval_Review_Field']?true:false,"inputmusttip"=>__("Opinion must input"),"submit"=>__("Submit"),"cancel"=>__("Cancel")];
+}
+$multireview['Bottom_Button_Actions_Array'] = $Bottom_Button_Actions_Array;
 //$multireview['multireview'][] = ["text"=>"Multi Change Status","action"=>"option_multi_change_status","title"=>"option_multi_change_status Item","content"=>"Do you really to delete this item?Do you really to delete this item?","memoname"=>"审核意见3","inputmust"=>false,"inputmusttip"=>"","submit"=>"Submit","cancel"=>__("Cancel")];
 $RS['init_default']['multireview'] = $multireview;
 $RS['init_default']['checkboxSelection']  = is_array($multireview['multireview']) && count($multireview['multireview'])>0 ? true : false;

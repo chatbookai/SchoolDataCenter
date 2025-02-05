@@ -204,7 +204,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
           : ''
         }
         {(!selectedRows || selectedRows.length == 0) && ( (isMobileData==false) || (isMobileData==true && MobileEndShowSearch=='Yes')) ?
-          <Box sx={{ pt: 2, pl: 3, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ pt: 2, pl: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <Grid container spacing={2}>
               {searchFieldArray ?
                 <Grid item sm={3} xs={6}>
@@ -287,45 +287,45 @@ const IndexTableHeader = (props: TableHeaderProps) => {
           </Box>
           : ''
         }
-      </form>
-      {selectedRows && selectedRows.length > 0 ?
-        <Box sx={{ pl: 3, pb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Grid container spacing={2}>
-            {multireview && multireview.multireview && multireview.multireview.map((Item: any, index: number) => {
+        {selectedRows && selectedRows.length > 0 ?
+          <Box sx={{ pt: 2, pl: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', height: '56px' }}>
+            <Grid container spacing={2}>
+              {multireview && multireview.multireview && multireview.multireview.map((Item: any, index: number) => {
 
-              return (
-                <Grid item key={"Grid_" + index}>
-                  <Fragment>
-                    <Button sx={{ mb: 2 }} variant='contained' type="button" onClick={() => handleMultiOpenDialog(Item.action)}>{Item.text}</Button>
-                    <Dialog
-                      open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
-                      onClose={() => handleMultiCloseDialog()}
-                      aria-labelledby='form-dialog-title'
-                    >
-                      <DialogTitle id='form-dialog-title'>{Item.title}</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText sx={{ mb: 3 }}>
-                          {Item.content}
-                        </DialogContentText>
-                        {Item.memoname != "" ? <TextField required={Item.inputmust} inputRef={myRef} id={Item.memoname} value={multiReviewInputValue} onChange={(e) => { setMultiReviewInputValue(e.target.value) }} autoFocus fullWidth type='text' label={Item.memoname} /> : ''}
-                      </DialogContent>
-                      <DialogActions className='dialog-actions-dense'>
-                        <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
-                        {Item.memoname != "" ?
-                          <Button onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
-                          :
-                          <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
-                        }
-                      </DialogActions>
-                    </Dialog>
-                  </Fragment>
-                </Grid>
-              )
-            })}
-          </Grid>
-        </Box>
-        : ''
-      }
+                return (
+                  <Grid item key={"Grid_" + index}>
+                    <Fragment>
+                      <Button sx={{ mb: 2 }} variant='contained' type="button" onClick={() => handleMultiOpenDialog(Item.action)}>{Item.text}</Button>
+                      <Dialog
+                        open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
+                        onClose={() => handleMultiCloseDialog()}
+                        aria-labelledby='form-dialog-title'
+                      >
+                        <DialogTitle id='form-dialog-title'>{Item.title}</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText sx={{ mb: 3, whiteSpace: 'pre-wrap' }}>
+                            {Item.content}
+                          </DialogContentText>
+                          {Item.memoname != "" ? <TextField required={Item.inputmust} inputRef={myRef} id={Item.memoname} value={multiReviewInputValue} onChange={(e) => { setMultiReviewInputValue(e.target.value) }} autoFocus fullWidth type='text' label={Item.memoname} /> : ''}
+                        </DialogContent>
+                        <DialogActions className='dialog-actions-dense'>
+                          <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
+                          {Item.memoname != "" ?
+                            <Button onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
+                            :
+                            <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
+                          }
+                        </DialogActions>
+                      </Dialog>
+                    </Fragment>
+                  </Grid>
+                )
+              })}
+            </Grid>
+          </Box>
+          : ''
+        }
+      </form>
     </>
   )
 }

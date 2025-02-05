@@ -138,9 +138,11 @@ $MAP['Bottom_Button_Actions'] 	    = 'Bottom button actions';
 $MAP['Approval Node Fields'] 	    = 'Approval node fields';
 $MAP['Batch_Setting_One_Name'] 	    = 'Batch setting one name';
 $MAP['Batch_Setting_One_Change_Field'] 	                    = 'Batch setting one change field';
+$MAP['Batch_Setting_One_Change_Value'] 	                    = 'Batch setting One change to value';
 $MAP['Batch_Setting_One_Additional_Display_Field'] 	        = 'Batch setting one additional display field';
 $MAP['Batch_Setting_Two_Name'] 	    = 'Batch setting two name';
 $MAP['Batch_Setting_Two_Change_Field'] 	                    = 'Batch setting two change field';
+$MAP['Batch_Setting_Two_Change_Value'] 	                    = 'Batch setting two change to value';
 $MAP['Batch_Setting_Two_Additional_Display_Field'] 	        = 'Batch setting two additional display field';
 $MAP['Which_Field_Store_Password_When_Enable_Change_Password'] = 'Which field stores password when enable change password';
 $MAP['Desc'] 				                                    = 'Descending';
@@ -738,5 +740,9 @@ $MAP['edit_view'] 	          = 'edit_view';
 $MAP['add_edit_view'] 	      = 'add_edit_view';
 $MAP['add_edit_view_delete'] 	= 'add_edit_view_delete';
 $MAP['TextareaRows'] 	        = 'Textarea Rows';
+
+$MAP['Do you really want to change multiple item values at this time?'] = "Do you really want to change multiple item values at this time?";
+$MAP['Change multiple item values one time'] = "Change multiple item values one time";
+
 
 ?>

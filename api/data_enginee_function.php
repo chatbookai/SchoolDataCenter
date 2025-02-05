@@ -1692,6 +1692,106 @@ function option_multi_cancel_exection($selectedRows, $multiReviewInputValue, $Re
     }
 }
 
+function option_multi_setting_one_exection($selectedRows, $multiReviewInputValue, $Reminder=1, $UpdateOtherTableField=1) {
+    global $db, $SettingMap, $MetaColumnNames, $TableName, $GLOBAL_USER;
+    $selectedRows   = ForSqlInjection($selectedRows);
+    $selectedRows   = explode(',',$selectedRows);
+    $primary_key    = $MetaColumnNames[0];
+    $Batch_Setting_One_Name             = $SettingMap['Batch_Setting_One_Name'];
+    $Batch_Setting_One_Change_Field     = $SettingMap['Batch_Setting_One_Change_Field'];
+    $Batch_Setting_One_Change_Value     = $SettingMap['Batch_Setting_One_Change_Value'];
+    $updateSQL = [];
+    if(in_array($Batch_Setting_One_Change_Field,$MetaColumnNames))   {
+        $updateSQL[] = " $Batch_Setting_One_Change_Field = '".$Batch_Setting_One_Change_Value."' ";
+    }
+
+    $sqlArray = [];
+    if($selectedRows[0]!=""&&count($updateSQL)>0) {
+        $RS             = [];
+        foreach($selectedRows as $id) {
+            if(strlen($id)>30) {
+                $id         = intval(DecryptID($id));
+            }
+            $sql        = "update $TableName set ".join(',',$updateSQL)." where $primary_key = '$id'";
+            $db->Execute($sql);
+            $sqlArray[] = $sql;
+            if($Reminder)   $RS['Msg_Reminder'][$id] = Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id);
+            if($UpdateOtherTableField) UpdateOtherTableFieldAfterFormSubmit($id);
+        }
+        //SystemLogRecord
+        if(in_array($SettingMap['OperationLogGrade'],["EditAndDeleteOperation","AddEditAndDeleteOperation","AllOperation"]))  {
+            SystemLogRecord("option_multi_setting_one", '', json_encode($sqlArray));
+        }
+        $RS['status']   = "OK";
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  {
+            $RS['sqlArray'] = $sqlArray;
+            global $GLOBAL_EXEC_KEY_SQL;
+            $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
+        }
+        $RS['msg']      = __("Update Success");
+        return json_encode($RS);
+    }
+    else {
+        $RS             = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = __("Params Error");
+        $RS['updateSQL']= $updateSQL;
+        $RS['_GET']     = $_GET;
+        $RS['_POST']    = $_POST;
+        return json_encode($RS);
+    }
+}
+
+function option_multi_setting_two_exection($selectedRows, $multiReviewInputValue, $Reminder=1, $UpdateOtherTableField=1) {
+    global $db, $SettingMap, $MetaColumnNames, $TableName, $GLOBAL_USER;
+    $selectedRows   = ForSqlInjection($selectedRows);
+    $selectedRows   = explode(',',$selectedRows);
+    $primary_key    = $MetaColumnNames[0];
+    $Batch_Setting_Two_Name             = $SettingMap['Batch_Setting_Two_Name'];
+    $Batch_Setting_Two_Change_Field     = $SettingMap['Batch_Setting_Two_Change_Field'];
+    $Batch_Setting_Two_Change_Value     = $SettingMap['Batch_Setting_Two_Change_Value'];
+    $updateSQL = [];
+    if(in_array($Batch_Setting_Two_Change_Field,$MetaColumnNames))   {
+        $updateSQL[] = " $Batch_Setting_Two_Change_Field = '".$Batch_Setting_Two_Change_Value."' ";
+    }
+
+    $sqlArray = [];
+    if($selectedRows[0]!=""&&count($updateSQL)>0) {
+        $RS             = [];
+        foreach($selectedRows as $id) {
+            if(strlen($id)>30) {
+                $id         = intval(DecryptID($id));
+            }
+            $sql        = "update $TableName set ".join(',',$updateSQL)." where $primary_key = '$id'";
+            $db->Execute($sql);
+            $sqlArray[] = $sql;
+            if($Reminder)   $RS['Msg_Reminder'][$id] = Msg_Reminder_Object_From_Add_Or_Edit($TableName, $id);
+            if($UpdateOtherTableField) UpdateOtherTableFieldAfterFormSubmit($id);
+        }
+        //SystemLogRecord
+        if(in_array($SettingMap['OperationLogGrade'],["EditAndDeleteOperation","AddEditAndDeleteOperation","AllOperation"]))  {
+            SystemLogRecord("option_multi_setting_two", '', json_encode($sqlArray));
+        }
+        $RS['status']   = "OK";
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  {
+            $RS['sqlArray'] = $sqlArray;
+            global $GLOBAL_EXEC_KEY_SQL;
+            $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
+        }
+        $RS['msg']      = __("Update Success");
+        return json_encode($RS);
+    }
+    else {
+        $RS             = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = __("Params Error");
+        $RS['updateSQL']= $updateSQL;
+        $RS['_GET']     = $_GET;
+        $RS['_POST']    = $_POST;
+        return json_encode($RS);
+    }
+}
+
 function UpdateOtherTableFieldAfterFormSubmit($id)  {
     global $db, $SettingMap, $MetaColumnNames, $TableName, $GLOBAL_USER;
     $GLOBAL_MetaTables = GLOBAL_MetaTables();

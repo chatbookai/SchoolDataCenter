@@ -136,9 +136,11 @@ $MAP['Bottom_Button_Actions'] 	= '底部按钮动作';
 $MAP['Approval Node Fields'] 	= '批量审核结节字段';
 $MAP['Batch_Setting_One_Name'] 	= '批量设置一名称';
 $MAP['Batch_Setting_One_Change_Field'] 	= '批量设置一修改字段';
+$MAP['Batch_Setting_One_Change_Value'] 	= '批量设置一修改之后的值';
 $MAP['Batch_Setting_One_Additional_Display_Field'] 	= '批量设置一额外显示字段';
 $MAP['Batch_Setting_Two_Name'] 	= '批量设置二名称';
 $MAP['Batch_Setting_Two_Change_Field'] 	= '批量设置二修改字段';
+$MAP['Batch_Setting_Two_Change_Value'] 	= '批量设置二修改之后的值';
 $MAP['Batch_Setting_Two_Additional_Display_Field'] 	= '批量设置二额外显示字段';
 $MAP['Which_Field_Store_Password_When_Enable_Change_Password'] 	= '哪个字段存储密码';
 $MAP['Desc'] 					= '倒序';
@@ -740,5 +742,7 @@ $MAP['add_edit_view'] 	      = 'add_edit_view';
 $MAP['add_edit_view_delete'] 	= 'add_edit_view_delete';
 $MAP['TextareaRows'] 	        = '多行文本框高度';
 
+$MAP['Do you really want to change multiple item values at this time?'] = "您确认要修改多个选定记录的值么？";
+$MAP['Change multiple item values one time'] = "一次修改多个记录的值";
 
 ?>

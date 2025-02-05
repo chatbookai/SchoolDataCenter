@@ -50,10 +50,10 @@ const AppAiChatList = (props: any) => {
 
   const handleSetChatWithApp = async (item: any) => {
     setPageModel("ChatWithApp")
-    setApp({...item, id: "ChatApp-" + item.id, AppName2: item.AppModel, avatar: '1.png', Model: {}, QuestionGuideTemplate })
+    setApp({...item, id: "ChatApp-" + item.id2, AppName2: item.AppModel, avatar: '1.png', Model: {}, QuestionGuideTemplate })
   }
 
-  const AppList = store.init_default.data.map( (Item: any) => ({...Item, id: Item.id2}) )
+  const AppList = store.init_default.data.map( (Item: any) => ({...Item}) )
 
   const renderContent = () => {
       return (
@@ -109,16 +109,19 @@ const AppAiChatList = (props: any) => {
                           <Button
                             variant="text"
                             size="small"
-                            startIcon={<Icon icon={item.permission == 'private' ? 'ri:git-repository-private-line' : 'material-symbols:share'} />}
-                            onClick={()=>{
-                              setAddEditActionId(item.id)
-                              setViewActionOpen(true)
-                              setEditViewCounter(0)
-                              setCSRF_TOKEN(store.init_default.CSRF_TOKEN)
-                              setAddEditActionName('view_default')
-                            }}
+                            disabled
+                            sx={{textTransform: 'capitalize'}}
+
+                            //startIcon={<Icon icon={item.permission == 'private' ? 'ri:git-repository-private-line' : 'material-symbols:share'} />}
+                            //</Box>onClick={()=>{
+                              //setAddEditActionId(item.id)
+                              //setViewActionOpen(true)
+                              //setEditViewCounter(0)
+                              //setCSRF_TOKEN(store.init_default.CSRF_TOKEN)
+                              //setAddEditActionName('view_default')
+                            //}}
                           >
-                            {'查看详情'}
+                            {item.AppModel}
                           </Button>
                         </Box>
                         <Box position="absolute" bottom={0} right={1} m={1} px={0.8}>
