@@ -235,8 +235,10 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
+                                  <MUITableCell sx={{ maxWidth: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
+                                  <MUITableCell sx={{ minWidth: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
                                 </Fragment>
                               )
                             }//end if
@@ -244,7 +246,9 @@ const ViewTableCore = (props: ViewTableType) => {
                               // Nothing to do
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
+                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
                                   <MUITableCell sx={{ width: '35%', whiteSpace: 'wrap', wordWrap: 'break-word' }}>******</MUITableCell>
                                 </Fragment>
                               )
@@ -253,7 +257,9 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
+                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
                                   <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
                                 </Fragment>
                               )
@@ -262,7 +268,9 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
+                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
                                   <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
                                 </Fragment>
                               )
@@ -271,18 +279,22 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
+                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
                                   <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
                                 </Fragment>
                               )
                             }
                             else if (FieldArray.type == "textarea") {
 
+                              console.log("CellData.Value", CellData.Value)
+
                               return (
                                 <Fragment key={FieldArray_index}>
                                     <MUITableCell sx={{ width: '50%' }} colSpan={Number(colSpan) + 1}>
-                                      {FieldArray.label}
-                                      {CellData.Value}
+                                      <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}</Typography>
+                                      <Typography style={{ whiteSpace: 'pre-wrap', paddingLeft: 14 }} variant='body2'>{CellData.Value}</Typography>
                                     </MUITableCell>
                                 </Fragment>
                               )
@@ -302,7 +314,9 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
+                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
                                   <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>
                                   <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+CellData.Value], ['image'])}>
                                     <ImgStyled src={authConfig.backEndApiHost+CellData.Value} alt={FieldArray.helptext} />
@@ -404,7 +418,9 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
+                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
                                   <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
                                 </Fragment>
                               )
@@ -413,8 +429,10 @@ const ViewTableCore = (props: ViewTableType) => {
 
                               return (
                                 <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>{FieldArray.label}:</MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>
+                                  <MUITableCell sx={{ maxWidth: '15%', whiteSpace: 'nowrap' }}>
+                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
+                                  </MUITableCell>
+                                  <MUITableCell sx={{ minWidth: '35%' }} colSpan={colSpan}>
                                     {CellData && CellData.Value && typeof CellData.Value === 'string' ? CellData.Value : FieldArray.type + " " + (CellData && CellData.Value ? CellData.Value.toString() : '')}
                                   </MUITableCell>
                                 </Fragment>
