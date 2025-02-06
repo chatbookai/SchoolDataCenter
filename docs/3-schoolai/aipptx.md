@@ -1,3 +1,7 @@
+---
+icon: network-wired
+---
+
 ### AI生成PPTX
 AI生成PPTX是使用AI技术来自动生成PPTX，并且支持在线修改和导出PPTX。
 主要功能:
