@@ -10,4 +10,4 @@ AI生成PPTX是使用AI技术来自动生成PPTX，并且支持在线修改和�
 | <img src="./images/AIChat-31.png" > | <img src="./images/AIChat-32.png" > |
 |------------------------------------------|------------------------------------------|
 | <img src="./images/AIChat-33.png" > | <img src="./images/AIChat-34.png" > |
-| <img src="./images/AIChat-35.png" > |  |
+| <img src="./images/AIChat-35.png" > | <img src="./images/AIChat-36.png" > |

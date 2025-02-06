@@ -10,7 +10,7 @@ AI（人工智能）是一种模拟人类智能的技术，能够执行复杂的
 4. AI翻译
 5. 工作周报
 
-| <img src="./images/AIChat-01.png" > | <img src="./images/AIChat-10.png" > |
+| <img src="./images/AIChat-00.png" > | <img src="./images/AIChat-01.png" > |
 |------------------------------------------|------------------------------------------|
-| <img src="./images/AIChat-11.png" > | <img src="./images/AIChat-12.png" > |
+| <img src="./images/AIChat-10.png" > | <img src="./images/AIChat-12.png" > |
 | <img src="./images/AIChat-13.png" > | <img src="./images/AIChat-14.png" > |
