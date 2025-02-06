@@ -4,15 +4,32 @@
 
 ## 如何安装本系统
 
+* [Window安装](0-install/win-install.md)
+
 ## 使用前准备基础数据
+
+* [准备数据](1-preparation/README.md)
 
 ## 老师和学生如何使用
 
+* [老师](2-howtouse/teacher.md)
+* [学生](2-howtouse/student.md)
+* [管理员](2-howtouse/admin.md)
+
 ## 教育AI功能
+
+* [AI对话](3-schoolai/aichat.md)
+* [AI仪表盘](3-schoolai/aischool.md)
+* [AI生成PPTX](3-schoolai/aipptx.md)
+* [AI课堂测验](3-schoolai/aiquestion.md)
+* [AI模块配置](3-schoolai/aiconfig.md)
 
 ## 数字校园功能
 
-* [功能概要说明](4-campus/README.md)
+* [教务管理](4-campus/jiaowu.md)
+* [学生管理](4-campus/xuesheng.md)
+* [德育量化](4-campus/gerenjifen.md)
+* [班级评价](4-campus/banjipingjia.md)
 
 ## 第三方业务对接
 
@@ -24,7 +41,8 @@
 
 ## 智慧大脑数据中台
 
-* [智慧大脑数据中台](8-datacenter/README.md)
+* [数据集](8-datacenter/dataset.md)
+* [数据交换](8-datacenter/dataexchange.md)
 
 ## 低代码开发平台
 
