@@ -6,7 +6,7 @@
 5.  展示形式是微信小程序, 家长和老师都可以使用
 6.  主要逻辑: 家长报名 -> 输入学生资料 -> 学校审核 -> 报名录取 -> 家长缴费 -> 查看结果
 
-| <img src="./images/01.png" > | <img src="./images/02.png" > |
+| <figure><img src="./images/01.png" ><figcaption></figcaption></figure> | <figure><img src="./images/02.png" ><figcaption></figcaption></figure> |
 |------------------------------------------|------------------------------------------|
 | <img src="./images/03.png" > | <img src="./images/04.png" > |
 | <img src="./images/05.png" > | <img src="./images/06.png" > |

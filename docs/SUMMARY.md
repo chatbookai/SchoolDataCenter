@@ -2,20 +2,6 @@
 
 * [Welcome](README.md)
 
-## 如何安装本系统
-
-* [Window安装](0-install/win-install.md)
-
-## 使用前准备基础数据
-
-* [准备数据](1-preparation/README.md)
-
-## 老师和学生如何使用
-
-* [老师](2-howtouse/teacher.md)
-* [学生](2-howtouse/student.md)
-* [管理员](2-howtouse/admin.md)
-
 ## 教育AI功能
 
 * [AI对话](3-schoolai/aichat.md)
@@ -47,6 +33,21 @@
 ## 低代码开发平台
 
 * [低代码开发平台](9-lowcode/README.md)
+
+
+## 如何安装本系统
+
+* [Window安装](0-install/win-install.md)
+
+## 使用前准备基础数据
+
+* [准备数据](1-preparation/README.md)
+
+## 老师和学生如何使用
+
+* [老师](2-howtouse/teacher.md)
+* [学生](2-howtouse/student.md)
+* [管理员](2-howtouse/admin.md)
 
 ## 内容演示
 
