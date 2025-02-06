@@ -32,7 +32,12 @@
 
 ## 低代码开发平台
 
-* [低代码开发平台](9-lowcode/README.md)
+* [介绍](9-lowcode/README.md)
+* [设计表单](9-lowcode/form.md)
+* [设计流程](9-lowcode/flow.md)
+* [数据类型](9-lowcode/datatype.md)
+* [菜单管理](9-lowcode/menu.md)
+* [权限管理](9-lowcode/role.md)
 
 
 ## 如何安装本系统
