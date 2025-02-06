@@ -1,115 +1,29 @@
-<p align="center">
-	<img alt="logo" src="https://www.dandian.net/cn/wp-content/uploads/20171021044351_57.png">
-</p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">单点职校数据中心 V0.1</h1>
-<h4 align="center">职校智慧大脑数据中台整体解决方案</h4>
+---
+icon: hand-wave
+cover: https://gitbookio.github.io/onboarding-template-images/header.png
+coverY: 0
+layout:
+  cover:
+    visible: true
+    size: full
+  title:
+    visible: true
+  description:
+    visible: false
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
+---
 
-## 平台简介
+# Welcome
 
-单点职校数据中心是针对职业院校的一款智慧大脑院校中台，按【全国职业教育智慧大脑院校中台-中职数据标准及接口规范】标准进行开发。
+Welcome to the GitBook Starter Template! Here you'll get an overview of all the amazing features GitBook offers to help you build beautiful, interactive documentation.
 
-* 前端采用React，NextJS，MUI，DataGrid。
-* 后端采用PHP，MYSQL。
-* 权限认证使用Jwt，支持多终端认证系统。
-* 理论基础：模型驱动架构。
-* 开发流程：设计表单（建立数据表，设置字段物理类型和显示设置），设计流程（设计功能页面），加入菜单，分配权限，即完成新模块开发，整个过程不需要写一行代码。
-* 框架特点：超过15年以上行业管理软件开发经验，内置软件快速开发工具。
-* 代码生成：无需生成软件代码，模型在设计完成以后，直接加载执行，快速高效。
-* 业务特点：支持老师和学生用户登录；内置学生，任课老师，班主任，专业，系部，宿舍管理员等特殊角色，用于适用不同的应用场景；可定制化的数据流审批和消息提醒机制。
-* 支持数据源：MYSQL，ORACLE，SQLSERVER，PostgreSQL。
-* 支持手动配置远程数据源和设置远程数据表，同步远程数据时，支持对每一个字段进行设置定义使用远程数据源还是本地数据源。
-* 支持按【全国职业教育智慧大脑院校中台-中职数据标准及接口规范】文件对数据进行数据清洗。
+You'll see some of the best parts of GitBook in action — and find help on how you can turn this template into your own.
 
-## 内置功能
+### Jump right in
 
-### 低代码平台
-1.  表单设计：设计底层的数据表和结构，可以设置每一个字段的数据库类型和显示类型（业务逻辑类型）。
-2.  功能设计：针对表单的一系列增刪查改操作，可以根据不同的业务逻辑需要，设置不同的功能（流程）页面。通过一些参数的配置，可以达到工作流程审核的效果，也可以设计独立的页面。
-3.  显示类型：内置大量常用的显示类型，用于在设计表单和功能的时候使用。
-4.  数据字典：设置数据字典，用于显示类型的下拉、多选等项目，主要用于给显示类型提供数据源。
-5.  菜单管理：分为一级菜单和二级菜单管理，通常不需要在此进行修改，直接在【流程管理】的【界面】中直接设定菜单位置即可。
-6.  角色与权限：设计好的菜单，分配权限以后，就可以直接在系统中打开使用。
-7.  消息提醒：针对每一个功能菜单，都可以设置独立的消息提醒功能，不同的数据条件会触发不同的消息提醒内容。另外，可以自定义消息模板，设置提醒对像（内置消息提醒对像为：学生，班主任，院系负责人，专业负责人，年段长，宿舍管理员，本班所有学生，本专业所有学生，本校所有学生，用户，部门负责人）。
-8.  操作日志：主要有所有记录，新增编辑和删除，编辑和删除，删除操作等几类，可以针对每一个流程设置不同的操作日志级别。
-9.  功能页面对字段的控制：在某一个功能（流程）页面里面，针对字段可以设置为正常沿用表单设计的值，只读，禁用，当前用户的某个信息等，用于实现更加灵活的权限控制和功能设计。
-10. 界面语言：自定义所有界面和按钮的值，以及返回信息的提示。因为是显示用户自定义的值，所以就只能是一种语言，即你输入的值。
-11. 额外权限控制：系统内置了学生，班主任，系部，宿舍管理员等几个常用角色，同时可以指定某个字段等于或包括某个值，用于提供额外的条件判断和过滤。
-12. 按钮控制：可以设置新建，导入，导出，编辑，删除，全选等按钮是否显示。
-13. 表单提交以后的数据操作：当用户提交表单以后，在特定的某些条件下面，可以更新其它表单的值。
-14. 列锁定：可以设置某些列固定在页面的左侧或是右侧，用于更好的显示某些重点信息。
-15. 页面排序：用于设置初始条件下面的默认排序和页面显示数量。
-16. 初始页面类型：用于设置用户打开页面的时候的页面类型，通常是列表，某个记录的编辑页面或是查看页面。
-17. 唯一性判断字段：用于设置表单的唯一性字段，用于支持某些特殊的业务场景。
-18. 底部常用按钮控制：删除，批量通过，批量退回，批量拒绝，重置密码为123654，重置密码为身份证号后六位，批量设置一，批量设置二。
-19. 批量审核：可以设置批量审核的人，状态，时间，意见。同时支持更新其它字段的值，用于实现其它字段的同步操作。
-
-
-### 数据集(47个数据集)
-支持【全国职业教育智慧大脑院校中台-中职数据标准及接口规范2023.06】文件
-1.  学校基本数据: 学校基本数据，校区基本数据
-2.  教学管理: 课程，实习基础，实习报告，教材，排课，选课，网络课程，课堂互动，校内实训基地，校外实训基地，实训教学，教学质量，巡课
-3.  教职工管理: 教师画像，资质证书，教师进修，教师考核
-4.  学生管理: 学生画像，基础课成绩，技能证书，综合成绩，心理咨询，奖助贷，社团活动，毕业去向(升学)，毕业去向(就业)，毕业去向(未就业)
-5.  党建德育: 党组织建设，党员发展，干部学习，党课，三会，日常活动，主题党日，德育活动
-6.  服务管理: 学生消费，一卡通认证，在线事务，校园动态，学生赛事，网络安全，数据集成，映射关系，系统集成，认证登录
-
-### 数据交换
-1.  数据集管理: 总计47个数据集需要上报. 可以通过远程数据同步的访问，获取第三方业务系统的数据，然后进行数据清洗和过滤，得到有效和精确的需要上报教育部的数据集合.
-2.  代码集管理: 【全国职业教育智慧大脑院校中台-中职数据标准及接口规范】文件里面所规定和描述的代码集合
-3.  数据库连接池: 设置第三方数据集合，用于同步过滤清洗第三方业务系统数据，以达到【全国职业教育智慧大脑院校中台-中职数据标准及接口规范】文件所要求的数据元素
-4.  数据同步任务: 可以配置每一个数据集合的同步时间和周期，以及查看到每次同步数据的日志信息，方便检验哪些数据不符合要求，从而为数据修正提供一个有效的依据
-5.  数据同步日志: 数据同步的日志信息
-
-### 数据可视化
-1.  特性: 不需要写代码，自动化配置，可以在线生成各种图表，自由组合布局等
-2.  组件: 图表，柱状图，横向柱状图，折线图，单/多，折线面积图(渐变色)，饼图，环形图，水球图，雷达图，散点图，对数回归散点图，热力图，漏斗图，中国地图，高德地图等
-3.  集成: 支持远程数据源模块，可以自由实时调整各种组件
-4.  框架: 基于 Vue3 框架编写，使用 hooks 写法抽离部分逻辑，使代码结构更加清晰。
-5.  类型: 使用 TypeScript 进行类型约束，减少未知错误发生概率，可以大胆修改逻辑内容。
-6.  性能: 多处性能优化，使用页面懒加载、组件动态注册、数据滚动加载等方式，提升页面渲染速度。
-7.  存储: 拥有本地记忆，部分配置项采用 storage 存储本地，提升使用体验。
-8.  封装: 项目进行了详细的工具类封装如：路由、存储、加/解密、文件处理、主题、NaiveUI 全局方法、组件等。
-
-
-## 演示图
-
-<table>
-    <tr>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/01.png"/></td>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/02.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/03.png"/></td>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/04.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/05.png"/></td>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/06.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/07.png"/></td>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/08.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/09.png"/></td>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/10.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/11.png"/></td>
-        <td><img src="https://gitee.com/dandiankeji/icampus/raw/master/public/images/screenshot/12.png"/></td>
-    </tr>
-</table>
-
-## 商业授权
-    授权形式：商业授权。
-    包含服务：仅为商业授权许可费用，服务费用需要单独购买。
-    如有需要，请联系我们得取商业授权价格。
-
-### 服务费用
-    服务形式：通常是以QQ群组或是微信群组一对一的形式提供技术服务。
-    计费形式：最少服务周期为一年，不接受少于一年的技术服务费用形式。
-    服务内容：技术支持，不会涉及到二次开发部分内容。
-    
-## 技术交流
-
-QQ群： 138595160
+<table data-view="cards"><thead><tr><th></th><th></th><th data-hidden data-card-cover data-type="files"></th><th data-hidden></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td><strong>Getting Started</strong></td><td>Create your first site</td><td></td><td></td><td><a href="getting-started/quickstart.md">quickstart.md</a></td></tr><tr><td><strong>Basics</strong></td><td>Learn the basics of GitBook</td><td></td><td></td><td><a href="broken-reference">Broken link</a></td></tr><tr><td><strong>Publish your docs</strong></td><td>Share your docs online</td><td></td><td></td><td><a href="getting-started/publish-your-docs.md">publish-your-docs.md</a></td></tr></tbody></table>
