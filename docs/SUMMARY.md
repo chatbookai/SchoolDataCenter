@@ -2,7 +2,7 @@
 
 * [Welcome](README.md)
 
-## 教育AI功能
+## 教育AI
 
 * [AI对话](3-schoolai/aichat.md)
 * [AI仪表盘](3-schoolai/aischool.md)
@@ -10,7 +10,7 @@
 * [AI课堂测验](3-schoolai/aiquestion.md)
 * [AI模块配置](3-schoolai/aiconfig.md)
 
-## 数字校园功能
+## 数字校园
 
 * [教务管理](4-campus/jiaowu.md)
 * [学生管理](4-campus/xuesheng.md)
@@ -19,7 +19,7 @@
 
 ## 第三方业务对接
 
-## 校园门户系统
+## 校园门户
 
 ## 微信小程序集成
 

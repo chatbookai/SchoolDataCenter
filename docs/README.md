@@ -51,14 +51,14 @@ layout:
 <tbody>
 
 <tr>
-<td><strong>教育AI功能</strong></td>
+<td><strong>教育AI</strong></td>
 <td>AI生成PPTX, 生成课程测验, 心理健康测评</td><td></td>
 <td></td>
 <td><a href="3-schoolai/aichat.md">aichat.md</a></td>
 </tr>
 
 <tr>
-<td><strong>数字校园功能</strong></td>
+<td><strong>数字校园</strong></td>
 <td>教务,学生,新生,后勤等</td>
 <td></td>
 <td></td>
