@@ -17,7 +17,7 @@ layout:
     visible: true
 ---
 
-## 单点数据中心 智慧校园 教育AI
+## 单点数据中心 教育AI 智慧校园
 
 欢迎你来到单点社区, 这里将会为您提供职校, 中小校的智慧校园产品和教育AI产品.
 
@@ -54,7 +54,7 @@ layout:
 <td><strong>教育AI功能</strong></td>
 <td>AI生成PPTX, 生成课程测验, 心理健康测评</td><td></td>
 <td></td>
-<td><a href="3-schoolai/README.md">README.md</a></td>
+<td><a href="3-schoolai/aichat.md">aichat.md</a></td>
 </tr>
 
 <tr>
