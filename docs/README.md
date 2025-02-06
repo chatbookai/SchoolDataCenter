@@ -18,9 +18,9 @@ layout:
     visible: true
 ---
 
-# Welcome
+# 单点数据中心 智慧校园 教育AI
 
-Welcome to the GitBook Starter Template! Here you'll get an overview of all the amazing features GitBook offers to help you build beautiful, interactive documentation.
+欢迎你来到单点社区, 这里将会为您提供职校, 中小校的智慧校园产品和教育AI产品.
 
 You'll see some of the best parts of GitBook in action — and find help on how you can turn this template into your own.
 
