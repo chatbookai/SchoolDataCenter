@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: mingcute:dashboard-line
 ---
 
 ### AI仪表盘

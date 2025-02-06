@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: bi:filetype-pptx
 ---
 
 ### AI生成PPTX

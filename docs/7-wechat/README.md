@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: hugeicons:wechat
 ---
 
 ### 新生报名缴费

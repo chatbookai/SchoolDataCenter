@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: material-symbols:database-outline
 ---
 
 

@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: mingcute:question-line
 ---
 
 ### AI生成课堂测验

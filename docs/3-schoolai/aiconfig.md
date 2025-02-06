@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: uil:setting
 ---
 
 ### AI模块配置

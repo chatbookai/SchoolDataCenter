@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: hugeicons:students
 ---
 
 

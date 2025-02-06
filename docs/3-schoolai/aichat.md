@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: material-symbols:chat-outline
 ---
 
 ### AI常用功能

@@ -1,4 +1,4 @@
 ---
-icon: network-wired
+icon: token:portal
 ---
 

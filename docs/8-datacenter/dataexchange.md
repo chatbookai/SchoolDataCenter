@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: carbon:ibm-data-product-exchange
 ---
 
 

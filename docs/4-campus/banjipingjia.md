@@ -1,5 +1,5 @@
 ---
-icon: network-wired
+icon: fa6-solid:users
 ---
 
 
