@@ -23,11 +23,11 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./
+      working-directory: ./htdocs
 
     - name: Make html files
       run: npm run build
-      working-directory: ./
+      working-directory: ./htdocs
 
     - name: Install Inno Setup
       run: |
