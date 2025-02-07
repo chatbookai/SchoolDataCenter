@@ -42,7 +42,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MyDataCenter-installer
-        path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolAI-0.1.exe"
+        path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolDataCenter-0.1.exe"
 
     - name: Create or Update Release
       id: create_release
@@ -94,6 +94,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolAI-0.1.exe"
-        asset_name: "MySchoolAI-0.1.exe"
+        asset_path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolDataCenter-0.1.exe"
+        asset_name: "MySchoolDataCenter-0.1.exe"
         asset_content_type: application/octet-stream
