@@ -19,6 +19,9 @@
 
 /xampp/xampp-control.log
 
+/xampp/wget
+/xampp/tmp
+
 # git rm --cached xampp/mysql/data/ib_logfile0
 # git rm --cached xampp/mysql/data/ib_logfile1
 # git rm --cached xampp/mysql/data/mysql_error.log
@@ -27,23 +30,20 @@
 # git rm -r --cached xampp/xampp-control.ini
 # git commit -m "Remove ignored files from index"
 
-/webroot.zip
+/htdocs/webroot.zip
 
-/api/tools
-/api/autotask
-/api/download
-/api/aipptx/cache
-/api/aipptx/output
-/api/download/DandianDataCenter.apk
+/htdocs/api/tools
+/htdocs/api/autotask
+/htdocs/api/download
+/htdocs/api/aipptx/cache
+/htdocs/api/aipptx/output
+/htdocs/api/download/DandianDataCenter.apk
 
-/xampp/wget
-/xampp/tmp
+/htdocs/.next
+/htdocs/node_modules
+/htdocs/webroot
+/htdocs/api/aipptx/json
+/htdocs/api/aipptx/templates
 
-/.next
-/node_modules
-/webroot
-/api/aipptx/json
-/api/aipptx/templates
-
-/go-view/dist
-/go-view/node_modules
+/htdocs/go-view/dist
+/htdocs/go-view/node_modules
