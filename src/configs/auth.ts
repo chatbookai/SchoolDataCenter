@@ -1,10 +1,11 @@
 
-export const AppSchoolConfigMap: any    = {}
-AppSchoolConfigMap['dandian.net']    = ["https://fdzz.dandian.net:8443/api/", 'SchoolAI', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
-AppSchoolConfigMap['fdzyzz.com'] = ["https://fdzz.dandian.net:8443/api/", '福鼎职中', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
-AppSchoolConfigMap['fjsmnx.com'] = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
+export const AppSchoolConfigMap: any  = {}
+AppSchoolConfigMap['localhost']       = ["http://localhost/api/", 'SchoolAI', "auth/menus.php", "http://localhost/api/"]
+AppSchoolConfigMap['dandian.net']     = ["https://fdzz.dandian.net:8443/api/", 'SchoolAI', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
+AppSchoolConfigMap['fdzyzz.com']      = ["https://fdzz.dandian.net:8443/api/", '福鼎职中', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
+AppSchoolConfigMap['fjsmnx.com']      = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
 
-const AppMarkId = "dandian.net"; //需要针对每个学校的情况进行修改
+const AppMarkId = "localhost"; //需要针对每个学校的情况进行修改
 
 const APP_URL = AppSchoolConfigMap[AppMarkId][0]
 const AppName = AppSchoolConfigMap[AppMarkId][1]
@@ -28,8 +29,9 @@ export const authConfig = {
 }
 
 export const defaultConfig = {
-  Github: 'https://github.com/chatbookai/SchoolDataCenterMobile',
-  AppVersion: '20241125',
+  Github: 'https://github.com/SmartSchoolAI/SchoolDataCenter',
+  Docs: 'https://docs.dandian.net',
+  AppVersion: '20250206',
   AppVersionType: '试用版本',
   defaultLanguage: 'zh',
   storageTokenKeyName: 'accessToken',
