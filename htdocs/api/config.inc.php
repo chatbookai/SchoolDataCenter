@@ -20,9 +20,9 @@ $GLOBAL_LANGUAGE = "zhCN";
 
 //File Storage Method And Location
 $FileStorageMethod      = "disk";
-$FileStorageLocation    = "D:/MYEDU/Attach";
-$ADODB_CACHE_DIR        = "D:/MYEDU/Attach/Cache";
-$FileCacheDir           = "D:/MYEDU/Attach/FileCache";
+$FileStorageLocation    = "D:/SchoolDataCenter/xampp/Attach";
+$ADODB_CACHE_DIR        = "D:/SchoolDataCenter/xampp/Attach/Cache";
+$FileCacheDir           = "D:/SchoolDataCenter/xampp/Attach/FileCache";
 
 //Setting JWT
 $NEXT_PUBLIC_JWT_EXPIRATION = 300;
@@ -48,10 +48,6 @@ $EncryptAESIV = random_bytes(16);
 global $SystemMark;
 $SystemMark = "Individual";
 $DB_TYPE    = 'mysqli';
-
-
-// #################################################################################
-$APIKEY         = "sk-6deec20f820f42c39ed57732a23764a7";
 
 // #################################################################################
 $redis = new Redis();

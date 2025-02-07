@@ -204,7 +204,6 @@ if((int)$questionCounts['single'] >= 0 && $课程名称 != "" && $grade != "" &&
 }
 
 function DeepSeekAiChat($系统模板, $用户输入, $历史消息, $temperature, $AppName, $备注)     {
-  global $APIKEY;
   $curl 		  = curl_init();
   $messages 	= [];
   $messages[] = ['content'=>$系统模板, 'role'=>'system'];
