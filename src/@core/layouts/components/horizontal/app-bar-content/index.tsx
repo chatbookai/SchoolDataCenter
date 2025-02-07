@@ -104,8 +104,7 @@ const AppBarContent = (props: Props) => {
             sx={{
               ml: 3,
               fontWeight: 600,
-              lineHeight: 'normal',
-              textTransform: 'uppercase'
+              lineHeight: 'normal'
             }}
           >
             {themeConfig.templateName}

@@ -79,7 +79,6 @@ export const EditorWrapper = styled('div')(({ theme }) => ({
         lineHeight: 1.71,
         borderRadius: '5px',
         letterSpacing: '0.3px',
-        textTransform: 'uppercase',
         fontWeight: theme.typography.fontWeightMedium,
         '&:first-of-type:not([disabled])': {
           boxShadow: theme.shadows[3],

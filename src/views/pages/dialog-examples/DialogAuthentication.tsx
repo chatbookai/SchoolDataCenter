@@ -148,7 +148,6 @@ const DialogAuthentication = () => {
                       variant='h6'
                       sx={{
                         fontWeight: 600,
-                        textTransform: 'uppercase',
                         ...(authType === 'sms' ? { color: 'primary.main' } : {})
                       }}
                     >

@@ -109,7 +109,7 @@ const Customizer = () => {
             borderBottom: (theme: any) => `1px solid ${theme.palette.divider}`
           }}
         >
-          <Typography variant='h6' sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
+          <Typography variant='h6' sx={{ fontWeight: 600 }}>
           主题自定义
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>自定义设置主题和界面</Typography>
@@ -131,7 +131,7 @@ const Customizer = () => {
             <Typography
               component='p'
               variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
+              sx={{ mb: 4, color: 'text.disabled' }}
             >
               主题化
             </Typography>
@@ -237,7 +237,7 @@ const Customizer = () => {
             <Typography
               component='p'
               variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
+              sx={{ mb: 4, color: 'text.disabled' }}
             >
               布局
             </Typography>
@@ -306,7 +306,7 @@ const Customizer = () => {
             <Typography
               component='p'
               variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
+              sx={{ mb: 4, color: 'text.disabled' }}
             >
               菜单
             </Typography>

@@ -36,7 +36,6 @@ const TypographyHeaderText = styled(Typography)<TypographyProps>(({ theme }) => 
   fontSize: '0.75rem',
   lineHeight: 'normal',
   letterSpacing: '0.21px',
-  textTransform: 'uppercase',
   fontWeight: theme.typography.fontWeightMedium
 }))
 
@@ -96,7 +95,6 @@ const VerticalNavSectionTitle = (props: Props) => {
               ? { width: 22 }
               : {
                   width: '100%',
-                  textTransform: 'uppercase',
                   '&:before, &:after': { top: 7, transform: 'none' },
                   '& .MuiDivider-wrapper': { px: 2.5, fontSize: '0.75rem', letterSpacing: '0.21px' }
                 })

@@ -36,7 +36,7 @@ jobs:
 
     - name: Compile Inno Setup Script
       run: |
-        ISCC.exe "${env:GITHUB_WORKSPACE}\xampp\innosetup\install.iss"
+        ISCC.exe "${env:GITHUB_WORKSPACE}\xampp\innosetup\单点数据中心-职校版.iss"
 
     - name: Upload compiled EXE file
       uses: actions/upload-artifact@v4

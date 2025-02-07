@@ -389,7 +389,7 @@ const ModelMiddleSchoolSoulAssessment = ({ authConfig, dataOriginal, modelOrigin
                     <Box sx={{ mb: 6, display: 'flex', alignItems: 'center' }}>
                       <Typography
                         variant='h6'
-                        sx={{ fontWeight: 600, lineHeight: 'normal', textTransform: 'uppercase' }}
+                        sx={{ fontWeight: 600, lineHeight: 'normal' }}
                       >
                         {data['单位名称']}
                       </Typography>
