@@ -58,19 +58,19 @@ Source: "{#MyAppSourceDir}\xampp\install\*"; DestDir: "{app}\xampp\install"; Fla
 Source: "{#MyAppSourceDir}\xampp\mysql\*"; DestDir: "{app}\xampp\mysql"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\php\*"; DestDir: "{app}\xampp\php"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\tmp\*"; DestDir: "{app}\xampp\tmp"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#MyAppSourceDir}\xampp\InitialSetup.bat"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#MyAppSourceDir}\xampp\xampp-control.exe"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#MyAppSourceDir}\xampp\xampp-control.ini"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#MyAppSourceDir}\xampp\readme.txt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppSourceDir}\xampp\InitialSetup.bat"; DestDir: "{app}\xampp"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppSourceDir}\xampp\xampp-control.exe"; DestDir: "{app}\xampp"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppSourceDir}\xampp\xampp-control.ini"; DestDir: "{app}\xampp"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppSourceDir}\xampp\readme.txt"; DestDir: "{app}\xampp"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:80"
 
 [Run]
-Filename: "{app}\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: shellexec nowait postinstall skipifsilent
-Filename: "{app}\InitialSetup.bat"; Description: "{cm:LaunchProgram,InitialSetup}"; Flags: waituntilterminated postinstall skipifsilent
-Filename: "{app}\xampp-control.exe"; Description: "{cm:LaunchProgram,xampp-control}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\xampp\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: shellexec nowait postinstall skipifsilent
+Filename: "{app}\xampp\InitialSetup.bat"; Description: "{cm:LaunchProgram,InitialSetup}"; Flags: waituntilterminated postinstall skipifsilent
+Filename: "{app}\xampp\xampp-control.exe"; Description: "{cm:LaunchProgram,xampp-control}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 procedure InitializeWizard();
