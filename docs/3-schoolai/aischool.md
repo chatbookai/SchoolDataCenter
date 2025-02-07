@@ -1,5 +1,5 @@
 ---
-icon: mingcute:dashboard-line
+icon: gauge-high
 ---
 
 ### AI仪表盘

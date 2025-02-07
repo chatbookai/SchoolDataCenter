@@ -1,5 +1,5 @@
 ---
-icon: icon-park-solid:data-four
+icon: text-width
 ---
 
 ### 概念说明

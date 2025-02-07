@@ -1,5 +1,5 @@
 ---
-icon: mingcute:code-line
+icon: code
 ---
 
 ### 低代码平台

@@ -1,5 +1,5 @@
 ---
-icon: material-symbols:database-outline
+icon: bars
 ---
 
 

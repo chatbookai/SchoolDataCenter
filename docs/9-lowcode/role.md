@@ -1,4 +1,4 @@
 ---
-icon: oui:app-users-roles
+icon: person-circle-plus
 ---
 

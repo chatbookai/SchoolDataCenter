@@ -1,5 +1,5 @@
 ---
-icon: ph:users-duotone
+icon: circle-user
 ---
 
 

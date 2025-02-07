@@ -1,4 +1,4 @@
 ---
-icon: carbon:integration
+icon: puzzle-piece
 ---
 

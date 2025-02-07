@@ -1,5 +1,5 @@
 ---
-icon: carbon:ibm-data-product-exchange
+icon: rotate
 ---
 
 

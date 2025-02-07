@@ -1,5 +1,5 @@
 ---
-icon: material-symbols:chat-outline
+icon: message
 ---
 
 ### AI常用功能

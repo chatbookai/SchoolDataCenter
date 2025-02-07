@@ -1,5 +1,5 @@
 ---
-icon: material-symbols:menu-rounded
+icon: bars
 ---
 
 ### 概念说明

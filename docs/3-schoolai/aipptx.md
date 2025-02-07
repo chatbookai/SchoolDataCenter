@@ -1,5 +1,5 @@
 ---
-icon: bi:filetype-pptx
+icon: file-powerpoint
 ---
 
 ### AI生成PPTX

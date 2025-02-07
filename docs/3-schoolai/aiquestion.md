@@ -1,5 +1,5 @@
 ---
-icon: mingcute:question-line
+icon: circle-question
 ---
 
 ### AI生成课堂测验

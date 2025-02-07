@@ -1,4 +1,4 @@
 ---
-icon: token:portal
+icon: building-columns
 ---
 

@@ -1,5 +1,5 @@
 ---
-icon: uil:setting
+icon: gear
 ---
 
 ### AI模块配置

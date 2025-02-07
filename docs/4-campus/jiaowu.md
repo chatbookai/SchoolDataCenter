@@ -1,5 +1,5 @@
 ---
-icon: hugeicons:students
+icon: building-columns
 ---
 
 

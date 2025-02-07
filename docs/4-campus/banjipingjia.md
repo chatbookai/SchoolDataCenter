@@ -1,5 +1,5 @@
 ---
-icon: fa6-solid:users
+icon: calendar-check
 ---
 
 

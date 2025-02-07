@@ -1,5 +1,5 @@
 ---
-icon: ph:users-four
+icon: users
 ---
 
 
