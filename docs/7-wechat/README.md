@@ -1,5 +1,5 @@
 ---
-icon: hugeicons:wechat
+icon: weixin
 ---
 
 ### 新生报名缴费

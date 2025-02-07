@@ -1,5 +1,5 @@
 ---
-icon: icon-park-outline:install
+icon: instalod
 ---
 
 随后发布内容

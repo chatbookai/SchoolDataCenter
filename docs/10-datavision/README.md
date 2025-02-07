@@ -1,5 +1,5 @@
 ---
-icon: icon-park-twotone:data-user
+icon: network-wired
 ---
 
 ### 数据可视化
