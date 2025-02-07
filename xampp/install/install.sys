@@ -1,7 +1,6 @@
-DIR = D:\SchoolDataCenter
+DIR = D:\SchoolDataCenter\xampp
 xampp = 8.2.4
-
-server = 1.8.0
+server = 0
 perl = 0
 python = 0
 utils = 0
