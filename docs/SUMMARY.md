@@ -53,15 +53,3 @@
 * [老师](2-howtouse/teacher.md)
 * [学生](2-howtouse/student.md)
 * [管理员](2-howtouse/admin.md)
-
-## 内容演示
-
-* [Quickstart](examples/getting-started/quickstart.md)
-* [Publish your docs](examples/getting-started/publish-your-docs.md)
-
-* [Editor](examples/basics/editor.md)
-* [Markdown](examples/basics/markdown.md)
-* [Images & media](examples/basics/images-and-media.md)
-* [Interactive blocks](examples/basics/interactive-blocks.md)
-* [OpenAPI](examples/basics/openapi.md)
-* [Integrations](examples/basics/integrations.md)
