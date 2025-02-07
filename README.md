@@ -22,7 +22,7 @@
 
 ## 帮助文档
 
-[帮助文档](https://smart-school-ai.gitbook.io/schoolai)
+[帮助文档](https://docs.dandian.net/)
 
 ## 主要功能
 
