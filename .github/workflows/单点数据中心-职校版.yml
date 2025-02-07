@@ -1,4 +1,4 @@
-name: Build and Package with Inno Setup
+name: 单点数据中心-职校版
 
 on:
   push:

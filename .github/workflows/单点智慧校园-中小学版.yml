@@ -1,4 +1,4 @@
-name: Build and Package with Inno Setup
+name: 单点智慧校园-中小学版
 
 on:
   push:
