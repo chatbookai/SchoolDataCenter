@@ -51,7 +51,6 @@ Source: "{#MyAppSourceDir}\htdocs\api\*"; DestDir: "{app}\htdocs\api"; Flags: ig
 Source: "{#MyAppSourceDir}\htdocs\public\*"; DestDir: "{app}\htdocs\public"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\htdocs\styles\*"; DestDir: "{app}\htdocs\styles"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\htdocs\webroot\*"; DestDir: "{app}\htdocs\webroot"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#MyAppSourceDir}\htdocs\goview\*"; DestDir: "{app}\htdocs\goview"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\apache\*"; DestDir: "{app}\xampp\apache"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\Attach\*"; DestDir: "{app}\xampp\Attach"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\install\*"; DestDir: "{app}\xampp\install"; Flags: ignoreversion recursesubdirs createallsubdirs
