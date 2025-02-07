@@ -27,8 +27,6 @@
 # git rm -r --cached xampp/xampp-control.ini
 # git commit -m "Remove ignored files from index"
 
-/xampp/xampp-control.ini
-
 /webroot.zip
 
 /api/tools
