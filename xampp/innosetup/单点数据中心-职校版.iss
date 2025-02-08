@@ -41,8 +41,6 @@ WizardStyle=modern
 DirExistsWarning=yes
 AllowUNCPath=yes
 DisableDirPage=no
-LanguageDetectionMethod=none
-DefaultLanguage=chinesesimplified
 ; SignTool=C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\arm\signtool.exe sign /f yourdomain.pfx /p yourpassword /t http://timestamp.digicert.com
 
 [Languages]
