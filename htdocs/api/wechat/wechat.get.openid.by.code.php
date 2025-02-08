@@ -3,8 +3,8 @@
 * 基础架构: 单点低代码开发平台
 * 版权所有: 郑州单点科技软件有限公司
 * Email: moodle360@qq.com
-* Copyright (c) 2023
-* License: GPL V3 or Commercial license
+* Copyright (c) 2007-2025
+* License: 商业授权
 */
 header("Content-Type: application/json");
 require_once('../cors.php');
@@ -40,7 +40,7 @@ function 得到微信小程序的OPENID($LOGIN_SCHOOL_ID,$SYSTEM_APPSTORE_ID,$co
 	$component_appid 			= $小程序信息['component_appid'];
 	$component_access_token 	= $小程序信息['component_access_token'];
 	$部署类型 					 = $小程序信息['部署类型'];
-	
+
 	if($SYSTEM_IS_CLOUD==0)				{
 		//私有部署;
 		//单个小程序 下面的OPEN获取
@@ -57,18 +57,18 @@ function 得到微信小程序的OPENID($LOGIN_SCHOOL_ID,$SYSTEM_APPSTORE_ID,$co
 		$apiData                    = json_encode($apiData);
 		//print $apiData;
 	}
-		
+
 	//print $URL;
 	//print_R($小程序信息);print_R($apiData);exit;//直接输出给微信小程序使用
 	$ARRAY	= json_decode($apiData);;
-	
+
 	if($ARRAY->openid!="")				{
 		//正常获取到OPENID,连同数据信息一起进行判断;
 		$userinfo				= str_replace('\"','"',$_POST['userinfo']);;	//print_R($_POST);print_R($userinfo);
 		$userinfo				= json_decode($userinfo,true);					//print "\n<BR>";print_R($userinfo);exit;
 		if(!is_array($userinfo) || $userinfo=="")					{
 			$userinfo 	= base64_decode($_POST['userinfo']);
-			$userinfo	= json_decode($userinfo,true);	
+			$userinfo	= json_decode($userinfo,true);
 		}
 		//print_R($userinfo);//exit;
 
@@ -88,7 +88,7 @@ function 得到微信小程序的OPENID($LOGIN_SCHOOL_ID,$SYSTEM_APPSTORE_ID,$co
 		$当前设备信息			= json_decode($currentDeviceInfo,true);
 		if(!is_array($当前设备信息) || $当前设备信息=="")					{
 			$当前设备信息 	= base64_decode($_POST['currentDeviceInfo']);
-			$当前设备信息	= json_decode($当前设备信息,true);	
+			$当前设备信息	= json_decode($当前设备信息,true);
 		}
 
 		$Element['手机型号']	= $当前设备信息['model'];
@@ -100,7 +100,7 @@ function 得到微信小程序的OPENID($LOGIN_SCHOOL_ID,$SYSTEM_APPSTORE_ID,$co
 		$Element['客户端平台']	= $当前设备信息['platform'];
 		$Element['操作系统版本']			= $当前设备信息['system'];
 		$Element['微信客户端基础库版本']	= $当前设备信息['versSDKVersionion'];
-		
+
 		//$Element['企业微信用户名']			= $_POST['dandian_system_qiyeweixin_userid'];
 		//$Element['企业微信用户类型']		    = $_POST['dandian_system_qiyeweixin_usertype'];
 		//$Element['企业微信关联OA用户']		= "";
@@ -130,21 +130,21 @@ function 得到微信小程序的OPENID($LOGIN_SCHOOL_ID,$SYSTEM_APPSTORE_ID,$co
 			//$ElementX['用户名']		= $用户名;
 			//$ElementX['姓名']		= $姓名;
 			$ElementX['OPENID']		= $ARRAY->openid;
-			
+
 			$ElementX['积分分值']	= 10;
 			$ElementX['积分类型']	= "好友推荐";
 			$ElementX['积分说明']	= "每推荐一个好友,会获取10个积分,好友不能重复.";
 			//$ElementX['昵称']		= iconv("gbk","utf-8",$ElementX['昵称']);
-			//$ElementX['昵称']		= str_replace("'","’",$ElementX['昵称']);		
-			
+			//$ElementX['昵称']		= str_replace("'","’",$ElementX['昵称']);
+
 			$ElementX['好友昵称']	= iconv("gbk","utf-8",$dandian_user_sharesource_nickname);
 			$ElementX['好友昵称']	= str_replace("'","’",$ElementX['好友昵称']);
-			
+
 			$ElementX['好友OPENID']	= $dandian_user_sharesource_openid;
 			$ElementX['创建时间']	= date("Y-m-d H:i:s");
 			//UserArrayToInsertAndUpdateTable("data_icampus_sharetofriends",$ElementX,"OPENID,好友OPENID");
 		}
-	
+
 	}
 }
 
