@@ -8,7 +8,7 @@ In addition to the default Markdown you can write, GitBook has a number of out-o
 
 <figure><img src="https://gitbookio.github.io/onboarding-template-images/interactive-hero.png" alt=""><figcaption></figcaption></figure>
 
-### Tabs
+#### Tabs
 
 {% tabs %}
 {% tab title="First tab" %}
@@ -26,7 +26,7 @@ const handleFetchEvent = async (request, context) => {
 {% endtab %}
 {% endtabs %}
 
-### Expandable sections
+#### Expandable sections
 
 <details>
 
@@ -36,11 +36,11 @@ Expandable blocks are helpful in condensing what could otherwise be a lengthy pa
 
 </details>
 
-### Drawings
+#### Drawings
 
 <img alt="" class="gitbook-drawing">
 
-### Embedded content
+#### Embedded content
 
 {% embed url="https://www.youtube.com/watch?v=YILlrDYzAm4" %}
 
