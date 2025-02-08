@@ -10,7 +10,7 @@ if($optionsMenuItem=="")  {
     $optionsMenuItem = "当前学期";
 }
 
-$学期 = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
+$学期 = getCurrentXueQi();
 
 $学号 = $GLOBAL_USER->学号;
 $班级 = $GLOBAL_USER->班级;

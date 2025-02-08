@@ -2241,10 +2241,7 @@ foreach($groupField as $FieldName) {
         $selected = ForSqlInjection($_POST[$FieldName]);
     }
     else if(strpos($FieldName, "学期") !== false) {
-        $selected = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
-        if($selected=='') {
-            $selected = returntablefield("data_xueqi","当前学期","1","学期名称")['学期名称'];
-        }
+        $selected = getCurrentXueQi();
         global $AddSql;
         if(in_array("当前学期", $MetaColumnNames) && !isset($_GET['当前学期']) ) {
             $AddSql .= " and 当前学期='$selected'";
