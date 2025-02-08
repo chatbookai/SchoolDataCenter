@@ -39,6 +39,9 @@
 * [菜单管理](9-lowcode/menu.md)
 * [权限管理](9-lowcode/role.md)
 
+## 系统安全
+
+* [通信加密](12-security/README.md)
 
 ## 如何安装本系统
 
