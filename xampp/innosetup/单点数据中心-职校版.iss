@@ -41,10 +41,12 @@ WizardStyle=modern
 DirExistsWarning=yes
 AllowUNCPath=yes
 DisableDirPage=no
+LanguageDetectionMethod=none
+DefaultLanguage=chinesesimplified
 ; SignTool=C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\arm\signtool.exe sign /f yourdomain.pfx /p yourpassword /t http://timestamp.digicert.com
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Files]
 Source: "{#MyAppSourceDir}\htdocs\api\*"; DestDir: "{app}\htdocs\api"; Flags: ignoreversion recursesubdirs createallsubdirs
