@@ -4188,58 +4188,61 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <TableContainer>
                                                                 <Table size='small'>
-                                                                <TableHead>
-                                                                    <TableRow>
-                                                                    <TableCell sx={{ pl: '0 !important' }}>
-                                                                        <Box
-                                                                        sx={{
-                                                                            display: 'flex',
-                                                                            fontSize: '0.875rem',
-                                                                            whiteSpace: 'nowrap',
-                                                                            alignItems: 'center',
-                                                                            textTransform: 'capitalize',
-                                                                            '& svg': { ml: 1, cursor: 'pointer' }
-                                                                        }}
-                                                                        >
-                                                                        </Box>
-                                                                    </TableCell>
-                                                                    </TableRow>
-                                                                </TableHead>
-                                                                <TableBody>
-                                                                <TableRow key={"TableRow_" + FieldArray_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-
-                                                                {Object.keys(FieldArray.MenuTwoArray).map((MenuOneName: string, MenuOneName_index: number) => {
+                                                                  <TableHead>
+                                                                      <TableRow>
+                                                                        <TableCell sx={{ px: '0 !important', mx: 0, py: 0, my: 0 }}>
+                                                                            <Box
+                                                                            sx={{
+                                                                              display: 'flex',
+                                                                              fontSize: '0.875rem',
+                                                                              whiteSpace: 'nowrap',
+                                                                              alignItems: 'center',
+                                                                              textTransform: 'capitalize',
+                                                                              '& svg': { ml: 1, cursor: 'pointer' }
+                                                                            }}
+                                                                            >角色权限
+                                                                            </Box>
+                                                                        </TableCell>
+                                                                      </TableRow>
+                                                                  </TableHead>
+                                                                  <TableBody>
+                                                                    <TableRow key={"TableRow_" + FieldArray_index} sx={{ '& .MuiTableCell-root:first-of-type': { px: '0 !important', mx: 0 } }}>
+                                                                    {Object.keys(FieldArray.MenuTwoArray).map((MenuOneName: string, MenuOneName_index: number) => {
                                                                     const MenuTwoArray = FieldArray.MenuTwoArray[MenuOneName]
 
                                                                     return (
                                                                         <TableCell
                                                                             key={MenuOneName_index}
                                                                             sx={{
-                                                                            verticalAlign: "top",
-                                                                            fontWeight: 600,
-                                                                            whiteSpace: 'nowrap',
-                                                                            color: (theme: any) => `${theme.palette.text.primary} !important`
+                                                                              verticalAlign: "top",
+                                                                              fontWeight: 600,
+                                                                              whiteSpace: 'nowrap',
+                                                                              color: (theme: any) => `${theme.palette.text.primary} !important`,
+                                                                              py: 0,
+                                                                              my: 0,
+                                                                              px: '0.2',
                                                                             }}
                                                                         >
                                                                             <Table size='small'>
                                                                                 <TableHead>
-                                                                                    <TableRow key={"MenuOneName_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                                                                                        <TableCell colSpan={3}>
+                                                                                    <TableRow key={"MenuOneName_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { px: '0 !important', mx: 0 } }}>
+                                                                                        <TableCell colSpan={3} sx={{py: 0, my: 0}}>
                                                                                             {MenuOneName}
                                                                                         </TableCell>
                                                                                     </TableRow>
-                                                                                    <TableRow key={"TableCell_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                                                                                    <TableCell colSpan={3}>
+                                                                                    <TableRow key={"TableCell_" + MenuOneName_index} sx={{ '& .MuiTableCell-root:first-of-type': { px: '0 !important', mx: 0 } }}>
+                                                                                    <TableCell colSpan={3} sx={{py: 0.2, my: 0.2}}>
                                                                                         <FormControlLabel
                                                                                         label={FieldArray.SelectAll}
                                                                                         sx={{ '& .MuiTypography-root': { textTransform: 'capitalize' } }}
                                                                                         control={
                                                                                             <Checkbox
-                                                                                            size='small'
-                                                                                            value={MenuOneName}
-                                                                                            onChange={handleSelectAllCheckbox}
-                                                                                            indeterminate={isIndeterminateCheckbox[MenuOneName]}
-                                                                                            checked={selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].length === menuTwoCount[MenuOneName] }
+                                                                                              size='small'
+                                                                                              value={MenuOneName}
+                                                                                              onChange={handleSelectAllCheckbox}
+                                                                                              indeterminate={isIndeterminateCheckbox[MenuOneName]}
+                                                                                              checked={selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].length === menuTwoCount[MenuOneName] }
+                                                                                              sx={{py: 0, my: 0}}
                                                                                             />
                                                                                         }
                                                                                         />
@@ -4256,16 +4259,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                     const checkboxid = MenuThreeRecord['id']
 
                                                                                                     return (
-                                                                                                    <TableRow key={`${MenuThreeRecord['id']}_${MenuThreeRecord_index}`} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                                                                                                        <TableCell>
+                                                                                                    <TableRow key={`${MenuThreeRecord['id']}_${MenuThreeRecord_index}`} sx={{ '& .MuiTableCell-root:first-of-type': { px: '0 !important', mx: 0 } }}>
+                                                                                                        <TableCell sx={{py: 0.2, my: 0.2}}>
                                                                                                             <FormControlLabel
                                                                                                             label={MenuThreeRecord['MenuTwoName']}
                                                                                                             control={
                                                                                                                 <Checkbox
-                                                                                                                size='small'
-                                                                                                                id={checkboxid}
-                                                                                                                onChange={() => RoleMenuElementPermission(checkboxid, MenuOneName)}
-                                                                                                                checked={selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].includes(checkboxid) ? true : false}
+                                                                                                                  size='small'
+                                                                                                                  id={checkboxid}
+                                                                                                                  onChange={() => RoleMenuElementPermission(checkboxid, MenuOneName)}
+                                                                                                                  checked={selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].includes(checkboxid) ? true : false}
+                                                                                                                  sx={{py: 0, my: 0}}
                                                                                                                 />
                                                                                                             }
                                                                                                             />
@@ -4276,14 +4280,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                                                                                                 {MenuThreeArray.length>1 ?
                                                                                                     <Fragment>
-                                                                                                        <TableRow key={`${MenuTwoName}_${MenuTwoName_index}_TableRow`} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                                                                                                            <TableCell>
+                                                                                                        <TableRow key={`${MenuTwoName}_${MenuTwoName_index}_TableRow`} sx={{ '& .MuiTableCell-root:first-of-type': { px: '0 !important', mx: 0 } }}>
+                                                                                                            <TableCell sx={{py: 0, my: 0}}>
                                                                                                                 <FormControlLabel
-                                                                                                                style={{paddingLeft:"30px"}}
-                                                                                                                label={MenuTwoName}
-                                                                                                                control={
-                                                                                                                    <Fragment></Fragment>
-                                                                                                                }
+                                                                                                                  style={{paddingLeft:"12px"}}
+                                                                                                                  label={MenuTwoName}
+                                                                                                                  control={
+                                                                                                                      <Fragment></Fragment>
+                                                                                                                  }
                                                                                                                 />
                                                                                                             </TableCell>
                                                                                                         </TableRow>
@@ -4295,17 +4299,18 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                     const checkboxid = MenuThreeRecord['id']
 
                                                                                                     return (
-                                                                                                    <TableRow key={`${MenuThreeRecord['id']}_${MenuThreeRecord_index}`} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                                                                                                        <TableCell>
+                                                                                                    <TableRow key={`${MenuThreeRecord['id']}_${MenuThreeRecord_index}`} sx={{ '& .MuiTableCell-root:first-of-type': { px: '0 !important', mx: 0 } }}>
+                                                                                                        <TableCell sx={{py: 0.2, my: 0.2}}>
                                                                                                             <FormControlLabel
                                                                                                             style={{paddingLeft:"20px"}}
                                                                                                             label={MenuThreeRecord['MenuThreeName']}
                                                                                                             control={
                                                                                                                 <Checkbox
-                                                                                                                size='small'
-                                                                                                                id={checkboxid}
-                                                                                                                onChange={() => RoleMenuElementPermission(checkboxid, MenuOneName)}
-                                                                                                                checked={selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].includes(checkboxid) ? true : false}
+                                                                                                                  size='small'
+                                                                                                                  id={checkboxid}
+                                                                                                                  onChange={() => RoleMenuElementPermission(checkboxid, MenuOneName)}
+                                                                                                                  checked={selectedCheckbox[MenuOneName] && selectedCheckbox[MenuOneName].includes(checkboxid) ? true : false}
+                                                                                                                  sx={{py: 0, my: 0}}
                                                                                                                 />
                                                                                                             }
                                                                                                             />
@@ -4323,7 +4328,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                                                                     })}
                                                                     </TableRow>
-                                                                </TableBody>
+                                                                  </TableBody>
                                                                 </Table>
                                                             </TableContainer>
                                                             </Grid>
