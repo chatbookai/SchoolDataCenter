@@ -4,7 +4,7 @@
 * 版权所有: 郑州单点科技软件有限公司
 * Email: moodle360@qq.com
 * Copyright (c) 2024
-* License: GPL V3 or Commercial license
+* License: 商业授权
 * Version: 0.0.1
 */
 

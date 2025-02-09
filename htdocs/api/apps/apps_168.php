@@ -4,7 +4,7 @@
 * 版权所有: 郑州单点科技软件有限公司
 * Email: moodle360@qq.com
 * Copyright (c) 2007-2025
-* License: 商业授权
+* License: GPL V3 or Commercial license
 */
 header("Content-Type: application/json");
 require_once("../cors.php");

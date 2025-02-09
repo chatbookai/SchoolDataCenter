@@ -1288,7 +1288,7 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
 * 版权所有: 郑州单点科技软件有限公司
 * Email: moodle360@qq.com
 * Copyright (c) 2007-2025
-* License: GPL V3 or Commercial license
+* License: 商业授权
 */
 header("Content-Type: application/json");
 require_once("../cors.php");
