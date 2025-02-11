@@ -101,6 +101,7 @@ export const getCellsInColumn = (columnIndex: number | number[]) => (selection: 
       [] as { pos: number; start: number; node: Node | null | undefined }[],
     )
   }
+
   return null
 }
 
@@ -125,6 +126,7 @@ export const getCellsInRow = (rowIndex: number | number[]) => (selection: Select
             cells.map(nodePos => {
               const node = table.node.nodeAt(nodePos)
               const pos = nodePos + table.start
+
               return { pos, start: pos + 1, node }
             }),
           )
@@ -224,6 +226,7 @@ const select = (type: 'row' | 'column') => (index: number) => (tr: Transaction) 
       return tr.setSelection(new CellSelection($anchor, $head))
     }
   }
+
   return tr
 }
 

@@ -31,7 +31,7 @@ export const BlockEditor = ({
   const menuContainerRef = useRef(null)
 
   const leftSidebar = useSidebar()
-  const { editor, users, collabState } = useBlockEditor({
+  const { editor, users } = useBlockEditor({
     aiToken,
     ydoc,
     provider,

@@ -11,12 +11,14 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
     editor,
     selector: ctx => {
       const attrs = ctx.editor.getAttributes('link')
+
       return { link: attrs.href, target: attrs.target }
     },
   })
 
   const shouldShow = useCallback(() => {
     const isActive = editor.isActive('link')
+
     return isActive
   }, [editor])
 
@@ -40,6 +42,7 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
   const onUnsetLink = useCallback(() => {
     editor.chain().focus().extendMarkRange('link').unsetLink().run()
     setShowEdit(false)
+
     return null
   }, [editor])
 
