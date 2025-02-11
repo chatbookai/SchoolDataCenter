@@ -71,6 +71,7 @@ export const useTextmenuCommands = (editor: Editor) => {
       if (!font || font.length === 0) {
         return editor.chain().focus().unsetFontFamily().run()
       }
+
       return editor.chain().focus().setFontFamily(font).run()
     },
     [editor],
@@ -81,6 +82,7 @@ export const useTextmenuCommands = (editor: Editor) => {
       if (!fontSize || fontSize.length === 0) {
         return editor.chain().focus().unsetFontSize().run()
       }
+
       return editor.chain().focus().setFontSize(fontSize).run()
     },
     [editor],

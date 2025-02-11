@@ -1,5 +1,5 @@
 import { Editor, useEditorState } from '@tiptap/react'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { ShouldShowProps } from '../../types'
 import { isCustomNodeSelected, isTextSelected } from 'src/tiptap/lib/utils'
 

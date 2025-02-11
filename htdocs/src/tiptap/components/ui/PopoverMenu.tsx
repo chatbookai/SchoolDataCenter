@@ -42,7 +42,6 @@ export const Menu = ({
         </Trigger>
       )}
       {withPortal ? (
-        // @ts-ignore
         <Popover.Portal className="z-9999">
           <Popover.Content asChild sideOffset={8}>
             <Surface className="min-w-[15rem] p-2 flex flex-col gap-0.5 max-h-80 overflow-auto z-[9999]">
