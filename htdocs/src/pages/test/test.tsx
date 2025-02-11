@@ -2,7 +2,7 @@
 //import 'iframe-resizer/js/iframeResizer.contentWindow'
 
 import { useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, ReactNode } from 'react'
 
 import { BlockEditor } from 'src/tiptap/components/BlockEditor'
 import { createPortal } from 'react-dom'
@@ -10,6 +10,9 @@ import { Surface } from 'src/tiptap/components/ui/Surface'
 import { Toolbar } from 'src/tiptap/components/ui/Toolbar'
 import { Icon } from 'src/tiptap/components/ui/Icon'
 import { useCollaboration } from 'src/tiptap/hooks/useCollaboration'
+
+// ** Layout Import
+import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 const useDarkmode = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(
@@ -40,7 +43,7 @@ const useDarkmode = () => {
   }
 }
 
-export default function Document() {
+const Document = () => {
   const { isDarkMode, darkMode, lightMode } = useDarkmode()
   const searchParams = useSearchParams()
   const providerState = useCollaboration({
@@ -70,3 +73,8 @@ export default function Document() {
     </>
   )
 }
+
+
+Document.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+
+export default Document
