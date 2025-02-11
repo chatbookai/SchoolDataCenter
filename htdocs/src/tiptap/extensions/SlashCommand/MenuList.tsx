@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Command, MenuListProps } from './types'
 import { CommandButton } from './CommandButton'
-import { Surface } from '@/components/ui/Surface'
-import { DropdownButton } from '@/components/ui/Dropdown'
-import { Icon } from '@/components/ui/Icon'
+import { Surface } from 'src/tiptap/components/ui/Surface'
+import { DropdownButton } from 'src/tiptap/components/ui/Dropdown'
+import { Icon } from 'src/tiptap/components/ui/Icon'
 
 export const MenuList = React.forwardRef((props: MenuListProps, ref) => {
   const scrollContainer = useRef<HTMLDivElement>(null)

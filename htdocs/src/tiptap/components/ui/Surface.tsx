@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from 'src/tiptap/lib/utils'
 import { HTMLProps, forwardRef } from 'react'
 
 export type SurfaceProps = HTMLProps<HTMLDivElement> & {

@@ -3,7 +3,7 @@
 import { Editor as CoreEditor } from '@tiptap/core'
 import { memo } from 'react'
 import { TableOfContentsStorage } from '@tiptap-pro/extension-table-of-contents'
-import { cn } from '@/lib/utils'
+import { cn } from 'src/tiptap/lib/utils'
 import { useEditorState } from '@tiptap/react'
 
 export type TableOfContentsProps = {
@@ -27,7 +27,7 @@ export const TableOfContents = memo(({ editor, onItemClick }: TableOfContentsPro
       </div>
       {content.length > 0 ? (
         <div className="flex flex-col gap-1">
-          {content.map(item => (
+          {content.map((item: any) => (
             <a
               key={item.id}
               href={`#${item.id}`}

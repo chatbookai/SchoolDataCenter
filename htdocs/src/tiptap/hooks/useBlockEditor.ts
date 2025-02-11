@@ -6,13 +6,13 @@ import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { TiptapCollabProvider, WebSocketStatus } from '@hocuspocus/provider'
 import type { Doc as YDoc } from 'yjs'
 
-import { ExtensionKit } from '@/extensions/extension-kit'
+import { ExtensionKit } from 'src/tiptap/extensions/extension-kit'
 import { userColors, userNames } from '../lib/constants'
 import { randomElement } from '../lib/utils'
 import type { EditorUser } from '../components/BlockEditor/types'
-import { initialContent } from '@/lib/data/initialContent'
-import { Ai } from '@/extensions/Ai'
-import { AiImage, AiWriter } from '@/extensions'
+import { initialContent } from 'src/tiptap/lib/data/initialContent'
+import { Ai } from 'src/tiptap/extensions/Ai'
+import { AiImage, AiWriter } from 'src/tiptap/extensions'
 
 declare global {
   interface Window {

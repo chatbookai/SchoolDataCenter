@@ -1187,6 +1187,13 @@
   dependencies:
     tslib "^2.4.0"
 
+"@tiptap-pro/extension-table-of-contents@^2.17.4":
+  version "2.17.4"
+  resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-table-of-contents/-/extension-table-of-contents-2.17.4.tgz"
+  integrity sha512-bXJySxWnoPh8sajpGa+PXKypeMYzqX7oiH05jM9fFdLYkaIR0H7ZBZTQH+vaw7fkWZWFUD60gEwWFch2N/Obvw==
+  dependencies:
+    uuid "^10.0.0"
+
 "@tiptap/core@^2.11.5":
   version "2.11.5"
   resolved "https://registry.npmjs.org/@tiptap/core/-/core-2.11.5.tgz"
@@ -1626,6 +1633,11 @@
     "@types/react" "*"
     date-fns "^2.0.1"
     react-popper "^2.2.5"
+
+"@types/react-dom@^19.0.3":
+  version "19.0.3"
+  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-19.0.3.tgz"
+  integrity sha512-0Knk+HJiMP/qOZgMyNFamlIjw9OFCsyC2ZbigmEEyXXixgre6IQpm/4V+r3qH4GC1JPvRJKInw+on2rV6YZLeA==
 
 "@types/react-draft-wysiwyg@1.13.4":
   version "1.13.4"
@@ -5446,6 +5458,11 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.npmjs.org/isobject/-/isobject-3.0.1.tgz"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
+isomorphic.js@^0.2.4:
+  version "0.2.5"
+  resolved "https://registry.npmjs.org/isomorphic.js/-/isomorphic.js-0.2.5.tgz"
+  integrity sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==
+
 js-sdsl@^4.1.4:
   version "4.2.0"
   resolved "https://registry.npmjs.org/js-sdsl/-/js-sdsl-4.2.0.tgz"
@@ -5625,6 +5642,13 @@ levn@^0.4.1:
   dependencies:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
+
+lib0@^0.2.99:
+  version "0.2.99"
+  resolved "https://registry.npmjs.org/lib0/-/lib0-0.2.99.tgz"
+  integrity sha512-vwztYuUf1uf/1zQxfzRfO5yzfNKhTtgOByCruuiQQxWQXnPb8Itaube5ylofcV0oM0aKal9Mv+S1s1Ky0UYP1w==
+  dependencies:
+    isomorphic.js "^0.2.4"
 
 lie@~3.3.0:
   version "3.3.0"
@@ -7458,7 +7482,7 @@ react-datepicker@4.8.0:
     react-onclickoutside "^6.12.0"
     react-popper "^2.2.5"
 
-react-dom@18.2.0:
+react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
@@ -9139,6 +9163,11 @@ utrie@^1.0.2:
   dependencies:
     base64-arraybuffer "^1.0.2"
 
+uuid@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-10.0.0.tgz"
+  integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
+
 uuid@^8.3.0:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
@@ -9490,6 +9519,13 @@ yauzl@^2.10.0:
   dependencies:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
+
+yjs@^13.6.23:
+  version "13.6.23"
+  resolved "https://registry.npmjs.org/yjs/-/yjs-13.6.23.tgz"
+  integrity sha512-ExtnT5WIOVpkL56bhLeisG/N5c4fmzKn4k0ROVfJa5TY2QHbH7F0Wu2T5ZhR7ErsFWQEFafyrnSI8TPKVF9Few==
+  dependencies:
+    lib0 "^0.2.99"
 
 yocto-queue@^0.1.0:
   version "0.1.0"

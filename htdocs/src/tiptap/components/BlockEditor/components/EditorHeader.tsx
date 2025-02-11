@@ -1,8 +1,8 @@
 'use client'
 
-import { Icon } from '@/components/ui/Icon'
+import { Icon } from 'src/tiptap/components/ui/Icon'
 import { EditorInfo } from './EditorInfo'
-import { Toolbar } from '@/components/ui/Toolbar'
+import { Toolbar } from 'src/tiptap/components/ui/Toolbar'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
 import { useState, useCallback } from 'react'

@@ -3,11 +3,11 @@ import { useCallback } from 'react'
 import { sticky } from 'tippy.js'
 import { v4 as uuid } from 'uuid'
 
-import { MenuProps } from '@/components/menus/types'
-import { getRenderContainer } from '@/lib/utils/getRenderContainer'
-import { Toolbar } from '@/components/ui/Toolbar'
+import { MenuProps } from 'src/tiptap/components/menus/types'
+import { getRenderContainer } from 'src/tiptap/lib/utils/getRenderContainer'
+import { Toolbar } from 'src/tiptap/components/ui/Toolbar'
 import { ColumnLayout } from '../Columns'
-import { Icon } from '@/components/ui/Icon'
+import { Icon } from 'src/tiptap/components/ui/Icon'
 
 export const ColumnsMenu = ({ editor, appendTo }: MenuProps) => {
   const getReferenceClientRect = useCallback(() => {

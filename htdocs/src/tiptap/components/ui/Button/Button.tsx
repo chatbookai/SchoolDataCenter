@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from 'src/tiptap/lib/utils'
 import React from 'react'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost'

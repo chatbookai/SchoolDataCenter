@@ -1,6 +1,6 @@
 import { DragEvent, useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-import { API } from '@/lib/api'
+import { API } from 'src/tiptap/lib/api'
 
 export const useUploader = ({ onUpload }: { onUpload: (url: string) => void }) => {
   const [loading, setLoading] = useState(false)

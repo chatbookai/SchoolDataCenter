@@ -2,7 +2,7 @@
 
 import { HocuspocusProvider } from '@hocuspocus/provider'
 
-import { API } from '@/lib/api'
+import { API } from 'src/tiptap/lib/api'
 
 import {
   BlockquoteFigure,

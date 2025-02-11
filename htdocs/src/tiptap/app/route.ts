@@ -6,6 +6,7 @@ export const runtime = 'edge'
 
 const getNanoId = (): string => {
   const nanoid = customAlphabet('6789BCDFGHJKLMNPQRTWbcdfghjkmnpqrtwz', 10)
+
   return nanoid()
 }
 

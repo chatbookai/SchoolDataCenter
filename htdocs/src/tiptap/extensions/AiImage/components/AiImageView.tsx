@@ -6,14 +6,14 @@ import { ImageOptions } from '@tiptap-pro/extension-ai'
 
 import * as Dropdown from '@radix-ui/react-dropdown-menu'
 
-import { Button } from '@/components/ui/Button'
-import { Loader } from '@/components/ui/Loader'
-import { Panel, PanelHeadline } from '@/components/ui/Panel'
-import { Textarea } from '@/components/ui/Textarea'
-import { Icon } from '@/components/ui/Icon'
-import { Surface } from '@/components/ui/Surface'
-import { DropdownButton } from '@/components/ui/Dropdown'
-import { Toolbar } from '@/components/ui/Toolbar'
+import { Button } from 'src/tiptap/components/ui/Button'
+import { Loader } from 'src/tiptap/components/ui/Loader'
+import { Panel, PanelHeadline } from 'src/tiptap/components/ui/Panel'
+import { Textarea } from 'src/tiptap/components/ui/Textarea'
+import { Icon } from 'src/tiptap/components/ui/Icon'
+import { Surface } from 'src/tiptap/components/ui/Surface'
+import { DropdownButton } from 'src/tiptap/components/ui/Dropdown'
+import { Toolbar } from 'src/tiptap/components/ui/Toolbar'
 
 const imageStyles = [
   { name: 'photorealistic', label: 'Photorealistic', value: 'photorealistic' },

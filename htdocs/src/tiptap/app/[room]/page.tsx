@@ -5,12 +5,12 @@ import { useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { Doc as YDoc } from 'yjs'
 
-import { BlockEditor } from '@/components/BlockEditor'
+import { BlockEditor } from 'src/tiptap/components/BlockEditor'
 import { createPortal } from 'react-dom'
-import { Surface } from '@/components/ui/Surface'
-import { Toolbar } from '@/components/ui/Toolbar'
-import { Icon } from '@/components/ui/Icon'
-import { useCollaboration } from '@/hooks/useCollaboration'
+import { Surface } from 'src/tiptap/components/ui/Surface'
+import { Toolbar } from 'src/tiptap/components/ui/Toolbar'
+import { Icon } from 'src/tiptap/components/ui/Icon'
+import { useCollaboration } from 'src/tiptap/hooks/useCollaboration'
 
 const useDarkmode = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(

@@ -1,4 +1,4 @@
-import type { Language } from '@/extensions/Ai'
+import type { Language } from 'src/tiptap/extensions/Ai'
 
 export type EditorUser = {
   clientId: string

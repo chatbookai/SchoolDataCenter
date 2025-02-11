@@ -1,20 +1,20 @@
 import { EditorContent } from '@tiptap/react'
 import React, { useRef, useState } from 'react'
 
-import { LinkMenu } from '@/components/menus'
+import { LinkMenu } from 'src/tiptap/components/menus'
 
-import { useBlockEditor } from '@/hooks/useBlockEditor'
+import { useBlockEditor } from 'src/tiptap/hooks/useBlockEditor'
 
 import '@/styles/index.css'
 
-import { Sidebar } from '@/components/Sidebar'
-import ImageBlockMenu from '@/extensions/ImageBlock/components/ImageBlockMenu'
-import { ColumnsMenu } from '@/extensions/MultiColumn/menus'
-import { TableColumnMenu, TableRowMenu } from '@/extensions/Table/menus'
+import { Sidebar } from 'src/tiptap/components/Sidebar'
+import ImageBlockMenu from 'src/tiptap/extensions/ImageBlock/components/ImageBlockMenu'
+import { ColumnsMenu } from 'src/tiptap/extensions/MultiColumn/menus'
+import { TableColumnMenu, TableRowMenu } from 'src/tiptap/extensions/Table/menus'
 import { EditorHeader } from './components/EditorHeader'
 import { TextMenu } from '../menus/TextMenu'
 import { ContentItemMenu } from '../menus/ContentItemMenu'
-import { useSidebar } from '@/hooks/useSidebar'
+import { useSidebar } from 'src/tiptap/hooks/useSidebar'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 

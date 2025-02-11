@@ -1,7 +1,7 @@
-import { DropdownButton, DropdownCategoryTitle } from '@/components/ui/Dropdown'
-import { Icon } from '@/components/ui/Icon'
-import { Surface } from '@/components/ui/Surface'
-import { Toolbar } from '@/components/ui/Toolbar'
+import { DropdownButton, DropdownCategoryTitle } from 'src/tiptap/components/ui/Dropdown'
+import { Icon } from 'src/tiptap/components/ui/Icon'
+import { Surface } from 'src/tiptap/components/ui/Surface'
+import { Toolbar } from 'src/tiptap/components/ui/Toolbar'
 import * as Dropdown from '@radix-ui/react-dropdown-menu'
 import { useCallback } from 'react'
 

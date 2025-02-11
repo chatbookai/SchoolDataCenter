@@ -3,19 +3,19 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { v4 as uuid } from 'uuid'
 
-import { Button } from '@/components/ui/Button'
-import { Panel, PanelHeadline } from '@/components/ui/Panel'
-import { Textarea } from '@/components/ui/Textarea'
-import { Icon } from '@/components/ui/Icon'
+import { Button } from 'src/tiptap/components/ui/Button'
+import { Panel, PanelHeadline } from 'src/tiptap/components/ui/Panel'
+import { Textarea } from 'src/tiptap/components/ui/Textarea'
+import { Icon } from 'src/tiptap/components/ui/Icon'
 
-import { AiTone, AiToneOption } from '@/components/BlockEditor/types'
-import { tones } from '@/lib/constants'
+import { AiTone, AiToneOption } from 'src/tiptap/components/BlockEditor/types'
+import { tones } from 'src/tiptap/lib/constants'
 
 import * as Dropdown from '@radix-ui/react-dropdown-menu'
-import { Toolbar } from '@/components/ui/Toolbar'
-import { Surface } from '@/components/ui/Surface'
-import { DropdownButton } from '@/components/ui/Dropdown'
-import { AiStorage, tryParseToTiptapHTML } from '@/extensions/Ai/index'
+import { Toolbar } from 'src/tiptap/components/ui/Toolbar'
+import { Surface } from 'src/tiptap/components/ui/Surface'
+import { DropdownButton } from 'src/tiptap/components/ui/Dropdown'
+import { AiStorage, tryParseToTiptapHTML } from 'src/tiptap/extensions/Ai/index'
 
 export interface DataProps {
   text: string
