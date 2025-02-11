@@ -18,6 +18,7 @@ export const EditorHeader = ({ editor, isSidebarOpen, toggleSidebar }: EditorHea
     editor,
     selector: (ctx): { characters: number; words: number } => {
       const { characters, words } = ctx.editor?.storage.characterCount || { characters: () => 0, words: () => 0 }
+
       return { characters: characters(), words: words() }
     },
   })
@@ -31,6 +32,7 @@ export const EditorHeader = ({ editor, isSidebarOpen, toggleSidebar }: EditorHea
 
   const toggleEditable = useCallback(() => {
     editor.setOptions({ editable: !editor.isEditable })
+
     // force update the editor
     editor.view.dispatch(editor.view.state.tr)
   }, [editor])

@@ -3,7 +3,6 @@
 import 'iframe-resizer/js/iframeResizer.contentWindow'
 import { useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { Doc as YDoc } from 'yjs'
 
 import { BlockEditor } from 'src/tiptap/components/BlockEditor'
 import { createPortal } from 'react-dom'
@@ -21,6 +20,7 @@ const useDarkmode = () => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     const handleChange = () => setIsDarkMode(mediaQuery.matches)
     mediaQuery.addEventListener('change', handleChange)
+
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
