@@ -5,8 +5,6 @@ import { LinkMenu } from 'src/tiptap/components/menus'
 
 import { useBlockEditor } from 'src/tiptap/hooks/useBlockEditor'
 
-import 'src/tiptap/styles/index.css'
-
 import { Sidebar } from 'src/tiptap/components/Sidebar'
 import ImageBlockMenu from 'src/tiptap/extensions/ImageBlock/components/ImageBlockMenu'
 import { ColumnsMenu } from 'src/tiptap/extensions/MultiColumn/menus'

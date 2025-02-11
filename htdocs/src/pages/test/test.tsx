@@ -40,11 +40,11 @@ const useDarkmode = () => {
   }
 }
 
-export default function Document({ params }: { params: { room: string } }) {
+export default function Document() {
   const { isDarkMode, darkMode, lightMode } = useDarkmode()
   const searchParams = useSearchParams()
   const providerState = useCollaboration({
-    docId: params.room,
+    docId: '20250211',
     enabled: parseInt(searchParams?.get('noCollab') as string) !== 1,
   })
 
