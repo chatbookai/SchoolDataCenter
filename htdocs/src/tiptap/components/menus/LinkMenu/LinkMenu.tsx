@@ -1,11 +1,11 @@
-import React, { useCallback, useState, JSX } from 'react'
+import React, { useCallback, useState } from 'react'
 import { BubbleMenu as BaseBubbleMenu, useEditorState } from '@tiptap/react'
 
 import { MenuProps } from '../types'
 import { LinkPreviewPanel } from 'src/tiptap/components/panels/LinkPreviewPanel'
 import { LinkEditorPanel } from 'src/tiptap/components/panels'
 
-export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
+export const LinkMenu = ({ editor, appendTo }: MenuProps): any => {
   const [showEdit, setShowEdit] = useState(false)
   const { link, target } = useEditorState({
     editor,
@@ -32,6 +32,8 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
         .chain()
         .focus()
         .extendMarkRange('link')
+
+        //@ts-ignore
         .setLink({ href: url, target: openInNewTab ? '_blank' : '' })
         .run()
       setShowEdit(false)
@@ -40,6 +42,8 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
   )
 
   const onUnsetLink = useCallback(() => {
+
+    //@ts-ignore
     editor.chain().focus().extendMarkRange('link').unsetLink().run()
     setShowEdit(false)
 

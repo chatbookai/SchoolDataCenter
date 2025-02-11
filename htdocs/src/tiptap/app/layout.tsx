@@ -1,5 +1,4 @@
 import './globals.css'
-import type { Metadata } from 'next'
 
 import 'cal-sans'
 
@@ -11,7 +10,7 @@ import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
 
-export const metadata: Metadata = {
+export const metadata: any = {
   metadataBase: new URL('https://demos.tiptap.dev'),
   title: 'Tiptap block editor template',
   description:
