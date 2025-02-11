@@ -1,4 +1,4 @@
-import { DropdownButton, DropdownCategoryTitle } from 'src/tiptap/components/ui/Dropdown'
+import { DropdownButton } from 'src/tiptap/components/ui/Dropdown'
 import { Icon } from 'src/tiptap/components/ui/Icon'
 import { Surface } from 'src/tiptap/components/ui/Surface'
 import { Toolbar } from 'src/tiptap/components/ui/Toolbar'

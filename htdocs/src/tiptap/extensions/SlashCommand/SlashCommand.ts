@@ -49,7 +49,7 @@ export const SlashCommand = Extension.create({
           const isRootDepth = $from.depth === 1
           const isParagraph = $from.parent.type.name === 'paragraph'
           const isStartOfNode = $from.parent.textContent?.charAt(0) === '/'
-          // TODO
+
           const isInColumn = this.editor.isActive('column')
 
           const afterContent = $from.parent.textContent?.substring($from.parent.textContent?.indexOf('/'))
@@ -126,7 +126,7 @@ export const SlashCommand = Extension.create({
 
               const { view } = props.editor
 
-              const editorNode = view.dom as HTMLElement
+              //const editorNode = view.dom as HTMLElement
 
               const getReferenceClientRect = () => {
                 if (!props.clientRect) {
@@ -171,7 +171,7 @@ export const SlashCommand = Extension.create({
 
               const { view } = props.editor
 
-              const editorNode = view.dom as HTMLElement
+              //const editorNode = view.dom as HTMLElement
 
               const getReferenceClientRect = () => {
                 if (!props.clientRect) {
@@ -194,7 +194,7 @@ export const SlashCommand = Extension.create({
                 return new DOMRect(rect.x, yPos, rect.width, rect.height)
               }
 
-              let scrollHandler = () => {
+              const scrollHandler = () => {
                 popup?.[0].setProps({
                   getReferenceClientRect,
                 })

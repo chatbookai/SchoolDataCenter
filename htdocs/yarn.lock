@@ -1379,6 +1379,15 @@
   resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-drag-handle-react/-/extension-drag-handle-react-2.17.4.tgz"
   integrity sha512-iiE5GihUjP0GeQk8oSxgyPK8Te+zv6ZJvo/xpq7LHgMmPO9OaGXfcTJICkpQK/L5dfFXqLEdtG8a70xxLhvq4g==
 
+"@tiptap-pro/extension-emoji@^2.17.4":
+  version "2.17.4"
+  resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-emoji/-/extension-emoji-2.17.4.tgz"
+  integrity sha512-P0njEqYny/gfAnwwMfO4n3xZnf+aJSVmK5gQ24j/9XZo0qejPnm6g7KF08j0yFbWLJPskd+n0MbIgpO7v6f5OA==
+  dependencies:
+    emoji-regex "^10.4.0"
+    emojibase-data "^7.0.1"
+    is-emoji-supported "^0.0.5"
+
 "@tiptap-pro/extension-table-of-contents@^2.17.4":
   version "2.17.4"
   resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-table-of-contents/-/extension-table-of-contents-2.17.4.tgz"
@@ -1561,6 +1570,11 @@
     "@tiptap/extension-text" "^2.11.5"
     "@tiptap/extension-text-style" "^2.11.5"
     "@tiptap/pm" "^2.11.5"
+
+"@tiptap/suggestion@^2.11.5":
+  version "2.11.5"
+  resolved "https://registry.npmjs.org/@tiptap/suggestion/-/suggestion-2.11.5.tgz"
+  integrity sha512-uafwGgB5YuKX/xLRjnt2H5eA21I8HcNXpdbH4Du2gg3KM71RpUbkyjaV7KEMA/5qwCEo+sddlpuErj4wBycZ5Q==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -3824,6 +3838,11 @@ elliptic@^6.5.3, elliptic@^6.5.5:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
+emoji-regex@^10.4.0:
+  version "10.4.0"
+  resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-10.4.0.tgz"
+  integrity sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
@@ -3833,6 +3852,11 @@ emoji-regex@^9.2.2:
   version "9.2.2"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-9.2.2.tgz"
   integrity sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==
+
+emojibase-data@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.npmjs.org/emojibase-data/-/emojibase-data-7.0.1.tgz"
+  integrity sha512-BLZpOdwyFpZ7lzBWyDtnxmKVm/SJMYgAfp1if3o6n1TVUMSXAf0nikONXl90LZuJ/m3XWPBkkubgCet2BsCGGQ==
 
 emojis-list@^3.0.0:
   version "3.0.0"
@@ -5350,6 +5374,11 @@ is-docker@^2.0.0, is-docker@^2.1.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/is-docker/-/is-docker-2.2.1.tgz"
   integrity sha512-F+i2BKsFrH66iaUFc0woD8sLy8getkwTwtOBjvs56Cx4CgJDeKQeqfz8wAYiSb8JOprWhHH5p77PbmYCvvUuXQ==
+
+is-emoji-supported@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/is-emoji-supported/-/is-emoji-supported-0.0.5.tgz"
+  integrity sha512-WOlXUhDDHxYqcSmFZis+xWhhqXiK2SU0iYiqmth5Ip0FHLZQAt9rKL5ahnilE8/86WH8tZ3bmNNNC+bTzamqlw==
 
 is-extendable@^0.1.0, is-extendable@^0.1.1:
   version "0.1.1"
@@ -9176,6 +9205,11 @@ uuid@^10.0.0:
   version "10.0.0"
   resolved "https://registry.npmjs.org/uuid/-/uuid-10.0.0.tgz"
   integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
+
+uuid@^11.0.5:
+  version "11.0.5"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-11.0.5.tgz"
+  integrity sha512-508e6IcKLrhxKdBbcA2b4KQZlLVp2+J5UwQ6F7Drckkc5N9ZJwFa4TgWtsww9UG8fGHbm6gbV19TdM5pQ4GaIA==
 
 vfile-message@^4.0.0:
   version "4.0.2"

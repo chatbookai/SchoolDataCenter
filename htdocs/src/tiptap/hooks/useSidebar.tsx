@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 export type SidebarState = {
   isOpen: boolean
@@ -9,6 +9,7 @@ export type SidebarState = {
 
 export const useSidebar = (): SidebarState => {
   const [isOpen, setIsOpen] = useState(false)
+
   return useMemo(() => {
     return {
       isOpen,

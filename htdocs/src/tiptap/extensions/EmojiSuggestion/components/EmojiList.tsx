@@ -56,16 +56,19 @@ const EmojiList = forwardRef(
         onKeyDown: ({ event }) => {
           if (event.key === 'ArrowUp') {
             upHandler()
+
             return true
           }
 
           if (event.key === 'ArrowDown') {
             downHandler()
+
             return true
           }
 
           if (event.key === 'Enter') {
             enterHandler()
+
             return true
           }
 

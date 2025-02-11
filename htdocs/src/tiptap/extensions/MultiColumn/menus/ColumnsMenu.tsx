@@ -19,6 +19,7 @@ export const ColumnsMenu = ({ editor, appendTo }: MenuProps) => {
 
   const shouldShow = useCallback(() => {
     const isColumns = editor.isActive('columns')
+
     return isColumns
   }, [editor])
 

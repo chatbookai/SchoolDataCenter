@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Command, MenuListProps } from './types'
-import { CommandButton } from './CommandButton'
 import { Surface } from 'src/tiptap/components/ui/Surface'
 import { DropdownButton } from 'src/tiptap/components/ui/Dropdown'
 import { Icon } from 'src/tiptap/components/ui/Icon'
