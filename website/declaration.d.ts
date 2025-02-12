@@ -10,8 +10,6 @@ declare global {
         Arweave: typeof Arweave;
     }
     module globalThis {
-        var Arweave: unknown;
-        var arweaveWallet: any;
     }
 }
 
