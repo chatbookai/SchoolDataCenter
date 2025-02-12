@@ -2,11 +2,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 // Slice Imports
-import emailReducer from '@/redux-store/slices/email'
 
 export const store = configureStore({
   reducer: {
-    emailReducer
+    
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
 })
