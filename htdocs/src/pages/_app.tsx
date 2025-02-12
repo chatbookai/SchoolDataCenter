@@ -58,18 +58,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
-//import 'styles/globals.css'
-
-import 'src/tiptap/styles/index.css'
-import 'src/tiptap/styles/partials/animations.css';
-import 'src/tiptap/styles/partials/blocks.css';
-import 'src/tiptap/styles/partials/code.css';
-import 'src/tiptap/styles/partials/collab.css';
-import 'src/tiptap/styles/partials/lists.css';
-import 'src/tiptap/styles/partials/placeholder.css';
-import 'src/tiptap/styles/partials/table.css';
-import 'src/tiptap/styles/partials/typography.css';
-
+import 'styles/globals.css'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
