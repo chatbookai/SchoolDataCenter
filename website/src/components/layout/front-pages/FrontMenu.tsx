@@ -67,7 +67,7 @@ const Wrapper = (props: WrapperProps) => {
     )
   }
 
-  return <div className={classnames('flex items-center flex-wrap gap-x-4 gap-y-3', className)}>{children}</div>
+  return <div className={classnames('flex items-center flex-wrap gap-x-2 gap-y-3', className)}>{children}</div>
 }
 
 const FrontMenu = (props: Props) => {

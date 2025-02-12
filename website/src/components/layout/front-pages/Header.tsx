@@ -7,11 +7,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 // MUI Imports
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
-import type { Theme } from '@mui/material/styles'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -27,6 +23,8 @@ import FrontMenu from './FrontMenu'
 // Util Imports
 import { frontLayoutClasses } from '@layouts/utils/layoutClasses'
 
+import { useImageVariant } from '@core/hooks/useImageVariant'
+
 // Styles Imports
 import styles from '@components/layout/front-pages/styles.module.css'
 
@@ -34,47 +32,29 @@ const Header = ({ mode }: { mode: Mode }) => {
   // States
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  // Hooks
-  const isBelowLgScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-
   // Detect window scroll
   const trigger = useScrollTrigger({
     threshold: 0,
     disableHysteresis: true
   })
 
+  const dropdownImageLight = '/images/website/index_header_top.png'
+  const dropdownImageDark = '/images/website/index_header_top.png'
+
+  const dropdownImage = useImageVariant(mode, dropdownImageLight, dropdownImageDark)
+
+  //<img src={dropdownImage} className="w-full h-auto rounded-lg" />
+
   return (
     <header className={classnames(frontLayoutClasses.header, styles.header)}>
-      <div className={classnames(frontLayoutClasses.navbar, styles.navbar, { [styles.headerScrolled]: trigger })}>
+      <div className={classnames(frontLayoutClasses.navbar, styles.navbar, { [styles.headerScrolled]: trigger })}>        
         <div className={classnames(frontLayoutClasses.navbarContent, styles.navbarContent)}>
-          <div className='flex items-center gap-4'>
-            <Link href='/'>
-              <Logo />
-            </Link>            
-            {!isBelowLgScreen && (
-              <FrontMenu mode={mode} isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
-            )}
-            {isBelowLgScreen && (
-              <Typography
-                component={Link}
-                href='https://school.dandian.net'
-                target='_blank'
-                className={classnames('font-medium plb-3 pli-1.5 hover:text-primary', {
-                  'text-primary': true
-                })}
-                color='text.primary'
-              >
-                Login
-              </Typography>
-            )}
+          <div className='flex items-center gap-4'>           
+            <Logo />
+            <FrontMenu mode={mode} isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
           </div>
           <div className='flex items-center sm:gap-4'>
             <ModeDropdown />
-            {!isBelowLgScreen && (
-              <Box sx={{ display: 'flex', alignItems: 'center', my: 0 }}>
-                Login
-              </Box>
-            )}
           </div>
         </div>
       </div>

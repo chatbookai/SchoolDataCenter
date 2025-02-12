@@ -31,7 +31,6 @@ import type { Mode } from '@core/types'
 
 // Component Imports
 import Link from '@components/Link'
-import CustomAvatar from '@/@core/components/mui/avatar2'
 
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
@@ -67,7 +66,7 @@ const MenuWrapper = (props: MenuWrapperProps) => {
         {isMounted && (
           <div ref={refs.setFloating} className='z-[1201] lg:z-[11]' {...getFloatingProps()} style={floatingStyles}>
             <div
-              className='flex gap-8 p-8'
+              className='flex gap-6 p-4'
               style={{
                 ...styles,
                 overflowY: 'auto',
@@ -183,7 +182,7 @@ const FrontMenuDropDown = (props: Props) => {
       <Typography
         color='text.primary'
         component={Link}
-        className={classnames('flex items-center gap-2 font-medium plb-3 pli-1.5 hover:text-primary', {
+        className={classnames('flex items-center gap-y-2 font-medium plb-1 pli-1.5 hover:text-primary', {
           'text-primary':
             pathname === '/home/payment' ||
             pathname === '/home/pricing'
@@ -221,18 +220,12 @@ const FrontMenuDropDown = (props: Props) => {
         isMounted={isMounted}
         styles={styles}
       >
-        <div className='flex flex-col gap-4'>
-          <div className='flex gap-3 items-center'>
-            <CustomAvatar variant='rounded' color='primary' skin='light'>
-              <i className='ri-grid-line' />
-            </CustomAvatar>
-            <Typography variant='h6'>{MenuInfor.title}</Typography>
-          </div>
+        <div className='flex flex-col gap-y-3 gap-x-0'>
           {MenuInfor.children.map((page: any, index: number) => (
             <Link
               key={index}
               href={'/front-pages' + page.href}
-              className={classnames('flex items-center gap-3 focus:outline-none hover:text-primary', {
+              className={classnames('flex items-center gap-y-3 gap-x-1 focus:outline-none hover:text-primary', {
                 'text-primary': pathname.includes('/front-pages' + page.href)
               })}
               onClick={handleLinkClick}
