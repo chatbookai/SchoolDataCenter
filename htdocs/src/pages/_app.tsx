@@ -58,7 +58,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
-import 'styles/globals.css'
+//import 'styles/globals.css'
 
 import 'src/tiptap/styles/index.css'
 import 'src/tiptap/styles/partials/animations.css';
