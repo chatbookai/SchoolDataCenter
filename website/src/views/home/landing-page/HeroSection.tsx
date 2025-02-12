@@ -1,32 +1,18 @@
-// React Imports
 import { useState, useEffect } from 'react'
-
-// Next Imports
 import Link from 'next/link'
-
-// MUI Imports
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-
-// Third-party Imports
 import classnames from 'classnames'
-
-// Type Imports
 import type { Mode } from '@core/types'
-
-// Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
-
-// Styles Imports
 import styles from './styles.module.css'
 import frontCommonStyles from '@views/home/styles.module.css'
 
 const HeroSection = ({ mode }: { mode: Mode }) => {
-  // States
   const [dashboardPosition, setDashboardPosition] = useState({ x: 0, y: 0 })
   const [elementsPosition, setElementsPosition] = useState({ x: 0, y: 0 })
 
-  // Vars
+  // 定义图片路径
   const dashboardImageLight = '/images/front-pages/landing-page/hero-dashboard-light.png'
   const dashboardImageDark = '/images/front-pages/landing-page/hero-dashboard-dark.png'
   const elementsImageLight = '/images/front-pages/landing-page/hero-elements-light.png'
@@ -34,11 +20,25 @@ const HeroSection = ({ mode }: { mode: Mode }) => {
   const heroSectionBgLight = '/images/front-pages/landing-page/hero-bg-light.png'
   const heroSectionBgDark = '/images/front-pages/landing-page/hero-bg-dark.png'
 
-  // Hooks
-  const dashboardImage = useImageVariant(mode, dashboardImageLight, dashboardImageDark)
-  const elementsImage = useImageVariant(mode, elementsImageLight, elementsImageDark)
-  const heroSectionBg = useImageVariant(mode, heroSectionBgLight, heroSectionBgDark)
+  // 使用 useState 来存储实际的图片路径
+  const [dashboardImage, setDashboardImage] = useState(dashboardImageLight)
+  const [elementsImage, setElementsImage] = useState(elementsImageLight)
+  const [heroSectionBg, setHeroSectionBg] = useState(heroSectionBgLight)
 
+  // 根据 mode 动态设置图片路径
+  useEffect(() => {
+    if (mode === 'dark') {
+      setDashboardImage(dashboardImageDark)
+      setElementsImage(elementsImageDark)
+      setHeroSectionBg(heroSectionBgDark)
+    } else {
+      setDashboardImage(dashboardImageLight)
+      setElementsImage(elementsImageLight)
+      setHeroSectionBg(heroSectionBgLight)
+    }
+  }, [mode])
+
+  // 监听鼠标移动来动态调整元素位置
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const speedDashboard = 2
@@ -76,7 +76,7 @@ const HeroSection = ({ mode }: { mode: Mode }) => {
             Smart School AI
           </Typography>
           <Typography className='font-medium' color='text.primary'>
-          Smart School AI
+            Smart School AI
           </Typography>
           <div className='mbs-8'>
             <Button

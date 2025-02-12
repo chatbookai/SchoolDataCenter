@@ -4,9 +4,7 @@ import { configureStore } from '@reduxjs/toolkit'
 // Slice Imports
 
 export const store = configureStore({
-  reducer: {
-    
-  },
+  reducer: () => ({}), // Set to an empty function
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
 })
 

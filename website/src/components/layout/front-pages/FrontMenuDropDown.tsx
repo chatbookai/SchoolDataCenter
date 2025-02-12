@@ -224,9 +224,9 @@ const FrontMenuDropDown = (props: Props) => {
           {MenuInfor.children.map((page: any, index: number) => (
             <Link
               key={index}
-              href={'/front-pages' + page.href}
+              href={page.href}
               className={classnames('flex items-center gap-y-3 gap-x-1 focus:outline-none hover:text-primary', {
-                'text-primary': pathname.includes('/front-pages' + page.href)
+                'text-primary': pathname.includes(page.href)
               })}
               onClick={handleLinkClick}
             >

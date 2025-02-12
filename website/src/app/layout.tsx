@@ -17,11 +17,9 @@ export const metadata = {
 }
 
 const RootLayout = ({ children }: ChildrenType) => {
-  // Vars
-  const direction = 'ltr'
 
   return (
-    <html id='__next' lang='en' dir={direction}>
+    <html id='__next'>
       <body className='flex is-full min-bs-full flex-auto flex-col'>{children}</body>
     </html>
   )
