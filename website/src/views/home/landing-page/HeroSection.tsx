@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import classnames from 'classnames'
 import type { Mode } from '@core/types'
-import { useImageVariant } from '@core/hooks/useImageVariant'
 import styles from './styles.module.css'
 import frontCommonStyles from '@views/home/styles.module.css'
 

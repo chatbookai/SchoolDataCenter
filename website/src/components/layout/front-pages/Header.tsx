@@ -3,9 +3,6 @@
 // React Imports
 import { useState } from 'react'
 
-// Next Imports
-import Link from 'next/link'
-
 // MUI Imports
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 
