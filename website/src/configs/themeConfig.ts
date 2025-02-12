@@ -19,6 +19,8 @@
 // Type Imports
 import type { Mode, Skin, Layout, LayoutComponentPosition, LayoutComponentWidth } from '@core/types'
 
+import authConfig from './auth'
+
 type Navbar = {
   type: LayoutComponentPosition
   contentWidth: LayoutComponentWidth
@@ -51,7 +53,7 @@ export type Config = {
 }
 
 const themeConfig: Config = {
-  templateName: 'SchoolAI',
+  templateName: authConfig.AppName,
   homePageUrl: '/home',
   settingsCookieName: 'SchoolAI-Session',
   mode: 'system', // 'system', 'light', 'dark'
@@ -74,7 +76,7 @@ const themeConfig: Config = {
     detached: true //! true, false (This will not work in the Horizontal Layout)
   },
   disableRipple: false, // true, false
-  toastPosition: 'top-left'
+  toastPosition: 'top-right'
 }
 
 export default themeConfig

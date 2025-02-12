@@ -23,7 +23,7 @@ import FrontMenu from './FrontMenu'
 // Util Imports
 import { frontLayoutClasses } from '@layouts/utils/layoutClasses'
 
-import { useImageVariant } from '@core/hooks/useImageVariant'
+//import { useImageVariant } from '@core/hooks/useImageVariant'
 
 // Styles Imports
 import styles from '@components/layout/front-pages/styles.module.css'
@@ -38,11 +38,9 @@ const Header = ({ mode }: { mode: Mode }) => {
     disableHysteresis: true
   })
 
-  const dropdownImageLight = '/images/website/index_header_top.png'
-  const dropdownImageDark = '/images/website/index_header_top.png'
-
-  const dropdownImage = useImageVariant(mode, dropdownImageLight, dropdownImageDark)
-
+  //const dropdownImageLight = '/images/website/index_header_top.png'
+  //const dropdownImageDark = '/images/website/index_header_top.png'
+  //const dropdownImage = useImageVariant(mode, dropdownImageLight, dropdownImageDark)
   //<img src={dropdownImage} className="w-full h-auto rounded-lg" />
 
   return (

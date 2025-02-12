@@ -1,5 +1,5 @@
 const config = {
-  AppName: 'SchoolAI',
+  AppName: '演示学校名称',
   AppVersion: '0.0.3'
 }
 
