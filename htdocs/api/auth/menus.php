@@ -44,7 +44,7 @@ if($USER_TYPE=="User")    {
     $RoleArray = array_values($RoleArray);
 
     //Menu From Database
-    $sql    = "select * from data_menuone order by SortNumber asc, MenuOneName asc";
+    $sql    = "select * from data_menuone order by SortNumber asc, MenuOneName asc limit 4";
     $rsf    = $db->Execute($sql);
     $MenuOneRSA  = $rsf->GetArray();
 
