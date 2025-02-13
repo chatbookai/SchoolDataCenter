@@ -1,172 +1,296 @@
+import bs58 from 'bs58'
+
 // ** React Imports
-import { useState, useEffect, ReactNode } from 'react'
+import { useState, ReactNode, Fragment } from 'react'
 
-// ** MUI Imports
-import Grid from '@mui/material/Grid'
-import CircularProgress from '@mui/material/CircularProgress'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
+// ** MUI Components
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
+import IconButton from '@mui/material/IconButton'
+import Box, { BoxProps } from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import { styled, useTheme } from '@mui/material/styles'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputAdornment from '@mui/material/InputAdornment'
+import Typography, { TypographyProps } from '@mui/material/Typography'
+import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
-// ** Styled Component Import
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
+import Link from 'next/link'
+import Avatar from '@mui/material/Avatar'
 
-// ** Demo Components Imports
-import ApexLineChart from 'src/views/charts/apex-charts/ApexLineChart'
-import ApexDonutChart from 'src/views/charts/apex-charts/ApexDonutChart'
-import ApexRadialBarChart from 'src/views/charts/apex-charts/ApexRadialBarChart'
+// ** Third Party Imports
+import * as yup from 'yup'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-import AnalyticsTrophy from 'src/views/dashboards/analytics/AnalyticsTrophy'
-import AnalyticsSalesByCountries from 'src/views/dashboards/analytics/AnalyticsSalesByCountries'
-import AnalyticsDepositWithdraw from 'src/views/dashboards/analytics/AnalyticsDepositWithdraw'
-import AnalyticsTransactionsCard from 'src/views/dashboards/analytics/AnalyticsTransactionsCard'
+import { setLocale } from 'yup';
+import AddOrEditTableLanguage from 'src/types/forms/AddOrEditTableLanguage';
 
-import AnalyticsWeeklyOverview from 'src/views/dashboards/analytics/AnalyticsWeeklyOverview'
-import AnalyticsPerformance from 'src/views/dashboards/analytics/AnalyticsPerformance'
+setLocale(AddOrEditTableLanguage);
+
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
+import { useSettings } from 'src/@core/hooks/useSettings'
+
+// ** Configs
+import themeConfig from 'src/configs/themeConfig'
 
 // ** Layout Import
-import SiteMenus from 'src/layouts/SiteMenus'
+import BlankLayout from 'src/@core/layouts/BlankLayout'
+
+import { authConfig } from 'src/configs/auth'
+
+const LinkStyled = styled(Link)(({ theme }) => ({
+  fontSize: '0.875rem',
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
+
+const LoginIllustration = styled('img')(({ theme }) => ({
+  maxWidth: '95%',
+  borderRadius: '10px', // 增加圆角
+  opacity: 0.9, // 设置透明度为90%
+  [theme.breakpoints.down('lg')]: {
+    maxWidth: '95%'
+  }
+}));
 
 
-import axios from 'axios'
+const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: 450
+  }
+}))
 
-// ** Config
-import { authConfig, defaultConfig } from 'src/configs/auth'
-import { useAuth } from 'src/hooks/useAuth'
+const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  [theme.breakpoints.down('xl')]: {
+    width: '100%'
+  },
+  [theme.breakpoints.down('md')]: {
+    maxWidth: 400
+  }
+}))
 
+const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontWeight: 600,
+  marginBottom: theme.spacing(1.5),
+  [theme.breakpoints.down('md')]: { mt: theme.spacing(8) }
+}))
 
-const AnalyticsDashboard = () => {
+const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
+  '& .MuiFormControlLabel-label': {
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary
+  }
+}))
 
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const dataDefault:{[key:string]:any} = {}
-  const [dashboardData, setDashboardData] = useState(dataDefault)
-  const [className, setClassName] = useState<string>("")
-  const [optionsMenuItem, setOptionsMenuItem] = useState<string>("")
+const schema = yup.object().shape({
+  username: yup.string().min(3).required().label('用户名'),
+  password: yup.string().min(6).required().label('密码'),
+  termsofUse: yup.boolean().required('请同意使用协议').test('is-true', '请同意使用协议', value => value === true)
+})
+
+const defaultValues = {
+  password: '',
+  username: '',
+  termsofUse: false
+}
+
+interface FormData {
+  username: string
+  password: string
+  termsofUse: boolean
+}
+
+const LoginPage = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+
+  // ** Hooks
   const auth = useAuth()
+  const theme = useTheme()
+  const { settings } = useSettings()
+  const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
-  const toggleSetClassName = (classNameTemp: string) => {
-    setClassName(classNameTemp)
+  // ** Vars
+  const { skin } = settings
+
+  const {
+    control,
+    setError,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
+  })
+
+  const onSubmit = (data: FormData) => {
+    const { username, password } = data
+
+    function base58Encode(data: string) {
+      const bytes = Buffer.from(data, 'utf8');
+      const encoded = bs58.encode(bytes);
+
+      return encoded;
+    }
+
+    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}, () => {
+      setError('username', {
+        type: 'manual',
+        message: '用户名或密码错误'
+      })
+    })
   }
 
-  const handleOptionsMenuItemClick = (Item: string) => {
-    setOptionsMenuItem(Item)
-  }
-
-  //console.log("auth",auth)
-
-  useEffect(() => {
-    if (auth.user && auth.user.type=="Student") {
-      const backEndApi = "charts/dashboard_deyu_geren_student.php"
-      axios.get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: { className, optionsMenuItem } })
-      .then(res => {
-          setDashboardData(res.data.charts);
-          setIsLoading(false)
-          setClassName(res.data.defaultValue)
-      })
-    }
-    else if (auth.user && auth.user.type=="User") {
-      const backEndApi = "charts/dashboard_deyu_geren_banji.php"
-      axios.get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: { className, optionsMenuItem } })
-      .then(res => {
-          setDashboardData(res.data.charts);
-          setIsLoading(false)
-          setClassName(res.data.defaultValue)
-      })
-    }
-  }, [className, auth, optionsMenuItem])
-
-  const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-
-  //console.log("dashboardData",dashboardData)
+  console.log("errors", errors)
 
   return (
-    <ApexChartWrapper>
-      {isLoading ? (
-                    <Grid item xs={12} sm={12} container justifyContent="space-around">
-                        <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                            <CircularProgress />
-                            <Typography>加载中...</Typography>
-                        </Box>
-                    </Grid>
-                ) : (
-                  <Grid container spacing={6}>
-                    {dashboardData && dashboardData.map( (item: any, index: number)=> {
-                      if(item.type=="AnalyticsTrophy") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <AnalyticsTrophy data={item} toggleSetClassName={toggleSetClassName} className={className} />
-                          </Grid>
-                        )
+    <Box className='content-right'>
+      {!hidden ? (
+        <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
+            <LoginIllustration
+              src={authConfig.indexImageUrl}
+            />
+        </Box>
+      ) : null}
+      <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
+        <Box
+          sx={{
+            p: 12,
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'background.paper'
+          }}
+        >
+          <BoxWrapper>
+            <Box
+              sx={{
+                top: 30,
+                left: 40,
+                display: 'flex',
+                position: 'absolute',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Avatar src={authConfig.logoUrl} sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Typography
+                variant='h6'
+                sx={{
+                  ml: 2,
+                  lineHeight: 1,
+                  fontWeight: 600,
+                  fontSize: '1.5rem !important'
+                }}
+              >
+                {themeConfig.templateName}
+              </Typography>
+            </Box>
+            <Box sx={{ mb: 6 }}>
+              <TypographyStyled variant='h5'>欢迎来到 {themeConfig.templateName}! 👋🏻</TypographyStyled>
+            </Box>
+            <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+              <FormControl fullWidth sx={{ mb: 4 }}>
+                <Controller
+                  name='username'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <TextField
+                      autoFocus
+                      label='用户名'
+                      value={value}
+                      onBlur={onBlur}
+                      onChange={onChange}
+                      error={Boolean(errors.username)}
+                      placeholder=''
+                    />
+                  )}
+                />
+                {errors.username && <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>}
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
+                  密码
+                </InputLabel>
+                <Controller
+                  name='password'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <OutlinedInput
+                      value={value}
+                      onBlur={onBlur}
+                      label='密码'
+                      onChange={onChange}
+                      id='auth-login-v2-password'
+                      error={Boolean(errors.password)}
+                      type={showPassword ? 'text' : 'password'}
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
+                          </IconButton>
+                        </InputAdornment>
                       }
-                      else if(item.type=="AnalyticsTransactionsCard") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <AnalyticsTransactionsCard data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else if(item.type=="AnalyticsSalesByCountries") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <AnalyticsSalesByCountries data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else if(item.type=="AnalyticsDepositWithdraw") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <AnalyticsDepositWithdraw data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else if(item.type=="AnalyticsWeeklyOverview") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <AnalyticsWeeklyOverview data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else if(item.type=="ApexLineChart") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <ApexLineChart data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else if(item.type=="ApexDonutChart") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <ApexDonutChart data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else if(item.type=="ApexRadialBarChart") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <ApexRadialBarChart data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else if(item.type=="AnalyticsPerformance") {
-                        return (
-                          <Grid item xs={12} md={item.grid} key={index}>
-                            <AnalyticsPerformance data={item} handleOptionsMenuItemClick={handleOptionsMenuItemClick} />
-                          </Grid>
-                        )
-                      }
-                      else  {
-                        console.log("Unknown Chart Type")
-                      }
-
-                    })}
-
-                  </Grid>
+                    />
+                  )}
+                />
+                {errors.password && (
+                  <FormHelperText sx={{ color: 'error.main' }} id=''>
+                    {errors.password.message}
+                  </FormHelperText>
                 )}
-
-    </ApexChartWrapper>
+              </FormControl>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }} >
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <Controller
+                    name='termsofUse'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <FormControlLabel
+                        control={<Checkbox checked={value} onChange={onChange} />}
+                        label={
+                          <Fragment>
+                            <span>我同意 </span>
+                            <LinkStyled href='/TermsofUse' target="_blank" sx={{mx: 1}}>使用协议</LinkStyled>
+                            <LinkStyled href='/PrivacyPolicy' target="_blank" sx={{mx: 1}}>隐私政策</LinkStyled>
+                          </Fragment>
+                        }
+                      />
+                    )}
+                  />
+                  {errors.termsofUse && <FormHelperText sx={{ color: 'error.main' }}>{errors.termsofUse.message}</FormHelperText>}
+                </FormControl>
+              </Box>
+              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
+                登录
+              </Button>
+            </form>
+          </BoxWrapper>
+        </Box>
+      </RightWrapper>
+    </Box>
   )
 }
 
+LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-AnalyticsDashboard.getLayout = (page: ReactNode) => <SiteMenus>{page}</SiteMenus>
+LoginPage.guestGuard = true
 
-export default AnalyticsDashboard
+export default LoginPage
