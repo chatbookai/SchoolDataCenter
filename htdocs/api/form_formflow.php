@@ -346,13 +346,12 @@ $edit_default_2['Tip_In_Interface'][] = ['name' => "Rules_When_Import", 'show'=>
 
 $Page_Number_In_List = [];
 $Page_Number_In_List[] = ['value'=>10, 'label'=>10];
+$Page_Number_In_List[] = ['value'=>15, 'label'=>15];
 $Page_Number_In_List[] = ['value'=>20, 'label'=>20];
 $Page_Number_In_List[] = ['value'=>30, 'label'=>30];
 $Page_Number_In_List[] = ['value'=>40, 'label'=>40];
 $Page_Number_In_List[] = ['value'=>50, 'label'=>50];
 $Page_Number_In_List[] = ['value'=>100, 'label'=>100];
-$Page_Number_In_List[] = ['value'=>200, 'label'=>200];
-$Page_Number_In_List[] = ['value'=>500, 'label'=>500];
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Page_Number_In_List", 'show'=>true, 'type'=>'select', 'options'=>$Page_Number_In_List, 'label' => __("Page_Number_In_List"), 'value' => $Page_Number_In_List[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 
 $Actions_In_List_Header = [];

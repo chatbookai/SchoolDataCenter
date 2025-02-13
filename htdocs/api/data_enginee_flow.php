@@ -2300,7 +2300,7 @@ foreach($groupField as $FieldName) {
 //print "TIME EXCEUTE 8:".(time()-$TIME_BEGIN)."<BR>\n";
 
 $pageNumberArray = $SettingMap['pageNumberArray'];
-if($pageNumberArray=="") {
+if($pageNumberArray=="" || true) {
     $pageNumberArray = [10,15,20,30,40,50,100];
 }
 $page       = intval($_REQUEST['page']);

@@ -49,7 +49,7 @@ export const appUsersSlice = createSlice({
     import_default: [],
     rowHeight: 60,
     pageNumber: 10,
-    pageNumberArray: [10, 20, 30, 40, 50, 100, 200, 500]
+    pageNumberArray: [10, 15, 20, 30, 40, 50, 100]
   },
   reducers: {},
   extraReducers: builder => {
