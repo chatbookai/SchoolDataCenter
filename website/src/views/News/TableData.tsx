@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -12,21 +12,36 @@ import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import Typography from '@mui/material/Typography'
 
-const TableData = ({ data }: any) => {
-  const dataJson = data
-  const dataJsonData = dataJson.data
-  console.log("dataJsonData", dataJsonData)
+import axios from 'axios'
+import authConfig from '@configs/auth'
 
-  const columns: any[] = []
-  if(dataJsonData && dataJsonData.length > 0) {
-    const Header = dataJsonData[0]
-    Object.keys(Header).map((Item: string)=>{
-      columns.push({ id: Item, label: Item, align: 'center' });
-    })
+
+const TableData = ({ type }: any) => {
+
+  useEffect(() => {
+    getNewsDataList()
+  }, [])
+
+  const [newsData, setNewsData] = useState<any>(null)
+
+  const getNewsDataList = async () => {
+      try {
+          const RS = await axios.post(authConfig.backEndApiHost + 'website/list.php', { type }, {
+          headers: {
+              'Content-Type': 'application/json'
+          }
+          }).then(res=>res.data)
+          setNewsData(RS)
+      }
+      catch(Error: any) {
+          console.log("getChatLogList Error", Error)
+      }
   }
 
+  console.log("newsData", newsData)
+
   const [page, setPage] = useState<number>(0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -39,55 +54,50 @@ const TableData = ({ data }: any) => {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ height: (dataJsonData && dataJsonData.length > 10 ? 380 : '100%') }}>
+      <TableContainer component={Paper} sx={{ height: 380 }}>
         <Table stickyHeader size='small'>
           <TableHead>
             <TableRow>
-              {columns.map(column => (
-                <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </TableCell>
-              ))}
+              <TableCell align={'center'} sx={{ minWidth: '200px', width: '70%' }}>
+                {'标题'}
+              </TableCell>
+              <TableCell align={'center'} sx={{ minWidth: '120px', width: '20%' }}>
+                {'发布时间'}
+              </TableCell>
+              <TableCell align={'center'} sx={{ minWidth: '70px', width: '10%' }}>
+                {'阅读'}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataJsonData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any) => {
+            {newsData && newsData.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any) => {
               return (
                 <TableRow hover tabIndex={-1} key={row.code}>
-                  {columns.map((column: any) => {
-
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {row[column.id]}
-                      </TableCell>
-                    )
-                  })}
+                  <TableCell align={'left'}>
+                    {row['标题']}
+                  </TableCell>
+                  <TableCell align={'center'}>
+                    {row['创建时间'].slice(0, 10)}
+                  </TableCell>
+                  <TableCell align={'center'}>
+                    {row['阅读次数']}
+                  </TableCell>
                 </TableRow>
               )
             })}
           </TableBody>
         </Table>
       </TableContainer>
-      {dataJsonData && dataJsonData.length > 10 && (
+      {newsData && newsData.data && newsData.data.length > 5 && (
         <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
+          rowsPerPageOptions={[5, 10, 25, 50]}
           component='div'
-          count={dataJsonData.length}
+          count={newsData.data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      )}
-      {dataJsonData && dataJsonData.length == 0 && dataJson.message && (
-        <Typography sx={{
-          width: 'fit-content',
-          fontSize: '0.875rem',
-          p: theme => theme.spacing(0.5, 2, 0.5, 2),
-          ml: 1,
-          color: 'text.primary',
-        }}
-        >{dataJson.message}</Typography>
       )}
     </>
   )
