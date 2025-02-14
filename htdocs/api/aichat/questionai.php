@@ -1,10 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization, X-Requested-With, satoken");
-header("Content-type: text/html; charset=utf-8");
-//header('Content-Type: text/event-stream');
-header('Cache-Control: no-cache');
+require_once('../cors.php');
+header('Content-Type: text/event-stream');
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

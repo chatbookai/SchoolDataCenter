@@ -94,7 +94,7 @@ const FrontMenu = (props: Props) => {
 
   const getHeaderMenusList = async function () {
     try {
-      const RS = await axios.get(authConfig.backEndApiHost + 'website/header.php', {
+      const RS = await axios.get(authConfig.backEndApiHost + 'website/menu.php', {
         headers: {
           'Content-Type': 'application/json'
         }

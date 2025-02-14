@@ -211,19 +211,20 @@ function FilterString($str) {
 
 function ForSqlInjection($str) 			{
 
-	$str  = addslashes($str);
-	// $str  = str_replace("'","",$str);
-	// $str  = str_replace('"',"",$str);
-	// $str  = str_replace('--',"",$str);
+	$str  = str_replace("'","",$str);
+	$str  = str_replace('"',"",$str);
+	$str  = str_replace('--',"",$str);
 
-	// $str  = str_replace('create table ',"",$str);
-	// $str  = str_replace('drop table ',"",$str);
-	// $str  = str_replace('drop database ',"",$str);
-	// $str  = str_replace('alter table ',"",$str);
-	// $str  = str_replace('update ',"",$str);
-	// $str  = str_replace('select ',"",$str);
-	// $str  = str_replace('delete ',"",$str);
-	// $str  = str_replace(' from ',"",$str);
+	$str  = str_replace('create table ',"",$str);
+	$str  = str_replace('drop table ',"",$str);
+	$str  = str_replace('drop database ',"",$str);
+	$str  = str_replace('alter table ',"",$str);
+	$str  = str_replace('update ',"",$str);
+	$str  = str_replace('select ',"",$str);
+	$str  = str_replace('delete ',"",$str);
+	$str  = str_replace(' from ',"",$str);
+	
+	$str  = addslashes($str);
 
   return $str;
 }
