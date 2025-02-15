@@ -21,8 +21,6 @@ import Lines from '@assets/svg/front-pages/landing-page/Lines'
 // Styles Imports
 import frontCommonStyles from '@views/home/styles.module.css'
 
-import styles from './styles.module.css'
-
 // Data
 const team = [
   {
@@ -46,12 +44,6 @@ const team = [
   {
     name: '赵丽',
     position: '副校长',
-    image: '/images/front-pages/landing-page/paul.png',
-    color: 'var(--mui-palette-info-mainOpacity)'
-  },
-  {
-    name: '陈刚',
-    position: '教务处主任',
     image: '/images/front-pages/landing-page/paul.png',
     color: 'var(--mui-palette-info-mainOpacity)'
   }
@@ -99,13 +91,10 @@ const OurTeam = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  
-  const heroSectionBg = '/images/front-pages/landing-page/hero-bg-light.png'
-
   return (
-    <section id='team' className='relative overflow-hidden pbs-[70px] -mbs-[70px] bg-backgroundPaper z-[1] plb-[50px]' ref={ref}>
-      <img src={heroSectionBg} alt='hero-bg' className={styles.heroSectionBg} />
-        <div className='flex flex-col items-center justify-center' style={{paddingTop: '50px'}}>
+    <section id='team' className='plb-[50px]' ref={ref}>
+      <div className={frontCommonStyles.layoutSpacing}>
+        <div className='flex flex-col items-center justify-center'>
           <div className='flex is-full justify-center relative'>
             <ElementOne className='absolute inline-end-0' />
             <div className='flex items-center justify-center mbe-6 gap-3'>
@@ -138,12 +127,7 @@ const OurTeam = () => {
                   <div className='flex flex-col gap-3 p-5 is-full'>
                     <div className='text-center'>
                       <Typography variant='h5'>{member.name}</Typography>
-                      <Typography color='text.secondary'>{member.position}</Typography>
-                    </div>
-                    <div className='flex gap-3 item-center justify-center'>
-                      <i className='ri-facebook-circle-line text-[22px] text-textPrimary' />
-                      <i className='ri-twitter-line text-[22px] text-textPrimary' />
-                      <i className='ri-linkedin-box-line text-[22px] text-textPrimary' />
+                      <Typography color='text.secondary' sx={{mt: 2}}>{member.position}</Typography>
                     </div>
                   </div>
                 </CardContent>
@@ -151,6 +135,7 @@ const OurTeam = () => {
             </Grid>
           ))}
         </Grid>
+      </div>
     </section>
   )
 }
