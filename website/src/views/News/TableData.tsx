@@ -10,11 +10,9 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import Typography from '@mui/material/Typography'
 
 import axios from 'axios'
 import authConfig from '@configs/auth'
-
 
 const TableData = ({ type }: any) => {
 
