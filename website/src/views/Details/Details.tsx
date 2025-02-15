@@ -8,23 +8,15 @@ import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { useTheme } from '@mui/material/styles'
-
-// Third-party Imports
-import ReactPlayer from '@/libs/ReactPlayer'
 
 // Type Imports
 import type { CourseDetails } from '@/types/apps/academyTypes'
 
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
-import CustomIconButton from '@core/components/mui/IconButton'
 
 const Details = ({ data }: { data?: CourseDetails }) => {
   // Hooks
-  const theme = useTheme()
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <Card>
@@ -44,25 +36,6 @@ const Details = ({ data }: { data?: CourseDetails }) => {
       <CardContent>
         <div className='border rounded'>
           <div className='mli-2 mbs-2 overflow-hidden rounded'>
-            <ReactPlayer
-              playing
-              controls
-              url='https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4'
-              height={smallScreen ? 280 : 440}
-              className='bg-black !is-full'
-              light={
-                <img
-                  src='/images/apps/academy/4.png'
-                  alt='Thumbnail'
-                  className='is-full bs-full object-cover bg-backgroundPaper'
-                />
-              }
-              playIcon={
-                <CustomIconButton variant='contained' color='error' className='absolute rounded-full'>
-                  <i className='ri-play-line text-2xl' />
-                </CustomIconButton>
-              }
-            />
           </div>
           <div className='flex flex-col gap-6 p-5'>
             <div className='flex flex-col gap-4'>
