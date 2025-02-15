@@ -21,7 +21,6 @@ $allowedOrigins[] = 'http://localhost:3000/';
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 
-
 $Global_Templates = [
     [
         "id" => "0",
