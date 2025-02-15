@@ -5,7 +5,6 @@ import { useState, useEffect, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -110,9 +109,6 @@ const CourseTable = ({ courseData }: { courseData?: Course[] }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(...[courseData])
   const [globalFilter, setGlobalFilter] = useState('')
-
-  // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo<ColumnDef<CourseWithProgress, any>[]>(
     () => [
